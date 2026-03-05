@@ -8,7 +8,7 @@
 [![ASP.NET Core MVC](https://img.shields.io/badge/ASP.NET%20Core%20MVC-0078D4?style=for-the-badge&logo=dotnet&logoColor=white)](https://docs.microsoft.com/aspnet/core)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind%20CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
-[![License](https://img.shields.io/badge/Lisans-MIT-green?style=for-the-badge)](LICENSE)
+
 
 <br/>
 
@@ -363,11 +363,6 @@ Bu proje þu anda bir staj projesi olarak geliþtirilmektedir. Katkýda bulunmak is
 
 [![GitHub](https://img.shields.io/badge/GitHub-Hasretozdemir-181717?style=for-the-badge&logo=github)](https://github.com/Hasretozdemir)
 
----
-
-## ?? Lisans
-
-Bu proje [MIT Lisansý](LICENSE) ile lisanslanmýþtýr.
 
 ---
 
