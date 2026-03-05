@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "Poliklinikler";
+}
+
+<div class="animate-[fadeIn_0.5s_ease-out] pr-2 pb-2">
+
+    <div class="mb-8 pl-2 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 relative z-10">
+        <div>
+            <h2 class="text-4xl md:text-5xl font-black mb-2 tracking-tight">Aktif <span class="text-gradient">Poliklinikler</span> 🏥</h2>
+            <p class="text-slate-400 font-medium">Hastaneye ait tıbbi birimleri, lokasyonları ve hekim kapasitelerini yönetin.</p>
+        </div>
+        <button class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:scale-105 transition flex items-center gap-2">
+            <i class="fa-solid fa-plus-circle"></i> Yeni Birim Ekle
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+
+        <div class="glass-card p-6 rounded-[2.5rem] relative group overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-rose-500/10 rounded-full blur-3xl group-hover:bg-rose-500/20 transition duration-500"></div>
+
+            <div class="flex justify-between items-start mb-6 relative z-10">
+                <div class="w-16 h-16 bg-rose-500/10 border border-rose-500/30 text-rose-400 rounded-2xl flex items-center justify-center text-3xl shadow-[0_0_15px_rgba(244,63,94,0.2)]">
+                    <i class="fa-solid fa-heart-pulse neon-icon"></i>
+                </div>
+                <div class="flex gap-2">
+                    <button class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/20 border border-white/10 text-slate-300 transition flex items-center justify-center"><i class="fa-solid fa-pen text-xs"></i></button>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-black text-white mb-2 relative z-10">Kardiyoloji</h3>
+            <p class="text-sm font-semibold text-slate-400 mb-6 flex items-center gap-2 relative z-10">
+                <i class="fa-solid fa-location-dot text-rose-400"></i> A Blok - 2. Kat
+            </p>
+
+            <div class="pt-5 border-t border-white/10 flex justify-between items-center relative z-10">
+                <div class="flex -space-x-3">
+                    <img src="https://ui-avatars.com/api/?name=Hasret+Özdemir&background=0D8ABC&color=fff" class="w-10 h-10 rounded-full border-2 border-[#0f172a] shadow-sm" alt="Doktor">
+                    <div class="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-300">AÜ</div>
+                    <div class="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-rose-500/20 text-rose-400 flex items-center justify-center text-xs font-bold">+4</div>
+                </div>
+                <span class="text-xs font-black text-rose-400 bg-rose-500/10 px-3 py-1.5 rounded-lg border border-rose-500/20 shadow-[0_0_10px_rgba(244,63,94,0.1)]">6 Hekim Aktif</span>
+            </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-[2.5rem] relative group overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl group-hover:bg-cyan-500/20 transition duration-500"></div>
+
+            <div class="flex justify-between items-start mb-6 relative z-10">
+                <div class="w-16 h-16 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 rounded-2xl flex items-center justify-center text-3xl shadow-[0_0_15px_rgba(6,182,212,0.2)]">
+                    <i class="fa-solid fa-eye neon-icon"></i>
+                </div>
+                <div class="flex gap-2">
+                    <button class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/20 border border-white/10 text-slate-300 transition flex items-center justify-center"><i class="fa-solid fa-pen text-xs"></i></button>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-black text-white mb-2 relative z-10">Göz Hastalıkları</h3>
+            <p class="text-sm font-semibold text-slate-400 mb-6 flex items-center gap-2 relative z-10">
+                <i class="fa-solid fa-location-dot text-cyan-400"></i> C Blok - Zemin Kat
+            </p>
+
+            <div class="pt-5 border-t border-white/10 flex justify-between items-center relative z-10">
+                <div class="flex -space-x-3">
+                    <div class="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white">SK</div>
+                    <div class="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-300">YK</div>
+                    <div class="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs font-bold">+1</div>
+                </div>
+                <span class="text-xs font-black text-cyan-400 bg-cyan-500/10 px-3 py-1.5 rounded-lg border border-cyan-500/20 shadow-[0_0_10px_rgba(6,182,212,0.1)]">3 Hekim Aktif</span>
+            </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-[2.5rem] relative group overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition duration-500"></div>
+
+            <div class="flex justify-between items-start mb-6 relative z-10">
+                <div class="w-16 h-16 bg-purple-500/10 border border-purple-500/30 text-purple-400 rounded-2xl flex items-center justify-center text-3xl shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+                    <i class="fa-solid fa-brain neon-icon"></i>
+                </div>
+                <div class="flex gap-2">
+                    <button class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/20 border border-white/10 text-slate-300 transition flex items-center justify-center"><i class="fa-solid fa-pen text-xs"></i></button>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-black text-white mb-2 relative z-10">Nöroloji</h3>
+            <p class="text-sm font-semibold text-slate-400 mb-6 flex items-center gap-2 relative z-10">
+                <i class="fa-solid fa-location-dot text-purple-400"></i> B Blok - 4. Kat
+            </p>
+
+            <div class="pt-5 border-t border-white/10 flex justify-between items-center relative z-10">
+                <div class="flex -space-x-3">
+                    <div class="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-300">ME</div>
+                    <div class="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs font-bold">+2</div>
+                </div>
+                <span class="text-xs font-black text-purple-400 bg-purple-500/10 px-3 py-1.5 rounded-lg border border-purple-500/20 shadow-[0_0_10px_rgba(168,85,247,0.1)]">4 Hekim Aktif</span>
+            </div>
+        </div>
+
+    </div>
+</div>

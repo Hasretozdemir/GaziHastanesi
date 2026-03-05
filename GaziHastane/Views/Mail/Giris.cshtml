@@ -1,0 +1,178 @@
+@{
+    ViewData["Title"] = "Gazi Üniversitesi | E-Posta Giriþi";
+}
+
+<div class="mail-auth-wrapper">
+    <div class="main-wallpaper" style="background-image: url('/assets/gazimail.jpg');"></div>
+
+    <div class="auth-card-glass animate__animated animate__fadeIn">
+        <div class="auth-card-content">
+
+            <div class="text-center mb-5">
+                <div class="logo-circle-bg mb-3">
+                    <img src="/assets/gazilogo.jpg" alt="Gazi Logo" class="brand-img">
+                </div>
+                <h4 class="fw-800 text-white mb-1">GAZÝ E-POSTA</h4>
+                <p class="text-white-50 small">Elektronik Posta Servis Giriþi</p>
+            </div>
+
+            <form action="/Mail/Login" method="post">
+
+                <div class="input-container-modern mb-4">
+                    <label class="label-premium">KULLANICI ADI</label>
+                    <div class="field-wrapper">
+                        <i class="fas fa-user-circle"></i>
+                        <input type="text" placeholder="Örn: 23380101031" required>
+                    </div>
+                </div>
+
+                <div class="input-container-modern mb-4">
+                    <label class="label-premium">PAROLA</label>
+                    <div class="field-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-5">
+                    <div class="custom-checkbox">
+                        <input type="checkbox" id="remember">
+                        <label for="remember" class="text-white small ms-1">Beni hatýrla</label>
+                    </div>
+                    <div class="version-info">
+                        <select class="minimal-select">
+                            <option>Standart Sürüm</option>
+                            <option>Mobil Görünüm</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-gazi-primary shadow-lg">
+                    <span>OTURUM AÇ</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="footer-links-modern mt-5">
+                <a href="#">Yardým Al</a>
+                <span class="dot-sep">•</span>
+                <a href="#">Þifre Ýþlemleri</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        :root {
+            --gazi-navy: #0f172a;
+            --gazi-gold: #c5a059;
+            --white-glass: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .mail-auth-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 20px;
+        }
+
+        .main-wallpaper {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -2;
+            filter: brightness(0.5) contrast(1.1);
+        }
+
+        .auth-card-glass {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 50px 40px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            z-index: 1;
+        }
+
+        .logo-circle-bg {
+            width: 75px; height: 75px;
+            background: white;
+            border-radius: 22px;
+            margin: 0 auto;
+            padding: 7px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .brand-img { width: 100%; height: 100%; object-fit: contain; }
+
+        .label-premium {
+            font-size: 11px; font-weight: 800; color: rgba(255,255,255,0.5);
+            margin-bottom: 8px; display: block; letter-spacing: 1px;
+        }
+
+        .field-wrapper { position: relative; display: flex; align-items: center; }
+        .field-wrapper i { position: absolute; left: 18px; color: rgba(255,255,255,0.3); font-size: 1.1rem; }
+
+        .field-wrapper input {
+            width: 100%; height: 58px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 0 20px 0 52px;
+            color: white; font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .field-wrapper input:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--gazi-gold);
+            outline: none;
+        }
+
+        .minimal-select {
+            background: transparent; border: none; color: white;
+            font-size: 13px; font-weight: 700; cursor: pointer; outline: none;
+        }
+        .minimal-select option { background: var(--gazi-navy); color: white; }
+
+        .btn-gazi-primary {
+            width: 100%; height: 65px;
+            background: linear-gradient(135deg, #1e40af 0%, #0f172a 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            color: white; font-weight: 800;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 25px; transition: 0.4s;
+        }
+
+        .btn-gazi-primary:hover {
+            transform: translateY(-3px);
+            background: var(--gazi-gold);
+            color: var(--gazi-navy);
+            box-shadow: 0 15px 30px rgba(197, 160, 89, 0.3);
+        }
+
+        .footer-links-modern { text-align: center; }
+        .footer-links-modern a { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 12px; font-weight: 700; transition: 0.3s; }
+        .footer-links-modern a:hover { color: white; }
+        .dot-sep { color: rgba(255,255,255,0.2); margin: 0 10px; }
+
+        @@media (max-width: 576px) {
+            .auth-card-glass { padding: 40px 25px; border-radius: 30px; margin: 10px; }
+        }
+    </style>
+}

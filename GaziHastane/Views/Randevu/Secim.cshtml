@@ -1,0 +1,447 @@
+﻿@{
+    ViewData["Title"] = "Gazi Sağlık | Randevu Planlama";
+}
+
+<div class="appointment-dashboard">
+    <div class="container pb-5 dashboard-safe-area">
+        <div class="dashboard-center-wrapper mx-auto" style="max-width: 1150px;">
+
+            <header class="glass-nav d-flex justify-content-between align-items-center mb-5 p-3 animate__animated animate__fadeIn">
+                <div class="d-flex align-items-center ms-md-3 flex-wrap">
+                    <div class="brand-box me-3"><i class="fas fa-h-square fa-2x text-primary"></i></div>
+                    <div class="brand-text">
+                        <h4 class="fw-800 mb-0 text-navy">GAZİ ÜNİVERSİTESİ</h4>
+                        <span class="status-badge small text-muted">Hastane Randevu Sistemi</span>
+                    </div>
+                </div>
+                <div class="user-profile me-md-3 d-flex align-items-center">
+                    <div class="text-end me-3 d-none d-md-block">
+                        <p class="mb-0 fw-bold small">Murat SARI</p>
+                        <span class="text-success extra-small">● Çevrimiçi</span>
+                    </div>
+                    <div class="avatar-circle">MS</div>
+                </div>
+            </header>
+
+            <div class="row g-4 justify-content-center">
+                <div class="col-xl-8 col-lg-7">
+                    <div class="content-card shadow-sm border-0 animate__animated animate__fadeInLeft">
+                        <div class="mb-4">
+                            <h3 class="fw-800 text-navy">Randevu Detayları</h3>
+                            <p class="text-muted small">Lütfen poliklinik ve hekim seçiminizi yapınız.</p>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="section-label-small">Tıbbi Birim</label>
+                                <select class="form-select-modern" id="birimSelect" onchange="updateSelection()">
+                                    <option selected disabled>Birim Seçiniz</option>
+                                    <option data-blok="A Blok" data-kat="3. Kat" data-oda="302">Kardiyoloji</option>
+                                    <option data-blok="B Blok" data-kat="Zemin Kat" data-oda="12">Ortopedi</option>
+                                    <option data-blok="C Blok" data-kat="2. Kat" data-oda="215">Dermatoloji</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="section-label-small">Uzman Doktor</label>
+                                <select class="form-select-modern" id="drSelect" onchange="updateSelection()">
+                                    <option selected disabled>Hekim Seçiniz</option>
+                                    <option>Prof. Dr. Ahmet Yılmaz</option>
+                                    <option>Doç. Dr. Ayşe Kaya</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12" id="locationAlert" style="display:none;">
+                                <div class="location-notif d-flex align-items-center">
+                                    <div class="loc-icon-mini me-3"><i class="fas fa-map-marker-alt"></i></div>
+                                    <div>
+                                        <small class="text-muted d-block fw-bold" style="font-size: 10px;">RANDEVU KONUMU</small>
+                                        <span id="txtFormKonum" class="fw-bold text-navy">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <label class="section-label">Uygun Tarihler</label>
+                                <div class="date-swipe-wrapper">
+                                    @for (int i = 0; i < 7; i++)
+                                    {
+                                        <div class="date-card @(i == 0 ? "active" : "")">
+                                            <span class="day">@DateTime.Now.AddDays(i).ToString("ddd")</span>
+                                            <span class="number">@DateTime.Now.AddDays(i).Day</span>
+                                            <span class="month">@DateTime.Now.AddDays(i).ToString("MMM")</span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <label class="section-label">Müsait Saatler</label>
+                                <div class="time-grid-modern">
+                                    <button class="time-chip">09:00</button>
+                                    <button class="time-chip active">09:30</button>
+                                    <button class="time-chip">10:00</button>
+                                    <button class="time-chip">11:00</button>
+                                    <button class="time-chip">14:00</button>
+                                    <button class="time-chip">15:00</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn-confirm-modern mt-5 shadow-lg" onclick="confirmAppointment()">
+                            <span>RANDEVUYU ONAYLA</span>
+                            <i class="fas fa-check-circle ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-lg-5">
+                    <div class="summary-panel-modern shadow-sm animate__animated animate__fadeInRight">
+                        <h5 class="fw-800 text-navy mb-4">Seçim Özeti</h5>
+                        <div class="summary-list">
+                            <div class="summary-item mb-3">
+                                <div class="s-icon blue"><i class="fas fa-stethoscope"></i></div>
+                                <div><small>Poliklinik</small><p id="sumBirim" class="m-0 fw-bold">-</p></div>
+                            </div>
+                            <div class="summary-item mb-3">
+                                <div class="s-icon purple"><i class="fas fa-user-md"></i></div>
+                                <div><small>Hekim</small><p id="sumHekim" class="m-0 fw-bold">-</p></div>
+                            </div>
+                            <div class="summary-item mb-4">
+                                <div class="s-icon orange"><i class="fas fa-calendar-day"></i></div>
+                                <div><small>Tarih & Saat</small><p class="m-0 fw-bold text-primary">05 Mart - 09:30</p></div>
+                            </div>
+                            <div id="sumLocation" class="location-summary-box animate__animated animate__zoomIn" style="display:none;">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-building text-muted me-2"></i>
+                                    <span class="extra-small fw-bold text-muted">HASTANE KONUM BİLGİSİ</span>
+                                </div>
+                                <p id="txtSumKonum" class="m-0 mt-1 fw-800 text-success">A Blok - Kat: 3</p>
+                                <small class="text-muted" style="font-size: 11px;">Oda Numarası: <span id="txtSumOda">302</span></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        :root {
+            --navy: #0f172a;
+            --primary: #2563eb;
+            --bg-gray: #eef2f6;
+            --navbar-height: 90px; /* Üst Appbar yüksekliği (Gerekirse bu değeri artırabilirsiniz) */
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            background-color: var(--bg-gray);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .appointment-dashboard {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-gray);
+        }
+
+        /* UYGULANAN YENİ KURAL: Navbar'ın altında kalmasını engelleyen güvenli alan */
+        .dashboard-safe-area {
+            padding-top: calc(var(--navbar-height) + 30px);
+        }
+
+        .dashboard-center-wrapper {
+            width: 100%;
+            z-index: 2;
+        }
+
+        .brand-text h4 {
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .content-card, .summary-panel-modern {
+            background: #ffffff;
+            border-radius: 35px;
+            padding: 40px;
+            height: 100%;
+        }
+
+        .glass-nav {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .section-label-small {
+            font-size: 11px;
+            font-weight: 800;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .form-select-modern {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid #f1f5f9;
+            background: #f8fafc;
+            font-weight: 600;
+            color: var(--navy);
+            outline: none;
+            transition: 0.3s;
+        }
+
+            .form-select-modern:focus {
+                border-color: var(--primary);
+                background: white;
+            }
+
+        .date-swipe-wrapper {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .date-card {
+            min-width: 80px;
+            padding: 15px 10px;
+            border-radius: 20px;
+            border: 2px solid #f1f5f9;
+            text-align: center;
+            cursor: pointer;
+            background: #fff;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+            .date-card .day {
+                font-size: 11px;
+                font-weight: 700;
+                color: #94a3b8;
+            }
+
+            .date-card .number {
+                font-size: 22px;
+                font-weight: 900;
+                color: var(--navy);
+                line-height: 1.2;
+                margin: 4px 0;
+            }
+
+            .date-card .month {
+                font-size: 11px;
+                font-weight: 700;
+                color: #94a3b8;
+            }
+
+            .date-card.active {
+                background: var(--primary);
+                border-color: var(--primary);
+                box-shadow: 0 10px 20px rgba(37,99,235,0.2);
+            }
+
+                .date-card.active span {
+                    color: white !important;
+                }
+
+        .time-grid-modern {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+            gap: 10px;
+        }
+
+        .time-chip {
+            background: #f1f5f9;
+            border: 2px solid transparent;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            color: #64748b;
+            transition: 0.3s;
+        }
+
+            .time-chip:hover {
+                border-color: var(--navy);
+                color: var(--navy);
+            }
+
+            .time-chip.active {
+                background: var(--navy);
+                color: #fff;
+                border-color: var(--navy);
+            }
+
+        .btn-confirm-modern {
+            width: 100%;
+            height: 65px;
+            background: var(--navy);
+            color: #fff;
+            border: none;
+            border-radius: 22px;
+            font-weight: 800;
+            transition: 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+            .btn-confirm-modern:hover {
+                background: var(--primary);
+                transform: translateY(-3px);
+                box-shadow: 0 15px 30px rgba(37,99,235,0.2) !important;
+            }
+
+        .avatar-circle {
+            width: 45px;
+            height: 45px;
+            background: var(--navy);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+        }
+
+            .summary-item small {
+                color: #94a3b8;
+                font-weight: 700;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+        .s-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+
+        .blue {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .purple {
+            background: #faf5ff;
+            color: #9333ea;
+        }
+
+        .orange {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+
+        .location-notif {
+            background: #f0fdf4;
+            border: 1px dashed #22c55e;
+            padding: 15px;
+            border-radius: 20px;
+        }
+
+        .location-summary-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 20px;
+        }
+
+        .loc-icon-mini {
+            color: #22c55e;
+            background: #dcfce7;
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fw-800 {
+            font-weight: 800;
+        }
+
+        .text-navy {
+            color: var(--navy);
+        }
+
+        @@media (max-width: 768px) {
+            .content-card, .summary-panel-modern {
+                padding: 25px;
+            }
+
+            .dashboard-safe-area {
+                padding-top: calc(var(--navbar-height) + 15px);
+            }
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        function updateSelection() {
+            var birim = document.getElementById("birimSelect");
+            var hekim = document.getElementById("drSelect");
+
+            if(birim.selectedIndex > 0) {
+                var selectedBirim = birim.options[birim.selectedIndex];
+                document.getElementById("sumBirim").innerText = selectedBirim.text;
+
+                // Konum bilgilerini göster
+                var blok = selectedBirim.getAttribute("data-blok");
+                var kat = selectedBirim.getAttribute("data-kat");
+                var oda = selectedBirim.getAttribute("data-oda");
+
+                document.getElementById("locationAlert").style.display = "block";
+                document.getElementById("txtFormKonum").innerText = blok + " - " + kat;
+
+                document.getElementById("sumLocation").style.display = "block";
+                document.getElementById("txtSumKonum").innerText = blok + " - " + kat;
+                document.getElementById("txtSumOda").innerText = oda;
+            }
+
+            if(hekim.selectedIndex > 0) {
+                document.getElementById("sumHekim").innerText = hekim.options[hekim.selectedIndex].text;
+            }
+        }
+
+        function confirmAppointment() {
+            // Animasyonlu onay butonu efekti için eklenebilir
+            alert("Randevunuz başarıyla oluşturulmuştur.");
+        }
+    </script>
+}

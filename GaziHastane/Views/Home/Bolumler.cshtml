@@ -1,0 +1,742 @@
+﻿@{
+    ViewData["Title"] = "Bölümlerimiz";
+}
+
+@section Scripts {
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@300;400;500;600;700;800&display=swap');
+
+        /* ── Sidebar sticky ── */
+        .sidebar-sticky {
+            position: sticky;
+            top: 7rem; /* Navbar'ın altında durması için ayarlandı */
+            max-height: calc(100vh - 8rem);
+            overflow-y: auto;
+        }
+
+            .sidebar-sticky::-webkit-scrollbar {
+                width: 4px;
+            }
+
+            .sidebar-sticky::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            .sidebar-sticky::-webkit-scrollbar-thumb {
+                background: #e2e8f0;
+                border-radius: 10px;
+            }
+
+        /* ── Nav links ── */
+        .cat-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 14px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+            .cat-link:hover {
+                background: #f1f5f9;
+                color: #1e293b;
+                transform: translateX(3px);
+            }
+
+            .cat-link.active-blue {
+                background: #eff6ff;
+                color: #2563eb;
+            }
+
+            .cat-link.active-red {
+                background: #fef2f2;
+                color: #ef4444;
+            }
+
+            .cat-link.active-green {
+                background: #f0fdf4;
+                color: #16a34a;
+            }
+
+        /* ── Search ── */
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+            border-color: #93c5fd;
+        }
+
+        /* ── Section header bar ── */
+        .section-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-bar-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, #e2e8f0, transparent);
+        }
+
+        /* ── Dept Cards ── */
+        .dept-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid #f1f5f9;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .dept-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                opacity: 0;
+                transition: opacity 0.25s ease;
+                border-radius: 1.5rem 1.5rem 0 0;
+            }
+
+            .dept-card:hover {
+                transform: translateY(-4px);
+            }
+
+                .dept-card:hover::before {
+                    opacity: 1;
+                }
+
+            /* Hover border & shadow by type */
+            .dept-card.type-dahili:hover {
+                box-shadow: 0 12px 40px rgba(37,99,235,0.1);
+                border-color: #bfdbfe;
+            }
+
+            .dept-card.type-dahili::before {
+                background: linear-gradient(90deg, #2563eb, #60a5fa);
+            }
+
+            .dept-card.type-cerrahi:hover {
+                box-shadow: 0 12px 40px rgba(239,68,68,0.1);
+                border-color: #fecaca;
+            }
+
+            .dept-card.type-cerrahi::before {
+                background: linear-gradient(90deg, #ef4444, #f87171);
+            }
+
+            .dept-card.type-temel:hover {
+                box-shadow: 0 12px 40px rgba(22,163,74,0.1);
+                border-color: #bbf7d0;
+            }
+
+            .dept-card.type-temel::before {
+                background: linear-gradient(90deg, #16a34a, #4ade80);
+            }
+
+        /* ── Icon box ── */
+        .icon-box {
+            width: 46px;
+            height: 46px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .ib-blue {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .ib-red {
+            background: #fef2f2;
+            color: #ef4444;
+        }
+
+        .ib-green {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        /* ── Arrow on card ── */
+        .card-arrow {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            color: #94a3b8;
+            font-size: 0.65rem;
+            transition: all 0.2s;
+            margin-left: auto;
+        }
+
+        .dept-card:hover .card-arrow {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        /* ── Badge chips ── */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 3px 8px;
+            border-radius: 99px;
+        }
+
+        .badge-blue {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .badge-red {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .badge-green {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        /* ── Mobile sidebar overlay ── */
+        #mob-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,0.4);
+            z-index: 40;
+            backdrop-filter: blur(2px);
+        }
+
+            #mob-overlay.open {
+                display: block;
+            }
+
+        #mob-sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100%;
+            background: white;
+            z-index: 50;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            padding: 1.5rem 1rem;
+            box-shadow: 8px 0 30px rgba(0,0,0,0.1);
+        }
+
+            #mob-sidebar.open {
+                left: 0;
+            }
+
+        /* ── Hidden card ── */
+        .hidden-card {
+            display: none !important;
+        }
+
+        /* ── Empty state ── */
+        #empty-state {
+            display: none;
+        }
+
+            #empty-state.show {
+                display: flex;
+            }
+
+        /* ── Count badge ── */
+        .count-pill {
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 99px;
+            background: #f1f5f9;
+            color: #64748b;
+        }
+    </style>
+
+    <script>
+        // ── Mobile sidebar ──
+        const mobToggle  = document.getElementById('mob-toggle');
+        const mobSidebar = document.getElementById('mob-sidebar');
+        const mobOverlay = document.getElementById('mob-overlay');
+        const mobClose   = document.getElementById('mob-close');
+
+        // Sayfada Navbar'ın yanına özel mobil menü butonu eklemek istersen HTML tarafına buton koyabilirsin,
+        // şu anki yapıda masaüstünde direkt sol menü görünecektir.
+        if(mobToggle) { mobToggle.addEventListener('click', openMob); }
+        if(mobClose) { mobClose.addEventListener('click', closeMob); }
+        if(mobOverlay) { mobOverlay.addEventListener('click', closeMob); }
+
+        function openMob()  { mobSidebar.classList.add('open'); mobOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+        function closeMob() { mobSidebar.classList.remove('open'); mobOverlay.classList.remove('open'); document.body.style.overflow = ''; }
+
+        // ── Search ──
+        function runSearch(term) {
+            const cards = document.querySelectorAll('.dept-card');
+            cards.forEach(card => {
+                const text = card.querySelector('h3').innerText.toLowerCase();
+                card.classList.toggle('hidden-card', !text.includes(term));
+            });
+
+            let anyVisible = false;
+            document.querySelectorAll('section.bolum-section').forEach(section => {
+                const visible = section.querySelectorAll('.dept-card:not(.hidden-card)').length;
+                section.style.display = visible === 0 ? 'none' : 'block';
+                if (visible > 0) anyVisible = true;
+            });
+
+            const empty = document.getElementById('empty-state');
+            if (!anyVisible && term) {
+                empty.classList.add('show');
+            } else {
+                empty.classList.remove('show');
+            }
+        }
+
+        document.getElementById('deptSearch')?.addEventListener('input', e => runSearch(e.target.value.toLowerCase().trim()));
+        document.getElementById('deptSearchMob')?.addEventListener('input', e => runSearch(e.target.value.toLowerCase().trim()));
+    </script>
+}
+
+<div id="mob-overlay"></div>
+<div id="mob-sidebar">
+    <div class="flex items-center justify-between mb-5">
+        <span class="font-black text-slate-800 text-sm uppercase tracking-wider">Birimler</span>
+        <button id="mob-close" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 transition">
+            <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+    </div>
+    <div class="relative mb-5">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+        <input type="text" id="deptSearchMob" placeholder="Bölüm ara..."
+               class="search-input w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 transition">
+    </div>
+    <nav class="space-y-1">
+        <a href="#dahili" class="cat-link active-blue" onclick="closeMob()">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-500 flex-shrink-0"></span>
+            <span>Dahili Tıp Bilimleri</span>
+            <span class="count-pill ml-auto">9</span>
+        </a>
+        <a href="#cerrahi" class="cat-link active-red" onclick="closeMob()">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500 flex-shrink-0"></span>
+            <span>Cerrahi Tıp Bilimleri</span>
+            <span class="count-pill ml-auto">8</span>
+        </a>
+        <a href="#temel" class="cat-link active-green" onclick="closeMob()">
+            <span class="w-2.5 h-2.5 rounded-full bg-green-500 flex-shrink-0"></span>
+            <span>Temel Tıp Bilimleri</span>
+            <span class="count-pill ml-auto">5</span>
+        </a>
+    </nav>
+    <div class="mt-6 p-4 bg-gradient-to-br from-red-50 to-red-100/60 rounded-2xl border border-red-100">
+        <div class="flex items-center gap-2 mb-1">
+            <div class="w-5 h-5 bg-red-500 rounded-lg flex items-center justify-center">
+                <i class="fa-solid fa-phone text-white text-[8px]"></i>
+            </div>
+            <p class="text-[10px] font-black text-red-700 uppercase tracking-widest">Acil Çağrı</p>
+        </div>
+        <p class="text-xl font-black text-red-600 mt-1">444 0 911</p>
+    </div>
+</div>
+
+<div class="max-w-[1400px] mx-auto px-4 sm:px-6 py-8 flex flex-col lg:flex-row gap-7 mt-24">
+    <aside class="hidden lg:block w-72 flex-shrink-0">
+        <div class="sidebar-sticky bg-white rounded-[1.75rem] p-4 border border-slate-100" style="box-shadow: 0 4px 24px rgba(0,0,0,0.05);">
+            <div class="flex items-center gap-3 mb-5 px-1">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-md shadow-blue-200">
+                    <i class="fa-solid fa-hospital text-white text-sm"></i>
+                </div>
+                <div>
+                    <p class="font-black text-slate-800 text-sm leading-none">Tıbbi Birimler</p>
+                    <p class="text-[10px] text-slate-400 font-bold mt-0.5">22 aktif anabilim dalı</p>
+                </div>
+            </div>
+
+            <div class="relative mb-4">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input type="text" id="deptSearch" placeholder="Bölüm ara..."
+                       class="search-input w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 transition">
+            </div>
+
+            <nav class="space-y-1 mb-5">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] px-2 py-1">Kategoriler</p>
+                <a href="#dahili" class="cat-link active-blue">
+                    <span class="w-2.5 h-2.5 rounded-full bg-blue-500 flex-shrink-0"></span>
+                    <span>Dahili Tıp Bilimleri</span>
+                    <span class="count-pill ml-auto">9</span>
+                </a>
+                <a href="#cerrahi" class="cat-link active-red">
+                    <span class="w-2.5 h-2.5 rounded-full bg-red-500 flex-shrink-0"></span>
+                    <span>Cerrahi Tıp Bilimleri</span>
+                    <span class="count-pill ml-auto">8</span>
+                </a>
+                <a href="#temel" class="cat-link active-green">
+                    <span class="w-2.5 h-2.5 rounded-full bg-green-500 flex-shrink-0"></span>
+                    <span>Temel Tıp Bilimleri</span>
+                    <span class="count-pill ml-auto">5</span>
+                </a>
+            </nav>
+
+            <div class="h-px bg-slate-100 mb-4"></div>
+
+            <div class="p-4 bg-gradient-to-br from-red-50 to-red-100/50 rounded-2xl border border-red-100 mb-4">
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="w-6 h-6 bg-red-500 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-phone text-white text-[9px]"></i>
+                    </div>
+                    <p class="text-[10px] font-black text-red-700 uppercase tracking-widest">Acil Çağrı</p>
+                </div>
+                <p class="text-2xl font-black text-red-600">444 0 911</p>
+                <p class="text-[10px] text-red-400 font-semibold mt-0.5">7/24 hizmetinizdeyiz</p>
+            </div>
+
+            <a href="#" class="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl py-2.5 text-xs font-black tracking-wider hover:from-blue-700 hover:to-blue-800 transition shadow-md shadow-blue-200/60">
+                <i class="fa-solid fa-calendar-check text-xs"></i>
+                RANDEVU AL
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 min-w-0">
+
+        <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-[1.75rem] p-6 sm:p-8 mb-7 relative overflow-hidden" style="box-shadow: 0 12px 40px rgba(37,99,235,0.25);">
+            <div class="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full translate-x-16 -translate-y-16"></div>
+            <div class="absolute bottom-0 right-20 w-28 h-28 bg-white/5 rounded-full translate-y-10"></div>
+            <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <p class="text-blue-300 text-[10px] font-black tracking-[0.2em] uppercase mb-1">Gazi Üniversitesi Hastanesi</p>
+                    <h2 class="text-white text-2xl sm:text-3xl font-black leading-tight tracking-tight">Tıbbi Birimlerimiz</h2>
+                    <p class="text-blue-200/80 text-sm font-medium mt-1.5">22 anabilim dalı · 3 kategori · Akademik düzeyde uzman hizmet</p>
+                </div>
+                <div class="flex gap-4 flex-shrink-0">
+                    <div class="text-center">
+                        <p class="text-white text-2xl font-black">22</p>
+                        <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Birim</p>
+                    </div>
+                    <div class="w-px bg-white/20"></div>
+                    <div class="text-center">
+                        <p class="text-white text-2xl font-black">850+</p>
+                        <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Uzman</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="empty-state" class="flex-col items-center justify-center py-20 text-center bg-white rounded-[1.75rem] border border-slate-100 mb-7" style="box-shadow: 0 4px 24px rgba(0,0,0,0.04);">
+            <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-magnifying-glass text-slate-400 text-xl"></i>
+            </div>
+            <p class="font-black text-slate-700 text-lg">Sonuç bulunamadı</p>
+            <p class="text-slate-400 text-sm mt-1">Farklı bir arama terimi deneyin.</p>
+        </div>
+
+        <section id="dahili" class="mb-10 bolum-section">
+            <div class="section-bar">
+                <div class="flex items-center gap-3">
+                    <span class="badge badge-blue"><i class="fa-solid fa-circle-dot"></i> Dahili</span>
+                    <h2 class="text-lg font-black text-slate-800">Dahili Tıp Bilimleri</h2>
+                </div>
+                <div class="section-bar-line"></div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider flex-shrink-0">9 birim</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" id="dahiliGrid">
+
+                <div class="dept-card type-dahili">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-blue"><i class="fa-solid fa-heart-pulse"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Kardiyoloji Anabilim Dalı</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Kalp ve damar hastalıkları tanı, tedavi ve takip merkezi.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-dahili">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-blue"><i class="fa-solid fa-kit-medical"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Acil Tıp Anabilim Dalı</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">7/24 acil müdahale ve kritik hasta yönetimi hizmetleri.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-dahili">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-blue"><i class="fa-solid fa-scale-balanced"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Adli Tıp Anabilim Dalı</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Hukuki süreçlere yönelik tıbbi değerlendirme ve raporlama.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-dahili">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-blue"><i class="fa-solid fa-child-reaching"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Çocuk Sağlığı ve Hastalıkları</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Yenidoğandan ergenliğe kapsamlı pediatri hizmetleri.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-dahili">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-blue"><i class="fa-solid fa-brain"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Nöroloji Anabilim Dalı</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Beyin, omurilik ve periferik sinir hastalıkları tedavisi.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-dahili">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-blue"><i class="fa-solid fa-lungs"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Göğüs Hastalıkları</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Akciğer ve solunum yolu hastalıkları tanı ve tedavisi.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-dahili">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-blue"><i class="fa-solid fa-virus"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Enfeksiyon Hastalıkları</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Bulaşıcı hastalıkların tanı, tedavi ve izolasyon yönetimi.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-dahili">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-blue"><i class="fa-solid fa-stethoscope"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">İç Hastalıkları (Dahiliye)</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">İç organlara ait hastalıkların kapsamlı değerlendirilmesi.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-dahili">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-blue"><i class="fa-solid fa-pills"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Tıbbi Farmakoloji</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">İlaç etki mekanizmaları ve klinik farmakoloji araştırmaları.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="cerrahi" class="mb-10 bolum-section">
+            <div class="section-bar">
+                <div class="flex items-center gap-3">
+                    <span class="badge badge-red"><i class="fa-solid fa-circle-dot"></i> Cerrahi</span>
+                    <h2 class="text-lg font-black text-slate-800">Cerrahi Tıp Bilimleri</h2>
+                </div>
+                <div class="section-bar-line"></div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider flex-shrink-0">8 birim</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" id="cerrahiGrid">
+
+                <div class="dept-card type-cerrahi">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-red"><i class="fa-solid fa-scalpel"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Genel Cerrahi Anabilim Dalı</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Karın içi organ ameliyatları ve cerrahi müdahaleler.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-cerrahi">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-red"><i class="fa-solid fa-eye"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Göz Hastalıkları Anabilim Dalı</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Göz cerrahisi, retina ve görme bozuklukları tedavisi.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-cerrahi">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-red"><i class="fa-solid fa-bone"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Ortopedi ve Travmatoloji</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Kas ve iskelet sistemi hastalıkları ile kırık tedavisi.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-cerrahi">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-red"><i class="fa-solid fa-baby"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Kadın Hastalıkları ve Doğum</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Kadın sağlığı, obstetrik ve jinekolojik cerrahi hizmetleri.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-cerrahi">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-red"><i class="fa-solid fa-ear-listen"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Kulak Burun Boğaz</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">KBB hastalıkları, baş-boyun cerrahisi ve işitme bozuklukları.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-cerrahi">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-red"><i class="fa-solid fa-user-doctor"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Beyin ve Sinir Cerrahisi</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Beyin, omurilik ve periferik sinir ameliyatları.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-cerrahi">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-red"><i class="fa-solid fa-droplet"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Üroloji Anabilim Dalı</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Üriner sistem ve erkek üreme organı hastalıkları tedavisi.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-cerrahi">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-red"><i class="fa-solid fa-heart-circle-check"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Kalp ve Damar Cerrahisi</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Kalp bypass, kapak ameliyatları ve damar cerrahisi.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="temel" class="mb-10 bolum-section">
+            <div class="section-bar">
+                <div class="flex items-center gap-3">
+                    <span class="badge badge-green"><i class="fa-solid fa-circle-dot"></i> Temel</span>
+                    <h2 class="text-lg font-black text-slate-800">Temel Tıp Bilimleri</h2>
+                </div>
+                <div class="section-bar-line"></div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider flex-shrink-0">5 birim</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" id="temelGrid">
+
+                <div class="dept-card type-temel">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-green"><i class="fa-solid fa-dna"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Tıbbi Biyokimya</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Metabolik süreçler ve laboratuvar tanı uygulamaları.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-temel">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-green"><i class="fa-solid fa-microscope"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Tıbbi Mikrobiyoloji</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Mikroorganizma tanımlama ve enfeksiyon hastalıkları araştırması.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-temel">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-green"><i class="fa-solid fa-person"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Anatomi Anabilim Dalı</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">İnsan vücudunun yapısal organizasyonu ve eğitim araştırmaları.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-temel">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-green"><i class="fa-solid fa-bolt"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Fizyoloji Anabilim Dalı</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Organ ve sistem işlevleri, homeostaz mekanizmaları.</p>
+                    </div>
+                </div>
+
+                <div class="dept-card type-temel">
+                    <div class="flex items-start justify-between">
+                        <div class="icon-box ib-green"><i class="fa-solid fa-vial"></i></div>
+                        <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug">Histoloji ve Embriyoloji</h3>
+                        <p class="text-slate-500 text-xs mt-1 leading-relaxed">Doku yapısı, hücre biyolojisi ve embriyonik gelişim.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+</div>

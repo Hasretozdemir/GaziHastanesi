@@ -1,0 +1,314 @@
+@{
+    ViewData["Title"] = "Gazi Saðlýk | Güvenli Ödeme";
+}
+
+<div class="payment-master-wrapper">
+    <div class="payment-bg-overlay"></div>
+
+    <div class="payment-center-container">
+
+        <div class="payment-card-container animate__animated animate__zoomIn">
+            <div class="row g-0">
+
+                <div class="col-lg-7 p-4 p-md-5 bg-white">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <img src="/assets/gazilogo.jpg" alt="Logo" style="height: 40px;" class="mb-3">
+                            <h4 class="fw-800 color-navy mb-1">Ödeme Detaylarý</h4>
+                            <p class="text-muted small">Lütfen ödemek istediðiniz kalemleri seçiniz.</p>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge bg-soft-gold text-gold p-2 rounded-pill px-3">Protokol: 1234567</span>
+                        </div>
+                    </div>
+
+                    <div class="transaction-list mb-4">
+                        <div class="transaction-item active">
+                            <div class="d-flex align-items-center">
+                                <div class="custom-check-wrapper">
+                                    <input type="checkbox" checked id="item1">
+                                    <label for="item1"></label>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="mb-0 fw-bold">Check-up Paketi (Standart)</h6>
+                                    <small class="text-muted">Kardiyoloji Birimi - 04.03.2026</small>
+                                </div>
+                            </div>
+                            <span class="fw-800 color-navy">850,00 TL</span>
+                        </div>
+
+                        <div class="transaction-item">
+                            <div class="d-flex align-items-center">
+                                <div class="custom-check-wrapper">
+                                    <input type="checkbox" id="item2">
+                                    <label for="item2"></label>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="mb-0 fw-bold">EKO / EKG Tetkik Ücreti</h6>
+                                    <small class="text-muted">Tetkik Hizmetleri - 04.03.2026</small>
+                                </div>
+                            </div>
+                            <span class="fw-800 color-navy">400,00 TL</span>
+                        </div>
+                    </div>
+
+                    <div class="total-section p-3 rounded-4 bg-light d-flex justify-content-between align-items-center">
+                        <span class="fw-600 text-muted">Toplam Ödenecek</span>
+                        <h3 class="fw-900 color-navy mb-0">1.250,00 <small class="fs-6">TL</small></h3>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 p-4 p-md-5 bg-navy text-white d-flex flex-column justify-content-center">
+                    <h5 class="fw-bold mb-4 d-flex align-items-center">
+                        <i class="fas fa-shield-check text-gold me-2"></i> Güvenli Ödeme
+                    </h5>
+
+                    <div class="visual-card mb-4 animate__animated animate__flipInX">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <i class="fas fa-chip-card fs-1 text-gold"></i>
+                            <i class="fab fa-cc-visa fs-2 opacity-50"></i>
+                        </div>
+                        <div class="mt-4">
+                            <div class="card-number-display small opacity-75">KART NUMARASI</div>
+                            <div class="fs-5 fw-bold letter-spacing-2">**** **** **** ****</div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <div>
+                                <div class="small opacity-50">AD SOYAD</div>
+                                <div class="small fw-bold">MURAT SARI</div>
+                            </div>
+                            <div>
+                                <div class="small opacity-50">SKT</div>
+                                <div class="small fw-bold">08/29</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form>
+                        <div class="mb-3">
+                            <label class="premium-label">KART ÜZERÝNDEKÝ ÝSÝM</label>
+                            <input type="text" class="premium-input" placeholder="AD SOYAD">
+                        </div>
+                        <div class="mb-3">
+                            <label class="premium-label">KART NUMARASI</label>
+                            <input type="text" class="premium-input" placeholder="0000 0000 0000 0000">
+                        </div>
+                        <div class="row g-3 mb-4">
+                            <div class="col-7">
+                                <label class="premium-label">SON KULLANMA</label>
+                                <input type="text" class="premium-input" placeholder="AA / YY">
+                            </div>
+                            <div class="col-5">
+                                <label class="premium-label">CVV</label>
+                                <input type="password" class="premium-input" placeholder="***">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-pay-now">
+                            <span>ÖDEMEYÝ ONAYLA</span>
+                            <i class="fas fa-lock"></i>
+                        </button>
+                    </form>
+                    <p class="text-center mt-4 small opacity-50">
+                        <i class="fas fa-lock-alt me-1"></i> 256-bit SSL ile korunmaktadýr.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        :root {
+            --gazi-navy: #0f172a;
+            --gazi-gold: #c5a059;
+            --soft-gold: rgba(197, 160, 89, 0.15);
+            --navbar-height: 80px; /* Üst barýn yüksekliði */
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow-x: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .payment-master-wrapper {
+            background: #f1f5f9;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* DÝKEY VE YATAY ORTALAMA ALANI */
+        .payment-center-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: calc(var(--navbar-height) + 20px) 20px 40px 20px; /* Üst barýn altýna itmek için */
+        }
+
+        .bg-navy {
+            background: var(--gazi-navy);
+        }
+
+        .color-navy {
+            color: var(--gazi-navy);
+        }
+
+        .text-gold {
+            color: var(--gazi-gold);
+        }
+
+        .bg-soft-gold {
+            background: var(--soft-gold);
+        }
+
+        .fw-800 {
+            font-weight: 800;
+        }
+
+        .fw-900 {
+            font-weight: 900;
+        }
+
+        /* Ana Kart */
+        .payment-card-container {
+            width: 100%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(15, 23, 42, 0.15);
+            z-index: 10;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-radius: 20px;
+            border: 2px solid #f1f5f9;
+            margin-bottom: 15px;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            .transaction-item.active {
+                border-color: var(--gazi-gold);
+                background: var(--soft-gold);
+            }
+
+            .transaction-item:hover {
+                transform: scale(1.02);
+                border-color: var(--gazi-gold);
+            }
+
+        .visual-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 24px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .visual-card::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(197, 160, 89, 0.1) 0%, transparent 70%);
+            }
+
+        .premium-label {
+            font-size: 10px;
+            font-weight: 800;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .premium-input {
+            width: 100%;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0 15px;
+            color: white;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+            .premium-input:focus {
+                background: rgba(255, 255, 255, 0.1);
+                border-color: var(--gazi-gold);
+                outline: none;
+            }
+
+        .btn-pay-now {
+            width: 100%;
+            height: 60px;
+            background: var(--gazi-gold);
+            color: var(--gazi-navy);
+            border: none;
+            border-radius: 15px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            transition: 0.4s;
+        }
+
+            .btn-pay-now:hover {
+                background: #fff;
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            }
+
+        .custom-check-wrapper input {
+            display: none;
+        }
+
+        .custom-check-wrapper label {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .custom-check-wrapper input:checked + label {
+            background: var(--gazi-gold);
+            border-color: var(--gazi-gold);
+        }
+
+            .custom-check-wrapper input:checked + label::after {
+                content: '\f00c';
+                font-family: 'Font Awesome 5 Free';
+                font-weight: 900;
+                color: white;
+                font-size: 12px;
+                position: absolute;
+                left: 4px;
+                top: 1px;
+            }
+
+        @@media (max-width: 991px) {
+            .payment-card-container {
+                border-radius: 20px;
+            }
+
+            .payment-center-container {
+                padding-top: calc(var(--navbar-height) + 30px);
+            }
+        }
+    </style>
+}

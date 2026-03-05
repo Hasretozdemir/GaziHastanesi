@@ -1,0 +1,426 @@
+﻿@{
+    ViewData["Title"] = "İletişim & Ulaşım";
+}
+
+@section Scripts {
+    <style>
+        /* ── Location card ── */
+        .loc-card {
+            background: white;
+            border-radius: 1.5rem;
+            border: 1px solid #f1f5f9;
+            overflow: hidden;
+            transition: all 0.25s ease;
+        }
+
+            .loc-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 16px 48px rgba(37,99,235,0.1);
+            }
+
+        /* ── Map placeholder ── */
+        .map-ph {
+            height: 200px;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .map-ph::before {
+                content: '';
+                position: absolute;
+                width: 180px;
+                height: 180px;
+                border-radius: 50%;
+                background: rgba(37,99,235,0.06);
+                top: -30px;
+                right: -30px;
+            }
+
+            .map-ph::after {
+                content: '';
+                position: absolute;
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                background: rgba(37,99,235,0.06);
+                bottom: -20px;
+                left: -20px;
+            }
+
+        /* ── Transport card ── */
+        .tr-card {
+            background: white;
+            border-radius: 1.25rem;
+            border: 1px solid #f1f5f9;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            transition: all 0.2s;
+        }
+
+            .tr-card:hover {
+                box-shadow: 0 8px 28px rgba(0,0,0,0.07);
+                transform: translateY(-2px);
+            }
+
+        .tr-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        /* ── Badge ── */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 3px 8px;
+            border-radius: 99px;
+        }
+
+        .badge-blue {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .badge-orange {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+        /* ── Section divider ── */
+        .section-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-bar-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, #e2e8f0, transparent);
+        }
+
+        /* ── Info row ── */
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.65rem 0.85rem;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #f1f5f9;
+        }
+
+        /* ── Pulse ── */
+        @@keyframes pulse-ring {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239,68,68,0.35);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(239,68,68,0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(239,68,68,0);
+            }
+        }
+
+        .pulse-badge {
+            animation: pulse-ring 2s ease infinite;
+        }
+    </style>
+}
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8 mt-24">
+    <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-[1.75rem] p-6 sm:p-10 relative overflow-hidden" style="box-shadow: 0 12px 40px rgba(37,99,235,0.25);">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full translate-x-20 -translate-y-20"></div>
+        <div class="absolute bottom-0 right-24 w-32 h-32 bg-white/5 rounded-full translate-y-12"></div>
+        <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+            <div>
+                <p class="text-blue-300 text-[10px] font-black tracking-[0.2em] uppercase mb-1">Gazi Üniversitesi Hastanesi</p>
+                <h2 class="text-white text-2xl sm:text-4xl font-black leading-tight tracking-tight">İletişim & Ulaşım</h2>
+                <p class="text-blue-200/80 text-sm font-medium mt-2 max-w-lg">Bize ulaşın, size en yakın birimimizden destek alın.</p>
+            </div>
+            <div class="flex gap-5 flex-shrink-0">
+                <div class="text-center">
+                    <p class="text-white text-2xl font-black">2</p>
+                    <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Konum</p>
+                </div>
+                <div class="w-px bg-white/20"></div>
+                <div class="text-center">
+                    <p class="text-white text-2xl font-black">7/24</p>
+                    <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Destek</p>
+                </div>
+                <div class="w-px bg-white/20"></div>
+                <div class="text-center">
+                    <p class="text-white text-2xl font-black">182</p>
+                    <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">ALO Doktor</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-gradient-to-r from-red-500 to-red-600 rounded-[1.25rem] px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3" style="box-shadow: 0 8px 30px rgba(239,68,68,0.25);">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center pulse-badge flex-shrink-0">
+                <i class="fa-solid fa-phone-volume text-white text-xs"></i>
+            </div>
+            <div>
+                <p class="text-white text-xs font-black">Acil & Çağrı Merkezi</p>
+                <p class="text-red-200 text-[10px] font-semibold">7/24 kesintisiz hizmet</p>
+            </div>
+        </div>
+        <div class="flex flex-wrap gap-3">
+            <a href="tel:4440911" class="flex items-center gap-2 bg-white/20 hover:bg-white/30 border border-white/30 text-white text-[10px] font-black tracking-wider rounded-xl px-4 py-2 transition">
+                <i class="fa-solid fa-phone text-[9px]"></i> 444 0 911
+            </a>
+            <a href="tel:03129114848" class="flex items-center gap-2 bg-white/20 hover:bg-white/30 border border-white/30 text-white text-[10px] font-black tracking-wider rounded-xl px-4 py-2 transition">
+                <i class="fa-solid fa-headset text-[9px]"></i> 0312 911 48 48
+            </a>
+        </div>
+    </div>
+
+    <div>
+        <div class="section-bar">
+            <span class="badge badge-blue"><i class="fa-solid fa-circle-dot"></i> Konumlar</span>
+            <h2 class="text-lg font-black text-slate-800">Hastane Lokasyonları</h2>
+            <div class="section-bar-line"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+            <div class="loc-card">
+                <div class="map-ph">
+                    <div class="relative z-10 flex flex-col items-center gap-2">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
+                            <i class="fa-solid fa-location-dot text-blue-600 text-lg"></i>
+                        </div>
+                        <p class="text-blue-700 text-xs font-black">Beşevler / Yenimahalle</p>
+                        <p class="text-blue-500 text-[10px] font-semibold">39.9328° K, 32.8252° D</p>
+                    </div>
+                    <a href="https://maps.app.goo.gl/" target="_blank"
+                       class="absolute bottom-3 right-3 z-10 flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-black px-3 py-1.5 rounded-xl transition shadow-md">
+                        <i class="fa-solid fa-diamond-turn-right text-[9px]"></i> Yol Tarifi
+                    </a>
+                </div>
+
+                <div class="p-5 space-y-3">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <h3 class="text-base font-black text-slate-800">Gazi Üniversitesi Hastanesi</h3>
+                            <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest">Merkez Kampüs</span>
+                        </div>
+                        <div class="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-hospital text-blue-600 text-sm"></i>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <i class="fa-solid fa-location-dot text-blue-500 text-xs mt-0.5 flex-shrink-0"></i>
+                        <p class="text-slate-600 text-xs leading-relaxed">Emniyet Mah., Mevlana Bulvarı No:29, 06560 Yenimahalle / ANKARA</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="info-row">
+                            <i class="fa-solid fa-phone text-blue-500 text-xs flex-shrink-0"></i>
+                            <div>
+                                <p class="text-[9px] font-black text-slate-500 uppercase">Çağrı Merkezi</p>
+                                <p class="text-xs font-black text-slate-700">0312 911 48 48</p>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <i class="fa-solid fa-phone text-blue-500 text-xs flex-shrink-0"></i>
+                            <div>
+                                <p class="text-[9px] font-black text-slate-500 uppercase">Santral</p>
+                                <p class="text-xs font-black text-slate-700">(312) 202 40 00</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <i class="fa-solid fa-envelope text-blue-500 text-xs flex-shrink-0 mt-0.5"></i>
+                        <p class="text-slate-700 text-xs font-semibold">hastane@gazi.edu.tr</p>
+                    </div>
+                    <div class="info-row">
+                        <i class="fa-solid fa-clock text-blue-500 text-xs flex-shrink-0 mt-0.5"></i>
+                        <p class="text-slate-600 text-xs">Poliklinikler: <strong class="text-slate-800">Pzt–Cuma 08:00–17:00</strong> · Acil: <strong class="text-red-600">7/24</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="loc-card">
+                <div class="map-ph" style="background: linear-gradient(135deg,#f0fdf4 0%,#dcfce7 50%,#bbf7d0 100%);">
+                    <div class="relative z-10 flex flex-col items-center gap-2">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
+                            <i class="fa-solid fa-location-dot text-emerald-600 text-lg"></i>
+                        </div>
+                        <p class="text-emerald-700 text-xs font-black">Yaşamkent / Çankaya</p>
+                        <p class="text-emerald-500 text-[10px] font-semibold">39.8700° K, 32.6500° D</p>
+                    </div>
+                    <a href="https://maps.app.goo.gl/" target="_blank"
+                       class="absolute bottom-3 right-3 z-10 flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-black px-3 py-1.5 rounded-xl transition shadow-md">
+                        <i class="fa-solid fa-diamond-turn-right text-[9px]"></i> Yol Tarifi
+                    </a>
+                </div>
+
+                <div class="p-5 space-y-3">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <h3 class="text-base font-black text-slate-800">Çayyolu Semt Polikliniği</h3>
+                            <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Yaşamkent Birimi</span>
+                        </div>
+                        <div class="w-9 h-9 bg-emerald-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-clinic-medical text-emerald-600 text-sm"></i>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <i class="fa-solid fa-location-dot text-emerald-500 text-xs mt-0.5 flex-shrink-0"></i>
+                        <p class="text-slate-600 text-xs leading-relaxed">Yaşamkent Mah. 3061. Cadde 3045 Sokak No:4, 06810 Çayyolu / ANKARA</p>
+                    </div>
+                    <div class="grid grid-cols-1 gap-2">
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="info-row flex-col !items-start gap-0.5">
+                                <p class="text-[9px] font-black text-slate-500 uppercase">Santral</p>
+                                <p class="text-xs font-black text-slate-700">(312) 233 40 00</p>
+                            </div>
+                            <div class="info-row flex-col !items-start gap-0.5">
+                                <p class="text-[9px] font-black text-slate-500 uppercase">Randevu</p>
+                                <p class="text-xs font-black text-slate-700">(312) 233 40 40</p>
+                            </div>
+                            <div class="info-row flex-col !items-start gap-0.5">
+                                <p class="text-[9px] font-black text-slate-500 uppercase">Danışma</p>
+                                <p class="text-xs font-black text-slate-700">(312) 233 40 30</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <i class="fa-solid fa-clock text-emerald-500 text-xs flex-shrink-0 mt-0.5"></i>
+                        <p class="text-slate-600 text-xs">Çalışma Saatleri: <strong class="text-slate-800">Pzt–Cuma 08:00–17:00</strong></p>
+                    </div>
+                    <div class="info-row">
+                        <i class="fa-solid fa-circle-info text-emerald-500 text-xs flex-shrink-0 mt-0.5"></i>
+                        <p class="text-slate-600 text-xs">Poliklinik hizmetleri, randevu ve tahlil işlemleri mevcuttur.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div>
+        <div class="section-bar">
+            <span class="badge badge-orange"><i class="fa-solid fa-circle-dot"></i> Ulaşım</span>
+            <h2 class="text-lg font-black text-slate-800">Gazi Hastanesi Ulaşım Rehberi</h2>
+            <div class="section-bar-line"></div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+            <div class="tr-card">
+                <div class="tr-icon bg-blue-50 text-blue-600">
+                    <i class="fa-solid fa-train-subway"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-black text-slate-800 mb-1">Ankara İçinden (Metro / Ankaray)</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">
+                        Ankaray hattı ile <strong class="text-slate-700">Bahçelievler</strong> istasyonunda inin, ardından kısa yürüyüşle ulaşabilirsiniz. EGO otobüsleri ve Ulus–Beşevler dolmuşları da tercih edilebilir.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tr-card">
+                <div class="tr-icon bg-orange-50 text-orange-600">
+                    <i class="fa-solid fa-bus"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-black text-slate-800 mb-1">Otobüs Terminalinden (AŞTİ)</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">
+                        AŞTİ'den Ankaray'a binerek <strong class="text-slate-700">Bahçelievler</strong> istasyonuna ulaşın. AŞTİ önünden geçen Emek–Bahçelievler dolmuşlarını da kullanabilirsiniz.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tr-card">
+                <div class="tr-icon bg-purple-50 text-purple-600">
+                    <i class="fa-solid fa-train"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-black text-slate-800 mb-1">Ankara Tren Garından</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">
+                        Gar alt geçidinden Ankaray / Anadolu istasyonuna geçip <strong class="text-slate-700">Bahçelievler</strong> durağına inerek hastanemize ulaşabilirsiniz.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tr-card">
+                <div class="tr-icon bg-sky-50 text-sky-600">
+                    <i class="fa-solid fa-plane-arrival"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-black text-slate-800 mb-1">Esenboğa Havalimanından</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">
+                        BelkoAir otobüsleri veya EGO hatlarıyla şehir merkezine, ardından Ankaray bağlantısıyla <strong class="text-slate-700">Bahçelievler</strong> durağına ulaşabilirsiniz.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tr-card">
+                <div class="tr-icon bg-amber-50 text-amber-600">
+                    <i class="fa-solid fa-car"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-black text-slate-800 mb-1">Özel Araçla</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">
+                        Mevlana Bulvarı üzerinden hastanemize kolayca ulaşabilirsiniz. Ana bina çevresinde <strong class="text-slate-700">ücretsiz otopark</strong> alanları mevcuttur.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tr-card">
+                <div class="tr-icon bg-rose-50 text-rose-600">
+                    <i class="fa-solid fa-taxi"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-black text-slate-800 mb-1">Taksi / Servis</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">
+                        Acil durumlarda şehrin her noktasından taksi ile ulaşabilirsiniz. Hastane önünde taksi durağı bulunmaktadır. Engelli servis hattı: <strong class="text-slate-700">(312) 202 40 20</strong>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="bg-gradient-to-r from-slate-800 to-slate-900 rounded-[1.5rem] p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 relative overflow-hidden" style="box-shadow: 0 12px 40px rgba(15,23,42,0.2);">
+        <div class="absolute right-0 top-0 w-48 h-48 bg-white/5 rounded-full translate-x-16 -translate-y-16"></div>
+        <div class="relative z-10">
+            <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Online Destek</p>
+            <h3 class="text-white text-xl font-black">Mesaj Gönderin</h3>
+            <p class="text-slate-400 text-sm mt-1">Görüş, öneri ve şikâyetlerinizi online form ile iletebilirsiniz.</p>
+        </div>
+        <div class="flex flex-wrap gap-3 relative z-10">
+            <a href="#" class="flex items-center gap-2 bg-white text-slate-800 hover:bg-blue-50 text-xs font-black px-5 py-2.5 rounded-xl transition shadow-md">
+                <i class="fa-solid fa-paper-plane text-blue-600 text-xs"></i> Form Doldur
+            </a>
+            <a href="mailto:hastane@gazi.edu.tr" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-black px-5 py-2.5 rounded-xl transition">
+                <i class="fa-solid fa-envelope text-xs"></i> E-posta
+            </a>
+        </div>
+    </div>
+
+</main>

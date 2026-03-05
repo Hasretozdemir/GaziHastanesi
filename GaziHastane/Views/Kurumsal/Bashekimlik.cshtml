@@ -1,0 +1,407 @@
+﻿@{
+    ViewData["Title"] = "Başhekimlik";
+}
+
+@section Scripts {
+    <style>
+        /* ── Sidebar (Kurumsal Menü) CSS ── */
+        .sidebar-link {
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 0.9rem;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #64748b;
+            text-decoration: none;
+        }
+
+            .sidebar-link:hover {
+                background: #eff6ff;
+                color: #2563eb;
+                transform: translateX(4px);
+            }
+            /* DİKKAT: Başhekimlik sayfasında olduğumuz için bu menü aktif olacak */
+            .sidebar-link[href="/Kurumsal/Bashekimlik"] {
+                background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                color: white;
+                box-shadow: 0 4px 14px rgba(37,99,235,0.25);
+            }
+
+        .section-title {
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #94a3b8;
+            margin: 1.4rem 0.9rem 0.4rem;
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        /* ── Head card (Başhekim Kartı) ── */
+        .head-card {
+            background: white;
+            border-radius: 1.75rem;
+            border: 1px solid #f1f5f9;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+            .head-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 24px 60px rgba(37,99,235,0.15) !important;
+            }
+
+            .head-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: linear-gradient(90deg, #2563eb, #60a5fa);
+                z-index: 2;
+            }
+
+        /* ── Assistant card (Yardımcı Kartı) ── */
+        .asst-card {
+            background: white;
+            border-radius: 1.25rem;
+            border: 1px solid #f1f5f9;
+            overflow: hidden;
+            display: flex;
+            align-items: stretch;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+            .asst-card::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 3px;
+                background: linear-gradient(180deg, #2563eb, #93c5fd);
+                opacity: 0;
+                transition: opacity 0.25s;
+            }
+
+            .asst-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 12px 36px rgba(37,99,235,0.10);
+            }
+
+                .asst-card:hover::before {
+                    opacity: 1;
+                }
+
+        /* ── Avatar ring ── */
+        .avatar-ring {
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            border: 2.5px solid transparent;
+            background: linear-gradient(135deg, #2563eb, #93c5fd) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
+        .asst-card:hover .avatar-ring {
+            opacity: 1;
+        }
+
+        /* ── Badge ── */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.58rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 3px 8px;
+            border-radius: 99px;
+        }
+
+        .badge-blue {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .badge-gold {
+            background: #fef9c3;
+            color: #92400e;
+        }
+
+        /* ── Section bar ── */
+        .section-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-bar-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right,#e2e8f0,transparent);
+        }
+
+        /* ── Org line (connector) ── */
+        .org-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .org-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #2563eb;
+        }
+
+        .org-line {
+            width: 2px;
+            height: 24px;
+            background: linear-gradient(to bottom,#2563eb,#bfdbfe);
+        }
+
+        /* ── Info row ── */
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.5rem 0.75rem;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #f1f5f9;
+        }
+    </style>
+}
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 mt-24">
+    <div class="flex flex-col lg:flex-row gap-7">
+
+        @await Html.PartialAsync("_KurumsalSidebar")
+
+        <section class="flex-1 min-w-0 space-y-8">
+
+            <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
+                <i class="fa-solid fa-house text-[9px]"></i>
+                <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                <span class="text-slate-500">Yönetim</span>
+                <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                <span class="text-blue-600">Başhekimlik</span>
+            </nav>
+
+            <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-[1.75rem] p-6 sm:p-10 relative overflow-hidden" style="box-shadow:0 12px 40px rgba(37,99,235,0.25);">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full translate-x-20 -translate-y-20"></div>
+                <div class="absolute bottom-0 right-24 w-32 h-32 bg-white/5 rounded-full translate-y-12"></div>
+                <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+                    <div>
+                        <p class="text-blue-300 text-[10px] font-black tracking-[0.2em] uppercase mb-1">Yönetim Kadrosu</p>
+                        <h2 class="text-white text-2xl sm:text-4xl font-black leading-tight tracking-tight">Başhekimlik</h2>
+                        <p class="text-blue-200/80 text-sm font-medium mt-2 max-w-lg">Gazi Üniversitesi Hastanesi'nin liderlik kadrosu ve idari yapılanması.</p>
+                    </div>
+                    <div class="flex gap-5 flex-shrink-0">
+                        <div class="text-center">
+                            <p class="text-white text-2xl font-black">1</p>
+                            <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Başhekim</p>
+                        </div>
+                        <div class="w-px bg-white/20"></div>
+                        <div class="text-center">
+                            <p class="text-white text-2xl font-black">3</p>
+                            <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Yardımcı</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="section-bar">
+                    <span class="badge badge-gold"><i class="fa-solid fa-star text-[8px]"></i> Başhekim</span>
+                    <h2 class="text-lg font-black text-slate-800">Hastane Başhekimi</h2>
+                    <div class="section-bar-line"></div>
+                </div>
+
+                <div class="flex justify-center">
+                    <div class="head-card w-full max-w-sm" style="box-shadow:0 8px 40px rgba(0,0,0,0.07);">
+                        <div class="relative overflow-hidden" style="height:320px;">
+                            <img src="https://ui-avatars.com/api/?name=Hakan+Atalar&background=dbeafe&color=1d4ed8&bold=true&size=256"
+                                 alt="Prof. Dr. Hakan ATALAR"
+                                 class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+                            <div class="absolute top-4 right-4 flex items-center gap-1.5 bg-blue-600 text-white text-[9px] font-black px-3 py-1.5 rounded-full shadow-md">
+                                <i class="fa-solid fa-crown text-[8px]"></i> BAŞHEKİM
+                            </div>
+                            <div class="absolute bottom-4 left-4 right-4">
+                                <p class="text-white text-base font-black leading-snug drop-shadow-md">Prof. Dr. Hakan ATALAR</p>
+                                <p class="text-blue-200 text-[10px] font-bold">Hastane Başhekimi</p>
+                            </div>
+                        </div>
+                        <div class="p-5 space-y-3">
+                            <div class="info-row">
+                                <i class="fa-solid fa-stethoscope text-blue-500 text-xs flex-shrink-0"></i>
+                                <p class="text-slate-600 text-xs font-semibold">Ortopedi ve Travmatoloji Uzmanı</p>
+                            </div>
+                            <div class="info-row">
+                                <i class="fa-solid fa-university text-blue-500 text-xs flex-shrink-0"></i>
+                                <p class="text-slate-600 text-xs font-semibold">Gazi Üniversitesi Tıp Fakültesi</p>
+                            </div>
+                            <div class="flex gap-2 pt-1">
+                                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 text-[10px] font-black py-2 rounded-xl transition border border-blue-100">
+                                    <i class="fa-solid fa-envelope text-[9px]"></i> E-posta
+                                </a>
+                                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 text-slate-700 text-[10px] font-black py-2 rounded-xl transition border border-slate-100">
+                                    <i class="fa-solid fa-id-card text-[9px]"></i> Özgeçmiş
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="org-connector mt-6 mb-2">
+                    <div class="org-dot"></div>
+                    <div class="org-line"></div>
+                    <div class="flex gap-8">
+                        <div class="org-dot"></div>
+                        <div class="org-dot"></div>
+                        <div class="org-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="section-bar">
+                    <span class="badge badge-blue"><i class="fa-solid fa-circle-dot"></i> Yardımcılar</span>
+                    <h2 class="text-lg font-black text-slate-800">Başhekim Yardımcıları</h2>
+                    <div class="section-bar-line"></div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+
+                    <div class="asst-card" style="box-shadow:0 2px 16px rgba(0,0,0,0.04);">
+                        <div class="relative flex-shrink-0" style="width:120px;">
+                            <img src="https://ui-avatars.com/api/?name=Ozlem+Guzel&background=f3e8ff&color=7c3aed&bold=true&size=128"
+                                 alt="Prof. Dr. Özlem GÜZEL TUNÇCAN"
+                                 class="w-full h-full object-cover" style="min-height:130px;">
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent to-white/10"></div>
+                        </div>
+                        <div class="p-4 flex flex-col justify-center gap-2 flex-1">
+                            <div>
+                                <p class="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400 mb-1">Başhekim Yardımcısı</p>
+                                <h4 class="text-sm font-black text-slate-800 leading-snug">Prof. Dr. Özlem GÜZEL TUNÇCAN</h4>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="text-[9px] font-black bg-purple-50 text-purple-700 px-2 py-0.5 rounded-full">İnfeksiyon</span>
+                            </div>
+                            <div class="flex gap-1.5 mt-1">
+                                <a href="#" class="w-7 h-7 bg-slate-100 hover:bg-blue-100 rounded-lg flex items-center justify-center transition">
+                                    <i class="fa-solid fa-envelope text-[9px] text-slate-500 hover:text-blue-600"></i>
+                                </a>
+                                <a href="#" class="w-7 h-7 bg-slate-100 hover:bg-blue-100 rounded-lg flex items-center justify-center transition">
+                                    <i class="fa-solid fa-id-card text-[9px] text-slate-500 hover:text-blue-600"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="asst-card" style="box-shadow:0 2px 16px rgba(0,0,0,0.04);">
+                        <div class="relative flex-shrink-0" style="width:120px;">
+                            <img src="https://ui-avatars.com/api/?name=Ilyas+Okur&background=dcfce7&color=166534&bold=true&size=128"
+                                 alt="Prof. Dr. İlyas OKUR"
+                                 class="w-full h-full object-cover" style="min-height:130px;">
+                        </div>
+                        <div class="p-4 flex flex-col justify-center gap-2 flex-1">
+                            <div>
+                                <p class="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400 mb-1">Başhekim Yardımcısı</p>
+                                <h4 class="text-sm font-black text-slate-800 leading-snug">Prof. Dr. İlyas OKUR</h4>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="text-[9px] font-black bg-green-50 text-green-700 px-2 py-0.5 rounded-full">Pediatri</span>
+                            </div>
+                            <div class="flex gap-1.5 mt-1">
+                                <a href="#" class="w-7 h-7 bg-slate-100 hover:bg-blue-100 rounded-lg flex items-center justify-center transition">
+                                    <i class="fa-solid fa-envelope text-[9px] text-slate-500 hover:text-blue-600"></i>
+                                </a>
+                                <a href="#" class="w-7 h-7 bg-slate-100 hover:bg-blue-100 rounded-lg flex items-center justify-center transition">
+                                    <i class="fa-solid fa-id-card text-[9px] text-slate-500 hover:text-blue-600"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="asst-card" style="box-shadow:0 2px 16px rgba(0,0,0,0.04);">
+                        <div class="relative flex-shrink-0" style="width:120px;">
+                            <img src="https://ui-avatars.com/api/?name=Abdullah+Ozer&background=fef9c3&color=92400e&bold=true&size=128"
+                                 alt="Prof. Dr. Abdullah ÖZER"
+                                 class="w-full h-full object-cover" style="min-height:130px;">
+                        </div>
+                        <div class="p-4 flex flex-col justify-center gap-2 flex-1">
+                            <div>
+                                <p class="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400 mb-1">Başhekim Yardımcısı</p>
+                                <h4 class="text-sm font-black text-slate-800 leading-snug">Prof. Dr. Abdullah ÖZER</h4>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="text-[9px] font-black bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full">Halk Sağlığı</span>
+                            </div>
+                            <div class="flex gap-1.5 mt-1">
+                                <a href="#" class="w-7 h-7 bg-slate-100 hover:bg-blue-100 rounded-lg flex items-center justify-center transition">
+                                    <i class="fa-solid fa-envelope text-[9px] text-slate-500 hover:text-blue-600"></i>
+                                </a>
+                                <a href="#" class="w-7 h-7 bg-slate-100 hover:bg-blue-100 rounded-lg flex items-center justify-center transition">
+                                    <i class="fa-solid fa-id-card text-[9px] text-slate-500 hover:text-blue-600"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[1.5rem] border border-slate-100 p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5" style="box-shadow:0 4px 24px rgba(0,0,0,0.04);">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-comment-medical text-blue-600 text-lg"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-black uppercase tracking-widest text-slate-400 mb-0.5">Başhekimlik Sekreterliği</p>
+                        <p class="text-slate-800 font-black text-base">(0312) 202 40 00</p>
+                        <p class="text-slate-400 text-xs font-semibold">Pzt–Cuma · 08:30 – 17:00</p>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <a href="/Home/Iletisim" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black px-5 py-2.5 rounded-xl transition shadow-md shadow-blue-200/60">
+                        <i class="fa-solid fa-phone text-xs"></i> İletişime Geç
+                    </a>
+                    <a href="#" class="flex items-center gap-2 border border-slate-200 hover:border-blue-300 hover:text-blue-600 text-slate-700 text-xs font-black px-5 py-2.5 rounded-xl transition">
+                        <i class="fa-solid fa-paper-plane text-xs"></i> Mesaj Gönder
+                    </a>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+</main>

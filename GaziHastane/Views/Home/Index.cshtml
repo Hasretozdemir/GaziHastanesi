@@ -1,0 +1,470 @@
+﻿@{
+    ViewData["Title"] = "Gazi Sağlık | Ana Sayfa";
+}
+
+@section Scripts {
+    <style>
+        /* ── Hero Arka Plan ── */
+        .hero-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 40%, #1d4ed8 75%, #2563eb 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(96,165,250,0.18), transparent 70%);
+        }
+
+        /* ── YENİ HIZLI ERİŞİM ALANI (Modern & Profesyonel) ── */
+        .qa-wrapper {
+            position: relative;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 2rem;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05), 0 0 15px rgba(37, 99, 235, 0.03);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            z-index: 20;
+            margin-top: -3rem; /* Hero'nun içine hafifçe girmesi için */
+        }
+
+        .qa-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-left: 0.5rem;
+        }
+
+        .qa-title {
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .qa-title i {
+                color: #2563eb;
+            }
+
+        .qa-scroll-hint {
+            font-size: 10px;
+            font-weight: 700;
+            color: #94a3b8;
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 50px;
+        }
+
+        .qa-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 1.25rem;
+            padding: 0.5rem;
+            scroll-behavior: smooth;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            cursor: grab;
+        }
+
+            .qa-container::-webkit-scrollbar {
+                display: none;
+            }
+
+            .qa-container:active {
+                cursor: grabbing;
+            }
+
+        /* Hızlı Erişim Kartları */
+        .qa-item {
+            flex: 0 0 auto;
+            width: 100px; /* Sabit Genişlik */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .qa-icon-wrapper {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px; /* Yumuşak kare görünüm (Squircle) */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            background: #f8fafc;
+            color: #3b82f6;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+            border: 2px solid transparent;
+        }
+
+            /* İkonların arkasındaki hafif parlama */
+            .qa-icon-wrapper::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: inherit;
+                filter: blur(12px);
+                opacity: 0;
+                z-index: -1;
+                transition: 0.3s ease;
+            }
+
+        .qa-label {
+            font-size: 10px;
+            font-weight: 800;
+            color: #475569;
+            text-align: center;
+            line-height: 1.3;
+            transition: all 0.3s ease;
+        }
+
+        /* Hover Efektleri */
+        .qa-item:hover {
+            transform: translateY(-8px);
+        }
+
+            .qa-item:hover .qa-icon-wrapper {
+                background: #2563eb;
+                color: white;
+                border-color: rgba(255, 255, 255, 0.5);
+                box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+            }
+
+            .qa-item:hover .qa-label {
+                color: #2563eb;
+            }
+
+        /* Vurgulu (Önemli) Butonlar İçin Özel Sınıf */
+        .qa-item.featured .qa-icon-wrapper {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+        }
+
+        /* ── Sol ve Sağ Solma Efekti ── */
+        .qa-fade-left, .qa-fade-right {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 40px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .qa-fade-left {
+            left: 0;
+            background: linear-gradient(to right, white, transparent);
+            border-radius: 2rem 0 0 2rem;
+        }
+
+        .qa-fade-right {
+            right: 0;
+            background: linear-gradient(to left, white, transparent);
+            border-radius: 0 2rem 2rem 0;
+        }
+
+        /* ── Diğer Kartlar (Dept/Stat) ── */
+        .dept-card {
+            background: white;
+            border-radius: 1.5rem;
+            border: 1px solid #f1f5f9;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+            .dept-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            }
+
+                .dept-card:hover .dept-img {
+                    transform: scale(1.06);
+                }
+
+        .dept-img {
+            transition: transform 0.5s;
+        }
+
+        .sec-label {
+            font-size: 0.6rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.22em;
+            color: #2563eb;
+        }
+
+        @@keyframes bounce-x {
+            0%, 100% {
+                transform: translateX(0);
+            }
+
+            50% {
+                transform: translateX(4px);
+            }
+        }
+
+        .bounce-x {
+            animation: bounce-x 1.2s ease infinite;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const slider = document.querySelector('.qa-container');
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            slider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                slider.style.cursor = 'grabbing';
+                startX = e.pageX - slider.offsetLeft;
+                scrollLeft = slider.scrollLeft;
+            });
+            slider.addEventListener('mouseleave', () => {
+                isDown = false;
+                slider.style.cursor = 'grab';
+            });
+            slider.addEventListener('mouseup', () => {
+                isDown = false;
+                slider.style.cursor = 'grab';
+            });
+            slider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - slider.offsetLeft;
+                const walk = (x - startX) * 2;
+                slider.scrollLeft = scrollLeft - walk;
+            });
+        });
+    </script>
+}
+
+<header class="hero-bg pt-16">
+    <div class="hero-orb w-[600px] h-[600px] -top-40 -right-32"></div>
+    <div class="hero-orb w-[400px] h-[400px] bottom-0 -left-20"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 relative z-10">
+        <div class="flex flex-col lg:flex-row items-center gap-12">
+
+            <div class="flex-1 text-white space-y-7 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full border border-white/20 backdrop-blur">
+                    <span class="w-2 h-2 bg-blue-300 rounded-full animate-pulse"></span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.18em]">Gazi Üniversitesi · 100 Yıllık Miras</span>
+                </div>
+
+                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.08] tracking-tight">
+                    Sağlığın<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-sky-200 to-white">Geleceği Burada.</span>
+                </h2>
+
+                <p class="text-blue-100/80 text-base leading-relaxed max-w-lg mx-auto lg:mx-0 font-light">
+                    Türkiye'nin sağlık hafızası olarak, en gelişmiş tıp teknolojilerini şefkatli bakım anlayışıyla birleştiriyoruz.
+                </p>
+
+                <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
+                    <a href="/Randevu/Giris" class="flex items-center gap-2 bg-white text-blue-700 text-xs font-black px-6 py-3 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition">
+                        <i class="fa-solid fa-calendar-check text-xs"></i> Online Randevu
+                    </a>
+                    <a href="/Home/Doktorlar" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/25 text-white text-xs font-black px-6 py-3 rounded-full transition backdrop-blur">
+                        <i class="fa-solid fa-user-doctor text-xs"></i> Doktorlarımız
+                        <i class="fa-solid fa-chevron-right text-[8px] bounce-x"></i>
+                    </a>
+                </div>
+
+                <div class="flex gap-6 sm:gap-10 justify-center lg:justify-start pt-2">
+                    <div>
+                        <p class="text-white text-2xl font-black">1926</p>
+                        <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Kuruluş</p>
+                    </div>
+                    <div class="w-px bg-white/15"></div>
+                    <div>
+                        <p class="text-white text-2xl font-black">850+</p>
+                        <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Uzman Hekim</p>
+                    </div>
+                    <div class="w-px bg-white/15"></div>
+                    <div>
+                        <p class="text-white text-2xl font-black">1.2M+</p>
+                        <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Yıllık Hasta</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-1 w-full max-w-lg lg:max-w-none relative">
+                <div class="relative rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white/10" style="box-shadow: 0 32px 80px rgba(0,0,0,0.35);">
+                    <img src="~/assets/gazi3.jpg" alt="Gazi Hastanesi" class="w-full h-72 sm:h-96 object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-blue-900/40 to-transparent"></div>
+                </div>
+                <div class="absolute -bottom-4 -left-4 bg-white rounded-2xl px-4 py-3 shadow-xl border border-slate-100 flex items-center gap-3">
+                    <div class="w-9 h-9 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-shield-halved text-green-600 text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-black text-slate-800">A++ Kalite Belgesi</p>
+                        <p class="text-[9px] text-slate-500 font-semibold">JCI Akredite Kuruluş</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="relative h-16">
+        <svg viewBox="0 0 1440 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute bottom-0 w-full" preserveAspectRatio="none">
+            <path d="M0 48 L0 24 C360 0 720 48 1080 24 L1440 0 L1440 48 Z" fill="#f8fafc" />
+        </svg>
+    </div>
+</header>
+
+<section class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10" style="background: #f8fafc;">
+
+    <div class="qa-wrapper">
+        <div class="qa-fade-left"></div>
+        <div class="qa-fade-right"></div>
+
+        <div class="qa-header">
+            <h3 class="qa-title"><i class="fas fa-bolt"></i> Hızlı İşlem Merkezi</h3>
+            <span class="qa-scroll-hint d-none d-md-inline-block">Kaydırarak İnceleyin <i class="fas fa-arrows-alt-h ms-1"></i></span>
+        </div>
+
+        <div class="qa-container">
+
+            <a href="/Randevu/Giris" class="qa-item featured">
+                <div class="qa-icon-wrapper text-blue-600"><i class="fa-solid fa-calendar-check"></i></div>
+                <span class="qa-label">Online<br>Randevu</span>
+            </a>
+
+            <a href="/Odeme/Giris" class="qa-item">
+                <div class="qa-icon-wrapper text-indigo-600"><i class="fa-solid fa-credit-card"></i></div>
+                <span class="qa-label">Güvenli<br>Ödeme</span>
+            </a>
+
+            <a href="/Sonuc/Giris" class="qa-item">
+                <div class="qa-icon-wrapper text-teal-600"><i class="fa-solid fa-file-waveform"></i></div>
+                <span class="qa-label">Test<br>Sonuçları</span>
+            </a>
+
+            <a href="http://mobilhbys.com:20108/nucleus-mobile/login" target="_blank" class="qa-item">
+                <div class="qa-icon-wrapper text-violet-600"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                <span class="qa-label">Mobil<br>HBYS</span>
+            </a>
+
+            <a href="/EBYS/Giris" class="qa-item featured">
+                <div class="qa-icon-wrapper text-sky-600"><i class="fa-solid fa-laptop-file"></i></div>
+                <span class="qa-label">EBYS<br>Sistemi</span>
+            </a>
+
+            <a href="/Mail/Giris" class="qa-item">
+                <div class="qa-icon-wrapper text-rose-600"><i class="fa-solid fa-envelope"></i></div>
+                <span class="qa-label">Gazi<br>WebMail</span>
+            </a>
+
+            <a href="/Egitim/Komite" class="qa-item">
+                <div class="qa-icon-wrapper text-orange-600"><i class="fa-solid fa-graduation-cap"></i></div>
+                <span class="qa-label">Eğitim<br>Komitesi</span>
+            </a>
+
+            <a href="https://www.gaziuniversityhospital.com/" target="_blank" class="qa-item">
+                <div class="qa-icon-wrapper text-emerald-600"><i class="fa-solid fa-globe"></i></div>
+                <span class="qa-label">Uluslararası<br>Hasta</span>
+            </a>
+
+            <a href="https://gaziemzirmedestekmerkezi.gazi.edu.tr/" target="_blank" class="qa-item">
+                <div class="qa-icon-wrapper text-pink-600"><i class="fa-solid fa-hands-holding-child"></i></div>
+                <span class="qa-label">Emzirme<br>Destek</span>
+            </a>
+
+            <a href="/Yemek/Liste" class="qa-item">
+                <div class="qa-icon-wrapper text-amber-600"><i class="fa-solid fa-utensils"></i></div>
+                <span class="qa-label">Yemek<br>Listesi</span>
+            </a>
+
+            <a href="/Kalite" class="qa-item">
+                <div class="qa-icon-wrapper text-yellow-500"><i class="fa-solid fa-star-of-life"></i></div>
+                <span class="qa-label">Kalite<br>Yönetimi</span>
+            </a>
+
+        </div>
+    </div>
+</section>
+
+<section class="max-w-7xl mx-auto px-4 sm:px-6 py-16" style="background: #f8fafc;">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-7">
+        <div>
+            <p class="sec-label mb-1">Branşlarımız</p>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">Modern Tıbbın<br>Tüm Birimleri</h2>
+        </div>
+        <a href="/Home/Bolumler" class="flex items-center gap-2 bg-white border border-slate-200 text-slate-700 hover:border-blue-300 hover:text-blue-600 text-xs font-black px-5 py-2.5 rounded-xl transition shadow-sm">
+            Tüm Bölümler <i class="fa-solid fa-arrow-right text-[9px] bounce-x"></i>
+        </a>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <div class="dept-card">
+            <div class="relative overflow-hidden h-48">
+                <img src="~/assets/gazi1.jpg" alt="Dahili Tıp" class="dept-img w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-blue-900/70 via-blue-900/20 to-transparent"></div>
+                <span class="absolute top-3 left-3 text-[9px] font-black bg-blue-600 text-white px-3 py-1 rounded-full uppercase tracking-wider">Popüler</span>
+                <h4 class="absolute bottom-4 left-4 text-white text-base font-black">Dahili Tıp Bilimleri</h4>
+            </div>
+            <div class="p-5">
+                <p class="text-slate-500 text-xs leading-relaxed mb-4">İç hastalıklarından kardiyolojiye, endokrinolojiden romatolojiye kapsamlı teşhis ve tedavi hizmetleri.</p>
+                <a href="/Home/Bolumler" class="flex items-center justify-between text-xs font-black text-slate-500 hover:text-blue-600 transition px-3 py-2 bg-slate-50 rounded-xl">
+                    Birimi İncele <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="dept-card">
+            <div class="relative overflow-hidden h-48">
+                <img src="~/assets/gazi4.jpg" alt="Cerrahi" class="dept-img w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-red-900/70 via-red-900/10 to-transparent"></div>
+                <span class="absolute top-3 left-3 text-[9px] font-black bg-red-500 text-white px-3 py-1 rounded-full uppercase tracking-wider">Cerrahi</span>
+                <h4 class="absolute bottom-4 left-4 text-white text-base font-black">Cerrahi Tıp Bilimleri</h4>
+            </div>
+            <div class="p-5">
+                <p class="text-slate-500 text-xs leading-relaxed mb-4">Genel cerrahiden ortopediye, beyin cerrahisinden kalp damar cerrahisine geniş bir cerrahi yelpazesi.</p>
+                <a href="/Home/Bolumler" class="flex items-center justify-between text-xs font-black text-slate-500 hover:text-red-600 transition px-3 py-2 bg-slate-50 rounded-xl">
+                    Birimi İncele <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="max-w-7xl mx-auto px-4 sm:px-6 pb-16" style="background: #f8fafc;">
+    <div class="bg-white rounded-[1.75rem] border border-slate-100 p-6 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6" style="box-shadow: 0 8px 40px rgba(0,0,0,0.05);">
+        <div class="flex items-center gap-5">
+            <div class="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg shadow-red-200 flex-shrink-0">
+                <i class="fa-solid fa-phone-volume text-white text-lg"></i>
+            </div>
+            <div>
+                <p class="text-slate-500 text-xs font-black uppercase tracking-widest mb-0.5">7/24 Kesintisiz Hizmet</p>
+                <p class="text-slate-900 text-2xl font-black">444 0 911</p>
+                <p class="text-slate-400 text-xs font-semibold">Acil & Çağrı Merkezi</p>
+            </div>
+        </div>
+        <div class="flex flex-wrap gap-3">
+            <a href="/Randevu/Giris" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black px-6 py-3 rounded-xl transition shadow-md shadow-blue-200/60">
+                <i class="fa-solid fa-calendar-check text-xs"></i> Randevu Al
+            </a>
+            <a href="/Home/Iletisim" class="flex items-center gap-2 border border-slate-200 hover:border-blue-300 hover:text-blue-600 text-slate-700 text-xs font-black px-6 py-3 rounded-xl transition">
+                <i class="fa-solid fa-location-dot text-xs"></i> Bize Ulaşın
+            </a>
+        </div>
+    </div>
+</section>

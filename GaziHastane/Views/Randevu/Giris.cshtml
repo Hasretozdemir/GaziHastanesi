@@ -1,0 +1,415 @@
+@{
+    ViewData["Title"] = "Gazi Saðlýk | Randevu Giriþi";
+}
+
+<div class="randevu-page-wrapper">
+    <div class="randevu-center-container">
+
+        <div class="randevu-main-card animate__animated animate__zoomIn">
+
+            <div class="randevu-left-panel">
+                <div class="d-flex align-items-center mb-5">
+                    <div class="logo-box">
+                        <img src="/assets/gazilogo.jpg" alt="Gazi Logo">
+                    </div>
+                    <div class="ms-3">
+                        <h5 class="fw-800 m-0 text-white">GAZÝ ÜNÝVERSÝTESÝ</h5>
+                        <p class="m-0 text-gold-accent" style="font-size:10px; font-weight:800; letter-spacing:1px;">ONLINE SAÐLIK SÝSTEMÝ</p>
+                    </div>
+                </div>
+
+                <h2 class="fw-900 text-white mb-3">Dijital <br><span class="text-gold">Saðlýk Rehberiniz</span></h2>
+                <p class="text-white mb-5" style="font-size: 0.9rem; line-height: 1.6;">
+                    Randevularýnýzý yönetin, sonuçlarýnýza anýnda eriþin ve saðlýðýnýzý Gazi güvencesiyle kolayca takip edin.
+                </p>
+
+                <div class="custom-stat-grid">
+                    <div class="stat-box">
+                        <span class="val">7/24</span>
+                        <span class="lbl">Eriþim</span>
+                    </div>
+                    <div class="stat-box active">
+                        <span class="val">50+</span>
+                        <span class="lbl">Bölüm</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="val">%100</span>
+                        <span class="lbl">Güvenli</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="randevu-right-panel">
+                <div class="text-center mb-4">
+                    <div class="user-avatar-icon mb-2">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h4 class="fw-900 text-navy">Hoþ Geldiniz</h4>
+                    <p class="text-muted small">Lütfen kimlik tipini seçerek giriþ yapýn</p>
+                </div>
+
+                <div class="custom-toggle-box mb-4">
+                    <input type="radio" name="loginType" id="tcType" checked onchange="changeLoginType('TC')">
+                    <label for="tcType" class="toggle-btn"><i class="fas fa-id-card me-1"></i> T.C. Kimlik</label>
+
+                    <input type="radio" name="loginType" id="passType" onchange="changeLoginType('PASS')">
+                    <label for="passType" class="toggle-btn"><i class="fas fa-passport me-1"></i> Pasaport</label>
+
+                    <div class="toggle-slider"></div>
+                </div>
+
+                <form action="/Randevu/Login" method="post">
+                    <div class="mb-3">
+                        <label id="lblIdentity" class="form-lbl">KÝMLÝK NUMARASI</label>
+                        <div class="input-with-icon">
+                            <i id="icoIdentity" class="far fa-id-card"></i>
+                            <input type="text" id="inpIdentity" placeholder="11 Haneli T.C. No" maxlength="11" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-lbl">DOÐUM TARÝHÝNÝZ</label>
+                        <div class="custom-date-grid">
+                            <select><option disabled selected>Gün</option>@for(int i=1;i<=31;i++){
+                            <option>@i</option>
+                                                        }
+</select>
+                            <select><option disabled selected>Ay</option><option>Ocak</option><option>Þubat</option><option>Mart</option><option>Nisan</option><option>Mayýs</option><option>Haziran</option><option>Temmuz</option><option>Aðustos</option><option>Eylül</option><option>Ekim</option><option>Kasým</option><option>Aralýk</option></select>
+                            <select><option disabled selected>Yýl</option>@for(int i=2026;i>=1930;i--){
+                            <option>@i</option>
+                                                        }
+</select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-login-action">
+                        <span>SÝSTEME GÝRÝÞ YAP</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <p class="text-center text-muted mt-4 mb-0" style="font-size: 11px;">
+                    <i class="fas fa-lock me-1"></i> Tüm verileriniz güvenle korunmaktadýr.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function changeLoginType(type) {
+            const lbl = document.getElementById('lblIdentity');
+            const inp = document.getElementById('inpIdentity');
+            const ico = document.getElementById('icoIdentity');
+
+            if(type === 'PASS') {
+                lbl.innerText = 'PASAPORT NUMARASI';
+                inp.placeholder = 'Pasaport Numaranýzý Giriniz';
+                ico.className = 'fas fa-passport';
+                inp.maxLength = 20;
+            } else {
+                lbl.innerText = 'KÝMLÝK NUMARASI';
+                inp.placeholder = '11 Haneli T.C. No';
+                ico.className = 'far fa-id-card';
+                inp.maxLength = 11;
+            }
+        }
+    </script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        :root {
+            --r-navy: #0f172a;
+            --r-blue: #2563eb;
+            --r-gold: #c5a059;
+            --r-bg: #f8fafc;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .text-navy {
+            color: var(--r-navy);
+        }
+
+        .text-gold {
+            color: var(--r-gold);
+        }
+
+        .text-gold-accent {
+            color: #e2c28d;
+        }
+
+        .fw-800 {
+            font-weight: 800;
+        }
+
+        .fw-900 {
+            font-weight: 900;
+        }
+
+        /* Tüm Sayfa ve Arka Plan (BEYAZ/AÇIK GRÝ YAPILDI) */
+        .randevu-page-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            background: #f1f5f9; /* Temiz ve modern arka plan rengi */
+        }
+
+        /* Ortalamayý Saðlayan Güvenli Alan (Navbar payý) */
+        .randevu-center-container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 100px 20px 40px 20px; /* Üstten 100px boþluk býrakarak navbarýn altýna ittik */
+        }
+
+        /* KESÝN YAN YANA DURACAK KART YAPISI */
+        .randevu-main-card {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            max-width: 950px;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08); /* Gölge rengi yumuþatýldý */
+            border: 1px solid #e2e8f0; /* Beyaz zeminde kartý belirginleþtirmek için ince çerçeve eklendi */
+        }
+
+        /* Sol Panel */
+        .randevu-left-panel {
+            width: 50%;
+            background: var(--r-navy);
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Sað Panel */
+        .randevu-right-panel {
+            width: 50%;
+            background: white;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Sol Panel Detaylarý */
+        .logo-box {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 15px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .logo-box img {
+                width: 100%;
+                object-fit: contain;
+            }
+
+        .custom-stat-grid {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px 10px;
+            border-radius: 16px;
+            text-align: center;
+            color: white;
+        }
+
+            .stat-box.active {
+                background: var(--r-blue);
+                border-color: var(--r-blue);
+            }
+
+            .stat-box .val {
+                display: block;
+                font-weight: 800;
+                font-size: 1.1rem;
+            }
+
+            .stat-box .lbl {
+                font-size: 9px;
+                opacity: 0.7;
+                text-transform: uppercase;
+                font-weight: 800;
+                letter-spacing: 1px;
+            }
+
+        /* Sað Panel Detaylarý */
+        .user-avatar-icon {
+            font-size: 3.5rem;
+            color: var(--r-navy);
+        }
+
+        .custom-toggle-box {
+            background: var(--r-bg);
+            padding: 6px;
+            border-radius: 20px;
+            display: flex;
+            position: relative;
+            border: 1px solid #e2e8f0;
+        }
+
+            .custom-toggle-box input {
+                display: none;
+            }
+
+        .toggle-btn {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 800;
+            color: #64748b;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+            transition: 0.3s;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            height: calc(100% - 12px);
+            width: calc(50% - 6px);
+            background: white;
+            border-radius: 15px;
+            top: 6px;
+            left: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: 0.3s ease;
+        }
+
+        #passType:checked ~ .toggle-slider {
+            transform: translateX(100%);
+        }
+
+        #tcType:checked ~ label[for="tcType"], #passType:checked ~ label[for="passType"] {
+            color: var(--r-navy);
+        }
+
+        .form-lbl {
+            font-size: 10px;
+            font-weight: 800;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            display: block;
+            letter-spacing: 1px;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+            .input-with-icon i {
+                position: absolute;
+                left: 18px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #94a3b8;
+                font-size: 1.1rem;
+            }
+
+            .input-with-icon input {
+                width: 100%;
+                height: 55px;
+                background: var(--r-bg);
+                border: 2px solid transparent;
+                border-radius: 16px;
+                padding: 0 20px 0 50px;
+                font-weight: 700;
+                color: var(--r-navy);
+                transition: 0.3s;
+                outline: none;
+            }
+
+                .input-with-icon input:focus {
+                    background: white;
+                    border-color: var(--r-blue);
+                    box-shadow: 0 5px 15px rgba(37,99,235,0.1);
+                }
+
+        .custom-date-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+            .custom-date-grid select {
+                height: 50px;
+                background: var(--r-bg);
+                border: 2px solid #e2e8f0;
+                border-radius: 14px;
+                padding: 0 10px;
+                font-weight: 700;
+                color: var(--r-navy);
+                cursor: pointer;
+                outline: none;
+            }
+
+        .btn-login-action {
+            width: 100%;
+            height: 60px;
+            background: var(--r-navy);
+            border: none;
+            border-radius: 18px;
+            color: white;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.4s;
+            cursor: pointer;
+        }
+
+            .btn-login-action:hover {
+                background: var(--r-blue);
+                transform: translateY(-3px);
+                box-shadow: 0 15px 30px rgba(15,23,42,0.2);
+            }
+
+        /* Mobil Cihazlar Ýçin */
+        @@media (max-width: 991px) {
+            .randevu-main-card {
+                flex-direction: column;
+                max-width: 500px;
+            }
+
+            .randevu-left-panel {
+                display: none;
+            }
+
+            .randevu-right-panel {
+                width: 100%;
+                padding: 40px 30px;
+            }
+
+            .randevu-center-container {
+                padding-top: 120px;
+            }
+        }
+    </style>
+}

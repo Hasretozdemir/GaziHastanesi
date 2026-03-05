@@ -1,0 +1,332 @@
+@{
+    ViewData["Title"] = "Gazi Saðlýk | Güvenli Ödeme";
+}
+
+<div class="payment-viewport">
+    <div class="payment-container shadow-2xl animate__animated animate__fadeIn">
+
+        <div class="side-info-panel">
+            <div class="info-inner">
+                <div class="brand-header mb-5">
+                    <img src="/assets/gazilogo.jpg" alt="Gazi Logo" class="brand-logo">
+                    <div class="brand-text">
+                        <h5 class="fw-800 m-0">GAZÝ ÜNÝVERSÝTESÝ</h5>
+                        <p class="m-0 extra-small text-gold">TIP FAKÜLTESÝ HASTANESÝ</p>
+                    </div>
+                </div>
+
+                <div class="hero-content mt-4">
+                    <h1 class="display-6 fw-800 text-white">Güvenli <br><span class="text-gold">Ödeme Merkezi</span></h1>
+                    <p class="text-white-50 small mt-3">Tetkik, muayene ve diðer tüm saðlýk ödemelerinizi güvenle sorgulayýp tamamlayabilirsiniz.</p>
+                </div>
+
+                <div class="feature-list mt-5">
+                    <div class="f-item"><i class="fas fa-check-circle"></i> <span>3D Secure</span></div>
+                    <div class="f-item"><i class="fas fa-check-circle"></i> <span>256-Bit SSL</span></div>
+                    <div class="f-item"><i class="fas fa-check-circle"></i> <span>Tüm Kartlar</span></div>
+                </div>
+
+                <div class="mt-auto pt-5">
+                    <div class="security-card p-3 rounded-4">
+                        <i class="fas fa-shield-alt text-gold me-2"></i>
+                        <span class="small fw-bold">Verileriniz Gazi Güvencesindedir.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-bg-overlay"></div>
+        </div>
+
+        <div class="side-form-panel">
+            <div class="form-scroll-area">
+                <div class="form-inner">
+                    <div class="form-header text-center mb-5">
+                        <div class="icon-circle-main mb-3">
+                            <i class="fas fa-fingerprint text-navy"></i>
+                        </div>
+                        <h3 class="fw-800 text-navy">Hasta Giriþi</h3>
+                        <p class="text-muted small">Borç sorgulamak için bilgileri doldurun</p>
+                    </div>
+
+                    <form id="paymentForm" action="/Odeme/Login" method="post" class="modern-form">
+                        <div class="floating-input mb-4">
+                            <label>T.C. Kimlik / Pasaport No</label>
+                            <div class="input-box">
+                                <i class="far fa-id-card"></i>
+                                <input type="text" placeholder="Giriþ yapýnýz..." required maxlength="11">
+                            </div>
+                        </div>
+
+                        <div class="floating-input mb-5">
+                            <label>Protokol No</label>
+                            <div class="input-box">
+                                <i class="far fa-file-alt"></i>
+                                <input type="text" placeholder="Örn: 2024-550..." required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-main-payment">
+                            <span class="btn-label">BORÇ SORGULA</span>
+                            <span class="btn-icon"><i class="fas fa-search-dollar"></i></span>
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-5">
+                        <div class="divider"><span>Ödeme Partnerleri</span></div>
+                        <div class="partner-logos opacity-50 d-flex justify-content-center gap-4 mt-3">
+                            <i class="fab fa-cc-visa fa-2x"></i>
+                            <i class="fab fa-cc-mastercard fa-2x"></i>
+                            <i class="fab fa-cc-amex fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        :root {
+            --navy: #0f172a;
+            --gold: #d4af37;
+            --soft-bg: #f8fafc;
+            --input-border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #eef2f6;
+        }
+
+        /* Ana Taþýyýcý: Masaüstünde Center, Mobilde Full */
+        .payment-viewport {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .payment-container {
+            width: 100%;
+            max-width: 1100px;
+            background: white;
+            border-radius: 40px;
+            display: flex;
+            min-height: 700px;
+            overflow: hidden; /* Taþmalarý engellemek ve oval yapýyý korumak için */
+        }
+
+        /* SOL PANEL (Bilgi) */
+        .side-info-panel {
+            flex: 1;
+            background: var(--navy);
+            position: relative;
+            padding: 50px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            z-index: 1;
+        }
+
+        .panel-bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1000');
+            background-size: cover;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .brand-logo {
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
+            background: white;
+            padding: 5px;
+            margin-right: 15px;
+            float: left;
+        }
+
+        .text-gold {
+            color: var(--gold);
+        }
+
+        .fw-800 {
+            font-weight: 800;
+        }
+
+        .f-item {
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+            .f-item i {
+                color: var(--gold);
+                margin-right: 10px;
+            }
+
+        /* SAÐ PANEL (Form - Kaydýrýlabilir Alan) */
+        .side-form-panel {
+            flex: 1;
+            background: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-scroll-area {
+            flex: 1;
+            overflow-y: auto; /* Ýçerik taþarsa kendi içinde kayar */
+            padding: 60px;
+            scrollbar-width: none;
+        }
+
+            .form-scroll-area::-webkit-scrollbar {
+                display: none;
+            }
+
+        .icon-circle-main {
+            width: 75px;
+            height: 75px;
+            background: var(--soft-bg);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            font-size: 2rem;
+        }
+
+        /* Modern Input Tasarýmý */
+        .floating-input label {
+            display: block;
+            font-size: 11px;
+            font-weight: 800;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .input-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+            .input-box i {
+                position: absolute;
+                left: 20px;
+                color: #94a3b8;
+                font-size: 1.1rem;
+            }
+
+            .input-box input {
+                width: 100%;
+                height: 60px;
+                background: var(--soft-bg);
+                border: 2px solid transparent;
+                border-radius: 18px;
+                padding: 0 20px 0 55px;
+                font-weight: 700;
+                color: var(--navy);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+                .input-box input:focus {
+                    background: #fff;
+                    border-color: var(--gold);
+                    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.1);
+                    outline: none;
+                }
+
+        /* Ana Buton */
+        .btn-main-payment {
+            width: 100%;
+            height: 65px;
+            background: var(--navy);
+            border: none;
+            border-radius: 22px;
+            color: white;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            transition: 0.4s;
+        }
+
+            .btn-main-payment:hover {
+                background: var(--gold);
+                transform: translateY(-3px);
+                box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
+            }
+
+        .btn-icon {
+            width: 35px;
+            height: 35px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Responsive Kurallar */
+        @@media (max-width: 991px) {
+            .payment-container {
+                flex-direction: column; /* Mobilde alt alta */
+                height: auto;
+                min-height: unset;
+                border-radius: 30px;
+            }
+
+            .side-info-panel {
+                padding: 40px 30px;
+                flex: none; /* Kendi içeriði kadar kaplasýn */
+            }
+
+            .side-form-panel {
+                flex: 1;
+            }
+
+            .form-scroll-area {
+                padding: 40px 25px;
+            }
+
+            .display-6 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Özel Kaydýrma/Hover Efektleri */
+        .divider {
+            display: flex;
+            align-items: center;
+            font-size: 10px;
+            font-weight: 800;
+            color: #cbd5e1;
+            text-transform: uppercase;
+        }
+
+            .divider::before, .divider::after {
+                content: '';
+                flex: 1;
+                border-bottom: 1px solid #f1f5f9;
+            }
+
+            .divider span {
+                padding: 0 10px;
+            }
+
+        .security-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+}

@@ -1,0 +1,529 @@
+@{
+    ViewData["Title"] = "Gazi Saðlýk | Profesyonel Sonuç Portalý";
+}
+
+<div class="results-viewport">
+    <div class="bg-blob"></div>
+    <div class="bg-blob-2"></div>
+
+    <div class="results-container animate__animated animate__zoomIn">
+
+        <div class="info-side-panel">
+            <div class="info-inner">
+                <div class="brand-group-premium mb-4 mb-md-5">
+                    <div class="logo-wrapper">
+                        <img src="/assets/gazilogo.jpg" alt="Gazi Logo">
+                    </div>
+                    <div class="brand-info">
+                        <h4 class="fw-900 m-0">GAZÝ ÜNÝVERSÝTESÝ</h4>
+                        <span class="badge-online"><span class="pulse-dot"></span> LABORATUVAR AÐI</span>
+                    </div>
+                </div>
+
+                <div class="hero-section mt-2 mt-md-4">
+                    <h1 class="display-5 fw-900 text-white">Analiz <br><span class="text-gradient-gold">Merkezi.</span></h1>
+                    <p class="text-white-50 lead-custom mt-3">Raporlarýnýz hazýr. Dijital arþivinize eriþerek tüm týbbi süreçlerinizi anlýk olarak takip edebilirsiniz.</p>
+                </div>
+
+                <div class="feature-stack mt-4 mt-md-5">
+                    <div class="feature-card-mini">
+                        <div class="f-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="f-text"><h6>Akýllý PDF</h6><p>HD Çözünürlük</p></div>
+                    </div>
+                    <div class="feature-card-mini active d-none d-sm-flex">
+                        <div class="f-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="f-text"><h6>Uçtan Uca</h6><p>Þifreli Veri</p></div>
+                    </div>
+                </div>
+
+                <div class="mt-auto pt-4 border-top border-white-10 d-none d-md-block">
+                    <div class="system-health d-flex align-items-center">
+                        <i class="fas fa-server text-success me-3"></i>
+                        <span class="small fw-bold text-white-50">Merkezi Sunucu Baðlantýsý Aktif</span>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-overlay-glass"></div>
+        </div>
+
+        <div class="form-side-panel">
+            <div class="form-scroll-wrapper">
+                <div class="form-main-box">
+
+                    <div class="header-minimal text-center mb-4 mb-md-5">
+                        <div class="g-symbol">G</div>
+                        <h2 class="fw-900 text-navy mt-4">Sonuç Sorgula</h2>
+                        <p class="text-muted small">Güvenli protokol ile sonuçlarýnýza eriþin</p>
+                    </div>
+
+                    <div class="toggle-wrapper-premium mb-4 mb-md-5">
+                        <input type="radio" name="loginType" id="tcMethod" checked onchange="updateUI('TC')">
+                        <label for="tcMethod" class="toggle-btn">T.C. KÝMLÝK</label>
+
+                        <input type="radio" name="loginType" id="passportMethod" onchange="updateUI('PASSPORT')">
+                        <label for="passportMethod" class="toggle-btn">PASAPORT</label>
+
+                        <div class="glider-premium"></div>
+                    </div>
+
+                    <form id="sonucForm" action="/Sonuc/Login" method="post" class="auth-form-premium">
+                        <div class="floating-group mb-4">
+                            <label id="idLabel" class="label-premium">KÝMLÝK NUMARASI</label>
+                            <div class="input-field">
+                                <i id="idIcon" class="far fa-id-card"></i>
+                                <input type="text" placeholder="11 Haneli T.C. Kimlik" required maxlength="11" class="w-100">
+                                <div class="input-line"></div>
+                            </div>
+                        </div>
+
+                        <div class="floating-group mb-4 mb-md-5">
+                            <label class="label-premium">SONUÇ ÞÝFRESÝ</label>
+                            <div class="input-field">
+                                <i class="fas fa-unlock-alt"></i>
+                                <input type="password" placeholder="Þifrenizi giriniz" required class="w-100">
+                                <div class="input-line"></div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-glow-premium">
+                            <span class="b-text">SONUÇLARI LÝSTELE</span>
+                            <div class="b-icon"><i class="fas fa-chevron-right"></i></div>
+                        </button>
+                    </form>
+
+                    <div class="extra-actions mt-4 text-center">
+                        <a href="#" class="link-luxury me-3 me-md-4">Þifremi Unuttum</a>
+                        <a href="#" class="link-luxury">Kayýt Ol</a>
+                    </div>
+
+                    <div class="partner-footer mt-5">
+                        <div class="divider-text">GÜVENLÝ ENTEGRASYON</div>
+                        <div class="d-flex justify-content-center align-items-center gap-3 gap-md-4 mt-3">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/E-Nab%C4%B1z_logo.png/640px-E-Nab%C4%B1z_logo.png" class="partner-img grayscale">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        :root {
+            --navy: #0f172a;
+            --primary: #2563eb;
+            --gold: #c5a059;
+            --soft-white: rgba(255,255,255,0.9);
+        }
+
+        body {
+            background: #f1f5f9;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .results-viewport {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .results-container {
+            width: 100%;
+            max-width: 1150px;
+            background: white;
+            border-radius: 45px;
+            display: flex;
+            flex-direction: row;
+            box-shadow: 0 40px 100px rgba(15,23,42,0.12);
+            overflow: hidden;
+            min-height: 700px;
+        }
+
+        .info-side-panel {
+            flex: 1.1;
+            background: var(--navy);
+            padding: 50px;
+            position: relative;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-side-panel {
+            flex: 1;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        @@media (max-width: 991px) {
+            .results-container {
+                flex-direction: column;
+                height: auto;
+                border-radius: 30px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+
+            .info-side-panel {
+                padding: 40px 30px;
+                order: 1;
+            }
+
+            .form-side-panel {
+                padding: 10px;
+                order: 2;
+            }
+
+            .results-viewport {
+                padding: 10px;
+                align-items: flex-start;
+            }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+        }
+
+        .bg-blob {
+            position: absolute;
+            top: -10%;
+            right: -5%;
+            width: 500px;
+            height: 500px;
+            background: rgba(37,99,235,0.05);
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+        }
+
+        .bg-blob-2 {
+            position: absolute;
+            bottom: -10%;
+            left: -5%;
+            width: 400px;
+            height: 400px;
+            background: rgba(197,160,89,0.05);
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+        }
+
+        .panel-overlay-glass {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, rgba(15,23,42,0.8) 0%, rgba(37,99,235,0.1) 100%);
+            z-index: 0;
+        }
+
+        .info-inner {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-wrapper {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 18px;
+            padding: 7px;
+        }
+
+            .logo-wrapper img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+        .brand-group-premium {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .badge-online {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--gold);
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+            animation: pulse-gold 2s infinite;
+        }
+
+        .text-gradient-gold {
+            background: linear-gradient(to right, #e2c27d, #c5a059);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .feature-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feature-card-mini {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+            .feature-card-mini.active {
+                background: rgba(255,255,255,0.08);
+            }
+
+        .f-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .f-text h6 {
+            margin: 0;
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: #fff;
+        }
+
+        .f-text p {
+            margin: 0;
+            font-size: 0.7rem;
+            opacity: 0.5;
+        }
+
+        .form-scroll-wrapper {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .g-symbol {
+            width: 65px;
+            height: 65px;
+            background: #f8fafc;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--navy);
+            margin: 0 auto;
+            border: 1px solid #e2e8f0;
+        }
+
+        .toggle-wrapper-premium {
+            background: #f1f5f9;
+            padding: 6px;
+            border-radius: 20px;
+            display: flex;
+            position: relative;
+            border: 1px solid #e2e8f0;
+        }
+
+            .toggle-wrapper-premium input {
+                display: none;
+            }
+
+        .toggle-btn {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            z-index: 2;
+            color: #64748b;
+            transition: 0.3s;
+        }
+
+        .glider-premium {
+            position: absolute;
+            height: calc(100% - 12px);
+            width: calc(50% - 6px);
+            background: white;
+            border-radius: 16px;
+            top: 6px;
+            left: 6px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+
+        #passportMethod:checked ~ .glider-premium {
+            transform: translateX(100%);
+        }
+
+        #tcMethod:checked ~ label[for="tcMethod"], #passportMethod:checked ~ label[for="passportMethod"] {
+            color: var(--navy);
+        }
+
+        .label-premium {
+            font-size: 11px;
+            font-weight: 800;
+            color: #94a3b8;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .input-field {
+            position: relative;
+        }
+
+            .input-field i {
+                position: absolute;
+                left: 0;
+                top: 12px;
+                color: #cbd5e1;
+                font-size: 1rem;
+            }
+
+            .input-field input {
+                width: 100%;
+                border: none;
+                padding: 12px 0 12px 30px;
+                font-weight: 700;
+                color: var(--navy);
+                background: transparent;
+                outline: none;
+            }
+
+        .input-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #f1f5f9;
+            transition: 0.3s;
+        }
+
+        .input-field input:focus ~ .input-line {
+            background: var(--primary);
+        }
+
+        .btn-glow-premium {
+            width: 100%;
+            height: 65px;
+            background: var(--navy);
+            border: none;
+            border-radius: 22px;
+            color: white;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            transition: 0.4s;
+        }
+
+            .btn-glow-premium:hover {
+                background: var(--primary);
+                transform: translateY(-3px);
+                box-shadow: 0 15px 30px rgba(37,99,235,0.25);
+            }
+
+        .b-icon {
+            width: 35px;
+            height: 35px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .link-luxury {
+            font-size: 11px;
+            font-weight: 700;
+            color: #94a3b8;
+            text-decoration: none;
+        }
+
+        .divider-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #cbd5e1;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+            .divider-text::before, .divider-text::after {
+                content: '';
+                flex: 1;
+                border-bottom: 1px solid #f1f5f9;
+            }
+
+        .partner-img {
+            height: 25px;
+            filter: grayscale(1);
+            opacity: 0.5;
+        }
+
+        @@keyframes pulse-gold {
+            0% {
+                box-shadow: 0 0 0 0 rgba(197,160,89,0.5);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(197,160,89,0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(197,160,89,0);
+            }
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        function updateUI(type) {
+            const label = document.getElementById('idLabel');
+            const input = document.querySelector('.input-field input');
+            const icon = document.getElementById('idIcon');
+
+            if (type === 'PASSPORT') {
+                label.innerText = 'PASAPORT NUMARASI';
+                input.placeholder = 'Pasaport numaranýzý giriniz';
+                icon.className = 'fas fa-passport';
+            } else {
+                label.innerText = 'KÝMLÝK NUMARASI';
+                input.placeholder = '11 Haneli T.C. Kimlik';
+                icon.className = 'far fa-id-card';
+            }
+        }
+    </script>
+}

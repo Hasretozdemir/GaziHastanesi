@@ -1,0 +1,238 @@
+@{
+    ViewData["Title"] = "Mart 2026 | Aylýk Yemek Listesi";
+}
+
+<div class="monthly-page-viewport">
+    <div class="bg-visuals">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="container py-5 position-relative" style="z-index: 2;">
+
+        <div class="page-header-wrapper mb-5 animate__animated animate__fadeIn">
+            <div class="d-flex align-items-center mb-3">
+                <a href="javascript:history.back()" class="btn-back-modern">
+                    <i class="fas fa-chevron-left"></i>
+                    <span>GERÝ DÖN</span>
+                </a>
+            </div>
+            <div class="header-text">
+                <h2 class="fw-900 text-navy m-0">MART 2026 <span class="text-primary">YEMEK MENÜSÜ</span></h2>
+                <p class="text-muted m-0 fw-600">Gazi Üniversitesi Hastanesi Aylýk Çizelgesi</p>
+            </div>
+        </div>
+
+        <div class="row g-4 justify-content-center animate__animated animate__fadeInUp">
+            @* Örnek veri döngüsü *@
+            @for (int day = 3; day <= 6; day++)
+            {
+                <div class="col-12 col-xl-11">
+                    @* Geniþ ekranlarda hafif daraltarak odak saðlar *@
+                    <div class="monthly-row-card shadow-sm">
+                        <div class="row-date-side">
+                            <span class="day-number">@day.ToString("00")</span>
+                            <span class="month-name">MART</span>
+                            <div class="ramazan-tag">RAMAZAN @(day + 10)</div>
+                        </div>
+
+                        <div class="row-content-side">
+                            <div class="meal-group">
+                                <label><i class="fas fa-coffee text-orange"></i> KAHVALTI</label>
+                                <p>Çay, Yumurta, Bal, Tereyað, Siyah Zeytin</p>
+                            </div>
+
+                            <div class="meal-group middle">
+                                <label><i class="fas fa-sun text-green"></i> ÖÐLE YEMEÐÝ</label>
+                                <p>Kýymalý Ispanak (Yoðurt), Soslu Makarna, Güllaç</p>
+                            </div>
+
+                            <div class="meal-group">
+                                <label><i class="fas fa-moon text-blue"></i> AKÞAM YEMEÐÝ</label>
+                                <p>Et Kavurma (Pirinç Pilavý), Hanýmaða Çorba, Portakal</p>
+                            </div>
+                        </div>
+
+                        <div class="row-info-side d-none d-lg-flex">
+                            <div class="kcal-pill">2100 kcal</div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        :root {
+            --navy: #0f172a;
+            --primary: #2563eb;
+            --bg-page: #f8fafc;
+        }
+
+        /* Ekraný ortalayan ana yapý */
+        .monthly-page-viewport {
+            min-height: 100vh;
+            background: var(--bg-page);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Yatayda tam merkezleme */
+        }
+
+        /* Header Düzenlemesi: Butonun üstte, baþlýðýn altta kalmasýný saðlar */
+        .page-header-wrapper {
+            width: 100%;
+            border-bottom: 2px solid rgba(0,0,0,0.03);
+            padding-bottom: 20px;
+        }
+
+        .btn-back-modern {
+            background: white;
+            color: var(--navy);
+            padding: 8px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            border: 1px solid #e2e8f0;
+        }
+
+            .btn-back-modern:hover {
+                background: var(--navy);
+                color: white;
+                transform: translateX(-5px);
+            }
+
+        /* Kart ve Ýçerik Tasarýmý */
+        .monthly-row-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            display: flex;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.6);
+            min-height: 120px;
+        }
+
+        .row-date-side {
+            background: var(--navy);
+            color: white;
+            padding: 20px;
+            min-width: 130px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .day-number {
+            font-size: 2.2rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .month-name {
+            font-size: 0.8rem;
+            font-weight: 700;
+            opacity: 0.7;
+        }
+
+        .row-content-side {
+            flex-grow: 1;
+            padding: 20px 30px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            align-items: center;
+            gap: 15px;
+        }
+
+        .meal-group label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+
+        .meal-group p {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin: 0;
+        }
+
+        .row-info-side {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border-left: 1px solid #f1f5f9;
+        }
+
+        .kcal-pill {
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.8rem;
+        }
+
+        /* Arka Plan */
+        .bg-visuals .blob {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            filter: blur(100px);
+            z-index: 1;
+        }
+
+        .blob-1 {
+            top: -100px;
+            right: -50px;
+            background: rgba(37, 99, 235, 0.08);
+        }
+
+        .blob-2 {
+            bottom: -100px;
+            left: -50px;
+            background: rgba(15, 23, 42, 0.04);
+        }
+
+        /* Mobil Ayarlar */
+        @@media (max-width: 991px) {
+            .row-content-side {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            .monthly-row-card {
+                flex-direction: column;
+            }
+
+            .row-date-side {
+                flex-direction: row;
+                min-width: 100%;
+                gap: 15px;
+                padding: 10px;
+            }
+
+            .day-number {
+                font-size: 1.5rem;
+            }
+
+            .row-info-side {
+                border-left: none;
+                border-top: 1px solid #f1f5f9;
+                justify-content: center;
+            }
+        }
+    </style>
+}

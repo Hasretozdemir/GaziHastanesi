@@ -1,0 +1,178 @@
+@{
+    ViewData["Title"] = "Gazi Saðlýk | Kalite Yönetimi";
+}
+
+<div class="quality-page-viewport">
+    <div class="bg-visuals">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="container py-5 position-relative" style="z-index: 2;">
+
+        <div class="header-section text-center mb-5 animate__animated animate__fadeIn">
+            <div class="quality-icon-circle mx-auto mb-3">
+                <i class="fas fa-award fa-2x text-primary"></i>
+            </div>
+            <h1 class="fw-900 text-navy display-5 mb-2">Kalite Yönetimi</h1>
+            <p class="text-muted fw-bold">Sürekli Ýyileþtirme ve Mükemmeliyet Odaklý Hizmet Anlayýþý</p>
+            <div class="mt-2">
+                <span class="badge rounded-pill bg-white text-muted border shadow-sm px-3 py-2" style="font-size: 0.75rem;">
+                    <i class="far fa-clock me-1"></i> Son Güncelleme: 13.08.2025
+                </span>
+            </div>
+        </div>
+
+        <div class="row g-3 justify-content-center animate__animated animate__fadeInUp">
+            @{
+                var kaliteMaddeleri = new[] {
+                    new { Icon = "fa-sitemap", Title = "Organizasyon Þemasý", Color = "blue" },
+                    new { Icon = "fa-route", Title = "Kalite Yolculuðu", Color = "purple" },
+                    new { Icon = "fa-cogs", Title = "Kalite Yönetim Sistemi", Color = "orange" },
+                    new { Icon = "fa-user-check", Title = "Görev, Yetki ve Sorumluluklar", Color = "green" },
+                    new { Icon = "fa-users-cog", Title = "Kalite Ekibi", Color = "blue" },
+                    new { Icon = "fa-external-link-alt", Title = "Faydalý Baðlantýlar ve Yayýnlar", Color = "purple" },
+                    new { Icon = "fa-tasks", Title = "Faaliyetler", Color = "orange" },
+                    new { Icon = "fa-users", Title = "Kalite Komiteleri", Color = "green" },
+                    new { Icon = "fa-project-diagram", Title = "Akýþ Þemasý", Color = "blue" },
+                    new { Icon = "fa-envelope-open-text", Title = "Ýletiþim", Color = "purple" },
+                    new { Icon = "fa-clipboard-list", Title = "Görev Tanýmlarý", Color = "orange" },
+                    new { Icon = "fa-user-tie", Title = "Kalite Komisyonu", Color = "green" },
+                    new { Icon = "fa-hand-holding-heart", Title = "Toplumsal Katký", Color = "blue" },
+                    new { Icon = "fa-file-medical-alt", Title = "Raporlar", Color = "purple" }
+                };
+            }
+
+            @foreach (var madde in kaliteMaddeleri)
+            {
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                    <a href="#" class="quality-link-card h-100 shadow-sm">
+                        <div class="card-icon @madde.Color">
+                            <i class="fas @madde.Icon"></i>
+                        </div>
+                        <div class="card-info">
+                            <span class="card-title">@madde.Title</span>
+                            <i class="fas fa-chevron-right arrow-icon"></i>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        :root {
+            --navy: #0f172a;
+            --primary: #2563eb;
+            --bg-gray: #f4f7fa;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-gray);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+        }
+
+        .quality-page-viewport {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-visuals .blob {
+            position: fixed;
+            width: 500px; height: 500px;
+            filter: blur(100px);
+            z-index: 1;
+            opacity: 0.5;
+            border-radius: 50%;
+        }
+        .blob-1 { top: -100px; right: -50px; background: rgba(37, 99, 235, 0.08); }
+        .blob-2 { bottom: -100px; left: -50px; background: rgba(15, 23, 42, 0.04); }
+
+        .quality-icon-circle {
+            width: 80px; height: 80px;
+            background: #fff;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        .quality-link-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .quality-link-card:hover {
+            transform: translateY(-5px);
+            background: #fff;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important;
+            border-color: var(--primary);
+        }
+
+        .quality-link-card:hover .arrow-icon {
+            transform: translateX(5px);
+            color: var(--primary);
+        }
+
+        .card-icon {
+            width: 45px; height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .card-icon.blue { background: #eff6ff; color: #2563eb; }
+        .card-icon.purple { background: #faf5ff; color: #9333ea; }
+        .card-icon.orange { background: #fff7ed; color: #ea580c; }
+        .card-icon.green { background: #f0fdf4; color: #16a34a; }
+
+        .card-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .card-title {
+            color: var(--navy);
+            font-weight: 700;
+            font-size: 0.95rem;
+            line-height: 1.2;
+        }
+
+        .arrow-icon {
+            color: #cbd5e1;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+
+        .fw-900 { font-weight: 900; }
+        .text-navy { color: var(--navy); }
+
+        @@media (max-width: 768px) {
+            .quality-page-viewport { align-items: flex-start; padding-top: 40px; }
+            .header-section h1 { font-size: 2rem; }
+        }
+    </style>
+}
