@@ -56,23 +56,31 @@ namespace GaziHastane.Models
     }
 
     // 2. Bolumler Table
-    [Table("Bolumler")]
+    [Table("bolumler")]
     public class Bolum
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+       
+            [Key]
+            [Column("id")]
+            public int Id { get; set; }
 
-        [Required]
-        [StringLength(150)]
-        public string Ad { get; set; } = null!;
+            [Required]
+            [StringLength(150)]
+            [Column("ad")]
+            public string Ad { get; set; } = null!;
 
-        public string? Aciklama { get; set; }
+            [Column("aciklama")]
+            public string? Aciklama { get; set; }
 
-        [StringLength(255)]
-        public string? FotografUrl { get; set; }
+            [Column("fotografurl")]
+            public string? FotografUrl { get; set; }
 
-        public bool IsActive { get; set; } = true;
+            [Column("kategori")]
+            public string? Kategori { get; set; }
+
+            [Column("isactive")]
+            public bool IsActive { get; set; } = true;
+        
 
         // Navigation properties
         public virtual ICollection<Doktor> Doktorlar { get; set; } = new List<Doktor>();
@@ -80,11 +88,11 @@ namespace GaziHastane.Models
     }
 
     // 3. Doktorlar Table
-    [Table("Doktorlar")]
+    [Table("doktorlar")]
     public class Doktor
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("id")]
         public int Id { get; set; }
 
         public int? KullaniciId { get; set; }
@@ -314,4 +322,6 @@ namespace GaziHastane.Models
         [StringLength(255)]
         public string? FotografUrl { get; set; }
     }
+
+
 }

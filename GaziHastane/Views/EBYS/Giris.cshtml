@@ -1,45 +1,45 @@
-@* RAZOR KOD BLOÐU: Sunucu tarafýnda (C#) çalýþan kodlar burada yer alýr.
+ï»¿@* RAZOR KOD BLOï¿½U: Sunucu tarafï¿½nda (C#) ï¿½alï¿½ï¿½an kodlar burada yer alï¿½r.
 *@
 @{
-    // Tarayýcýnýn üst sekmesinde (Title bar) görünecek sayfa baþlýðýný belirliyoruz.
-    ViewData["Title"] = "Gazi Üniversitesi | EBYS Beyaz Giriþ";
+    // Tarayï¿½cï¿½nï¿½n ï¿½st sekmesinde (Title bar) gï¿½rï¿½necek sayfa baï¿½lï¿½ï¿½ï¿½nï¿½ belirliyoruz.
+    ViewData["Title"] = "Gazi ï¿½niversitesi | EBYS Beyaz Giriï¿½";
 }
 
 <div class="ebys-white-wrapper">
-    <!-- Tüm giriþ ekranýný sarmalayan ana kapsayýcý. Beyaz aðýrlýklý bir tema olduðunu iþaret ediyor.-->
+    <!-- Tï¿½m giriï¿½ ekranï¿½nï¿½ sarmalayan ana kapsayï¿½cï¿½. Beyaz aï¿½ï¿½rlï¿½klï¿½ bir tema olduï¿½unu iï¿½aret ediyor.-->
 
     <div class="main-wallpaper" style="background-image: url('/assets/gaziebys.jpg');"></div>
-	<!-- Sayfanýn arka planýnda tam ekran kaplayan bir görsel. CSS ile karartýlmýþ ve bulanýklaþtýrýlmýþ, böylece üzerindeki beyaz kart öne çýkar. -->'
+    <!-- Sayfanï¿½n arka planï¿½nda tam ekran kaplayan bir gï¿½rsel. CSS ile karartï¿½lmï¿½ï¿½ ve bulanï¿½klaï¿½tï¿½rï¿½lmï¿½ï¿½, bï¿½ylece ï¿½zerindeki beyaz kart ï¿½ne ï¿½ï¿½kar. -->'
     <div class="auth-card-white animate__animated animate__fadeInUp">
-        <!--  Giriþ formunun içinde bulunduðu beyaz kutu. animate__fadeInUp sýnýfý, kutunun sayfa açýldýðýnda aþaðýdan yukarýya doðru kayarak gelmesini (animasyon) saðlar.-->
+        <!--  Giriï¿½ formunun iï¿½inde bulunduï¿½u beyaz kutu. animate__fadeInUp sï¿½nï¿½fï¿½, kutunun sayfa aï¿½ï¿½ldï¿½ï¿½ï¿½nda aï¿½aï¿½ï¿½dan yukarï¿½ya doï¿½ru kayarak gelmesini (animasyon) saï¿½lar.-->
 
         <div class="auth-card-content">
 
             <div class="text-center mb-5">
 
                 <div class="logo-premium-wrapper mb-3">
-                    <!--Logoyu estetik bir çerçeveye alan kýsým.-->
-                    <img src="/assets/gazilogo.jpg" alt="Gazi Logo" class="brand-img"><!--Gazi Üniversitesi'nin logosunu ekrana basar.-->
+                    <!--Logoyu estetik bir ï¿½erï¿½eveye alan kï¿½sï¿½m.-->
+                    <img src="/assets/gazilogo.jpg" alt="Gazi Logo" class="brand-img"><!--Gazi ï¿½niversitesi'nin logosunu ekrana basar.-->
                 </div>
 
-                <h4 class="fw-800 text-navy mb-1">EBYS GÝRÝÞ</h4><!--Kalýn puntolu (fw-800) ve lacivert renkli (text-navy) ana baþlýk.-->
+                <h4 class="fw-800 text-navy mb-1">EBYS Gï¿½Rï¿½ï¿½</h4><!--Kalï¿½n puntolu (fw-800) ve lacivert renkli (text-navy) ana baï¿½lï¿½k.-->
 
-                <p class="text-muted small mb-0">Elektronik Belge Yönetim Sistemi</p>
-               
-                <div class="ebys-badge-gold">SÝSTEME GÜVENLÝ ERÝÞÝM</div> <!--Altýn rengi temalý bir rozet/etiket; sistemin güvenli olduðunu vurgulayan görsel bir öge.-->
+                <p class="text-muted small mb-0">Elektronik Belge Yï¿½netim Sistemi</p>
+
+                <div class="ebys-badge-gold">Sï¿½STEME Gï¿½VENLï¿½ ERï¿½ï¿½ï¿½M</div> <!--Altï¿½n rengi temalï¿½ bir rozet/etiket; sistemin gï¿½venli olduï¿½unu vurgulayan gï¿½rsel bir ï¿½ge.-->
 
             </div>
 
             <form action="/EBYS/Login" method="post">
-                <!--Formun kalbidir. Kullanýcý butona bastýðýnda veriler güvenli bir þekilde (post) sunucudaki /EBYS/Login adresine gönderilir.
+                <!--Formun kalbidir. Kullanï¿½cï¿½ butona bastï¿½ï¿½ï¿½nda veriler gï¿½venli bir ï¿½ekilde (post) sunucudaki /EBYS/Login adresine gï¿½nderilir.
                 -->
 
                 <div class="input-modern mb-4">
-                    <label class="premium-label-navy">KULLANICI ÝSMÝ</label>
+                    <label class="premium-label-navy">KULLANICI ï¿½SMï¿½</label>
 
                     <div class="field-wrapper-white">
-                        <i class="fas fa-id-card-alt text-navy-light"></i><!-- FontAwesome kütüphanesinden bir kimlik kartý ikonu ekler.-->
-                        <input type="text" placeholder="Kullanýcý adýnýzý giriniz" required><!--Kullanýcýnýn metin gireceði alan. required boþ býrakýlmasýný engeller.-->
+                        <i class="fas fa-id-card-alt text-navy-light"></i><!-- FontAwesome kï¿½tï¿½phanesinden bir kimlik kartï¿½ ikonu ekler.-->
+                        <input type="text" placeholder="Kullanï¿½cï¿½ adï¿½nï¿½zï¿½ giriniz" required><!--Kullanï¿½cï¿½nï¿½n metin gireceï¿½i alan. required boï¿½ bï¿½rakï¿½lmasï¿½nï¿½ engeller.-->
                     </div>
                 </div>
 
@@ -47,7 +47,7 @@
                     <label class="premium-label-navy">PAROLA</label>
                     <div class="field-wrapper-white">
                         <i class="fas fa-lock text-navy-light"></i><!--Kilit ikonu ekler.-->
-                        <input type="password" placeholder="••••••••" required><!--Yazýlan karakterlerin gizli (nokta þeklinde) görünmesini saðlar.-->
+                        <input type="password" placeholder="ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" required><!--Yazï¿½lan karakterlerin gizli (nokta ï¿½eklinde) gï¿½rï¿½nmesini saï¿½lar.-->
                     </div>
                 </div>
 
@@ -55,26 +55,26 @@
 
                     <div class="custom-checkbox-white">
                         <input type="checkbox" id="remember">
-                        <label for="remember" class="text-navy small ms-1">Oturumu Açýk Tut</label><!--"Oturumu Açýk Tut" seçeneði için özelleþtirilmiþ onay kutusu.-->
+                        <label for="remember" class="text-navy small ms-1">Oturumu Aï¿½ï¿½k Tut</label><!--"Oturumu Aï¿½ï¿½k Tut" seï¿½eneï¿½i iï¿½in ï¿½zelleï¿½tirilmiï¿½ onay kutusu.-->
                     </div>
 
                     <div class="forgot-pass-link">
-                        <!--Þifresini unutanlar için "Parola Ýþlemleri" baðlantýsý.-->
-                        <a href="#" class="small fw-600 text-navy-light">Parola Ýþlemleri</a>
+                        <!--ï¿½ifresini unutanlar iï¿½in "Parola ï¿½ï¿½lemleri" baï¿½lantï¿½sï¿½.-->
+                        <a href="#" class="small fw-600 text-navy-light">Parola ï¿½ï¿½lemleri</a>
                     </div>
                 </div>
 
                 <button type="submit" class="btn-ebys-action-gold shadow-lg">
-                    <!--Formu gönderen ana buton. Altýn rengi efektine ve üzerine gelindiðinde parlayan bir gölgeye (shadow-lg) sahiptir.-->
-                    <span>SÝSTEME GÝRÝÞ YAP</span>
-                    <i class="fas fa-sign-in-alt"></i><!-- Butonun yanýndaki "giriþ yap" ikonu.-->
+                    <!--Formu gï¿½nderen ana buton. Altï¿½n rengi efektine ve ï¿½zerine gelindiï¿½inde parlayan bir gï¿½lgeye (shadow-lg) sahiptir.-->
+                    <span>Sï¿½STEME Gï¿½Rï¿½ï¿½ YAP</span>
+                    <i class="fas fa-sign-in-alt"></i><!-- Butonun yanï¿½ndaki "giriï¿½ yap" ikonu.-->
                 </button>
             </form>
 
             <div class="footer-links-modern mt-5">
-                <!-- Kartýn en altýnda bulunan yardýmcý linkler alaný.-->
-                <a href="#">Kullaným Kýlavuzu</a> <!--Kullanýcýya sistemle ilgili yardým alabileceði yönlendirmeler sunar.-->
-                <span class="dot-sep-navy">•</span><!-->: Ýki link arasýna lacivert bir nokta iþareti koyar.-->
+                <!-- Kartï¿½n en altï¿½nda bulunan yardï¿½mcï¿½ linkler alanï¿½.-->
+                <a href="#">Kullanï¿½m Kï¿½lavuzu</a> <!--Kullanï¿½cï¿½ya sistemle ilgili yardï¿½m alabileceï¿½i yï¿½nlendirmeler sunar.-->
+                <span class="dot-sep-navy">ï¿½</span><!-->: ï¿½ki link arasï¿½na lacivert bir nokta iï¿½areti koyar.-->
                 -->
                 <a href="#">Destek Talebi</a>
             </div>
@@ -83,202 +83,202 @@
 </div>
 
 
-@* CSS BÖLÜMÜ: Sadece bu sayfada geçerli olacak stiller. 
-  _Layout.cshtml içindeki '@RenderSection("Styles", required: false)' etiketinin olduðu yere otomatik olarak yerleþir.
+@* CSS Bï¿½Lï¿½Mï¿½: Sadece bu sayfada geï¿½erli olacak stiller. 
+  _Layout.cshtml iï¿½indeki '@RenderSection("Styles", required: false)' etiketinin olduï¿½u yere otomatik olarak yerleï¿½ir.
 *@
 @section Styles {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <style>
-        /* CSS DEÐÝÞKENLERÝ: Kodun her yerinde ayný renk kodunu ezberlemek yerine isim verilir. Deðiþtirmek çok kolaydýr */
+        /* CSS DEï¿½ï¿½ï¿½KENLERï¿½: Kodun her yerinde aynï¿½ renk kodunu ezberlemek yerine isim verilir. Deï¿½iï¿½tirmek ï¿½ok kolaydï¿½r */
         :root {
-            --gazi-navy: #0f172a; /* Koyu lacivert: Baþlýklar ve buton yazýlarý için */
-            --gazi-navy-light: #475569; /* Açýk lacivert/gri: Ýkonlar ve alt yazýlar için */
-            --gazi-gold-premium: #c5a059; /* Altýn/Hardal: Rozet ve butonun ana rengi */
-            --soft-gold: rgba(197, 160, 89, 0.4); /* Yarý saydam altýn: Kartýn etrafýndaki parlama(glow) gölgesi için */
-            --btn-gold-gr-1: #c5a059; /* Buton gradyaný (renk geçiþi) baþlangýç rengi */
-            --btn-gold-gr-2: #e2c28d; /* Buton gradyaný bitiþ rengi (daha açýk ton) */
+            --gazi-navy: #0f172a; /* Koyu lacivert: Baï¿½lï¿½klar ve buton yazï¿½larï¿½ iï¿½in */
+            --gazi-navy-light: #475569; /* Aï¿½ï¿½k lacivert/gri: ï¿½konlar ve alt yazï¿½lar iï¿½in */
+            --gazi-gold-premium: #c5a059; /* Altï¿½n/Hardal: Rozet ve butonun ana rengi */
+            --soft-gold: rgba(197, 160, 89, 0.4); /* Yarï¿½ saydam altï¿½n: Kartï¿½n etrafï¿½ndaki parlama(glow) gï¿½lgesi iï¿½in */
+            --btn-gold-gr-1: #c5a059; /* Buton gradyanï¿½ (renk geï¿½iï¿½i) baï¿½langï¿½ï¿½ rengi */
+            --btn-gold-gr-2: #e2c28d; /* Buton gradyanï¿½ bitiï¿½ rengi (daha aï¿½ï¿½k ton) */
         }
 
-        /* Sayfa Genel Ayarlarý */
+        /* Sayfa Genel Ayarlarï¿½ */
         body {
             margin: 0;
-            padding: 0; /* Tarayýcýnýn varsayýlan boþluklarýný sýfýrlar */
-            font-family: 'Plus Jakarta Sans', sans-serif; /* Modern, okunabilir yazý fontu */
-            overflow-x: hidden; /* Sayfanýn saða sola kaymasýný (yatay scroll) engeller */
+            padding: 0; /* Tarayï¿½cï¿½nï¿½n varsayï¿½lan boï¿½luklarï¿½nï¿½ sï¿½fï¿½rlar */
+            font-family: 'Plus Jakarta Sans', sans-serif; /* Modern, okunabilir yazï¿½ fontu */
+            overflow-x: hidden; /* Sayfanï¿½n saï¿½a sola kaymasï¿½nï¿½ (yatay scroll) engeller */
         }
 
-        /* Tüm Ekraný Kaplayan Dýþ Div */
+        /* Tï¿½m Ekranï¿½ Kaplayan Dï¿½ï¿½ Div */
         .ebys-white-wrapper {
-            min-height: 100vh; /* Ekranýn yüzde 100'ünü dikey olarak kaplar (Görünür alan kadar) */
-            display: flex; /* Ýçindeki elemanlarý (kartý) esnek yerleþtirmeyi saðlar */
-            align-items: center; /* Kartý dikey olarak tam ortaya (düþey merkez) hizalar */
-            justify-content: center; /* Kartý yatay olarak tam ortaya hizalar */
-            position: relative; /* Arka plan resmini absolute yapabilmek için gerekli */
-            padding: 20px; /* Mobil ekranlarda kartýn kenarlara yapýþmamasý için boþluk */
+            min-height: 100vh; /* Ekranï¿½n yï¿½zde 100'ï¿½nï¿½ dikey olarak kaplar (Gï¿½rï¿½nï¿½r alan kadar) */
+            display: flex; /* ï¿½ï¿½indeki elemanlarï¿½ (kartï¿½) esnek yerleï¿½tirmeyi saï¿½lar */
+            align-items: center; /* Kartï¿½ dikey olarak tam ortaya (dï¿½ï¿½ey merkez) hizalar */
+            justify-content: center; /* Kartï¿½ yatay olarak tam ortaya hizalar */
+            position: relative; /* Arka plan resmini absolute yapabilmek iï¿½in gerekli */
+            padding: 20px; /* Mobil ekranlarda kartï¿½n kenarlara yapï¿½ï¿½mamasï¿½ iï¿½in boï¿½luk */
         }
 
-        /* Arka Plan Görseli Özellikleri */
+        /* Arka Plan Gï¿½rseli ï¿½zellikleri */
         .main-wallpaper {
             position: fixed;
             top: 0;
-            left: 0; /* Ekranýn sol üst köþesine kilitler, kaydýrýlsa da yerinde kalýr */
+            left: 0; /* Ekranï¿½n sol ï¿½st kï¿½ï¿½esine kilitler, kaydï¿½rï¿½lsa da yerinde kalï¿½r */
             width: 100%;
-            height: 100%; /* Ekranýn tamamýný doldurur */
-            background-size: cover; /* Resmi sündürmeden, en-boy oranýný koruyarak ekraný kaplatýr */
-            background-position: center; /* Resmin ortasýný odaklar */
-            z-index: -2; /* Sayfanýn en arkasýna (alt katmana) atar */
-            filter: brightness(0.5) blur(3px); /* Resmi %50 karartýr ve 3px bulanýklaþtýrýr ki üzerindeki beyaz kart okunsun */
+            height: 100%; /* Ekranï¿½n tamamï¿½nï¿½ doldurur */
+            background-size: cover; /* Resmi sï¿½ndï¿½rmeden, en-boy oranï¿½nï¿½ koruyarak ekranï¿½ kaplatï¿½r */
+            background-position: center; /* Resmin ortasï¿½nï¿½ odaklar */
+            z-index: -2; /* Sayfanï¿½n en arkasï¿½na (alt katmana) atar */
+            filter: brightness(0.5) blur(3px); /* Resmi %50 karartï¿½r ve 3px bulanï¿½klaï¿½tï¿½rï¿½r ki ï¿½zerindeki beyaz kart okunsun */
         }
 
-        /* Beyaz Giriþ Kartý Özellikleri */
+        /* Beyaz Giriï¿½ Kartï¿½ ï¿½zellikleri */
         .auth-card-white {
             width: 100%;
-            max-width: 440px; /* Kart esnektir ama geniþliði 440px'i geçemez */
+            max-width: 440px; /* Kart esnektir ama geniï¿½liï¿½i 440px'i geï¿½emez */
             background: #ffffff; /* Saf beyaz arka plan */
-            border-radius: 40px; /* Kartýn köþelerini yuvarlatýr (Modern görünüm) */
-            padding: 50px 45px; /* Kartýn içindeki yazýlarla kenarlarý arasýnda boþluk býrakýr */
-            /* Gölgelendirme: Ýlk deðer koyu alt gölge, ikinci deðer etrafýndaki altýn rengi (glow) yansýma */
+            border-radius: 40px; /* Kartï¿½n kï¿½ï¿½elerini yuvarlatï¿½r (Modern gï¿½rï¿½nï¿½m) */
+            padding: 50px 45px; /* Kartï¿½n iï¿½indeki yazï¿½larla kenarlarï¿½ arasï¿½nda boï¿½luk bï¿½rakï¿½r */
+            /* Gï¿½lgelendirme: ï¿½lk deï¿½er koyu alt gï¿½lge, ikinci deï¿½er etrafï¿½ndaki altï¿½n rengi (glow) yansï¿½ma */
             box-shadow: 0 40px 100px -15px rgba(0, 0, 0, 0.3), 0 0 10px var(--soft-gold);
-            z-index: 1; /* Arka plan resminin (z-index:-2) üstünde görünmesini saðlar */
+            z-index: 1; /* Arka plan resminin (z-index:-2) ï¿½stï¿½nde gï¿½rï¿½nmesini saï¿½lar */
         }
 
-        /* Logo Yuvasý */
+        /* Logo Yuvasï¿½ */
         .logo-premium-wrapper {
             width: 80px;
-            height: 80px; /* Logonun oturduðu kutunun ebatlarý */
-            background: #f8fafc; /* Logonun arkasýna çok açýk gri bir zemin */
-            border-radius: 20px; /* Logonun kutusunu yuvarlatýr */
+            height: 80px; /* Logonun oturduï¿½u kutunun ebatlarï¿½ */
+            background: #f8fafc; /* Logonun arkasï¿½na ï¿½ok aï¿½ï¿½k gri bir zemin */
+            border-radius: 20px; /* Logonun kutusunu yuvarlatï¿½r */
             margin: 0 auto; /* Kutuyu yatayda tam ortaya hizalar */
-            padding: 8px; /* Logonun kutu dýþýna taþmamasý için iç boþluk */
+            padding: 8px; /* Logonun kutu dï¿½ï¿½ï¿½na taï¿½mamasï¿½ iï¿½in iï¿½ boï¿½luk */
             display: flex;
             align-items: center;
-            justify-content: center; /* Ýçindeki logoyu tam merkeze oturtur */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Logonun altýna hafif derinlik (gölge) verir */
+            justify-content: center; /* ï¿½ï¿½indeki logoyu tam merkeze oturtur */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Logonun altï¿½na hafif derinlik (gï¿½lge) verir */
         }
 
         /* Logonun Kendisi */
         .brand-img {
             width: 100%;
-            height: 100%; /* Kutunun içini tam doldurur */
-            object-fit: contain; /* Logonun kenarlarýndan kesilmeden, orantýlý sýðmasýný saðlar */
+            height: 100%; /* Kutunun iï¿½ini tam doldurur */
+            object-fit: contain; /* Logonun kenarlarï¿½ndan kesilmeden, orantï¿½lï¿½ sï¿½ï¿½masï¿½nï¿½ saï¿½lar */
         }
 
-        /* Altýn Rozet Tasarýmý */
+        /* Altï¿½n Rozet Tasarï¿½mï¿½ */
         .ebys-badge-gold {
             display: inline-block;
-            margin-top: 15px; /* Üstteki yazýdan biraz uzaklaþtýrýr */
+            margin-top: 15px; /* ï¿½stteki yazï¿½dan biraz uzaklaï¿½tï¿½rï¿½r */
             font-size: 10px;
-            font-weight: 800; /* Çok küçük ama kalýn yazýlýr */
-            letter-spacing: 2px; /* Harflerin arasýný açarak premium görünüm katar */
-            color: #fff; /* Rozet içi yazý rengi beyaz */
-            background: var(--gazi-gold-premium); /* Deðiþkendeki altýn rengini zemin yapar */
-            border-radius: 50px; /* Rozetin uçlarýný tam yuvarlak (hap þeklinde) yapar */
-            padding: 6px 18px; /* Rozetin içi boþluklarý */
+            font-weight: 800; /* ï¿½ok kï¿½ï¿½ï¿½k ama kalï¿½n yazï¿½lï¿½r */
+            letter-spacing: 2px; /* Harflerin arasï¿½nï¿½ aï¿½arak premium gï¿½rï¿½nï¿½m katar */
+            color: #fff; /* Rozet iï¿½i yazï¿½ rengi beyaz */
+            background: var(--gazi-gold-premium); /* Deï¿½iï¿½kendeki altï¿½n rengini zemin yapar */
+            border-radius: 50px; /* Rozetin uï¿½larï¿½nï¿½ tam yuvarlak (hap ï¿½eklinde) yapar */
+            padding: 6px 18px; /* Rozetin iï¿½i boï¿½luklarï¿½ */
         }
 
-        /* Yazý Renklendirmeleri */
+        /* Yazï¿½ Renklendirmeleri */
         .text-navy {
             color: var(--gazi-navy);
         }
-        /* Koyu lacivert atamasý */
+        /* Koyu lacivert atamasï¿½ */
         .text-navy-light {
             color: var(--gazi-navy-light);
             text-decoration: none;
         }
-        /* Açýk lacivert ve alt çizgisi olmayan link */
+        /* Aï¿½ï¿½k lacivert ve alt ï¿½izgisi olmayan link */
         .fw-800 {
             font-weight: 800;
         }
-        /* Yazýyý ekstra kalýnlaþtýrýr */
+        /* Yazï¿½yï¿½ ekstra kalï¿½nlaï¿½tï¿½rï¿½r */
 
-        /* Inputlarýn Üzerindeki Baþlýklar (KULLANICI ÝSMÝ vs.) */
+        /* Inputlarï¿½n ï¿½zerindeki Baï¿½lï¿½klar (KULLANICI ï¿½SMï¿½ vs.) */
         .premium-label-navy {
             font-size: 11px;
             font-weight: 800;
             color: var(--gazi-navy-light);
             margin-bottom: 8px;
-            display: block; /* Etiketin altýna inmesini (block) saðlar */
-            letter-spacing: 1.5px; /* Harf aralýðý */
+            display: block; /* Etiketin altï¿½na inmesini (block) saï¿½lar */
+            letter-spacing: 1.5px; /* Harf aralï¿½ï¿½ï¿½ */
         }
 
-        /* Inputlar (Metin Kutularý) Ýçin Taþýyýcý */
+        /* Inputlar (Metin Kutularï¿½) ï¿½ï¿½in Taï¿½ï¿½yï¿½cï¿½ */
         .field-wrapper-white {
-            position: relative; /* Ýçindeki ikonun (absolute) konumlanabilmesi için referans noktasý olur */
+            position: relative; /* ï¿½ï¿½indeki ikonun (absolute) konumlanabilmesi iï¿½in referans noktasï¿½ olur */
             display: flex;
             align-items: center;
         }
 
-            /* Metin Kutularýnýn Ýçindeki Ýkonlar */
+            /* Metin Kutularï¿½nï¿½n ï¿½ï¿½indeki ï¿½konlar */
             .field-wrapper-white i {
                 position: absolute;
-                left: 18px; /* Ýkonu kutunun en soluna yaslar */
+                left: 18px; /* ï¿½konu kutunun en soluna yaslar */
                 font-size: 1.1rem;
-                opacity: 0.8; /* Ýkon boyutu ve %80 saydamlýk */
+                opacity: 0.8; /* ï¿½kon boyutu ve %80 saydamlï¿½k */
             }
 
-            /* Metin Kutularý (Input'larýn kendisi) */
+            /* Metin Kutularï¿½ (Input'larï¿½n kendisi) */
             .field-wrapper-white input {
                 width: 100%;
-                height: 58px; /* Kutunun geniþliði ve yüksekliði */
-                background: #f8fafc; /* Ýçi hafif açýk gri */
-                border: 1px solid #e2e8f0; /* Çok ince gri dýþ çizgi (border) */
-                border-radius: 15px; /* Köþeleri yuvarlatýlmýþ kutu */
-                padding: 0 20px 0 55px; /* Soldan 55px boþluk býrakýr, çünkü orada ikon duruyor. Yazý ikonun üstüne binmez */
+                height: 58px; /* Kutunun geniï¿½liï¿½i ve yï¿½ksekliï¿½i */
+                background: #f8fafc; /* ï¿½ï¿½i hafif aï¿½ï¿½k gri */
+                border: 1px solid #e2e8f0; /* ï¿½ok ince gri dï¿½ï¿½ ï¿½izgi (border) */
+                border-radius: 15px; /* Kï¿½ï¿½eleri yuvarlatï¿½lmï¿½ï¿½ kutu */
+                padding: 0 20px 0 55px; /* Soldan 55px boï¿½luk bï¿½rakï¿½r, ï¿½ï¿½nkï¿½ orada ikon duruyor. Yazï¿½ ikonun ï¿½stï¿½ne binmez */
                 color: var(--gazi-navy);
-                font-weight: 600; /* Girilen yazýnýn rengi ve kalýnlýðý */
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Focus efekti için yumuþak geçiþ animasyonu süresi */
+                font-weight: 600; /* Girilen yazï¿½nï¿½n rengi ve kalï¿½nlï¿½ï¿½ï¿½ */
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Focus efekti iï¿½in yumuï¿½ak geï¿½iï¿½ animasyonu sï¿½resi */
             }
 
-                /* Kullanýcý Input'a Týkladýðýnda (Yazý Yazarken) Olanlar */
+                /* Kullanï¿½cï¿½ Input'a Tï¿½kladï¿½ï¿½ï¿½nda (Yazï¿½ Yazarken) Olanlar */
                 .field-wrapper-white input:focus {
-                    background: #ffffff; /* Kutunun içi tam beyaz olur */
-                    border-color: var(--gazi-gold-premium); /* Dýþ çizgisi altýn rengi olur */
-                    box-shadow: 0 0 15px var(--soft-gold); /* Kutunun etrafýna altýn rengi bir parlama (glow) verir */
-                    outline: none; /* Tarayýcýnýn varsayýlan mavi çizgisini yok eder */
+                    background: #ffffff; /* Kutunun iï¿½i tam beyaz olur */
+                    border-color: var(--gazi-gold-premium); /* Dï¿½ï¿½ ï¿½izgisi altï¿½n rengi olur */
+                    box-shadow: 0 0 15px var(--soft-gold); /* Kutunun etrafï¿½na altï¿½n rengi bir parlama (glow) verir */
+                    outline: none; /* Tarayï¿½cï¿½nï¿½n varsayï¿½lan mavi ï¿½izgisini yok eder */
                 }
 
-        /* Giriþ Yap Butonu */
+        /* Giriï¿½ Yap Butonu */
         .btn-ebys-action-gold {
             width: 100%;
             height: 60px;
-            /* Arka plana linear-gradient (iki renkli geçiþ) verir */
+            /* Arka plana linear-gradient (iki renkli geï¿½iï¿½) verir */
             background: linear-gradient(135deg, var(--btn-gold-gr-1) 0%, var(--btn-gold-gr-2) 100%);
             border: none;
             border-radius: 15px;
             color: var(--gazi-navy);
-            font-weight: 800; /* Buton yazýsý lacivert ve kalýn */
+            font-weight: 800; /* Buton yazï¿½sï¿½ lacivert ve kalï¿½n */
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Yazý sola, ikon saða yaslanýr */
+            justify-content: space-between; /* Yazï¿½ sola, ikon saï¿½a yaslanï¿½r */
             padding: 0 25px;
-            transition: all 0.5s ease; /* Hover(üzerine gelme) efekti süresi */
+            transition: all 0.5s ease; /* Hover(ï¿½zerine gelme) efekti sï¿½resi */
             letter-spacing: 1px;
         }
 
-            /* Farenin Ýmleci Butonun Üzerine Geldiðinde (Hover) */
+            /* Farenin ï¿½mleci Butonun ï¿½zerine Geldiï¿½inde (Hover) */
             .btn-ebys-action-gold:hover {
-                transform: translateY(-3px); /* Butonu hafifçe 3 piksel yukarý kaldýrýr (Týklanma hissi verir) */
-                /* Renk geçiþini tersine çevirip biraz daha açýk hale getirir */
+                transform: translateY(-3px); /* Butonu hafifï¿½e 3 piksel yukarï¿½ kaldï¿½rï¿½r (Tï¿½klanma hissi verir) */
+                /* Renk geï¿½iï¿½ini tersine ï¿½evirip biraz daha aï¿½ï¿½k hale getirir */
                 background: linear-gradient(135deg, #e0bf81 0%, #c5a059 100%);
-                color: #fff; /* Üstüne gelince yazý lacivertten beyaza döner */
-                box-shadow: 0 15px 30px var(--soft-gold); /* Altýndaki gölgeyi/parlamayý büyütür */
+                color: #fff; /* ï¿½stï¿½ne gelince yazï¿½ lacivertten beyaza dï¿½ner */
+                box-shadow: 0 15px 30px var(--soft-gold); /* Altï¿½ndaki gï¿½lgeyi/parlamayï¿½ bï¿½yï¿½tï¿½r */
             }
 
-        /* Linklere Týklanma/Gelinme Efekti */
+        /* Linklere Tï¿½klanma/Gelinme Efekti */
         .forgot-pass-link a:hover {
             color: var(--gazi-gold-premium);
         }
-        /* "Parola iþlemleri" linkinin üstüne gelince sararmasý */
+        /* "Parola iï¿½lemleri" linkinin ï¿½stï¿½ne gelince sararmasï¿½ */
 
-        /* En Alttaki Footer Linkleri (Kullaným Kýlavuzu vs.) */
+        /* En Alttaki Footer Linkleri (Kullanï¿½m Kï¿½lavuzu vs.) */
         .footer-links-modern {
             text-align: center;
         }
             /* Linkleri ortalar */
             .footer-links-modern a {
                 color: var(--gazi-navy-light);
-                text-decoration: none; /* Alt çizgiyi kaldýrýr */
+                text-decoration: none; /* Alt ï¿½izgiyi kaldï¿½rï¿½r */
                 font-size: 12px;
                 font-weight: 700;
                 transition: 0.3s;
@@ -292,18 +292,17 @@
             color: #cbd5e1;
             margin: 0 10px;
         }
-        /* Linkler arasýndaki noktalarýn rengi ve boþluðu */
+        /* Linkler arasï¿½ndaki noktalarï¿½n rengi ve boï¿½luï¿½u */
 
-        /* MOBÝL UYUM (Responsive Tasarým) */
-        /* Ekran geniþliði 576px'den (telefon ekranlarý) küçükse aþaðýdaki kodlar devreye girer */
+        /* MOBï¿½L UYUM (Responsive Tasarï¿½m) */
+        /* Ekran geniï¿½liï¿½i 576px'den (telefon ekranlarï¿½) kï¿½ï¿½ï¿½kse aï¿½aï¿½ï¿½daki kodlar devreye girer */
         @@media (max-width: 576px) {
             .auth-card-white {
-                padding: 40px 25px; /* Telefon ekranýnda iç boþluklarý daraltarak kartýn ekrana sýðmasýný saðlar */
-                border-radius: 30px; /* Ovaliði biraz azaltýr */
-                margin: 10px; /* Dýþarýdan 10px pay býrakarak telefonun kenarlarýna yapýþmasýný engeller */
+                padding: 40px 25px; /* Telefon ekranï¿½nda iï¿½ boï¿½luklarï¿½ daraltarak kartï¿½n ekrana sï¿½ï¿½masï¿½nï¿½ saï¿½lar */
+                border-radius: 30px; /* Ovaliï¿½i biraz azaltï¿½r */
+                margin: 10px; /* Dï¿½ï¿½arï¿½dan 10px pay bï¿½rakarak telefonun kenarlarï¿½na yapï¿½ï¿½masï¿½nï¿½ engeller */
             }
         }
     </style>
 }
 
-      

@@ -1,13 +1,13 @@
-using Microsoft.AspNetCore.Mvc;
+ï»¿using Microsoft.AspNetCore.Mvc;
 
 namespace GaziHastane.Controllers
 {
     public class MailController : Controller
     {
-        // Mail Giriþ Ekraný
+        // Mail Giriï¿½ Ekranï¿½
         public IActionResult Giris() { return View(); }
 
-        // Mail Login Ýþlemi (POST)
+        // Mail Login ï¿½ï¿½lemi (POST)
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
@@ -15,4 +15,4 @@ namespace GaziHastane.Controllers
         }
     }
 }
-//Personelin kurumsal "Gazi Mail" sistemine hýzlýca giriþ yapabilmesi için bir köprü sayfasý.
+//Personelin kurumsal "Gazi Mail" sistemine hï¿½zlï¿½ca giriï¿½ yapabilmesi iï¿½in bir kï¿½prï¿½ sayfasï¿½.

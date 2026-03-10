@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+ï»¿using Microsoft.AspNetCore.Mvc;
 
 namespace GaziHastane.Controllers
 {
@@ -13,4 +13,4 @@ namespace GaziHastane.Controllers
         }
     }
 }
-//Elektronik Belge Yönetim Sistemi. Hastane içindeki resmi evrak trafiðinin ve yazýþmalarýn dijital olarak yürütüleceði modül.
+//Elektronik Belge Yï¿½netim Sistemi. Hastane iï¿½indeki resmi evrak trafiï¿½inin ve yazï¿½ï¿½malarï¿½n dijital olarak yï¿½rï¿½tï¿½leceï¿½i modï¿½l.

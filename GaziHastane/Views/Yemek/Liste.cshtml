@@ -1,18 +1,18 @@
-@using GaziHastane.Models
+ï»¿@using GaziHastane.Models
 @model List<YemekListesi>
 
 @{
     ViewData["Title"] = "Gazi Hastanesi | Yemek Listesi";
-    
-    // Modelden gelen verileri al (Null gelme ihtimaline karþý kontrol et)
+
+    // Modelden gelen verileri al (Null gelme ihtimaline karï¿½ï¿½ kontrol et)
     var kahvalti = Model?.FirstOrDefault(x => x.Ogun == 1);
     var ogle = Model?.FirstOrDefault(x => x.Ogun == 2);
     var aksam = Model?.FirstOrDefault(x => x.Ogun == 3);
-    
+
     // Toplam kaloriyi hesapla
     var toplamKalori = (kahvalti?.ToplamKalori ?? 0) + (ogle?.ToplamKalori ?? 0) + (aksam?.ToplamKalori ?? 0);
-    
-    // Tarih bilgisi için bugünü kullan veya modelden varsa al
+
+    // Tarih bilgisi iï¿½in bugï¿½nï¿½ kullan veya modelden varsa al
     var tarih = DateTime.Today;
     if (Model != null && Model.Any())
     {
@@ -21,107 +21,107 @@
 }
 <!-- Sayfann ana kapsaycs. Tm ierik bu div'in iinde yer alr. -->
 <div class="menu-viewport">
-    <!-- Arka plan görsel efektleri (bulanýk daireler/blob'lar). -->
+    <!-- Arka plan gï¿½rsel efektleri (bulanï¿½k daireler/blob'lar). -->
     <div class="bg-visuals">
-        <!-- Birinci bulanýk daire (Mavi tonlarýnda) -->
+        <!-- Birinci bulanï¿½k daire (Mavi tonlarï¿½nda) -->
         <div class="blob blob-1"></div>
-        <!-- Ýkinci bulanýk daire (Koyu lacivert tonlarýnda) -->
+        <!-- ï¿½kinci bulanï¿½k daire (Koyu lacivert tonlarï¿½nda) -->
         <div class="blob blob-2"></div>
-        <!-- Üçüncü bulanýk daire (Daha küçük, hareketli) -->
+        <!-- ï¿½ï¿½ï¿½ncï¿½ bulanï¿½k daire (Daha kï¿½ï¿½ï¿½k, hareketli) -->
         <div class="blob blob-3"></div>
     </div>
 
-    <!-- Ortadaki içeriði saran kapsayýcý. Animasyonlu giriþ (aþaðýdan yukarý belirme) efekti var. -->
+    <!-- Ortadaki iï¿½eriï¿½i saran kapsayï¿½cï¿½. Animasyonlu giriï¿½ (aï¿½aï¿½ï¿½dan yukarï¿½ belirme) efekti var. -->
     <div class="center-content-wrapper animate__animated animate__fadeInUp">
 
-        <!-- Baþlýk ve selamlama bölümü -->
+        <!-- Baï¿½lï¿½k ve selamlama bï¿½lï¿½mï¿½ -->
         <div class="welcome-section text-center mb-5">
-            <!-- Büyük "Afiyet Olsun" baþlýðý -->
+            <!-- Bï¿½yï¿½k "Afiyet Olsun" baï¿½lï¿½ï¿½ï¿½ -->
             <h1 class="fw-900 text-navy display-5 mb-2">Afiyet Olsun</h1>
-            <!-- Alt açýklama metni -->
-            <p class="text-muted fw-bold shadow-text">Gazi Üniversitesi Hastanesi Günlük Menü</p>
+            <!-- Alt aï¿½ï¿½klama metni -->
+            <p class="text-muted fw-bold shadow-text">Gazi ï¿½niversitesi Hastanesi Gï¿½nlï¿½k Menï¿½</p>
         </div>
 
         @if (Model == null || !Model.Any())
         {
-             <div class="alert alert-warning text-center">
-                 <h4>Bugüne ait yemek menüsü bulunamadý.</h4>
-                 <p>Lütfen daha sonra tekrar deneyiniz.</p>
-             </div>
+            <div class="alert alert-warning text-center">
+                <h4>Bugï¿½ne ait yemek menï¿½sï¿½ bulunamadï¿½.</h4>
+                <p>Lï¿½tfen daha sonra tekrar deneyiniz.</p>
+            </div>
         }
         else
         {
-            <!-- Günlük menü kartýnýn kendisi -->
+            <!-- Gï¿½nlï¿½k menï¿½ kartï¿½nï¿½n kendisi -->
             <div class="menu-card-main shadow-2xl">
-                <!-- Kartýn üst kýsmý: Tarih ve Gün bilgisi (Mavi gradyan arka planlý) -->
+                <!-- Kartï¿½n ï¿½st kï¿½smï¿½: Tarih ve Gï¿½n bilgisi (Mavi gradyan arka planlï¿½) -->
                 <div class="card-date-header today p-4 text-center">
-                    <!-- Üst kýsýmda hafif desenli bir katman (overlay) -->
+                    <!-- ï¿½st kï¿½sï¿½mda hafif desenli bir katman (overlay) -->
                     <div class="header-overlay"></div>
-                    <!-- Tarih Baþlýðý -->
+                    <!-- Tarih Baï¿½lï¿½ï¿½ï¿½ -->
                     <h3 class="m-0 fw-900 text-white position-relative">
-                       @tarih.ToString("dd MMMM yyyy") | @tarih.ToString("dddd")
+                        @tarih.ToString("dd MMMM yyyy") | @tarih.ToString("dddd")
                     </h3>
-                    <!-- Ramazan ayý bilgisi (Opsiyonel: Eðer veritabanýnda varsa eklenebilir, þimdilik statik kaldýrýlabilir veya dinamik hesaplanabilir) -->
+                    <!-- Ramazan ayï¿½ bilgisi (Opsiyonel: Eï¿½er veritabanï¿½nda varsa eklenebilir, ï¿½imdilik statik kaldï¿½rï¿½labilir veya dinamik hesaplanabilir) -->
                     <!-- <div class="ramazan-pill mt-2 position-relative">Ramazan 15</div> -->
                 </div>
-    
-                <!-- Kartýn gövdesi: Yemek Listesi -->
+
+                <!-- Kartï¿½n gï¿½vdesi: Yemek Listesi -->
                 <div class="card-body p-4 p-md-5">
-                    
+
                     @if (kahvalti != null)
                     {
-                        <!-- Kahvaltý Satýrý -->
+                        <!-- Kahvaltï¿½ Satï¿½rï¿½ -->
                         <div class="meal-item-row mb-4">
-                            <!-- Öðün etiketi (Turuncu) -->
+                            <!-- ï¿½ï¿½ï¿½n etiketi (Turuncu) -->
                             <span class="meal-tag breakfast"><i class="fas fa-coffee me-2"></i>KAHVALTI</span>
-                            <!-- Yemek içeriði -->
+                            <!-- Yemek iï¿½eriï¿½i -->
                             <p class="meal-desc">
                                 @string.Join(", ", new[] { kahvalti.Corba, kahvalti.AnaYemek, kahvalti.YardimciYemek, kahvalti.TatliMeyve }.Where(s => !string.IsNullOrEmpty(s)))
                             </p>
                         </div>
                     }
-    
+
                     @if (ogle != null)
                     {
-                        <!-- Öðle Yemeði Satýrý -->
+                        <!-- ï¿½ï¿½le Yemeï¿½i Satï¿½rï¿½ -->
                         <div class="meal-item-row mb-4">
-                            <!-- Öðün etiketi (Yeþil) -->
-                            <span class="meal-tag lunch"><i class="fas fa-sun me-2"></i>ÖÐLE YEMEÐÝ</span>
-                            <!-- Yemek içeriði -->
+                            <!-- ï¿½ï¿½ï¿½n etiketi (Yeï¿½il) -->
+                            <span class="meal-tag lunch"><i class="fas fa-sun me-2"></i>ï¿½ï¿½LE YEMEï¿½ï¿½</span>
+                            <!-- Yemek iï¿½eriï¿½i -->
                             <p class="meal-desc">
                                 @string.Join(", ", new[] { ogle.Corba, ogle.AnaYemek, ogle.YardimciYemek, ogle.TatliMeyve }.Where(s => !string.IsNullOrEmpty(s)))
                             </p>
                         </div>
                     }
-    
+
                     @if (aksam != null)
                     {
-                        <!-- Akþam Yemeði Satýrý -->
+                        <!-- Akï¿½am Yemeï¿½i Satï¿½rï¿½ -->
                         <div class="meal-item-row">
-                            <!-- Öðün etiketi (Mavi) -->
-                            <span class="meal-tag dinner"><i class="fas fa-moon me-2"></i>AKÞAM YEMEÐÝ</span>
-                            <!-- Yemek içeriði -->
+                            <!-- ï¿½ï¿½ï¿½n etiketi (Mavi) -->
+                            <span class="meal-tag dinner"><i class="fas fa-moon me-2"></i>AKï¿½AM YEMEï¿½ï¿½</span>
+                            <!-- Yemek iï¿½eriï¿½i -->
                             <p class="meal-desc">
-                                 @string.Join(", ", new[] { aksam.Corba, aksam.AnaYemek, aksam.YardimciYemek, aksam.TatliMeyve }.Where(s => !string.IsNullOrEmpty(s)))
+                                @string.Join(", ", new[] { aksam.Corba, aksam.AnaYemek, aksam.YardimciYemek, aksam.TatliMeyve }.Where(s => !string.IsNullOrEmpty(s)))
                             </p>
                         </div>
                     }
                 </div>
-    
-                <!-- Kartýn alt kýsmý: Kalori Bilgisi -->
+
+                <!-- Kartï¿½n alt kï¿½smï¿½: Kalori Bilgisi -->
                 <div class="card-footer-info text-center py-3">
                     <span class="kcal-badge"><i class="fas fa-fire-alt me-2"></i>@toplamKalori kcal</span>
                 </div>
             </div>
         }
 
-        <!-- Aylýk Listeye Git Butonu -->
+        <!-- Aylï¿½k Listeye Git Butonu -->
         <div class="text-center mt-5">
             <a href="/Yemek/AylikListe" class="btn-modern-toggle text-decoration-none">
                 <!-- Buton ikonu -->
                 <div class="btn-icon"><i class="far fa-calendar-alt"></i></div>
                 <!-- Buton metni -->
-                <span class="ms-3 me-2">TAM AY LÝSTESÝNÝ GÖRÜNTÜLE</span>
+                <span class="ms-3 me-2">TAM AY Lï¿½STESï¿½Nï¿½ Gï¿½Rï¿½NTï¿½LE</span>
             </a>
         </div>
 
@@ -129,29 +129,29 @@
 </div>
 
 @section Styles {
-    <!-- Animasyon kütüphanesi -->
+    <!-- Animasyon kï¿½tï¿½phanesi -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
-        /* CSS Deðiþkenleri: Renkleri tek bir yerden yönetmek için */
+        /* CSS Deï¿½iï¿½kenleri: Renkleri tek bir yerden yï¿½netmek iï¿½in */
         :root {
             --navy: #0f172a; /* Temel lacivert renk */
             --primary: #2563eb; /* Ana mavi vurgu rengi */
-            --bg-page: #f8fafc; /* Sayfa arka plan rengi (açýk gri/mavi) */
+            --bg-page: #f8fafc; /* Sayfa arka plan rengi (aï¿½ï¿½k gri/mavi) */
         }
 
-        /* Sayfa Geneli Ayarlarý */
+        /* Sayfa Geneli Ayarlarï¿½ */
         body, html {
             margin: 0;
             padding: 0;
             background: var(--bg-page);
-            font-family: 'Plus Jakarta Sans', sans-serif; /* Yazý tipi */
-            overflow-x: hidden; /* Yatay taþmayý engelle */
+            font-family: 'Plus Jakarta Sans', sans-serif; /* Yazï¿½ tipi */
+            overflow-x: hidden; /* Yatay taï¿½mayï¿½ engelle */
         }
 
-        /* Ana Görünüm Alaný (Viewport) */
+        /* Ana Gï¿½rï¿½nï¿½m Alanï¿½ (Viewport) */
         .menu-viewport {
             width: 100%;
-            min-height: 100vh; /* Ekranýn tamamýný kapla */
+            min-height: 100vh; /* Ekranï¿½n tamamï¿½nï¿½ kapla */
             display: flex;
             align-items: center; /* Dikey ortala */
             justify-content: center; /* Yatay ortala */
@@ -159,9 +159,9 @@
             padding: 60px 20px;
         }
 
-        /* Arka Plan Görsel Efektleri (Blob'lar) */
+        /* Arka Plan Gï¿½rsel Efektleri (Blob'lar) */
         .bg-visuals {
-            position: fixed; /* Üstte sabit kalsýn */
+            position: fixed; /* ï¿½stte sabit kalsï¿½n */
             top: 0;
             left: 0;
             width: 100%;
@@ -170,13 +170,13 @@
             overflow: hidden;
         }
 
-        /* Blob (Bulanýk Daire) Temel Stil */
+        /* Blob (Bulanï¿½k Daire) Temel Stil */
         .blob {
             position: absolute;
             width: 600px;
             height: 600px;
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(30, 64, 175, 0.05) 100%);
-            filter: blur(100px); /* Bulanýklýk efekti */
+            filter: blur(100px); /* Bulanï¿½klï¿½k efekti */
             border-radius: 50%; /* Tam daire */
             animation: move 20s infinite alternate; /* Hareket animasyonu */
         }
@@ -187,7 +187,7 @@
             right: -100px;
         }
 
-        /* Ýkinci Blob Konumu ve Rengi */
+        /* ï¿½kinci Blob Konumu ve Rengi */
         .blob-2 {
             bottom: -200px;
             left: -100px;
@@ -196,14 +196,14 @@
             background: rgba(15, 23, 42, 0.08);
         }
 
-        /* Üçüncü Blob Konumu ve Rengi */
+        /* ï¿½ï¿½ï¿½ncï¿½ Blob Konumu ve Rengi */
         .blob-3 {
             top: 40%;
             left: 30%;
             width: 300px;
             height: 300px;
             background: rgba(37, 99, 235, 0.1);
-            animation-delay: -5s; /* Animasyonu farklý zamanda baþlat */
+            animation-delay: -5s; /* Animasyonu farklï¿½ zamanda baï¿½lat */
         }
 
         /* Blob Hareket Animasyonu (Keyframes) */
@@ -211,48 +211,49 @@
             from {
                 transform: translate(0, 0) rotate(0deg) scale(1);
             }
+
             to {
                 transform: translate(100px, 50px) rotate(30deg) scale(1.1);
             }
         }
 
-        /* Merkezdeki Ýçeriði Saran Yapý */
+        /* Merkezdeki ï¿½ï¿½eriï¿½i Saran Yapï¿½ */
         .center-content-wrapper {
             width: 100%;
-            max-width: 700px; /* Maksimum geniþlik */
-            z-index: 2; /* Arka planýn üstünde */
+            max-width: 700px; /* Maksimum geniï¿½lik */
+            z-index: 2; /* Arka planï¿½n ï¿½stï¿½nde */
             position: relative;
         }
 
         /* KART TASARIMI - Glassmorphism (Buzlu Cam Efekti) */
         .menu-card-main {
-            background: rgba(255, 255, 255, 0.9); /* Yarý saydam beyaz */
-            backdrop-filter: blur(20px); /* Arkadaki nesneleri bulanýklaþtýr */
-            border-radius: 40px; /* Yuvarlak köþeler */
-            overflow: hidden; /* Taþmayý gizle */
-            border: 1px solid rgba(255, 255, 255, 0.6); /* Ýnce beyaz kenarlýk */
-            transition: transform 0.3s ease; /* Hover efekti için geçiþ */
+            background: rgba(255, 255, 255, 0.9); /* Yarï¿½ saydam beyaz */
+            backdrop-filter: blur(20px); /* Arkadaki nesneleri bulanï¿½klaï¿½tï¿½r */
+            border-radius: 40px; /* Yuvarlak kï¿½ï¿½eler */
+            overflow: hidden; /* Taï¿½mayï¿½ gizle */
+            border: 1px solid rgba(255, 255, 255, 0.6); /* ï¿½nce beyaz kenarlï¿½k */
+            transition: transform 0.3s ease; /* Hover efekti iï¿½in geï¿½iï¿½ */
         }
 
-        /* Tarih Baþlýðý (Kartýn Üstü) */
+        /* Tarih Baï¿½lï¿½ï¿½ï¿½ (Kartï¿½n ï¿½stï¿½) */
         .card-date-header.today {
             background: linear-gradient(135deg, var(--navy) 0%, #1e40af 100%); /* Mavi gradyan */
             position: relative;
             overflow: hidden;
         }
 
-        /* Baþlýk Üzerindeki Desen (Overlay) */
+        /* Baï¿½lï¿½k ï¿½zerindeki Desen (Overlay) */
         .header-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('https://www.transparenttextures.com/patterns/cubes.png'); /* Desen görseli */
-            opacity: 0.1; /* Çok hafif görünürlük */
+            background: url('https://www.transparenttextures.com/patterns/cubes.png'); /* Desen gï¿½rseli */
+            opacity: 0.1; /* ï¿½ok hafif gï¿½rï¿½nï¿½rlï¿½k */
         }
 
-        /* YEMEK ÝÇERÝKLERÝ VE METÝNLERÝ */
+        /* YEMEK ï¿½ï¿½ERï¿½KLERï¿½ VE METï¿½NLERï¿½ */
         .meal-desc {
             font-size: 1.35rem;
             font-weight: 800;
@@ -261,7 +262,7 @@
             line-height: 1.2;
         }
 
-        /* Öðün Etiketleri (Kahvaltý, Öðle, Akþam) */
+        /* ï¿½ï¿½ï¿½n Etiketleri (Kahvaltï¿½, ï¿½ï¿½le, Akï¿½am) */
         .meal-tag {
             font-size: 11px;
             font-weight: 800;
@@ -273,45 +274,45 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-            /* Kahvaltý Etiketi Rengi */
+            /* Kahvaltï¿½ Etiketi Rengi */
             .meal-tag.breakfast {
                 background: #fff7ed;
                 color: #ea580c;
             }
 
-            /* Öðle Yemeði Etiketi Rengi */
+            /* ï¿½ï¿½le Yemeï¿½i Etiketi Rengi */
             .meal-tag.lunch {
                 background: #f0fdf4;
                 color: #16a34a;
             }
 
-            /* Akþam Yemeði Etiketi Rengi */
+            /* Akï¿½am Yemeï¿½i Etiketi Rengi */
             .meal-tag.dinner {
                 background: #eff6ff;
                 color: #2563eb;
             }
 
-        /* Aylýk Liste Butonu */
+        /* Aylï¿½k Liste Butonu */
         .btn-modern-toggle {
             background: var(--navy);
             color: white;
             border: none;
             padding: 10px 30px 10px 10px;
-            border-radius: 100px; /* Hap þeklinde buton */
+            border-radius: 100px; /* Hap ï¿½eklinde buton */
             display: inline-flex;
             align-items: center;
             font-weight: 800;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Yaylanma efektli geçiþ */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Yaylanma efektli geï¿½iï¿½ */
         }
 
             /* Buton Hover Efekti */
             .btn-modern-toggle:hover {
-                transform: scale(1.05); /* Büyüme */
-                background: #000; /* Renk deðiþimi */
-                box-shadow: 0 15px 30px rgba(15,23,42,0.3); /* Gölge artýþý */
+                transform: scale(1.05); /* Bï¿½yï¿½me */
+                background: #000; /* Renk deï¿½iï¿½imi */
+                box-shadow: 0 15px 30px rgba(15,23,42,0.3); /* Gï¿½lge artï¿½ï¿½ï¿½ */
             }
 
-        /* Butonun Solundaki Yuvarlak Ýkon */
+        /* Butonun Solundaki Yuvarlak ï¿½kon */
         .btn-icon {
             width: 48px;
             height: 48px;
@@ -323,7 +324,7 @@
             font-size: 1.1rem;
         }
 
-        /* Gölge Efektleri */
+        /* Gï¿½lge Efektleri */
         .shadow-2xl {
             box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.15);
         }
@@ -332,18 +333,18 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        /* MOBÝL UYUMLULUK (Responsive) */
+        /* MOBï¿½L UYUMLULUK (Responsive) */
         @@media (max-width: 768px) {
             .welcome-section h1 {
-                font-size: 2rem; /* Baþlýk boyutunu küçült */
+                font-size: 2rem; /* Baï¿½lï¿½k boyutunu kï¿½ï¿½ï¿½lt */
             }
 
             .meal-desc {
-                font-size: 1.15rem; /* Yemek açýklamalarýný küçült */
+                font-size: 1.15rem; /* Yemek aï¿½ï¿½klamalarï¿½nï¿½ kï¿½ï¿½ï¿½lt */
             }
 
             .blob {
-                width: 300px; /* Arka plan dairelerini küçült */
+                width: 300px; /* Arka plan dairelerini kï¿½ï¿½ï¿½lt */
                 height: 300px;
             }
         }

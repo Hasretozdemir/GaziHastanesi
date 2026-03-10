@@ -1,83 +1,83 @@
-@* RAZOR KOD BLOÐU: Sunucu tarafýnda (C#) çalýþan kodlar. *@
+ï»¿@* RAZOR KOD BLOï¿½U: Sunucu tarafï¿½nda (C#) ï¿½alï¿½ï¿½an kodlar. *@
 @{
-    // Sayfanýn baþlýðýný belirtiyoruz. Tarayýcý sekmesinde "Mart 2026 | Aylýk Yemek Listesi" olarak görünecek.
-    ViewData["Title"] = "Mart 2026 | Aylýk Yemek Listesi";
+    // Sayfanï¿½n baï¿½lï¿½ï¿½ï¿½nï¿½ belirtiyoruz. Tarayï¿½cï¿½ sekmesinde "Mart 2026 | Aylï¿½k Yemek Listesi" olarak gï¿½rï¿½necek.
+    ViewData["Title"] = "Mart 2026 | Aylï¿½k Yemek Listesi";
 }
 
-<!-- Ana Kapsayýcý: Tüm aylýk yemek listesi sayfasýný saran yapý. -->
+<!-- Ana Kapsayï¿½cï¿½: Tï¿½m aylï¿½k yemek listesi sayfasï¿½nï¿½ saran yapï¿½. -->
 <div class="monthly-page-viewport">
-    <!-- Arka plan görsel efektleri (bulanýk daireler/blob'lar). -->
+    <!-- Arka plan gï¿½rsel efektleri (bulanï¿½k daireler/blob'lar). -->
     <div class="bg-visuals">
-        <!-- Birinci bulanýk daire (Mavi tonlarýnda) -->
+        <!-- Birinci bulanï¿½k daire (Mavi tonlarï¿½nda) -->
         <div class="blob blob-1"></div>
-        <!-- Ýkinci bulanýk daire (Daha koyu tonlarda) -->
+        <!-- ï¿½kinci bulanï¿½k daire (Daha koyu tonlarda) -->
         <div class="blob blob-2"></div>
     </div>
 
-    <!-- Ýçerik Kapsayýcýsý: Ortalanmýþ ve dikey dolgusu (padding) olan alan. -->
+    <!-- ï¿½ï¿½erik Kapsayï¿½cï¿½sï¿½: Ortalanmï¿½ï¿½ ve dikey dolgusu (padding) olan alan. -->
     <div class="container py-5 position-relative" style="z-index: 2;">
 
-        <!-- Üst Baþlýk Bölümü: Geri dön butonu ve sayfa baþlýðýný içerir. -->
+        <!-- ï¿½st Baï¿½lï¿½k Bï¿½lï¿½mï¿½: Geri dï¿½n butonu ve sayfa baï¿½lï¿½ï¿½ï¿½nï¿½ iï¿½erir. -->
         <div class="page-header-wrapper mb-5 animate__animated animate__fadeIn">
-            <!-- Geri Dön Butonu -->
+            <!-- Geri Dï¿½n Butonu -->
             <div class="d-flex align-items-center mb-3">
-                <!-- Tarayýcýnýn geçmiþine (bir önceki sayfaya) döndüren javascript baðlantýsý. -->
+                <!-- Tarayï¿½cï¿½nï¿½n geï¿½miï¿½ine (bir ï¿½nceki sayfaya) dï¿½ndï¿½ren javascript baï¿½lantï¿½sï¿½. -->
                 <a href="javascript:history.back()" class="btn-back-modern">
                     <i class="fas fa-chevron-left"></i>
-                    <span>GERÝ DÖN</span>
+                    <span>GERï¿½ Dï¿½N</span>
                 </a>
             </div>
-            
-            <!-- Sayfa Baþlýðý ve Alt Metin -->
+
+            <!-- Sayfa Baï¿½lï¿½ï¿½ï¿½ ve Alt Metin -->
             <div class="header-text">
-                <h2 class="fw-900 text-navy m-0">MART 2026 <span class="text-primary">YEMEK MENÜSÜ</span></h2>
-                <p class="text-muted m-0 fw-600">Gazi Üniversitesi Hastanesi Aylýk Çizelgesi</p>
+                <h2 class="fw-900 text-navy m-0">MART 2026 <span class="text-primary">YEMEK MENï¿½Sï¿½</span></h2>
+                <p class="text-muted m-0 fw-600">Gazi ï¿½niversitesi Hastanesi Aylï¿½k ï¿½izelgesi</p>
             </div>
         </div>
 
-        <!-- Aylýk Listeleme Grid Yapýsý: Aþaðýdan yukarý animasyonlu giriþ. -->
+        <!-- Aylï¿½k Listeleme Grid Yapï¿½sï¿½: Aï¿½aï¿½ï¿½dan yukarï¿½ animasyonlu giriï¿½. -->
         <div class="row g-4 justify-content-center animate__animated animate__fadeInUp">
-            
-            @* Döngü Örneði: Mart ayýnýn 3. gününden 6. gününe kadar olan verileri basar. 
-               Gerçek projede burasý veritabanýndan gelen bir liste üzerinde dönecektir. *@
+
+            @* Dï¿½ngï¿½ ï¿½rneï¿½i: Mart ayï¿½nï¿½n 3. gï¿½nï¿½nden 6. gï¿½nï¿½ne kadar olan verileri basar. 
+               Gerï¿½ek projede burasï¿½ veritabanï¿½ndan gelen bir liste ï¿½zerinde dï¿½necektir. *@
             @for (int day = 3; day <= 6; day++)
             {
                 <div class="col-12 col-xl-11">
-                    @* Tekil Gün Kartý: Her bir günü temsil eden yatay kart yapýsý. *@
+                    @* Tekil Gï¿½n Kartï¿½: Her bir gï¿½nï¿½ temsil eden yatay kart yapï¿½sï¿½. *@
                     <div class="monthly-row-card shadow-sm">
-                        
-                        <!-- Sol Taraf: Tarih ve Gün Bilgisi (Koyu arka plan) -->
+
+                        <!-- Sol Taraf: Tarih ve Gï¿½n Bilgisi (Koyu arka plan) -->
                         <div class="row-date-side">
-                            <!-- Günün rakamý (Örn: 03, 04) -->
+                            <!-- Gï¿½nï¿½n rakamï¿½ (ï¿½rn: 03, 04) -->
                             <span class="day-number">@day.ToString("00")</span>
-                            <!-- Ay Ýsmi -->
+                            <!-- Ay ï¿½smi -->
                             <span class="month-name">MART</span>
-                            <!-- Ramazan Günü Göstergesi (Hesaplamalý örnek) -->
+                            <!-- Ramazan Gï¿½nï¿½ Gï¿½stergesi (Hesaplamalï¿½ ï¿½rnek) -->
                             <div class="ramazan-tag">RAMAZAN @(day + 10)</div>
                         </div>
 
-                        <!-- Orta Kýsým: Yemek Ýçerikleri (Kahvaltý, Öðle, Akþam) -->
+                        <!-- Orta Kï¿½sï¿½m: Yemek ï¿½ï¿½erikleri (Kahvaltï¿½, ï¿½ï¿½le, Akï¿½am) -->
                         <div class="row-content-side">
-                            <!-- Kahvaltý Bölümü -->
+                            <!-- Kahvaltï¿½ Bï¿½lï¿½mï¿½ -->
                             <div class="meal-group">
                                 <label><i class="fas fa-coffee text-orange"></i> KAHVALTI</label>
-                                <p>Çay, Yumurta, Bal, Tereyað, Siyah Zeytin</p>
+                                <p>ï¿½ay, Yumurta, Bal, Tereyaï¿½, Siyah Zeytin</p>
                             </div>
 
-                            <!-- Öðle Yemeði Bölümü -->
+                            <!-- ï¿½ï¿½le Yemeï¿½i Bï¿½lï¿½mï¿½ -->
                             <div class="meal-group middle">
-                                <label><i class="fas fa-sun text-green"></i> ÖÐLE YEMEÐÝ</label>
-                                <p>Kýymalý Ispanak (Yoðurt), Soslu Makarna, Güllaç</p>
+                                <label><i class="fas fa-sun text-green"></i> ï¿½ï¿½LE YEMEï¿½ï¿½</label>
+                                <p>Kï¿½ymalï¿½ Ispanak (Yoï¿½urt), Soslu Makarna, Gï¿½llaï¿½</p>
                             </div>
 
-                            <!-- Akþam Yemeði Bölümü -->
+                            <!-- Akï¿½am Yemeï¿½i Bï¿½lï¿½mï¿½ -->
                             <div class="meal-group">
-                                <label><i class="fas fa-moon text-blue"></i> AKÞAM YEMEÐÝ</label>
-                                <p>Et Kavurma (Pirinç Pilavý), Hanýmaða Çorba, Portakal</p>
+                                <label><i class="fas fa-moon text-blue"></i> AKï¿½AM YEMEï¿½ï¿½</label>
+                                <p>Et Kavurma (Pirinï¿½ Pilavï¿½), Hanï¿½maï¿½a ï¿½orba, Portakal</p>
                             </div>
                         </div>
 
-                        <!-- Sað Taraf: Ek Bilgiler (Kalori vb.) - Sadece masaüstünde görünür (d-none d-lg-flex) -->
+                        <!-- Saï¿½ Taraf: Ek Bilgiler (Kalori vb.) - Sadece masaï¿½stï¿½nde gï¿½rï¿½nï¿½r (d-none d-lg-flex) -->
                         <div class="row-info-side d-none d-lg-flex">
                             <div class="kcal-pill">2100 kcal</div>
                         </div>
@@ -89,18 +89,18 @@
 </div>
 
 @section Styles {
-    <!-- Sayfaya Özel CSS Stilleri -->
+    <!-- Sayfaya ï¿½zel CSS Stilleri -->
     <style>
-        /* CSS Deðiþkenleri */
+        /* CSS Deï¿½iï¿½kenleri */
         :root {
             --navy: #0f172a; /* Temel lacivert renk */
             --primary: #2563eb; /* Ana mavi renk */
             --bg-page: #f8fafc; /* Sayfa arka plan rengi */
         }
 
-        /* Ekraný ortalayan ve dikey hizalayan ana kýsýtlayýcý */
+        /* Ekranï¿½ ortalayan ve dikey hizalayan ana kï¿½sï¿½tlayï¿½cï¿½ */
         .monthly-page-viewport {
-            min-height: 100vh; /* Ekran boyu kadar yükseklik */
+            min-height: 100vh; /* Ekran boyu kadar yï¿½kseklik */
             background: var(--bg-page);
             position: relative;
             display: flex;
@@ -108,44 +108,44 @@
             align-items: center; /* Yatayda tam merkezleme */
         }
 
-        /* Baþlýk Alaný Düzeni: Çizgi ile ayrýlmýþ alt kýsým */
+        /* Baï¿½lï¿½k Alanï¿½ Dï¿½zeni: ï¿½izgi ile ayrï¿½lmï¿½ï¿½ alt kï¿½sï¿½m */
         .page-header-wrapper {
             width: 100%;
-            border-bottom: 2px solid rgba(0,0,0,0.03); /* Çok hafif alt çizgi */
+            border-bottom: 2px solid rgba(0,0,0,0.03); /* ï¿½ok hafif alt ï¿½izgi */
             padding-bottom: 20px;
         }
 
-        /* Geri Dön Butonu Tasarýmý */
+        /* Geri Dï¿½n Butonu Tasarï¿½mï¿½ */
         .btn-back-modern {
             background: white;
             color: var(--navy);
             padding: 8px 20px;
             border-radius: 12px;
-            text-decoration: none; /* Alt çizgiyi kaldýr */
-            font-weight: 800; /* Kalýn yazý */
+            text-decoration: none; /* Alt ï¿½izgiyi kaldï¿½r */
+            font-weight: 800; /* Kalï¿½n yazï¿½ */
             font-size: 0.85rem;
             display: inline-flex;
             align-items: center;
-            gap: 10px; /* Ýkon ve yazý arasý boþluk */
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Hafif gölge */
+            gap: 10px; /* ï¿½kon ve yazï¿½ arasï¿½ boï¿½luk */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Hafif gï¿½lge */
             transition: all 0.3s;
             border: 1px solid #e2e8f0;
         }
 
             /* Buton Hover Efekti */
             .btn-back-modern:hover {
-                background: var(--navy); /* Zemin rengi deðiþimi */
-                color: white; /* Yazý rengi deðiþimi */
+                background: var(--navy); /* Zemin rengi deï¿½iï¿½imi */
+                color: white; /* Yazï¿½ rengi deï¿½iï¿½imi */
                 transform: translateX(-5px); /* Hafif sola kayma */
             }
 
-        /* Aylýk Liste Kartý Tasarýmý (Glassmorphism) */
+        /* Aylï¿½k Liste Kartï¿½ Tasarï¿½mï¿½ (Glassmorphism) */
         .monthly-row-card {
-            background: rgba(255, 255, 255, 0.9); /* Yarý saydam beyaz */
-            backdrop-filter: blur(10px); /* Arka planý bulanýklaþtýr */
-            border-radius: 20px; /* Yuvarlak köþeler */
-            display: flex; /* Ýçerikleri yan yana diz */
-            overflow: hidden; /* Taþmayý engelle */
+            background: rgba(255, 255, 255, 0.9); /* Yarï¿½ saydam beyaz */
+            backdrop-filter: blur(10px); /* Arka planï¿½ bulanï¿½klaï¿½tï¿½r */
+            border-radius: 20px; /* Yuvarlak kï¿½ï¿½eler */
+            display: flex; /* ï¿½ï¿½erikleri yan yana diz */
+            overflow: hidden; /* Taï¿½mayï¿½ engelle */
             border: 1px solid rgba(255,255,255,0.6);
             min-height: 120px;
         }
@@ -155,7 +155,7 @@
             background: var(--navy); /* Koyu arka plan */
             color: white;
             padding: 20px;
-            min-width: 130px; /* Sabit geniþlik */
+            min-width: 130px; /* Sabit geniï¿½lik */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -163,31 +163,31 @@
             text-align: center;
         }
 
-        /* Gün Numarasý (Büyük Font) */
+        /* Gï¿½n Numarasï¿½ (Bï¿½yï¿½k Font) */
         .day-number {
             font-size: 2.2rem;
             font-weight: 900;
             line-height: 1;
         }
 
-        /* Ay Ýsmi */
+        /* Ay ï¿½smi */
         .month-name {
             font-size: 0.8rem;
             font-weight: 700;
-            opacity: 0.7; /* Hafif saydamlýk */
+            opacity: 0.7; /* Hafif saydamlï¿½k */
         }
 
-        /* Yemek Ýçerik Alaný (Orta Kýsým) */
+        /* Yemek ï¿½ï¿½erik Alanï¿½ (Orta Kï¿½sï¿½m) */
         .row-content-side {
-            flex-grow: 1; /* Kalan boþluðu doldur */
+            flex-grow: 1; /* Kalan boï¿½luï¿½u doldur */
             padding: 20px 30px;
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3 eþit kolona böl */
+            grid-template-columns: repeat(3, 1fr); /* 3 eï¿½it kolona bï¿½l */
             align-items: center;
-            gap: 15px; /* Kolonlar arasý boþluk */
+            gap: 15px; /* Kolonlar arasï¿½ boï¿½luk */
         }
 
-        /* Yemek Grubu Baþlýðý (Kahvaltý, Öðle...) */
+        /* Yemek Grubu Baï¿½lï¿½ï¿½ï¿½ (Kahvaltï¿½, ï¿½ï¿½le...) */
         .meal-group label {
             display: block;
             font-size: 0.7rem;
@@ -196,7 +196,7 @@
             margin-bottom: 4px;
         }
 
-        /* Yemek Ýçeriði Metni */
+        /* Yemek ï¿½ï¿½eriï¿½i Metni */
         .meal-group p {
             font-size: 0.95rem;
             font-weight: 700;
@@ -204,15 +204,15 @@
             margin: 0;
         }
 
-        /* Sað Taraf: Bilgi Kutusu */
+        /* Saï¿½ Taraf: Bilgi Kutusu */
         .row-info-side {
             padding: 20px;
             display: flex;
             align-items: center;
-            border-left: 1px solid #f1f5f9; /* Sol kenar çizgisi */
+            border-left: 1px solid #f1f5f9; /* Sol kenar ï¿½izgisi */
         }
 
-        /* Kalori Hapý (Pill Badge) */
+        /* Kalori Hapï¿½ (Pill Badge) */
         .kcal-pill {
             background: #f1f5f9;
             color: #64748b;
@@ -222,13 +222,13 @@
             font-size: 0.8rem;
         }
 
-        /* Arka Plan Görsel Efektleri (Blob'lar) */
+        /* Arka Plan Gï¿½rsel Efektleri (Blob'lar) */
         .bg-visuals .blob {
-            position: fixed; /* Sayfa kaydýðýnda sabit kalýr */
+            position: fixed; /* Sayfa kaydï¿½ï¿½ï¿½nda sabit kalï¿½r */
             width: 500px;
             height: 500px;
-            filter: blur(100px); /* Bulanýklýk efekti */
-            z-index: 1; /* Ýçeriðin arkasýnda */
+            filter: blur(100px); /* Bulanï¿½klï¿½k efekti */
+            z-index: 1; /* ï¿½ï¿½eriï¿½in arkasï¿½nda */
         }
 
         /* Birinci Blob Konumu */
@@ -238,42 +238,37 @@
             background: rgba(37, 99, 235, 0.08);
         }
 
-        /* Ýkinci Blob Konumu */
+        /* ï¿½kinci Blob Konumu */
         .blob-2 {
             bottom: -100px;
             left: -50px;
             background: rgba(15, 23, 42, 0.04);
         }
 
-        /* MOBÝL UYUMLULUK (Responsive Ayarlar) */
-        /* Ekran geniþliði 991px (Tablet/Mobil) altýndaysa devreye girer */
+        /* MOBï¿½L UYUMLULUK (Responsive Ayarlar) */
+        /* Ekran geniï¿½liï¿½i 991px (Tablet/Mobil) altï¿½ndaysa devreye girer */
         @@media (max-width: 991px) {
-            
-            /* Yemek içeriklerini tek sütuna düþür */
+            /* Yemek iï¿½eriklerini tek sï¿½tuna dï¿½ï¿½ï¿½r */
             .row-content-side {
                 grid-template-columns: 1fr;
                 padding: 20px;
             }
-
-            /* Kartý dikey yerleþime çevir */
+            /* Kartï¿½ dikey yerleï¿½ime ï¿½evir */
             .monthly-row-card {
                 flex-direction: column;
             }
-
-            /* Tarih kutusunu yatay yap ve geniþlet */
+            /* Tarih kutusunu yatay yap ve geniï¿½let */
             .row-date-side {
                 flex-direction: row;
                 min-width: 100%;
                 gap: 15px;
                 padding: 10px;
             }
-
-            /* Gün numarasýný küçült */
+            /* Gï¿½n numarasï¿½nï¿½ kï¿½ï¿½ï¿½lt */
             .day-number {
                 font-size: 1.5rem;
             }
-
-            /* Bilgi kutusunun kenarlýðýný deðiþtir ve ortala */
+            /* Bilgi kutusunun kenarlï¿½ï¿½ï¿½nï¿½ deï¿½iï¿½tir ve ortala */
             .row-info-side {
                 border-left: none;
                 border-top: 1px solid #f1f5f9;
