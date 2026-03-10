@@ -7,6 +7,10 @@ namespace GaziHastane
     {
         public static void Main(string[] args)
         {
+            // PostgreSQL 6.0+ sürümlerinde DateTime.Local hatasýný önlemek için 
+            // eski zaman davranýþýný (Legacy Behavior) etkinleþtiriyoruz.
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.

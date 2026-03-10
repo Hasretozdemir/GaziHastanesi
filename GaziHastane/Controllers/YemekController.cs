@@ -14,31 +14,32 @@ namespace GaziHastane.Controllers
             _context = context;
         }
 
-        public IActionResult Liste() 
-        { 
-            // Bugünün tarihine göre yemek listesini getir
-            // (Demo amaçlı 2026 yılına sabitlenmiş olabilir, ama normalde DateTime.Today kullanılır)
-            // Eğer veri yoksa boş liste döner, view tarafında kontrol edilir.
-            var bugun = DateTime.Today; 
-            
-            // Veritabanından bugüne ait kayıtları çekiyoruz (Sabah, Öğle, Akşam)
+        // Günlük yemek listesini getiren aksiyon
+        public IActionResult Liste()
+        {
+            // PostgreSQL UTC uyumluluğu için UtcNow kullanılmıştır
+            var bugun = DateTime.UtcNow.Date;
+
             var gunlukListe = _context.YemekListesi
                                       .Where(x => x.Tarih.Date == bugun)
                                       .OrderBy(x => x.Ogun)
                                       .ToList();
 
-            return View(gunlukListe); 
+            return View(gunlukListe);
         }
 
-        public async Task<IActionResult> AylikListe() 
+        // Tüm aylık listeyi veritabanından çeken aksiyon
+        public async Task<IActionResult> AylikListe()
         {
-            // Tüm aylık listeyi getir
+            // Veritabanındaki tüm yemek listesini çekiyoruz
+            // Tarihe göre baştan sona (OrderBy) ve öğün sırasına göre diziyoruz
             var liste = await _context.YemekListesi
-                                      .OrderByDescending(x => x.Tarih)
+                                      .OrderBy(x => x.Tarih)
                                       .ThenBy(x => x.Ogun)
                                       .ToListAsync();
-            return View(liste); 
+
+            // Çekilen listeyi View'a (AylikListe.cshtml) gönderiyoruz
+            return View(liste);
         }
     }
 }
-//Hastane çalışanlarının ve refakatçilerin aylık yemek menüsünü dijital ortamda takip edebilmesi için eklenmiş.

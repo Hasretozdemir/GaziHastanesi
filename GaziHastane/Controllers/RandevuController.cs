@@ -1,11 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GaziHastane.Controllers
 {
     public class RandevuController : Controller
     {
-        // Giriþ Ekraný
-        public IActionResult Giris() { return View(); }
+        public IActionResult Giris()
+        {
+            var randevular = _context.Randevular.ToList();
+            return View(randevular);
+        }
 
         // Giriþ yapýldýktan sonra açýlan seçim ekraný
         public IActionResult Secim() { return View(); }

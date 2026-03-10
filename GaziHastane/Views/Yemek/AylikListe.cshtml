@@ -1,161 +1,122 @@
-﻿@* RAZOR KOD BLO�U: Sunucu taraf�nda (C#) �al��an kodlar. *@
+﻿@model IEnumerable<GaziHastane.Models.YemekListesi>
+
 @{
-    // Sayfan�n ba�l���n� belirtiyoruz. Taray�c� sekmesinde "Mart 2026 | Ayl�k Yemek Listesi" olarak g�r�necek.
-    ViewData["Title"] = "Mart 2026 | Ayl�k Yemek Listesi";
+    ViewData["Title"] = "Mart 2026 | Aylık Yemek Listesi";
+
+    // Verileri tarihe göre grupluyoruz ki her güne bir satır/kart basalım
+    var gruplanmisListe = Model.GroupBy(x => x.Tarih.Date).OrderBy(g => g.Key);
 }
 
-<!-- Ana Kapsay�c�: T�m ayl�k yemek listesi sayfas�n� saran yap�. -->
 <div class="monthly-page-viewport">
-    <!-- Arka plan g�rsel efektleri (bulan�k daireler/blob'lar). -->
     <div class="bg-visuals">
-        <!-- Birinci bulan�k daire (Mavi tonlar�nda) -->
         <div class="blob blob-1"></div>
-        <!-- �kinci bulan�k daire (Daha koyu tonlarda) -->
         <div class="blob blob-2"></div>
     </div>
 
-    <!-- ��erik Kapsay�c�s�: Ortalanm�� ve dikey dolgusu (padding) olan alan. -->
     <div class="container py-5 position-relative" style="z-index: 2;">
 
-        <!-- �st Ba�l�k B�l�m�: Geri d�n butonu ve sayfa ba�l���n� i�erir. -->
         <div class="page-header-wrapper mb-5 animate__animated animate__fadeIn">
-            <!-- Geri D�n Butonu -->
             <div class="d-flex align-items-center mb-3">
-                <!-- Taray�c�n�n ge�mi�ine (bir �nceki sayfaya) d�nd�ren javascript ba�lant�s�. -->
                 <a href="javascript:history.back()" class="btn-back-modern">
                     <i class="fas fa-chevron-left"></i>
-                    <span>GER� D�N</span>
+                    <span>GERİ DÖN</span>
                 </a>
             </div>
 
-            <!-- Sayfa Ba�l��� ve Alt Metin -->
             <div class="header-text">
-                <h2 class="fw-900 text-navy m-0">MART 2026 <span class="text-primary">YEMEK MEN�S�</span></h2>
-                <p class="text-muted m-0 fw-600">Gazi �niversitesi Hastanesi Ayl�k �izelgesi</p>
+                <h2 class="fw-900 text-navy m-0">MART 2026 <span class="text-primary">YEMEK MENÜSÜ</span></h2>
+                <p class="text-muted m-0 fw-600">Gazi Üniversitesi Hastanesi Aylık Çizelgesi</p>
             </div>
         </div>
 
-        <!-- Ayl�k Listeleme Grid Yap�s�: A�a��dan yukar� animasyonlu giri�. -->
         <div class="row g-4 justify-content-center animate__animated animate__fadeInUp">
 
-            @* D�ng� �rne�i: Mart ay�n�n 3. g�n�nden 6. g�n�ne kadar olan verileri basar. 
-               Ger�ek projede buras� veritaban�ndan gelen bir liste �zerinde d�necektir. *@
-            @for (int day = 3; day <= 6; day++)
+            @foreach (var gun in gruplanmisListe)
             {
+                // O güne ait öğünleri değişkenlere atıyoruz
+                var kahvalti = gun.FirstOrDefault(x => x.Ogun == 1);
+                var ogle = gun.FirstOrDefault(x => x.Ogun == 2);
+                var aksam = gun.FirstOrDefault(x => x.Ogun == 3);
+
                 <div class="col-12 col-xl-11">
-                    @* Tekil G�n Kart�: Her bir g�n� temsil eden yatay kart yap�s�. *@
                     <div class="monthly-row-card shadow-sm">
 
-                        <!-- Sol Taraf: Tarih ve G�n Bilgisi (Koyu arka plan) -->
                         <div class="row-date-side">
-                            <!-- G�n�n rakam� (�rn: 03, 04) -->
-                            <span class="day-number">@day.ToString("00")</span>
-                            <!-- Ay �smi -->
-                            <span class="month-name">MART</span>
-                            <!-- Ramazan G�n� G�stergesi (Hesaplamal� �rnek) -->
-                            <div class="ramazan-tag">RAMAZAN @(day + 10)</div>
+                            <span class="day-number">@gun.Key.Day.ToString("00")</span>
+                            <span class="month-name">@gun.Key.ToString("MMMM").ToUpper()</span>
+                            @* Hafta sonu ise belirtmek için ek bilgi eklenebilir *@
+                            <small style="opacity:0.6; font-size:10px;">@gun.Key.ToString("dddd").ToUpper()</small>
                         </div>
 
-                        <!-- Orta K�s�m: Yemek ��erikleri (Kahvalt�, ��le, Ak�am) -->
                         <div class="row-content-side">
-                            <!-- Kahvalt� B�l�m� -->
                             <div class="meal-group">
                                 <label><i class="fas fa-coffee text-orange"></i> KAHVALTI</label>
-                                <p>�ay, Yumurta, Bal, Tereya�, Siyah Zeytin</p>
+                                <p>@(kahvalti != null ? $"{kahvalti.AnaYemek}, {kahvalti.YardimciYemek}" : "Kayıt Yok")</p>
                             </div>
 
-                            <!-- ��le Yeme�i B�l�m� -->
                             <div class="meal-group middle">
-                                <label><i class="fas fa-sun text-green"></i> ��LE YEME��</label>
-                                <p>K�ymal� Ispanak (Yo�urt), Soslu Makarna, G�lla�</p>
+                                <label><i class="fas fa-sun text-green"></i> ÖĞLE YEMEĞİ</label>
+                                <p>@(ogle != null ? $"{ogle.Corba}, {ogle.AnaYemek}, {ogle.YardimciYemek}, {ogle.TatliMeyve}" : "Kayıt Yok")</p>
                             </div>
 
-                            <!-- Ak�am Yeme�i B�l�m� -->
                             <div class="meal-group">
-                                <label><i class="fas fa-moon text-blue"></i> AK�AM YEME��</label>
-                                <p>Et Kavurma (Pirin� Pilav�), Han�ma�a �orba, Portakal</p>
+                                <label><i class="fas fa-moon text-blue"></i> AKŞAM YEMEĞİ</label>
+                                <p>@(aksam != null ? $"{aksam.Corba}, {aksam.AnaYemek}, {aksam.YardimciYemek}, {aksam.TatliMeyve}" : "Kayıt Yok")</p>
                             </div>
                         </div>
 
-                        <!-- Sa� Taraf: Ek Bilgiler (Kalori vb.) - Sadece masa�st�nde g�r�n�r (d-none d-lg-flex) -->
                         <div class="row-info-side d-none d-lg-flex">
-                            <div class="kcal-pill">2100 kcal</div>
+                            @{
+                                var toplamKcal = gun.Sum(x => x.ToplamKalori ?? 0);
+                            }
+                            <div class="kcal-pill">@toplamKcal kcal</div>
                         </div>
                     </div>
                 </div>
+            }
+
+            @if (!gruplanmisListe.Any())
+            {
+                <div class="alert alert-info text-center">Henüz bu aya ait yemek listesi girilmemiştir.</div>
             }
         </div>
     </div>
 </div>
 
 @section Styles {
-    <!-- Sayfaya �zel CSS Stilleri -->
     <style>
-        /* CSS De�i�kenleri */
+        /* CSS kısmınız aynı kalabilir, yukarıdaki yapıya tam uyumludur */
         :root {
-            --navy: #0f172a; /* Temel lacivert renk */
-            --primary: #2563eb; /* Ana mavi renk */
-            --bg-page: #f8fafc; /* Sayfa arka plan rengi */
+            --navy: #0f172a;
+            --primary: #2563eb;
+            --bg-page: #f8fafc;
         }
 
-        /* Ekran� ortalayan ve dikey hizalayan ana k�s�tlay�c� */
         .monthly-page-viewport {
-            min-height: 100vh; /* Ekran boyu kadar y�kseklik */
+            min-height: 100vh;
             background: var(--bg-page);
             position: relative;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Yatayda tam merkezleme */
-        }
-
-        /* Ba�l�k Alan� D�zeni: �izgi ile ayr�lm�� alt k�s�m */
-        .page-header-wrapper {
-            width: 100%;
-            border-bottom: 2px solid rgba(0,0,0,0.03); /* �ok hafif alt �izgi */
-            padding-bottom: 20px;
-        }
-
-        /* Geri D�n Butonu Tasar�m� */
-        .btn-back-modern {
-            background: white;
-            color: var(--navy);
-            padding: 8px 20px;
-            border-radius: 12px;
-            text-decoration: none; /* Alt �izgiyi kald�r */
-            font-weight: 800; /* Kal�n yaz� */
-            font-size: 0.85rem;
-            display: inline-flex;
             align-items: center;
-            gap: 10px; /* �kon ve yaz� aras� bo�luk */
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Hafif g�lge */
-            transition: all 0.3s;
-            border: 1px solid #e2e8f0;
         }
 
-            /* Buton Hover Efekti */
-            .btn-back-modern:hover {
-                background: var(--navy); /* Zemin rengi de�i�imi */
-                color: white; /* Yaz� rengi de�i�imi */
-                transform: translateX(-5px); /* Hafif sola kayma */
-            }
-
-        /* Ayl�k Liste Kart� Tasar�m� (Glassmorphism) */
         .monthly-row-card {
-            background: rgba(255, 255, 255, 0.9); /* Yar� saydam beyaz */
-            backdrop-filter: blur(10px); /* Arka plan� bulan�kla�t�r */
-            border-radius: 20px; /* Yuvarlak k��eler */
-            display: flex; /* ��erikleri yan yana diz */
-            overflow: hidden; /* Ta�may� engelle */
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            display: flex;
+            overflow: hidden;
             border: 1px solid rgba(255,255,255,0.6);
             min-height: 120px;
+            margin-bottom: 10px;
         }
 
-        /* Sol Taraf: Tarih Kutusu */
         .row-date-side {
-            background: var(--navy); /* Koyu arka plan */
+            background: var(--navy);
             color: white;
             padding: 20px;
-            min-width: 130px; /* Sabit geni�lik */
+            min-width: 130px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -163,31 +124,27 @@
             text-align: center;
         }
 
-        /* G�n Numaras� (B�y�k Font) */
         .day-number {
             font-size: 2.2rem;
             font-weight: 900;
             line-height: 1;
         }
 
-        /* Ay �smi */
         .month-name {
             font-size: 0.8rem;
             font-weight: 700;
-            opacity: 0.7; /* Hafif saydaml�k */
+            opacity: 0.7;
         }
 
-        /* Yemek ��erik Alan� (Orta K�s�m) */
         .row-content-side {
-            flex-grow: 1; /* Kalan bo�lu�u doldur */
+            flex-grow: 1;
             padding: 20px 30px;
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3 e�it kolona b�l */
+            grid-template-columns: repeat(3, 1fr);
             align-items: center;
-            gap: 15px; /* Kolonlar aras� bo�luk */
+            gap: 15px;
         }
 
-        /* Yemek Grubu Ba�l��� (Kahvalt�, ��le...) */
         .meal-group label {
             display: block;
             font-size: 0.7rem;
@@ -196,23 +153,21 @@
             margin-bottom: 4px;
         }
 
-        /* Yemek ��eri�i Metni */
         .meal-group p {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: var(--navy);
             margin: 0;
+            line-height: 1.4;
         }
 
-        /* Sa� Taraf: Bilgi Kutusu */
         .row-info-side {
             padding: 20px;
             display: flex;
             align-items: center;
-            border-left: 1px solid #f1f5f9; /* Sol kenar �izgisi */
+            border-left: 1px solid #f1f5f9;
         }
 
-        /* Kalori Hap� (Pill Badge) */
         .kcal-pill {
             background: #f1f5f9;
             color: #64748b;
@@ -220,55 +175,30 @@
             border-radius: 50px;
             font-weight: 800;
             font-size: 0.8rem;
+            white-space: nowrap;
         }
 
-        /* Arka Plan G�rsel Efektleri (Blob'lar) */
-        .bg-visuals .blob {
-            position: fixed; /* Sayfa kayd���nda sabit kal�r */
-            width: 500px;
-            height: 500px;
-            filter: blur(100px); /* Bulan�kl�k efekti */
-            z-index: 1; /* ��eri�in arkas�nda */
-        }
-
-        /* Birinci Blob Konumu */
-        .blob-1 {
-            top: -100px;
-            right: -50px;
-            background: rgba(37, 99, 235, 0.08);
-        }
-
-        /* �kinci Blob Konumu */
-        .blob-2 {
-            bottom: -100px;
-            left: -50px;
-            background: rgba(15, 23, 42, 0.04);
-        }
-
-        /* MOB�L UYUMLULUK (Responsive Ayarlar) */
-        /* Ekran geni�li�i 991px (Tablet/Mobil) alt�ndaysa devreye girer */
         @@media (max-width: 991px) {
-            /* Yemek i�eriklerini tek s�tuna d���r */
             .row-content-side {
                 grid-template-columns: 1fr;
                 padding: 20px;
             }
-            /* Kart� dikey yerle�ime �evir */
+
             .monthly-row-card {
                 flex-direction: column;
             }
-            /* Tarih kutusunu yatay yap ve geni�let */
+
             .row-date-side {
                 flex-direction: row;
                 min-width: 100%;
                 gap: 15px;
                 padding: 10px;
             }
-            /* G�n numaras�n� k���lt */
+
             .day-number {
                 font-size: 1.5rem;
             }
-            /* Bilgi kutusunun kenarl���n� de�i�tir ve ortala */
+
             .row-info-side {
                 border-left: none;
                 border-top: 1px solid #f1f5f9;
