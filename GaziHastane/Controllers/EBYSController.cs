@@ -13,3 +13,4 @@ namespace GaziHastane.Controllers
         }
     }
 }
+//Elektronik Belge Yönetim Sistemi. Hastane içindeki resmi evrak trafiðinin ve yazýþmalarýn dijital olarak yürütüleceði modül.

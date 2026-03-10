@@ -1,29 +1,44 @@
 @{
+    // Sayfanýn tarayýcý sekmesinde görünen baþlýðý
     ViewData["Title"] = "Gazi Saðlýk | Hasta Sonuç Paneli";
 }
 
+<!-- Ana Kapsayýcý: Tüm hasta paneli içeriðini sarar -->
 <div class="patient-master-wrapper">
+    <!-- Arka plan katmaný (opsiyonel dekoratif amaçlý) -->
     <div class="dashboard-bg-overlay"></div>
 
+    <!-- Ýçeriði dikey ve yatay olarak ortalayan yapý -->
     <div class="patient-center-container">
 
+        <!-- Ana Panel Kutusu: Animasyonlu giriþ efektiyle belirir -->
         <div class="dashboard-main-container animate__animated animate__fadeIn">
 
+            <!-- Üst Kýsým: Kullanýcý Profili ve Hýzlý Ýþlemler -->
             <div class="glass-header-panel mb-4">
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    
+                    <!-- Sol Taraf: Hasta Bilgileri -->
                     <div class="d-flex align-items-center">
+                        <!-- Avatar (Profil Resmi) ve Durum Göstergesi -->
                         <div class="avatar-premium-wrapper me-3">
-                            <div class="avatar-premium">MS</div>
-                            <div class="status-indicator online"></div>
+                            <div class="avatar-premium">MS</div> <!-- Ýsim Baþharfleri -->
+                            <div class="status-indicator online"></div> <!-- Çevrimiçi Yeþil Noktasý -->
                         </div>
+                        
+                        <!-- Ýsim ve Detaylar -->
                         <div>
                             <h4 class="fw-800 color-navy mb-0">Murat SARI</h4>
                             <div class="d-flex align-items-center gap-2">
+                                <!-- Hasta Numarasý Rozeti -->
                                 <span class="badge bg-soft-navy text-navy-light small">Hasta No: 9876543</span>
+                                <!-- Konum Bilgisi -->
                                 <span class="text-muted small"><i class="fas fa-map-marker-alt"></i> Ankara, Türkiye</span>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Sað Taraf: Profil ve Çýkýþ Butonlarý -->
                     <div class="d-flex gap-2">
                         <button class="btn-premium-light"><i class="fas fa-user-cog"></i> Profilim</button>
                         <button class="btn-premium-danger"><i class="fas fa-sign-out-alt"></i> Güvenli Çýkýþ</button>
@@ -31,14 +46,22 @@
                 </div>
             </div>
 
+            <!-- Alt Kýsým: Sidebar ve Ana Ýçerik Grid Yapýsý -->
             <div class="row g-4">
+                
+                <!-- Sol Menü (Sidebar) - Mobilde ve küçük ekranlarda üstte, büyük ekranlarda solda -->
                 <div class="col-lg-3 animate__animated animate__fadeInLeft">
                     <div class="dashboard-sidebar card border-0 shadow-sm rounded-5 p-3 h-100">
+                        <!-- Menü Baþlýðý -->
                         <h6 class="sidebar-title">TIBBÝ ARÞÝV</h6>
+                        
+                        <!-- Menü Linkleri -->
                         <nav class="nav flex-column sidebar-nav">
+                            <!-- Aktif Link (Örnek: Laboratuvar) -->
                             <a href="#" class="nav-link active">
                                 <div class="nav-icon"><i class="fas fa-vial"></i></div>
                                 <span>Laboratuvar</span>
+                                <!-- Bildirim Sayýsý Rozeti -->
                                 <span class="count-badge">12</span>
                             </a>
                             <a href="#" class="nav-link">
@@ -53,7 +76,9 @@
                                 <div class="nav-icon"><i class="fas fa-file-medical"></i></div>
                                 <span>Raporlarým</span>
                             </a>
+                            <!-- Ayýrýcý Çizgi -->
                             <hr class="my-3 opacity-10">
+                            <!-- Acil Bilgiler Linki (Kýrmýzý vurgulu) -->
                             <a href="#" class="nav-link text-danger">
                                 <div class="nav-icon"><i class="fas fa-exclamation-circle"></i></div>
                                 <span>Acil Bilgilerim</span>
@@ -62,19 +87,24 @@
                     </div>
                 </div>
 
+                <!-- Sað Ýçerik Alaný: Tablo ve Detaylar -->
                 <div class="col-lg-9 animate__animated animate__fadeInRight">
                     <div class="content-card card border-0 shadow-sm rounded-5 p-4 h-100">
+                        
+                        <!-- Ýçerik Baþlýðý ve Arama Kutusu -->
                         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                             <div>
                                 <h5 class="fw-800 color-navy mb-1">Son Tetkikler</h5>
                                 <p class="text-muted small mb-0">Son 6 ay içerisindeki tüm týbbi tetkikleriniz listelenmektedir.</p>
                             </div>
+                            <!-- Arama Kutusu -->
                             <div class="search-wrapper-modern">
                                 <i class="fas fa-search"></i>
                                 <input type="text" placeholder="Tetkik adý veya birim ara...">
                             </div>
                         </div>
 
+                        <!-- Tablo Alaný: Mobil uyumlu (responsive) -->
                         <div class="table-responsive">
                             <table class="table table-hover-modern align-middle">
                                 <thead>
@@ -87,9 +117,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <!-- Örnek Satýr 1: Tamamlanmýþ Tetkik -->
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center">
+                                                <!-- Ýkon -->
                                                 <div class="test-icon-bg"><i class="fas fa-tint"></i></div>
                                                 <div class="ms-3">
                                                     <div class="fw-bold color-navy">Hemogram (Tam Kan Sayýmý)</div>
@@ -100,20 +132,24 @@
                                         <td><span class="text-muted small fw-600">Biyokimya</span></td>
                                         <td><span class="text-muted small">04.03.2026</span></td>
                                         <td class="text-center">
+                                            <!-- Durum Rozeti (Yeþil) -->
                                             <span class="badge-status success">
                                                 <i class="fas fa-check-circle"></i> Tamamlandý
                                             </span>
                                         </td>
                                         <td class="text-end">
+                                            <!-- Ýþlem Butonlarý -->
                                             <div class="btn-group-action">
                                                 <button class="btn-action view" title="Görüntüle"><i class="fas fa-eye"></i></button>
                                                 <button class="btn-action download" title="Ýndir"><i class="fas fa-file-pdf"></i></button>
                                             </div>
                                         </td>
                                     </tr>
+                                    <!-- Örnek Satýr 2: Bekleyen Tetkik -->
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center">
+                                                <!-- Ýkon (Sarý) -->
                                                 <div class="test-icon-bg warning"><i class="fas fa-sun"></i></div>
                                                 <div class="ms-3">
                                                     <div class="fw-bold color-navy">Vitamin D (25-OH)</div>
@@ -124,6 +160,7 @@
                                         <td><span class="text-muted small fw-600">Biyokimya</span></td>
                                         <td><span class="text-muted small">04.03.2026</span></td>
                                         <td class="text-center">
+                                            <!-- Durum Rozeti (Sarý) -->
                                             <span class="badge-status warning">
                                                 <i class="fas fa-clock"></i> Onay Bekliyor
                                             </span>
@@ -145,17 +182,20 @@
     </div>
 </div>
 
+<!-- Sayfaya Özel CSS Stilleri -->
 <style>
+    /* Renk Deðiþkenleri */
     :root {
-        --gazi-navy: #0f172a;
-        --gazi-blue: #2563eb;
-        --gazi-gold: #c5a059;
-        --bg-light: #f1f5f9;
-        --success-green: #10b981;
-        --warning-orange: #f59e0b;
-        --navbar-safe-gap: 80px; /* Üst bar yüksekliðini buradan ayarlayabilirsin */
+        --gazi-navy: #0f172a; /* Temel lacivert renk */
+        --gazi-blue: #2563eb; /* Vurgu mavisi */
+        --gazi-gold: #c5a059; /* Altýn rengi */
+        --bg-light: #f1f5f9; /* Açýk gri arka plan */
+        --success-green: #10b981; /* Baþarýlý iþlem yeþili */
+        --warning-orange: #f59e0b; /* Uyarý turuncusu */
+        --navbar-safe-gap: 80px; /* Üst bar (navbar) yüksekliði, içeriðin altýnda kalmamasý için */
     }
 
+    /* Temel Sayfa Ayarlarý */
     body, html {
         height: 100%;
         margin: 0;
@@ -163,55 +203,61 @@
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
+    /* Ana sayfa kapsayýcýsý arka planý */
     .patient-master-wrapper {
         background: var(--bg-light);
         min-height: 100vh;
         position: relative;
     }
 
-    /* DÝKEY VE YATAY ORTALAMA ALANI */
+    /* Ýçeriði dikey ve yatay olarak ortalayan yapý */
     .patient-center-container {
         display: flex;
-        align-items: center;
-        justify-content: center;
+        align-items: center; /* Dikeyde ortalar */
+        justify-content: center; /* Yatayda ortalar */
         min-height: 100vh;
-        padding: calc(var(--navbar-safe-gap) + 20px) 20px 40px 20px; /* Üst barýn altýna iter */
+        /* Üstten navbar payý + 20px, alttan 40px boþluk */
+        padding: calc(var(--navbar-safe-gap) + 20px) 20px 40px 20px; 
     }
 
+    /* Ýçerik geniþliðini sýnýrlayan kutu */
     .dashboard-main-container {
         width: 100%;
         max-width: 1200px;
-        margin: auto; /* Kendi içinde de ortalar */
+        margin: auto;
     }
 
+    /* Renk yardýmcý sýnýflarý */
     .color-navy {
         color: var(--gazi-navy);
     }
 
     .fw-800 {
-        font-weight: 800;
+        font-weight: 800; /* Ekstra kalýn yazý tipi */
     }
 
     .extra-small {
         font-size: 11px;
     }
 
+    /* Üst Profil Kartý (Cam efekti yok, düz beyaz) */
     .glass-header-panel {
         background: white;
         padding: 25px;
         border-radius: 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03); /* Hafif gölge */
+        border: 1px solid rgba(0,0,0,0.05); /* Ýnce kenarlýk */
     }
 
+    /* Avatar Kutusu */
     .avatar-premium-wrapper {
-        position: relative;
+        position: relative; /* Durum göstergesi (online) için referans */
     }
 
     .avatar-premium {
         width: 60px;
         height: 60px;
-        background: linear-gradient(135deg, var(--gazi-navy), #1e293b);
+        background: linear-gradient(135deg, var(--gazi-navy), #1e293b); /* Lacivert gradyan */
         color: white;
         border-radius: 20px;
         display: flex;
@@ -222,26 +268,29 @@
         box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
     }
 
+    /* Çevrimiçi Durum Göstergesi (Yeþil Nokta) */
     .status-indicator.online {
         width: 14px;
         height: 14px;
         background: var(--success-green);
-        border: 3px solid white;
+        border: 3px solid white; /* Beyaz çerçeve ile ayrým */
         border-radius: 50%;
         position: absolute;
         bottom: -2px;
         right: -2px;
     }
 
+    /* Sidebar Baþlýðý */
     .sidebar-title {
         font-size: 11px;
         font-weight: 800;
         color: #94a3b8;
-        letter-spacing: 1.5px;
+        letter-spacing: 1.5px; /* Harf aralýðý */
         margin-bottom: 20px;
         padding-left: 15px;
     }
 
+    /* Sidebar Linkleri */
     .sidebar-nav .nav-link {
         display: flex;
         align-items: center;
@@ -258,17 +307,20 @@
             font-size: 1.1rem;
         }
 
+        /* Link üzerine gelince */
         .sidebar-nav .nav-link:hover {
             background: #f1f5f9;
             color: var(--gazi-navy);
         }
 
+        /* Aktif Link */
         .sidebar-nav .nav-link.active {
             background: var(--gazi-navy);
             color: white;
             box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15);
         }
 
+    /* Bildirim Sayýsý Rozeti */
     .count-badge {
         margin-left: auto;
         background: rgba(255,255,255,0.2);
@@ -277,12 +329,14 @@
         font-size: 10px;
     }
 
+    /* Arama Kutusu Stili */
     .search-wrapper-modern {
         position: relative;
         width: 100%;
         max-width: 300px;
     }
 
+        /* Arama Ýkonu */
         .search-wrapper-modern i {
             position: absolute;
             left: 15px;
@@ -291,6 +345,7 @@
             color: #94a3b8;
         }
 
+        /* Arama Inputu */
         .search-wrapper-modern input {
             width: 100%;
             padding: 10px 15px 10px 45px;
@@ -301,12 +356,14 @@
             transition: 0.3s;
         }
 
+            /* Input odaklanýnca */
             .search-wrapper-modern input:focus {
                 border-color: var(--gazi-gold);
                 background: white;
                 box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.1);
             }
 
+    /* Tablo Baþlýklarý */
     .table-hover-modern thead th {
         color: #94a3b8;
         font-size: 11px;
@@ -316,16 +373,18 @@
         border-bottom: 2px solid #f1f5f9;
     }
 
+    /* Tablo Satýrlarý */
     .table-hover-modern tbody td {
         padding: 20px;
         border-bottom: 1px solid #f1f5f9;
         vertical-align: middle;
     }
 
+    /* Test/Tetkik Ýkonu Arka Planý */
     .test-icon-bg {
         width: 40px;
         height: 40px;
-        background: #eff6ff;
+        background: #eff6ff; /* Mavi arka plan */
         color: var(--gazi-blue);
         border-radius: 12px;
         display: flex;
@@ -334,11 +393,13 @@
         font-size: 1rem;
     }
 
+        /* Uyarý Ýkonu (Sarý) */
         .test-icon-bg.warning {
             background: #fff7ed;
             color: var(--warning-orange);
         }
 
+    /* Durum Rozetleri */
     .badge-status {
         padding: 6px 14px;
         border-radius: 10px;
@@ -359,6 +420,7 @@
             color: #b45309;
         }
 
+    /* Ýþlem Butonlarý */
     .btn-action {
         width: 36px;
         height: 36px;
@@ -368,27 +430,32 @@
         margin-left: 5px;
     }
 
+        /* Görüntüle Butonu (Lacivert) */
         .btn-action.view {
             background: var(--gazi-navy);
             color: white;
         }
 
+        /* Ýndir Butonu (Gri) */
         .btn-action.download {
             background: #f1f5f9;
             color: #64748b;
         }
 
+        /* Buton Hover Efekti */
         .btn-action:hover:not(.disabled) {
             transform: translateY(-3px);
             box-shadow: 0 5px 10px rgba(0,0,0,0.1);
         }
 
+    /* Mobil Uyumluluk Ayarlarý */
     @@media (max-width: 991px) {
         .dashboard-main-container {
-            margin: 15px;
+            margin: 15px; /* Kenar boþluklarýný azalt */
         }
 
         .patient-center-container {
+            /* Navbar'ýn altýnda kalmamasý için üst boþluðu artýr */
             padding-top: calc(var(--navbar-safe-gap) + 30px);
         }
     }

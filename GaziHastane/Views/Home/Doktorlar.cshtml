@@ -1,107 +1,153 @@
-﻿@{
+﻿@* RAZOR KOD BLOĞU: Sunucu tarafında sayfa ayarları *@
+@* Sayfanın derlenmesi (render) aşamasında çalışacak C# kodları buraya yazılır. *@
+@{
+    // "Title" anahtarına "Doktorlarımız" değeri atanıyor.
+    // Bu değer _Layout.cshtml dosyasındaki <title> etiketi içinde görüntülenir.
     ViewData["Title"] = "Doktorlarımız";
 }
 
+@* 'Scripts' bölümü: Sayfaya özel CSS ve JavaScript kodlarının eklendiği alan *@
 @section Scripts {
+    <!-- SAYFAYA ÖZEL STİLLER (CSS) -->
     <style>
+        /* Google Fonts'tan 'Plus Jakarta Sans' fontunu içe aktar */
         @@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@300;400;500;600;700;800&display=swap');
 
-        /* ── Sidebar sticky ── */
+        /* ── YAPIŞKAN YAN MENÜ (SIDEBAR) ── */
+        /* Sol taraftaki menünün sayfa kaydırılırken ekranda sabit kalmasını sağlayan stil */
         .sidebar-sticky {
+            /* 'sticky' konumlandırma: Belirli bir noktadan sonra sabitlenir */
             position: sticky;
+            /* Üstten 7rem (Navbar yüksekliği + biraz boşluk) mesafede sabitlenir */
             top: 7rem;
+            /* Maksimum yükseklik: Ekran yüksekliğinden 8rem eksik */
             max-height: calc(100vh - 8rem);
+            /* İçerik taşarsa dikey kaydırma çubuğu çıkar */
             overflow-y: auto;
         }
 
+            /* Kaydırma çubuğu (Scrollbar) genişliği (Webkit tarayıcılar için) */
             .sidebar-sticky::-webkit-scrollbar {
                 width: 4px;
             }
 
+            /* Kaydırma çubuğu izi (arkaplanı) */
             .sidebar-sticky::-webkit-scrollbar-track {
-                background: transparent;
+                background: transparent; /* Şeffaf */
             }
 
+            /* Kaydırma çubuğu tutamacı (hareket eden kısım) */
             .sidebar-sticky::-webkit-scrollbar-thumb {
-                background: #e2e8f0;
-                border-radius: 10px;
+                background: #e2e8f0; /* Açık gri */
+                border-radius: 10px; /* Yuvarlak köşeler */
             }
 
-        /* ── Search ── */
+        /* ── ARAMA KUTUSU ── */
+        /* Arama kutusuna tıklandığında (odaklanıldığında) */
         .search-input:focus {
+            /* Varsayılan tarayıcı çerçevesini kaldır */
             outline: none;
+            /* Mavi bir parlama (glow) efekti ekle */
             box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+            /* Kenarlık rengini mavi yap */
             border-color: #93c5fd;
         }
 
-        /* ── Nav filter buttons ── */
+        /* ── FİLTRE BUTONLARI (SOL MENÜ) ── */
+        /* Kategori değiştirme butonlarının genel stili */
         .nav-btn {
+            /* İçeriği hizalamak için flexbox */
             display: flex;
             align-items: center;
+            /* İkon ve metin arası boşluk */
             gap: 0.75rem;
+            /* Genişlik %100 (kapsayıcıyı doldur) */
             width: 100%;
+            /* İç boşluk */
             padding: 0.75rem 1rem;
+            /* Köşeleri yuvarla */
             border-radius: 14px;
+            /* Yazı boyutu ve kalınlığı */
             font-size: 0.82rem;
             font-weight: 700;
+            /* Yazı rengi */
             color: #64748b;
+            /* Arka plan şeffaf */
             background: transparent;
+            /* Kenarlık yok */
             border: none;
-            cursor: pointer;
+            /* İmleç el (tıklanabilir) */
+            cursor: pointer; 
+            /* Geçiş efekti */
             transition: all 0.2s ease;
+            /* Metni sola hizala */
             text-align: left;
         }
 
+            /* Mouse üzerine gelince (Hover) */
             .nav-btn:hover {
+                /* Arka plan açık gri */
                 background: #f1f5f9;
+                /* Yazı rengi koyu */
                 color: #1e293b;
+                /* Hafif sağa kaydır */
                 transform: translateX(3px);
             }
 
+            /* Aktif buton renkleri (Seçili olduğunda) */
+            /* Mavi (Dahili) */
             .nav-btn.active-blue {
                 background: #eff6ff;
                 color: #2563eb;
             }
 
+            /* Kırmızı (Cerrahi) */
             .nav-btn.active-red {
                 background: #fef2f2;
                 color: #ef4444;
             }
 
+            /* Yeşil (Temel) */
             .nav-btn.active-green {
                 background: #f0fdf4;
                 color: #16a34a;
             }
 
-        /* ── Doctor Card ── */
+        /* ── DOKTOR KARTI TASARIMI ── */
+        /* Doktor bilgilerini içeren kutu */
         .doctor-card {
             background: white;
-            border-radius: 1.5rem;
-            border: 1px solid #f1f5f9;
-            transition: all 0.25s ease;
-            overflow: hidden;
-            position: relative;
+            border-radius: 1.5rem; /* Büyük yuvarlak köşeler */
+            border: 1px solid #f1f5f9; /* İnce gri kenarlık */
+            transition: all 0.25s ease; /* Animasyonlu geçiş */
+            overflow: hidden; /* Taşmayı gizle */
+            position: relative; /* İçerideki mutlak pozisyonlu öğeler için referans */
         }
 
+            /* Hover (Üzerine gelme) efekti */
             .doctor-card:hover {
-                transform: translateY(-5px);
+                transform: translateY(-5px); /* Yukarı kaldır */
             }
 
+            /* Tipe göre gölge renkleri (Dahili - Mavi gölge) */
             .doctor-card.type-dahili:hover {
                 box-shadow: 0 16px 44px rgba(37,99,235,0.12);
                 border-color: #bfdbfe;
             }
 
+            /* Cerrahi - Kırmızı gölge */
             .doctor-card.type-cerrahi:hover {
                 box-shadow: 0 16px 44px rgba(239,68,68,0.12);
                 border-color: #fecaca;
             }
 
+            /* Temel - Yeşil gölge */
             .doctor-card.type-temel:hover {
                 box-shadow: 0 16px 44px rgba(22,163,74,0.12);
                 border-color: #bbf7d0;
             }
 
+            /* Kartın üst kısmındaki ince çizgi (Hover'da görünür) */
             .doctor-card::before {
                 content: '';
                 position: absolute;
@@ -109,14 +155,16 @@
                 left: 0;
                 right: 0;
                 height: 3px;
-                opacity: 0;
+                opacity: 0; /* Başlangıçta gizli */
                 transition: opacity 0.25s;
             }
 
+            /* Hover olunca üst çizgiyi göster */
             .doctor-card:hover::before {
                 opacity: 1;
             }
 
+        /* Çizgi renkleri (Gradient) */
         .type-dahili::before {
             background: linear-gradient(90deg, #2563eb, #60a5fa);
         }
@@ -129,31 +177,34 @@
             background: linear-gradient(90deg, #16a34a, #4ade80);
         }
 
-        /* ── Avatar ring ── */
+        /* ── PROFİL FOTOĞRAFI ÇERÇEVESİ ── */
         .avatar-wrap {
             position: relative;
             width: 88px;
             height: 88px;
-            margin: 0 auto;
+            margin: 0 auto; /* Ortala */
         }
 
+            /* Profil resmi */
             .avatar-wrap img {
                 width: 100%;
                 height: 100%;
-                border-radius: 50%;
-                object-fit: cover;
-                border: 3px solid white;
-                box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+                border-radius: 50%; /* Tam daire */
+                object-fit: cover; /* Resmi sığdır */
+                border: 3px solid white; /* Beyaz çerçeve */
+                box-shadow: 0 4px 16px rgba(0,0,0,0.1); /* Hafif gölge */
             }
 
+        /* Profil halkası (Fotoğraf etrafındaki ikinci ince çizgi, hover'da renklenir) */
         .avatar-ring {
             position: absolute;
-            inset: -4px;
+            inset: -4px; /* Dışa doğru 4px taş */
             border-radius: 50%;
-            border: 2px solid transparent;
+            border: 2px solid transparent; /* Başlangıçta şeffaf */
             transition: border-color 0.25s;
         }
 
+        /* Hover'da halka rengini değiştir */
         .type-dahili:hover .avatar-ring {
             border-color: #bfdbfe;
         }
@@ -166,7 +217,7 @@
             border-color: #bbf7d0;
         }
 
-        /* ── Unvan badge ── */
+        /* ── UNVAN ETİKETİ (Prof. Dr. vb.) ── */
         .unvan-badge {
             display: inline-block;
             font-size: 0.6rem;
@@ -177,7 +228,7 @@
             border-radius: 99px;
         }
 
-        /* ── CV button ── */
+        /* ── ÖZGEÇMİŞ BUTONU ── */
         .cv-btn {
             display: flex;
             align-items: center;
@@ -197,6 +248,7 @@
             transition: all 0.2s;
         }
 
+        /* Butonun hover renkleri */
         .type-dahili:hover .cv-btn {
             background: #eff6ff;
             color: #2563eb;
@@ -215,7 +267,7 @@
             border-color: #bbf7d0;
         }
 
-        /* ── Section bar ── */
+        /* ── BÖLÜM AYIRICI ÇİZGİSİ ── */
         .section-bar {
             display: flex;
             align-items: center;
@@ -223,13 +275,14 @@
             margin-bottom: 1.5rem;
         }
 
+        /* Çizgi elemanı */
         .section-bar-line {
-            flex: 1;
+            flex: 1; /* Uzayabildiği kadar uza */
             height: 1px;
             background: linear-gradient(to right, #e2e8f0, transparent);
         }
 
-        /* ── Badge chip ── */
+        /* ── ROZETLER (Badges) ── */
         .badge {
             display: inline-flex;
             align-items: center;
@@ -242,6 +295,7 @@
             border-radius: 99px;
         }
 
+        /* Renk varyasyonları */
         .badge-blue {
             background: #dbeafe;
             color: #1d4ed8;
@@ -257,7 +311,7 @@
             color: #15803d;
         }
 
-        /* ── Count pill ── */
+        /* ── SAYI ETİKETİ (Yuvarlak hap şekli - Menülerde) ── */
         .count-pill {
             font-size: 0.6rem;
             font-weight: 800;
@@ -265,10 +319,11 @@
             border-radius: 99px;
             background: #f1f5f9;
             color: #64748b;
-            margin-left: auto;
+            margin-left: auto; /* Sağa yasla */
         }
 
-        /* ── Mobile sidebar ── */
+        /* ── MOBİL YAN MENÜ KATMANLARI ── */
+        /* Arka plan karartması */
         #mob-overlay {
             display: none;
             position: fixed;
@@ -282,67 +337,89 @@
                 display: block;
             }
 
+        /* Mobil menü paneli */
         #mob-sidebar {
             position: fixed;
             top: 0;
-            left: -100%;
+            left: -100%; /* Soldan dışarıda */
             width: 300px;
             height: 100%;
             background: white;
             z-index: 50;
-            transition: left 0.3s ease;
+            transition: left 0.3s ease; /* Kayma efekti */
             overflow-y: auto;
             padding: 1.5rem 1rem;
             box-shadow: 8px 0 30px rgba(0,0,0,0.1);
         }
 
             #mob-sidebar.open {
-                left: 0;
+                left: 0; /* İçeri kay */
             }
 
-        /* ── Hidden & Empty State ── */
+        /* ── GİZLEME VE BOŞ DURUM SINIFLARI ── */
+        /* Bölümleri gizlemek için kullanılır */
         .hidden-section {
             display: none !important;
         }
 
+        /* Arama sonucu yoksa gösterilecek uyarı */
         #empty-state {
             display: none;
         }
 
             #empty-state.show {
-                display: flex;
+                display: flex; /* Görünür yap */
             }
     </style>
 
+    <!-- SAYFA İÇİ JAVASCRIPT KODLARI -->
     <script>
-        // ── Mobile sidebar ──
+        // ── MOBİL MENÜ KONTROLÜ ──
+        // Elemanları seç
         const mobToggle  = document.getElementById('mob-toggle');
         const mobSidebar = document.getElementById('mob-sidebar');
         const mobOverlay = document.getElementById('mob-overlay');
         const mobClose   = document.getElementById('mob-close');
 
+        // Tıklama olaylarını dinle
         if(mobToggle) mobToggle.addEventListener('click', openMob);
         if(mobClose) mobClose.addEventListener('click', closeMob);
         if(mobOverlay) mobOverlay.addEventListener('click', closeMob);
 
-        function openMob()  { mobSidebar.classList.add('open'); mobOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
-        function closeMob() { mobSidebar.classList.remove('open'); mobOverlay.classList.remove('open'); document.body.style.overflow = ''; }
+        // Menüyü aç
+        function openMob()  { 
+            mobSidebar.classList.add('open'); 
+            mobOverlay.classList.add('open'); 
+            document.body.style.overflow = 'hidden'; // Sayfa kaydırmasını kilitle
+        }
+        // Menüyü kapat
+        function closeMob() { 
+            mobSidebar.classList.remove('open'); 
+            mobOverlay.classList.remove('open'); 
+            document.body.style.overflow = ''; // Sayfa kaydırmasını aç
+        }
 
-        // ── Category filter ──
+        // ── KATEGORİ FİLTRELEME ──
+        // Hangi butonun hangi CSS sınıfını (rengini) alacağını tanımlayan obje
         const typeConfig = {
             dahili:  { color: 'active-blue',  label: 'Dahili'  },
             cerrahi: { color: 'active-red',   label: 'Cerrahi' },
             temel:   { color: 'active-green', label: 'Temel'   },
         };
 
+        // Kategori butonuna tıklandığında çalışan fonksiyon
         function filterType(type) {
+            // 1. Tüm bölümleri (.dept-section) gizle
             document.querySelectorAll('.dept-section').forEach(s => s.classList.add('hidden-section'));
+            // 2. Sadece seçilen bölümü göster (id'si section-dahili vb. olan)
             document.getElementById('section-' + type).classList.remove('hidden-section');
 
-            document.querySelectorAll('#btn-dahili, #btn-cerrahi, #btn-temel').forEach(b => b.className = 'nav-btn');
+            // 3. Masaüstü buton stillerini güncelle (aktif olanı renklendir)
+            document.querySelectorAll('#btn-dahili, #btn-cerrahi, #btn-temel').forEach(b => b.className = 'nav-btn'); // Hepsini sıfırla
             const activeBtn = document.getElementById('btn-' + type);
             if (activeBtn) activeBtn.classList.add(typeConfig[type].color);
 
+            // 4. Mobil buton stillerini güncelle
             ['dahili','cerrahi','temel'].forEach(t => {
                 const mb = document.getElementById('mob-btn-' + t);
                 if (mb) mb.className = 'nav-btn';
@@ -350,60 +427,81 @@
             const mobActiveBtn = document.getElementById('mob-btn-' + type);
             if (mobActiveBtn) mobActiveBtn.classList.add(typeConfig[type].color);
 
+            // 5. Arama kutusunu temizle ve tüm sonuçları göster (Filtreleme sıfırlanır)
             document.getElementById('mainSearch').value = '';
             document.getElementById('mainSearchMob').value = '';
-            document.querySelectorAll('.doctor-card').forEach(c => c.style.display = '');
-            document.getElementById('empty-state').classList.remove('show');
+            document.querySelectorAll('.doctor-card').forEach(c => c.style.display = ''); // Tüm kartları göster
+            document.getElementById('empty-state').classList.remove('show'); // Boş durumu gizle
         }
 
-        // ── Search ──
+        // ── ARAMA FONKSİYONU ──
         function runSearch(term) {
+            // Arama kutusu boşsa her şeyi göster ve çık
             if (!term) {
                 document.querySelectorAll('.doctor-card').forEach(c => c.style.display = '');
                 document.getElementById('empty-state').classList.remove('show');
                 return;
             }
 
+            // Arama yapılıyorsa tüm ana bölümleri (section) görünür yap (Filtrelerin etkisini kaldır)
             document.querySelectorAll('.dept-section').forEach(s => s.classList.remove('hidden-section'));
+            // Butonların aktiflik durumunu kaldır
             document.querySelectorAll('#btn-dahili, #btn-cerrahi, #btn-temel, #mob-btn-dahili, #mob-btn-cerrahi, #mob-btn-temel').forEach(b => b.className = 'nav-btn');
 
-            let anyVisible = false;
+            let anyVisible = false; // Hiç sonuç bulundu mu?
+            
+            // Tüm doktor kartlarını döngüye al
             document.querySelectorAll('.doctor-card').forEach(card => {
-                const name = (card.getAttribute('data-name') || '').toLowerCase();
-                const dept = (card.getAttribute('data-dept') || '').toLowerCase();
-                const match = name.includes(term) || dept.includes(term);
-                card.style.display = match ? '' : 'none';
+                const name = (card.getAttribute('data-name') || '').toLowerCase(); // Karttan doktor adını al
+                const dept = (card.getAttribute('data-dept') || '').toLowerCase(); // Karttan bölümü al
+                
+                // Aranan kelime ad veya bölüm içinde geçiyor mu?
+                const match = name.includes(term) || dept.includes(term); 
+                
+                // Eşleşiyorsa göster (''), yoksa gizle ('none')
+                card.style.display = match ? '' : 'none'; 
                 if (match) anyVisible = true;
             });
 
+            // İçinde hiç görünür kart kalmayan bölümleri (section) gizle
             document.querySelectorAll('.dept-section').forEach(section => {
+                // Section içindeki kartlardan, display:none olmayan var mı?
                 const visible = [...section.querySelectorAll('.doctor-card')].some(c => c.style.display !== 'none');
+                // Varsa göster, yoksa gizle
                 section.style.display = visible ? '' : 'none';
             });
 
+            // Hiç sonuç yoksa boş durumu (empty-state) göster
             document.getElementById('empty-state').classList.toggle('show', !anyVisible);
         }
 
+        // Arama kutularını dinle (input eventi: her tuşa basıldığında)
+        // ?. (safe navigation) elementi bulamazsa hata verme demektir.
         document.getElementById('mainSearch')?.addEventListener('input', e => runSearch(e.target.value.toLowerCase().trim()));
         document.getElementById('mainSearchMob')?.addEventListener('input', e => runSearch(e.target.value.toLowerCase().trim()));
     </script>
 }
 
+<!-- MOBİL SIDEBAR YAPISI (Ekranda Gizli Duran Menü) -->
 <div id="mob-overlay"></div>
 <div id="mob-sidebar">
+    <!-- Başlık ve Kapat Butonu -->
     <div class="flex items-center justify-between mb-5">
         <span class="font-black text-slate-800 text-sm uppercase tracking-wider">Filtrele</span>
         <button id="mob-close" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 transition">
             <i class="fa-solid fa-xmark text-sm"></i>
         </button>
     </div>
+    <!-- Mobil Arama Kutusu -->
     <div class="relative mb-4">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
         <input type="text" id="mainSearchMob" placeholder="Doktor veya uzmanlık..."
                class="search-input w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 transition">
     </div>
+    <!-- Mobil Kategori Butonları -->
     <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] px-2 py-1">Kategoriler</p>
     <div class="space-y-1">
+        <!-- Tıklayınca filtreleme yapar ve menüyü kapatır -->
         <button onclick="filterType('dahili'); closeMob();" class="nav-btn active-blue" id="mob-btn-dahili">
             <span class="w-2.5 h-2.5 rounded-full bg-blue-500 flex-shrink-0"></span>
             <span>Dahili Bilimler</span><span class="count-pill">9</span>
@@ -419,9 +517,15 @@
     </div>
 </div>
 
+<!-- ANA SAYFA DÜZENİ -->
+<!-- Geniş ekranlarda içerik ortalanır ve max. 1400px olur. -->
 <div class="max-w-[1400px] mx-auto px-4 sm:px-6 py-8 flex flex-col lg:flex-row gap-7 mt-24">
+    <!-- SOL SABİT MENÜ (MASAÜSTÜ) -->
+    <!-- Sadece lg (large) ekran ve üzerinde görünür -->
     <aside class="hidden lg:block w-72 flex-shrink-0">
+        <!-- Yapışkan içerik kutusu -->
         <div class="sidebar-sticky bg-white rounded-[1.75rem] p-4 border border-slate-100" style="box-shadow: 0 4px 24px rgba(0,0,0,0.05);">
+            <!-- Sidebar Başlık Alanı -->
             <div class="flex items-center gap-3 mb-5 px-1">
                 <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-md shadow-blue-200">
                     <i class="fa-solid fa-user-doctor text-white text-sm"></i>
@@ -432,14 +536,18 @@
                 </div>
             </div>
 
+            <!-- Masaüstü Arama Kutusu -->
             <div class="relative mb-4">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <!-- id="mainSearch" JS ile bağlanır -->
                 <input type="text" id="mainSearch" placeholder="Doktor veya uzmanlık..."
                        class="search-input w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 transition">
             </div>
 
+            <!-- Masaüstü Kategori Butonları -->
             <div class="space-y-1 mb-5">
                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] px-2 py-1">Kategoriler</p>
+                <!-- Filtreleme Butonları -->
                 <button onclick="filterType('dahili')" class="nav-btn active-blue" id="btn-dahili">
                     <span class="w-2.5 h-2.5 rounded-full bg-blue-500 flex-shrink-0"></span>
                     <span>Dahili Bilimler</span>
@@ -459,22 +567,28 @@
         </div>
     </aside>
 
+    <!-- SAĞ İÇERİK ALANI (Doktor Kartlarının Listelendiği Yer) -->
     <main class="flex-1 min-w-0">
 
+        <!-- Banner Kartı (Modern Başlık) -->
         <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-[1.75rem] p-6 sm:p-8 mb-7 relative overflow-hidden" style="box-shadow: 0 12px 40px rgba(37,99,235,0.25);">
+            <!-- Arka plan süslemeleri -->
             <div class="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full translate-x-16 -translate-y-16"></div>
             <div class="absolute bottom-0 right-16 w-28 h-28 bg-white/5 rounded-full translate-y-10"></div>
+            <!-- İçerik -->
             <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <p class="text-blue-300 text-[10px] font-black tracking-[0.2em] uppercase mb-1">Gazi Üniversitesi Hastanesi</p>
                     <h2 class="text-white text-2xl sm:text-3xl font-black leading-tight tracking-tight">Akademik Kadromuz</h2>
                     <p class="text-blue-200/80 text-sm font-medium mt-1.5">850+ uzman hekim · 3 kategori · Akademik ve klinik uzmanlık</p>
                 </div>
+                <!-- Sağ taraf sayaçları -->
                 <div class="flex gap-5 flex-shrink-0">
                     <div class="text-center">
                         <p class="text-white text-2xl font-black">850+</p>
                         <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Uzman</p>
                     </div>
+                    <!-- Dikey çizgi -->
                     <div class="w-px bg-white/20"></div>
                     <div class="text-center">
                         <p class="text-white text-2xl font-black">120+</p>
@@ -484,6 +598,7 @@
             </div>
         </div>
 
+        <!-- Sonuç Bulunamadı Alanı (Başlangıçta Gizli) -->
         <div id="empty-state" class="flex-col items-center justify-center py-20 text-center bg-white rounded-[1.75rem] border border-slate-100 mb-7" style="box-shadow: 0 4px 24px rgba(0,0,0,0.04);">
             <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <i class="fa-solid fa-user-doctor text-slate-400 text-xl"></i>
@@ -492,31 +607,46 @@
             <p class="text-slate-400 text-sm mt-1">Farklı bir isim veya uzmanlık alanı deneyin.</p>
         </div>
 
+        <!-- DAHİLİ BİLİMLER BÖLÜMÜ (Varsayılan olarak açık) -->
+        <!-- id="section-dahili": Filtreleme için kullanılır -->
         <div id="section-dahili" class="dept-section mb-10">
+            <!-- Bölüm başlığı ve çizgisi -->
             <div class="section-bar">
                 <div class="flex items-center gap-3">
                     <span class="badge badge-blue"><i class="fa-solid fa-circle-dot"></i> Dahili</span>
                     <h2 class="text-lg font-black text-slate-800">Dahili Tıp Bilimleri</h2>
                 </div>
                 <div class="section-bar-line"></div>
+                <!-- Uzman sayısı -->
                 <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider flex-shrink-0">9 uzman</span>
             </div>
 
+            <!-- Doktor kartları ızgarası -->
             <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
 
+                <!-- Doktor Kartı: Abdurrahman Tufan -->
+                <!-- data-name ve data-dept: Arama fonksiyonu bu özellikleri okur -->
                 <div class="doctor-card type-dahili" data-name="Abdurrahman Tufan" data-dept="İç Hastalıkları Romatoloji">
                     <div class="p-5">
+                        <!-- Profil resmi alanı -->
                         <div class="avatar-wrap mb-4">
+                            <!-- ui-avatars.com servisi ile geçici avatar oluşturuluyor -->
                             <img src="https://ui-avatars.com/api/?name=Abdurrahman+Tufan&background=dbeafe&color=1d4ed8&bold=true&size=128" alt="">
+                            <!-- Hover halkası -->
                             <div class="avatar-ring"></div>
                         </div>
+                        <!-- Unvan etiketi -->
                         <span class="unvan-badge bg-blue-50 text-blue-700 mb-1">Prof. Dr.</span>
+                        <!-- İsim -->
                         <h3 class="text-sm font-black text-slate-800 mt-1 leading-snug">Abdurrahman Tufan</h3>
+                        <!-- Bölüm bilgisi -->
                         <p class="text-slate-500 text-xs font-semibold mt-1">Romatoloji · İç Hastalıkları</p>
+                        <!-- Buton -->
                         <button class="cv-btn mt-3"><i class="fa-solid fa-id-card text-[10px]"></i> Özgeçmişi İncele</button>
                     </div>
                 </div>
 
+                <!-- Doktor Kartı: Serhat Ünal -->
                 <div class="doctor-card type-dahili" data-name="Serhat Ünal" data-dept="Enfeksiyon Hastalıkları">
                     <div class="p-5">
                         <div class="avatar-wrap mb-4">
@@ -532,6 +662,8 @@
             </div>
         </div>
 
+        <!-- CERRAHİ BİLİMLER BÖLÜMÜ (Başlangıçta Gizli) -->
+        <!-- hidden-section sınıfı ile baştan gizleniyor -->
         <div id="section-cerrahi" class="dept-section hidden-section mb-10">
             <div class="section-bar">
                 <div class="flex items-center gap-3">
@@ -543,6 +675,7 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                <!-- Doktor Kartı: Abdulkadir Bedirli -->
                 <div class="doctor-card type-cerrahi" data-name="Abdulkadir Bedirli" data-dept="Genel Cerrahi">
                     <div class="p-5">
                         <div class="avatar-wrap mb-4">
@@ -558,6 +691,7 @@
             </div>
         </div>
 
+        <!-- TEMEL BİLİMLER BÖLÜMÜ (Başlangıçta Gizli) -->
         <div id="section-temel" class="dept-section hidden-section mb-10">
             <div class="section-bar">
                 <div class="flex items-center gap-3">
@@ -569,6 +703,7 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                <!-- Doktor Kartı: Işıl Fidan -->
                 <div class="doctor-card type-temel" data-name="Işıl Fidan" data-dept="Tıbbi Mikrobiyoloji">
                     <div class="p-5">
                         <div class="avatar-wrap mb-4">

@@ -1,10 +1,14 @@
-﻿@{
+﻿@* RAZOR KOD BLOĞU: Sunucu (C#) tarafında sayfa ayarları *@
+@{
+    // Tarayıcı sekmesinde "Başmüdürlük" başlığını gösterir.
     ViewData["Title"] = "Başmüdürlük";
 }
 
 @section Scripts {
+    <!-- SAYFA STİLLERİ (CSS) -->
     <style>
-        /* ── Sidebar (Kurumsal Menü) CSS ── */
+        /* ── YAN MENÜ (SIDEBAR) STİLLERİ ── */
+        /* Menü linklerinin temel stil ve hizalama ayarları */
         .sidebar-link {
             transition: all 0.2s ease;
             display: flex;
@@ -18,18 +22,22 @@
             text-decoration: none;
         }
 
+            /* Link üzerine gelindiğinde (Hover) */
             .sidebar-link:hover {
                 background: #eff6ff;
                 color: #2563eb;
                 transform: translateX(4px);
             }
-            /* DİKKAT: Başmüdürlük sayfasında olduğumuz için bu menü aktif olacak */
+            
+            /* AKTİF SAYFA LİNKİ */
+            /* "Başmüdürlük" sayfasında olduğumuz için bu menüyü mavi yapıp vurguluyoruz. */
             .sidebar-link[href="/Kurumsal/Basmudurluk"] {
                 background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
                 color: white;
                 box-shadow: 0 4px 14px rgba(37,99,235,0.25);
             }
 
+        /* Menü Bölüm Başlıkları (Küçük gri başlıklar) */
         .section-title {
             font-size: 0.68rem;
             font-weight: 800;
@@ -39,6 +47,7 @@
             margin: 1.4rem 0.9rem 0.4rem;
         }
 
+        /* Kaydırma Çubuğu (Scrollbar) İnceltme */
         .custom-scroll::-webkit-scrollbar {
             width: 4px;
         }
@@ -52,7 +61,8 @@
             border-radius: 10px;
         }
 
-        /* ── Head card (Başmüdür Kartı) ── */
+        /* ── BAŞMÜDÜR PROFİL KARTI ── */
+        /* Yöneticinin fotoğraf ve bilgilerini içeren büyük kart */
         .head-card {
             background: white;
             border-radius: 1.75rem;
@@ -62,11 +72,13 @@
             position: relative;
         }
 
+            /* Kartın üzerine gelince (Hover) efekti */
             .head-card:hover {
                 transform: translateY(-6px);
                 box-shadow: 0 24px 60px rgba(37,99,235,0.15) !important;
             }
 
+            /* Kartın üst kısmındaki dekoratif mavi çizgi */
             .head-card::before {
                 content: '';
                 position: absolute;
@@ -78,7 +90,7 @@
                 z-index: 2;
             }
 
-        /* ── Assistant card (Yardımcı Kartı) ── */
+        /* ── YARDIMCI KARTLARI (Küçük Kartlar) ── */
         .asst-card {
             background: white;
             border-radius: 1.25rem;
@@ -90,6 +102,7 @@
             position: relative;
         }
 
+            /* Sol taraftaki çizgi (Başlangıçta gizli) */
             .asst-card::before {
                 content: '';
                 position: absolute;
@@ -102,16 +115,19 @@
                 transition: opacity 0.25s;
             }
 
+            /* Kartın üzerine gelince (Hover) */
             .asst-card:hover {
                 transform: translateY(-3px);
                 box-shadow: 0 12px 36px rgba(37,99,235,0.10);
             }
 
+                /* Hover olunca sol çizgiyi göster */
                 .asst-card:hover::before {
                     opacity: 1;
                 }
 
-        /* ── Avatar ring ── */
+        /* ── AVATAR HALKASI ── */
+        /* Profil resminin etrafındaki renkli dış çizgi efekti */
         .avatar-ring {
             position: absolute;
             inset: -3px;
@@ -129,7 +145,7 @@
             opacity: 1;
         }
 
-        /* ── Badge ── */
+        /* ── ETİKETLER (Badges) ── */
         .badge {
             display: inline-flex;
             align-items: center;
@@ -157,7 +173,7 @@
             color: #475569;
         }
 
-        /* ── Section bar ── */
+        /* ── BÖLÜM ÇİZGİSİ ── */
         .section-bar {
             display: flex;
             align-items: center;
@@ -171,7 +187,7 @@
             background: linear-gradient(to right,#e2e8f0,transparent);
         }
 
-        /* ── Org line (connector) ── */
+        /* ── BAĞLANTI HATTI (Organizasyon Şeması) ── */
         .org-connector {
             display: flex;
             flex-direction: column;
@@ -192,7 +208,7 @@
             background: linear-gradient(to bottom,#2563eb,#bfdbfe);
         }
 
-        /* ── Info row ── */
+        /* ── BİLGİ SATIRI ── */
         .info-row {
             display: flex;
             align-items: center;
@@ -205,13 +221,18 @@
     </style>
 }
 
+<!-- SAYFA YAPISI BAŞLANGICI -->
 <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 mt-24">
+    <!-- İki Sütunlu Grid: Sol Sidebar + Sağ İçerik -->
     <div class="flex flex-col lg:flex-row gap-7">
 
+        <!-- SOL SIDEBAR ÇAĞIRILIYOR -->
         @await Html.PartialAsync("_KurumsalSidebar")
 
+        <!-- SAĞ TARAF: BAŞMÜDÜRLÜK İÇERİĞİ -->
         <section class="flex-1 min-w-0 space-y-8">
 
+            <!-- EKMEK KIRINTISI (Navigasyon Yolu) -->
             <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
                 <i class="fa-solid fa-house text-[9px]"></i>
                 <i class="fa-solid fa-chevron-right text-[8px]"></i>
@@ -220,15 +241,20 @@
                 <span class="text-blue-600">Başmüdürlük</span>
             </nav>
 
+            <!-- ÜST BİLGİ KARTI (Mavi) -->
             <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-[1.75rem] p-6 sm:p-10 relative overflow-hidden" style="box-shadow:0 12px 40px rgba(37,99,235,0.25);">
+                <!-- Arka plan süslemeleri -->
                 <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full translate-x-20 -translate-y-20"></div>
                 <div class="absolute bottom-0 right-24 w-32 h-32 bg-white/5 rounded-full translate-y-12"></div>
+                
+                <!-- Başlık ve Açıklamalar -->
                 <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
                     <div>
                         <p class="text-blue-300 text-[10px] font-black tracking-[0.2em] uppercase mb-1">İdari Yönetim</p>
                         <h2 class="text-white text-2xl sm:text-4xl font-black leading-tight tracking-tight">Başmüdürlük</h2>
                         <p class="text-blue-200/80 text-sm font-medium mt-2 max-w-lg">Hastanemizin mali, teknik ve destek hizmetlerinin kesintisiz koordinasyonu.</p>
                     </div>
+                    <!-- İstatistik (Sağ Taraf) -->
                     <div class="flex gap-5 flex-shrink-0">
                         <div class="text-center">
                             <p class="text-white text-2xl font-black">1</p>
@@ -243,6 +269,7 @@
                 </div>
             </div>
 
+            <!-- BAŞMÜDÜR ALANI -->
             <div>
                 <div class="section-bar">
                     <span class="badge badge-gold"><i class="fa-solid fa-star text-[8px]"></i> Başmüdür</span>
@@ -250,21 +277,28 @@
                     <div class="section-bar-line"></div>
                 </div>
 
+                <!-- Başmüdür Profil Kartı -->
                 <div class="flex justify-center">
                     <div class="head-card w-full max-w-sm" style="box-shadow:0 8px 40px rgba(0,0,0,0.07);">
                         <div class="relative overflow-hidden" style="height:320px;">
+                            <!-- Profil Resmi (Placeholder) -->
                             <img src="https://ui-avatars.com/api/?name=Fatih+Yılmaz&background=dbeafe&color=1d4ed8&bold=true&size=256"
                                  alt="Fatih Yılmaz"
                                  class="w-full h-full object-cover">
+                            <!-- Karartma Katmanı -->
                             <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+                            <!-- Başmüdür Etiketi -->
                             <div class="absolute top-4 right-4 flex items-center gap-1.5 bg-blue-600 text-white text-[9px] font-black px-3 py-1.5 rounded-full shadow-md">
                                 <i class="fa-solid fa-building-user text-[8px]"></i> BAŞMÜDÜR
                             </div>
+                            <!-- İsim ve Unvan -->
                             <div class="absolute bottom-4 left-4 right-4">
                                 <p class="text-white text-base font-black leading-snug drop-shadow-md">Fatih YILMAZ</p>
                                 <p class="text-blue-200 text-[10px] font-bold">Hastane Başmüdürü</p>
                             </div>
                         </div>
+                        
+                        <!-- Bilgi Alanı -->
                         <div class="p-5 space-y-3">
                             <div class="info-row">
                                 <i class="fa-solid fa-briefcase text-blue-500 text-xs flex-shrink-0"></i>
@@ -274,6 +308,7 @@
                                 <i class="fa-solid fa-building text-blue-500 text-xs flex-shrink-0"></i>
                                 <p class="text-slate-600 text-xs font-semibold">Gazi Üniversitesi Hastanesi</p>
                             </div>
+                            <!-- Butonlar -->
                             <div class="flex gap-2 pt-1">
                                 <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 text-[10px] font-black py-2 rounded-xl transition border border-blue-100">
                                     <i class="fa-solid fa-envelope text-[9px]"></i> E-posta
@@ -286,6 +321,7 @@
                     </div>
                 </div>
 
+                <!-- Bağlantı Hattı (Çizgi ve Noktalar) -->
                 <div class="org-connector mt-6 mb-2">
                     <div class="org-dot"></div>
                     <div class="org-line"></div>
@@ -298,6 +334,7 @@
                 </div>
             </div>
 
+            <!-- YARDIMCILAR ALANI -->
             <div>
                 <div class="section-bar">
                     <span class="badge badge-blue"><i class="fa-solid fa-circle-dot"></i> Yardımcılar</span>
@@ -305,8 +342,10 @@
                     <div class="section-bar-line"></div>
                 </div>
 
+                <!-- Yardımcı Kartları Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-4">
 
+                    <!-- Yardımcı 1 -->
                     <div class="asst-card" style="box-shadow:0 2px 16px rgba(0,0,0,0.04);">
                         <div class="relative flex-shrink-0" style="width:120px;">
                             <img src="https://ui-avatars.com/api/?name=Ayse+Demir&background=f8fafc&color=475569&bold=true&size=128"
@@ -330,6 +369,7 @@
                         </div>
                     </div>
 
+                    <!-- Yardımcı 2 -->
                     <div class="asst-card" style="box-shadow:0 2px 16px rgba(0,0,0,0.04);">
                         <div class="relative flex-shrink-0" style="width:120px;">
                             <img src="https://ui-avatars.com/api/?name=Kemal+Arslan&background=f8fafc&color=475569&bold=true&size=128"
@@ -352,6 +392,7 @@
                         </div>
                     </div>
 
+                    <!-- Yardımcı 3 -->
                     <div class="asst-card" style="box-shadow:0 2px 16px rgba(0,0,0,0.04);">
                         <div class="relative flex-shrink-0" style="width:120px;">
                             <img src="https://ui-avatars.com/api/?name=Zeynep+Celik&background=f8fafc&color=475569&bold=true&size=128"
@@ -374,6 +415,7 @@
                         </div>
                     </div>
 
+                    <!-- Yardımcı 4 -->
                     <div class="asst-card" style="box-shadow:0 2px 16px rgba(0,0,0,0.04);">
                         <div class="relative flex-shrink-0" style="width:120px;">
                             <img src="https://ui-avatars.com/api/?name=Burak+Kaya&background=f8fafc&color=475569&bold=true&size=128"
@@ -399,6 +441,7 @@
                 </div>
             </div>
 
+            <!-- ALT İLETİŞİM ALANI -->
             <div class="bg-white rounded-[1.5rem] border border-slate-100 p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5" style="box-shadow:0 4px 24px rgba(0,0,0,0.04);">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center flex-shrink-0">

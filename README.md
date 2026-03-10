@@ -368,7 +368,7 @@ Bu proje þu anda bir staj projesi olarak geliþtirilmektedir. Katkýda bulunmak is
 
 <div align="center">
 
-**? Bu projeyi beðendiyseniz yýldýz vermeyi unutmayýn!**
+
 
 <br/>
 

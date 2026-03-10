@@ -15,3 +15,4 @@ namespace GaziHastane.Controllers
         }
     }
 }
+//Personelin kurumsal "Gazi Mail" sistemine hýzlýca giriþ yapabilmesi için bir köprü sayfasý.

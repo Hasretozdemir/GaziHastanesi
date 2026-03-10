@@ -1,0 +1,81 @@
+@model GaziHastane.Models.Doktor
+
+@{
+    ViewData["Title"] = "Yeni Hekim Ekle";
+}
+
+<div class="max-w-2xl mx-auto animate-[fadeIn_0.5s_ease-out]">
+    
+    <div class="mb-8">
+        <h2 class="text-3xl font-black mb-2 text-white">Yeni Hekim <span class="text-gradient">Ekle</span></h2>
+        <p class="text-slate-400 font-medium">Sisteme yeni bir doktor kaydý oluþturun.</p>
+    </div>
+
+    <!-- Form Kartý -->
+    <div class="glass-card p-8 rounded-[2rem] relative z-10 border border-white/10">
+        <form asp-action="Create">
+            <!-- Hata Mesajlarý -->
+            <div asp-validation-summary="ModelOnly" class="text-rose-400 mb-6 text-sm font-bold bg-rose-500/10 p-4 rounded-xl border border-rose-500/20"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Ad Alaný -->
+                <div class="form-group">
+                    <label asp-for="Ad" class="block text-sm font-bold text-slate-300 mb-2">Ad <span class="text-rose-500">*</span></label>
+                    <input asp-for="Ad" class="w-full bg-slate-900/50 text-white border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition placeholder-slate-600" placeholder="Örn: Ahmet" />
+                    <span asp-validation-for="Ad" class="text-rose-400 text-xs mt-1 block font-bold"></span>
+                </div>
+
+                <!-- Soyad Alaný -->
+                <div class="form-group">
+                    <label asp-for="Soyad" class="block text-sm font-bold text-slate-300 mb-2">Soyad <span class="text-rose-500">*</span></label>
+                    <input asp-for="Soyad" class="w-full bg-slate-900/50 text-white border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition placeholder-slate-600" placeholder="Örn: Yýlmaz" />
+                    <span asp-validation-for="Soyad" class="text-rose-400 text-xs mt-1 block font-bold"></span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                 <!-- Ünvan Alaný -->
+                <div class="form-group">
+                    <label asp-for="Unvan" class="block text-sm font-bold text-slate-300 mb-2">Ünvan</label>
+                    <input asp-for="Unvan" class="w-full bg-slate-900/50 text-white border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition placeholder-slate-600" placeholder="Örn: Prof. Dr." />
+                    <span asp-validation-for="Unvan" class="text-rose-400 text-xs mt-1 block font-bold"></span>
+                </div>
+
+                <!-- Bölüm Seçimi -->
+                <div class="form-group">
+                    <label asp-for="BolumId" class="block text-sm font-bold text-slate-300 mb-2">Bölüm</label>
+                    <div class="relative">
+                        <select asp-for="BolumId" class ="w-full bg-slate-900/50 text-white border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition appearance-none" asp-items="ViewBag.BolumId">
+                            <option value="">-- Bölüm Seçiniz --</option>
+                        </select>
+                        <!-- Select oku ikonu -->
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Uzmanlýk Alaný -->
+            <div class="form-group mb-8">
+                <label asp-for="UzmanlikAlani" class="block text-sm font-bold text-slate-300 mb-2">Uzmanlýk Alaný</label>
+                <input asp-for="UzmanlikAlani" class="w-full bg-slate-900/50 text-white border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition placeholder-slate-600" placeholder="Örn: Kornea Hastalýklarý" />
+                <span asp-validation-for="UzmanlikAlani" class="text-rose-400 text-xs mt-1 block font-bold"></span>
+            </div>
+
+            <!-- Butonlar -->
+            <div class="flex items-center gap-4">
+                 <button type="submit" class="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white py-3 rounded-xl font-bold shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:scale-[1.02] transition border-0 cursor-pointer">
+                    <i class="fa-solid fa-save mr-2"></i> Kaydet
+                </button>
+                <a asp-action="Index" class="px-6 py-3 bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 rounded-xl font-bold transition decoration-none hover:text-white">
+                    Ýptal
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

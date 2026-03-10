@@ -1,250 +1,284 @@
+@* RAZOR KOD BLOÐU: Sunucu tarafýnda (C#) çalýþan kodlar burada yer alýr.
+*@
 @{
+    // Tarayýcýnýn üst sekmesinde (Title bar) görünecek sayfa baþlýðýný belirliyoruz.
     ViewData["Title"] = "Gazi Üniversitesi | EBYS Beyaz Giriþ";
 }
 
 <div class="ebys-white-wrapper">
-    <div class="main-wallpaper" style="background-image: url('/assets/gaziebys.jpg');"></div>
+    <!-- Tüm giriþ ekranýný sarmalayan ana kapsayýcý. Beyaz aðýrlýklý bir tema olduðunu iþaret ediyor.-->
 
+    <div class="main-wallpaper" style="background-image: url('/assets/gaziebys.jpg');"></div>
+	<!-- Sayfanýn arka planýnda tam ekran kaplayan bir görsel. CSS ile karartýlmýþ ve bulanýklaþtýrýlmýþ, böylece üzerindeki beyaz kart öne çýkar. -->'
     <div class="auth-card-white animate__animated animate__fadeInUp">
+        <!--  Giriþ formunun içinde bulunduðu beyaz kutu. animate__fadeInUp sýnýfý, kutunun sayfa açýldýðýnda aþaðýdan yukarýya doðru kayarak gelmesini (animasyon) saðlar.-->
+
         <div class="auth-card-content">
 
             <div class="text-center mb-5">
+
                 <div class="logo-premium-wrapper mb-3">
-                    <img src="/assets/gazilogo.jpg" alt="Gazi Logo" class="brand-img">
+                    <!--Logoyu estetik bir çerçeveye alan kýsým.-->
+                    <img src="/assets/gazilogo.jpg" alt="Gazi Logo" class="brand-img"><!--Gazi Üniversitesi'nin logosunu ekrana basar.-->
                 </div>
-                <h4 class="fw-800 text-navy mb-1">EBYS GÝRÝÞ</h4>
+
+                <h4 class="fw-800 text-navy mb-1">EBYS GÝRÝÞ</h4><!--Kalýn puntolu (fw-800) ve lacivert renkli (text-navy) ana baþlýk.-->
+
                 <p class="text-muted small mb-0">Elektronik Belge Yönetim Sistemi</p>
-                <div class="ebys-badge-gold">SÝSTEME GÜVENLÝ ERÝÞÝM</div>
+               
+                <div class="ebys-badge-gold">SÝSTEME GÜVENLÝ ERÝÞÝM</div> <!--Altýn rengi temalý bir rozet/etiket; sistemin güvenli olduðunu vurgulayan görsel bir öge.-->
+
             </div>
 
             <form action="/EBYS/Login" method="post">
+                <!--Formun kalbidir. Kullanýcý butona bastýðýnda veriler güvenli bir þekilde (post) sunucudaki /EBYS/Login adresine gönderilir.
+                -->
 
                 <div class="input-modern mb-4">
                     <label class="premium-label-navy">KULLANICI ÝSMÝ</label>
+
                     <div class="field-wrapper-white">
-                        <i class="fas fa-id-card-alt text-navy-light"></i>
-                        <input type="text" placeholder="Kullanýcý adýnýzý giriniz" required>
+                        <i class="fas fa-id-card-alt text-navy-light"></i><!-- FontAwesome kütüphanesinden bir kimlik kartý ikonu ekler.-->
+                        <input type="text" placeholder="Kullanýcý adýnýzý giriniz" required><!--Kullanýcýnýn metin gireceði alan. required boþ býrakýlmasýný engeller.-->
                     </div>
                 </div>
 
                 <div class="input-modern mb-4">
                     <label class="premium-label-navy">PAROLA</label>
                     <div class="field-wrapper-white">
-                        <i class="fas fa-lock text-navy-light"></i>
-                        <input type="password" placeholder="••••••••" required>
+                        <i class="fas fa-lock text-navy-light"></i><!--Kilit ikonu ekler.-->
+                        <input type="password" placeholder="••••••••" required><!--Yazýlan karakterlerin gizli (nokta þeklinde) görünmesini saðlar.-->
                     </div>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-5 px-1">
+
                     <div class="custom-checkbox-white">
                         <input type="checkbox" id="remember">
-                        <label for="remember" class="text-navy small ms-1">Oturumu Açýk Tut</label>
+                        <label for="remember" class="text-navy small ms-1">Oturumu Açýk Tut</label><!--"Oturumu Açýk Tut" seçeneði için özelleþtirilmiþ onay kutusu.-->
                     </div>
+
                     <div class="forgot-pass-link">
+                        <!--Þifresini unutanlar için "Parola Ýþlemleri" baðlantýsý.-->
                         <a href="#" class="small fw-600 text-navy-light">Parola Ýþlemleri</a>
                     </div>
                 </div>
 
                 <button type="submit" class="btn-ebys-action-gold shadow-lg">
+                    <!--Formu gönderen ana buton. Altýn rengi efektine ve üzerine gelindiðinde parlayan bir gölgeye (shadow-lg) sahiptir.-->
                     <span>SÝSTEME GÝRÝÞ YAP</span>
-                    <i class="fas fa-sign-in-alt"></i>
+                    <i class="fas fa-sign-in-alt"></i><!-- Butonun yanýndaki "giriþ yap" ikonu.-->
                 </button>
             </form>
 
             <div class="footer-links-modern mt-5">
-                <a href="#">Kullaným Kýlavuzu</a>
-                <span class="dot-sep-navy">•</span>
+                <!-- Kartýn en altýnda bulunan yardýmcý linkler alaný.-->
+                <a href="#">Kullaným Kýlavuzu</a> <!--Kullanýcýya sistemle ilgili yardým alabileceði yönlendirmeler sunar.-->
+                <span class="dot-sep-navy">•</span><!-->: Ýki link arasýna lacivert bir nokta iþareti koyar.-->
+                -->
                 <a href="#">Destek Talebi</a>
             </div>
         </div>
     </div>
 </div>
 
+
+@* CSS BÖLÜMÜ: Sadece bu sayfada geçerli olacak stiller. 
+  _Layout.cshtml içindeki '@RenderSection("Styles", required: false)' etiketinin olduðu yere otomatik olarak yerleþir.
+*@
 @section Styles {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
     <style>
+        /* CSS DEÐÝÞKENLERÝ: Kodun her yerinde ayný renk kodunu ezberlemek yerine isim verilir. Deðiþtirmek çok kolaydýr */
         :root {
-            --gazi-navy: #0f172a; /* Koyu Lacivert (Yazýlar için) */
-            --gazi-navy-light: #475569; /* Daha açýk navy (Ýkonlar için) */
-            --gazi-gold-premium: #c5a059;
-            --soft-gold: rgba(197, 160, 89, 0.4);
-            /* Turuncu/Gold Buton Gradyaný */
-            --btn-gold-gr-1: #c5a059;
-            --btn-gold-gr-2: #e2c28d;
+            --gazi-navy: #0f172a; /* Koyu lacivert: Baþlýklar ve buton yazýlarý için */
+            --gazi-navy-light: #475569; /* Açýk lacivert/gri: Ýkonlar ve alt yazýlar için */
+            --gazi-gold-premium: #c5a059; /* Altýn/Hardal: Rozet ve butonun ana rengi */
+            --soft-gold: rgba(197, 160, 89, 0.4); /* Yarý saydam altýn: Kartýn etrafýndaki parlama(glow) gölgesi için */
+            --btn-gold-gr-1: #c5a059; /* Buton gradyaný (renk geçiþi) baþlangýç rengi */
+            --btn-gold-gr-2: #e2c28d; /* Buton gradyaný bitiþ rengi (daha açýk ton) */
         }
 
+        /* Sayfa Genel Ayarlarý */
         body {
             margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden;
+            padding: 0; /* Tarayýcýnýn varsayýlan boþluklarýný sýfýrlar */
+            font-family: 'Plus Jakarta Sans', sans-serif; /* Modern, okunabilir yazý fontu */
+            overflow-x: hidden; /* Sayfanýn saða sola kaymasýný (yatay scroll) engeller */
         }
 
+        /* Tüm Ekraný Kaplayan Dýþ Div */
         .ebys-white-wrapper {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            padding: 20px;
+            min-height: 100vh; /* Ekranýn yüzde 100'ünü dikey olarak kaplar (Görünür alan kadar) */
+            display: flex; /* Ýçindeki elemanlarý (kartý) esnek yerleþtirmeyi saðlar */
+            align-items: center; /* Kartý dikey olarak tam ortaya (düþey merkez) hizalar */
+            justify-content: center; /* Kartý yatay olarak tam ortaya hizalar */
+            position: relative; /* Arka plan resmini absolute yapabilmek için gerekli */
+            padding: 20px; /* Mobil ekranlarda kartýn kenarlara yapýþmamasý için boþluk */
         }
 
-        /* Arka Plan Resmi ( gazimail.jpg ) ve Karartma */
+        /* Arka Plan Görseli Özellikleri */
         .main-wallpaper {
             position: fixed;
             top: 0;
-            left: 0;
+            left: 0; /* Ekranýn sol üst köþesine kilitler, kaydýrýlsa da yerinde kalýr */
             width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            z-index: -2;
-            /* Resim canlý kalsýn ama karartma ve blur olsun */
-            filter: brightness(0.5) blur(3px);
+            height: 100%; /* Ekranýn tamamýný doldurur */
+            background-size: cover; /* Resmi sündürmeden, en-boy oranýný koruyarak ekraný kaplatýr */
+            background-position: center; /* Resmin ortasýný odaklar */
+            z-index: -2; /* Sayfanýn en arkasýna (alt katmana) atar */
+            filter: brightness(0.5) blur(3px); /* Resmi %50 karartýr ve 3px bulanýklaþtýrýr ki üzerindeki beyaz kart okunsun */
         }
 
-        /* Tamamen Beyaz, Premium Kart Tasarýmý */
+        /* Beyaz Giriþ Kartý Özellikleri */
         .auth-card-white {
             width: 100%;
-            max-width: 440px;
-            background: #ffffff; /* Beyaz Zemin */
-            border-radius: 40px;
-            padding: 50px 45px;
-            /* Beyaz karta derinlik vermek için gölge ve glow */
+            max-width: 440px; /* Kart esnektir ama geniþliði 440px'i geçemez */
+            background: #ffffff; /* Saf beyaz arka plan */
+            border-radius: 40px; /* Kartýn köþelerini yuvarlatýr (Modern görünüm) */
+            padding: 50px 45px; /* Kartýn içindeki yazýlarla kenarlarý arasýnda boþluk býrakýr */
+            /* Gölgelendirme: Ýlk deðer koyu alt gölge, ikinci deðer etrafýndaki altýn rengi (glow) yansýma */
             box-shadow: 0 40px 100px -15px rgba(0, 0, 0, 0.3), 0 0 10px var(--soft-gold);
-            z-index: 1;
+            z-index: 1; /* Arka plan resminin (z-index:-2) üstünde görünmesini saðlar */
         }
 
-        /* Logo */
+        /* Logo Yuvasý */
         .logo-premium-wrapper {
             width: 80px;
-            height: 80px;
-            background: #f8fafc;
-            border-radius: 20px;
-            margin: 0 auto;
-            padding: 8px;
+            height: 80px; /* Logonun oturduðu kutunun ebatlarý */
+            background: #f8fafc; /* Logonun arkasýna çok açýk gri bir zemin */
+            border-radius: 20px; /* Logonun kutusunu yuvarlatýr */
+            margin: 0 auto; /* Kutuyu yatayda tam ortaya hizalar */
+            padding: 8px; /* Logonun kutu dýþýna taþmamasý için iç boþluk */
             display: flex;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            justify-content: center; /* Ýçindeki logoyu tam merkeze oturtur */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Logonun altýna hafif derinlik (gölge) verir */
         }
 
+        /* Logonun Kendisi */
         .brand-img {
             width: 100%;
-            height: 100%;
-            object-fit: contain;
+            height: 100%; /* Kutunun içini tam doldurur */
+            object-fit: contain; /* Logonun kenarlarýndan kesilmeden, orantýlý sýðmasýný saðlar */
         }
 
-        /* Gold Badge */
+        /* Altýn Rozet Tasarýmý */
         .ebys-badge-gold {
             display: inline-block;
-            margin-top: 15px;
+            margin-top: 15px; /* Üstteki yazýdan biraz uzaklaþtýrýr */
             font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            color: #fff;
-            background: var(--gazi-gold-premium); /* Tam Gold rozet */
-            border-radius: 50px;
-            padding: 6px 18px;
+            font-weight: 800; /* Çok küçük ama kalýn yazýlýr */
+            letter-spacing: 2px; /* Harflerin arasýný açarak premium görünüm katar */
+            color: #fff; /* Rozet içi yazý rengi beyaz */
+            background: var(--gazi-gold-premium); /* Deðiþkendeki altýn rengini zemin yapar */
+            border-radius: 50px; /* Rozetin uçlarýný tam yuvarlak (hap þeklinde) yapar */
+            padding: 6px 18px; /* Rozetin içi boþluklarý */
         }
 
-        /* Yazý Renkleri (Navy Dengesi) */
+        /* Yazý Renklendirmeleri */
         .text-navy {
             color: var(--gazi-navy);
         }
-
+        /* Koyu lacivert atamasý */
         .text-navy-light {
             color: var(--gazi-navy-light);
             text-decoration: none;
         }
-
+        /* Açýk lacivert ve alt çizgisi olmayan link */
         .fw-800 {
             font-weight: 800;
         }
+        /* Yazýyý ekstra kalýnlaþtýrýr */
 
-        /* Inputlar (Beyaz Zemin Ýçin) */
+        /* Inputlarýn Üzerindeki Baþlýklar (KULLANICI ÝSMÝ vs.) */
         .premium-label-navy {
             font-size: 11px;
             font-weight: 800;
             color: var(--gazi-navy-light);
             margin-bottom: 8px;
-            display: block;
-            letter-spacing: 1.5px;
+            display: block; /* Etiketin altýna inmesini (block) saðlar */
+            letter-spacing: 1.5px; /* Harf aralýðý */
         }
 
+        /* Inputlar (Metin Kutularý) Ýçin Taþýyýcý */
         .field-wrapper-white {
-            position: relative;
+            position: relative; /* Ýçindeki ikonun (absolute) konumlanabilmesi için referans noktasý olur */
             display: flex;
             align-items: center;
         }
 
+            /* Metin Kutularýnýn Ýçindeki Ýkonlar */
             .field-wrapper-white i {
                 position: absolute;
-                left: 18px;
+                left: 18px; /* Ýkonu kutunun en soluna yaslar */
                 font-size: 1.1rem;
-                opacity: 0.8;
+                opacity: 0.8; /* Ýkon boyutu ve %80 saydamlýk */
             }
 
+            /* Metin Kutularý (Input'larýn kendisi) */
             .field-wrapper-white input {
                 width: 100%;
-                height: 58px;
-                /* Beyaz karta uygun hafif gri input arka planý */
-                background: #f8fafc;
-                border: 1px solid #e2e8f0;
-                border-radius: 15px;
-                padding: 0 20px 0 55px;
+                height: 58px; /* Kutunun geniþliði ve yüksekliði */
+                background: #f8fafc; /* Ýçi hafif açýk gri */
+                border: 1px solid #e2e8f0; /* Çok ince gri dýþ çizgi (border) */
+                border-radius: 15px; /* Köþeleri yuvarlatýlmýþ kutu */
+                padding: 0 20px 0 55px; /* Soldan 55px boþluk býrakýr, çünkü orada ikon duruyor. Yazý ikonun üstüne binmez */
                 color: var(--gazi-navy);
-                font-weight: 600;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                font-weight: 600; /* Girilen yazýnýn rengi ve kalýnlýðý */
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Focus efekti için yumuþak geçiþ animasyonu süresi */
             }
 
+                /* Kullanýcý Input'a Týkladýðýnda (Yazý Yazarken) Olanlar */
                 .field-wrapper-white input:focus {
-                    background: #ffffff;
-                    border-color: var(--gazi-gold-premium);
-                    /* Focus olduðunda gold glow */
-                    box-shadow: 0 0 15px var(--soft-gold);
-                    outline: none;
+                    background: #ffffff; /* Kutunun içi tam beyaz olur */
+                    border-color: var(--gazi-gold-premium); /* Dýþ çizgisi altýn rengi olur */
+                    box-shadow: 0 0 15px var(--soft-gold); /* Kutunun etrafýna altýn rengi bir parlama (glow) verir */
+                    outline: none; /* Tarayýcýnýn varsayýlan mavi çizgisini yok eder */
                 }
 
-        /* Gold Buton Tasarýmý */
+        /* Giriþ Yap Butonu */
         .btn-ebys-action-gold {
             width: 100%;
             height: 60px;
-            /* Tam turuncu/gold gradyan */
+            /* Arka plana linear-gradient (iki renkli geçiþ) verir */
             background: linear-gradient(135deg, var(--btn-gold-gr-1) 0%, var(--btn-gold-gr-2) 100%);
             border: none;
             border-radius: 15px;
             color: var(--gazi-navy);
-            font-weight: 800;
+            font-weight: 800; /* Buton yazýsý lacivert ve kalýn */
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: space-between; /* Yazý sola, ikon saða yaslanýr */
             padding: 0 25px;
-            transition: all 0.5s ease;
+            transition: all 0.5s ease; /* Hover(üzerine gelme) efekti süresi */
             letter-spacing: 1px;
         }
 
+            /* Farenin Ýmleci Butonun Üzerine Geldiðinde (Hover) */
             .btn-ebys-action-gold:hover {
-                transform: translateY(-3px);
-                /* Hover'da turuncuyu biraz daha parlatýyoruz */
+                transform: translateY(-3px); /* Butonu hafifçe 3 piksel yukarý kaldýrýr (Týklanma hissi verir) */
+                /* Renk geçiþini tersine çevirip biraz daha açýk hale getirir */
                 background: linear-gradient(135deg, #e0bf81 0%, #c5a059 100%);
-                color: #fff;
-                box-shadow: 0 15px 30px var(--soft-gold);
+                color: #fff; /* Üstüne gelince yazý lacivertten beyaza döner */
+                box-shadow: 0 15px 30px var(--soft-gold); /* Altýndaki gölgeyi/parlamayý büyütür */
             }
 
-        /* Linkler */
+        /* Linklere Týklanma/Gelinme Efekti */
         .forgot-pass-link a:hover {
             color: var(--gazi-gold-premium);
         }
+        /* "Parola iþlemleri" linkinin üstüne gelince sararmasý */
 
-        /* Footer */
+        /* En Alttaki Footer Linkleri (Kullaným Kýlavuzu vs.) */
         .footer-links-modern {
             text-align: center;
         }
-
+            /* Linkleri ortalar */
             .footer-links-modern a {
                 color: var(--gazi-navy-light);
-                text-decoration: none;
+                text-decoration: none; /* Alt çizgiyi kaldýrýr */
                 font-size: 12px;
                 font-weight: 700;
                 transition: 0.3s;
@@ -258,13 +292,18 @@
             color: #cbd5e1;
             margin: 0 10px;
         }
+        /* Linkler arasýndaki noktalarýn rengi ve boþluðu */
 
+        /* MOBÝL UYUM (Responsive Tasarým) */
+        /* Ekran geniþliði 576px'den (telefon ekranlarý) küçükse aþaðýdaki kodlar devreye girer */
         @@media (max-width: 576px) {
             .auth-card-white {
-                padding: 40px 25px;
-                border-radius: 30px;
-                margin: 10px;
+                padding: 40px 25px; /* Telefon ekranýnda iç boþluklarý daraltarak kartýn ekrana sýðmasýný saðlar */
+                border-radius: 30px; /* Ovaliði biraz azaltýr */
+                margin: 10px; /* Dýþarýdan 10px pay býrakarak telefonun kenarlarýna yapýþmasýný engeller */
             }
         }
     </style>
 }
+
+      

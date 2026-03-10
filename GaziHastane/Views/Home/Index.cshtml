@@ -1,301 +1,499 @@
-﻿@{
+﻿@* RAZOR KOD BLOĞU: Sunucu tarafında (C#) çalışan kodlar. *@
+@* Bu blok, sayfa render edilmeden önce sunucu tarafından işlenir. *@
+@{
+    // ViewData koleksiyonuna "Title" anahtarı ile bir değer atanıyor.
+    // Bu değer, _Layout.cshtml dosyasındaki <title> etiketi içinde kullanılır.
+    // Sayfanın tarayıcı sekmesinde "Gazi Sağlık | Ana Sayfa" yazmasını sağlar.
     ViewData["Title"] = "Gazi Sağlık | Ana Sayfa";
 }
 
+@* 'Scripts' adında bir bölüm (section) tanımlanıyor. *@
+@* Bu bölüm, Layout dosyasında @RenderSection("Scripts", required: false) olan yere yerleştirilir. *@
 @section Scripts {
+    <!-- SAYFAYA ÖZEL STİLLER (CSS) -->
+    <!-- Bu sayfaya özgü CSS kuralları burada tanımlanıyor. -->
     <style>
-        /* ── Hero Arka Plan ── */
+        /* ── HERO (KARŞILAMA) ALANI ARKA PLANI ── */
+        /* Sayfanın en üstünde yer alan, geniş ve mavi gradyanlı karşılama alanı */
         .hero-bg {
+            /* Arka plan rengi olarak 135 derecelik bir açıyla mavi tonlarında geçiş (gradient) kullanılıyor. */
             background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 40%, #1d4ed8 75%, #2563eb 100%);
+            /* Position: relative, içindeki absolute (mutlak) konumlandırılmış öğeler (hero-orb) için referans noktası oluşturur. */
             position: relative;
+            /* Overflow: hidden, bu alandan taşan içeriklerin (örneğin süsleme dairelerinin taşan kısımlarının) gizlenmesini sağlar. */
             overflow: hidden;
         }
 
+        /* Hero alanındaki dekoratif, yarı saydam yuvarlak şekiller */
         .hero-orb {
+            /* Position: absolute, bu öğeyi .hero-bg kapsayıcısına göre serbestçe konumlandırmayı sağlar. */
             position: absolute;
+            /* Border-radius: 50%, kare olan div öğesini tam bir daireye dönüştürür. */
             border-radius: 50%;
+            /* Arka plan olarak merkezden dışa doğru yayılan (radial) bir geçiş kullanılır. */
+            /* Ortada yarı saydam mavi, dışta ise tamamen şeffaf (transparent) bir renk vardır. */
             background: radial-gradient(circle, rgba(96,165,250,0.18), transparent 70%);
         }
 
-        /* ── YENİ HIZLI ERİŞİM ALANI (Modern & Profesyonel) ── */
+        /* ── HIZLI ERİŞİM ALANI (Modern & Profesyonel) ── */
+        /* Sayfanın ortasında yer alan, yatay kaydırılabilir butonların olduğu beyaz kart */
         .qa-wrapper {
+            /* Diğer öğelerin üzerine çıkabilmesi için z-index kullanacağız, bu yüzden position: relative gerekiyor. */
             position: relative;
+            /* Genişliği kapsayıcısının %100'ü kadar olsun. */
             width: 100%;
+            /* Arka plan rengi beyaz. */
             background: #ffffff;
+            /* Köşeleri 2rem (yaklaşık 32px) kadar yuvarlatır. */
             border-radius: 2rem;
+            /* İç boşluk: Üst-alt 2rem, sağ-sol 1.5rem. */
             padding: 2rem 1.5rem;
+            /* Kutu gölgesi: Elemana derinlik hissi katar. */
             box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05), 0 0 15px rgba(37, 99, 235, 0.03);
+            /* İnce bir kenarlık ekler. */
             border: 1px solid rgba(226, 232, 240, 0.8);
+            /* Z-index: 20 ile diğer standart elementlerin üzerinde görünmesi sağlanır. */
             z-index: 20;
-            margin-top: -3rem; /* Hero'nun içine hafifçe girmesi için */
+            /* Margin-top: -3rem ile bu kutu, üstündeki Hero alanının 3rem kadar üzerine biner (taşar). */
+            margin-top: -3rem;
         }
 
+        /* Hızlı erişim kartının başlık bölümü */
         .qa-header {
+            /* Flexbox düzeni kullanarak içindeki öğeleri yan yana dizer. */
             display: flex;
+            /* Dikey eksende ortalar. */
             align-items: center;
+            /* Yatay eksende, öğeler arasına mümkün olduğunca çok boşluk bırakarak onları kenarlara iter. */
             justify-content: space-between;
+            /* Alt tarafa 1.5rem boşluk bırakır. */
             margin-bottom: 1.5rem;
+            /* Sol tarafa 0.5rem iç boşluk ekler. */
             padding-left: 0.5rem;
         }
 
+        /* Başlık metni stili */
         .qa-title {
+            /* Yazı boyutu 11px. */
             font-size: 11px;
+            /* Yazı kalınlığı çok kalın (900). */
             font-weight: 900;
+            /* Tüm harfleri büyük harfe çevirir. */
             text-transform: uppercase;
+            /* Harfler arası boşluğu 2px açar. */
             letter-spacing: 2px;
+            /* Yazı rengi gri tonu. */
             color: #64748b;
+            /* İkon ve metni hizalamak için flexbox kullanılır. */
             display: flex;
+            /* Dikeyde ortalar. */
             align-items: center;
+            /* İkon ile yazı arasında 8px boşluk bırakır. */
             gap: 8px;
         }
 
+            /* Başlık ikonunun rengi */
+            /* .qa-title içindeki i (ikon) etiketlerini hedefler. */
             .qa-title i {
-                color: #2563eb;
+                /* İkon rengi mavi. */
+                color: #2563eb; 
             }
 
+        /* Kullanıcıya yatay kaydırabileceğini söyleyen ipucu etiketi */
         .qa-scroll-hint {
+            /* Yazı boyutu 10px. */
             font-size: 10px;
+            /* Yazı kalınlığı 700 (bold). */
             font-weight: 700;
+            /* Yazı rengi açık gri. */
             color: #94a3b8;
+            /* Arka plan rengi çok açık bir gri. */
             background: #f1f5f9;
+            /* İç boşluk (padding): üst-alt 4px, sağ-sol 10px. */
             padding: 4px 10px;
+            /* Köşeleri tamamen yuvarlayarak hap (pill) şekli verir. */
             border-radius: 50px;
         }
 
+        /* Butonların yatay olarak dizildiği kapsayıcı (Scroll Container) */
         .qa-container {
+            /* Flexbox ile öğeleri yan yana dizer. */
             display: flex;
+            /* Yatay eksende taşma olursa kaydırma çubuğu (scroll) çıkarır. */
             overflow-x: auto;
+            /* Öğeler (butonlar) arasına 1.25rem boşluk koyar. */
             gap: 1.25rem;
+            /* Konteynerın içine 0.5rem boşluk ekler. */
             padding: 0.5rem;
+            /* Kaydırma işleminin yumuşak (smooth) olmasını sağlar. */
             scroll-behavior: smooth;
+            /* Internet Explorer ve Edge için scrollbar'ı gizler. */
             -ms-overflow-style: none;
+            /* Firefox için scrollbar'ı gizler. */
             scrollbar-width: none;
+            /* Mouse imlecini "tutma eli" (grab) şeklinde gösterir, sürüklenebileceğini ima eder. */
             cursor: grab;
         }
 
+            /* Webkit tarayıcılar (Chrome, Safari, Opera) için scrollbar gizleme */
             .qa-container::-webkit-scrollbar {
+                /* Görünürlüğü kapatır. */
                 display: none;
             }
 
+            /* Mouse ile tıklanıp sürüklendiğinde imleç */
             .qa-container:active {
+                /* İmleci "tutan el" (grabbing - sıkılmış el) yapar. */
                 cursor: grabbing;
             }
 
-        /* Hızlı Erişim Kartları */
+        /* Hızlı Erişim Öğesi (Tekil Buton) */
         .qa-item {
+            /* flex-grow: 0 (büyümesin), flex-shrink: 0 (küçülmesin), flex-basis: auto. Boyutunu korur. */
             flex: 0 0 auto;
-            width: 100px; /* Sabit Genişlik */
+            /* Genişliği sabit 100px. */
+            width: 100px;
+            /* İçerikleri (ikon ve yazı) alt alta dizer. */
             display: flex;
+            /* Yönü dikey (column) yapar. */
             flex-direction: column;
+            /* Yatayda ortalar. */
             align-items: center;
+            /* Link olduğu için altındaki varsayılan çizgiyi kaldırır. */
             text-decoration: none;
+            /* Değişikliklerin 0.3 saniyede animasyonlu olmasını sağlar. */
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Pozisyonlama için referans noktası. */
             position: relative;
         }
 
+        /* İkonun bulunduğu kutu */
         .qa-icon-wrapper {
+            /* Genişlik 64px. */
             width: 64px;
+            /* Yükseklik 64px. */
             height: 64px;
-            border-radius: 20px; /* Yumuşak kare görünüm (Squircle) */
+            /* Köşeleri 20px yuvarlatır (Squircle şekli). */
+            border-radius: 20px;
+            /* İçindeki ikonu ortalamak için flexbox. */
             display: flex;
+            /* Dikeyde ortala. */
             align-items: center;
+            /* Yatayda ortala. */
             justify-content: center;
+            /* İkon boyutu 1.4rem. */
             font-size: 1.4rem;
+            /* Arka plan rengi çok açık gri/beyazımsı. */
             background: #f8fafc;
+            /* İkon rengi mavi. */
             color: #3b82f6;
+            /* Altındaki metinle arasına 12px boşluk koyar. */
             margin-bottom: 12px;
+            /* Geçiş efektleri için süre ayarı. */
             transition: all 0.3s ease;
+            /* Z-index ve relative pozisyon ile katman sıralamasını ayarlar. */
             position: relative;
             z-index: 2;
+            /* Kenarlık 2px kalınlığında ve şeffaf (başlangıçta görünmez). */
             border: 2px solid transparent;
         }
 
-            /* İkonların arkasındaki hafif parlama */
+            /* İkonların arkasındaki parlama efekti (pseudo-element) */
             .qa-icon-wrapper::after {
+                /* İçerik boş string (gerekli). */
                 content: '';
+                /* Ana elementin üzerini tam kaplaması için absolute pozisyon. */
                 position: absolute;
+                /* Genişlik %100. */
                 width: 100%;
+                /* Yükseklik %100. */
                 height: 100%;
+                /* Arka plan rengini ebeveynden miras alır. */
                 background: inherit;
+                /* Bulanıklık efekti (blur) verir, parlama gibi görünür. */
                 filter: blur(12px);
+                /* Başlangıçta opaklık 0 (görünmez). */
                 opacity: 0;
+                /* İkonun arkasında kalması için z-index -1. */
                 z-index: -1;
+                /* Geçiş efekti süresi. */
                 transition: 0.3s ease;
             }
 
+        /* Buton altındaki etiket metni */
         .qa-label {
+            /* Yazı boyutu 10px. */
             font-size: 10px;
+            /* Yazı kalınlığı 800 (bold). */
             font-weight: 800;
+            /* Yazı rengi koyu gri. */
             color: #475569;
+            /* Metni ortalar. */
             text-align: center;
+            /* Satır yüksekliği 1.3. */
             line-height: 1.3;
+            /* Renk değişiminde geçiş efekti. */
             transition: all 0.3s ease;
         }
 
-        /* Hover Efektleri */
+        /* Hover Efektleri (Mouse öğe üzerine gelince çalışır) */
         .qa-item:hover {
+            /* Öğeyi 8px yukarı kaydırır (zıplama efekti). */
             transform: translateY(-8px);
         }
 
+            /* Mouse üzerine gelince ikon kutusunun stilini değiştir. */
             .qa-item:hover .qa-icon-wrapper {
+                /* Arka planı koyu mavi yap. */
                 background: #2563eb;
+                /* İkon rengini beyaz yap. */
                 color: white;
+                /* Kenarlığı yarı saydam beyaz yap. */
                 border-color: rgba(255, 255, 255, 0.5);
+                /* Mavi renkte bir gölge ekle (parlama hissi). */
                 box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
             }
 
+            /* Mouse üzerine gelince etiket rengini değiştir. */
             .qa-item:hover .qa-label {
+                /* Yazı rengini mavi yap. */
                 color: #2563eb;
             }
 
-        /* Vurgulu (Önemli) Butonlar İçin Özel Sınıf */
+        /* Öne Çıkan (Featured) Butonlar İçin Özel Stil */
+        /* class="qa-item featured" olan elementlerin içindeki ikon kutusu. */
         .qa-item.featured .qa-icon-wrapper {
+            /* Arka plan açık mavi. */
             background: #eff6ff;
+            /* Kenarlık daha belirgin mavi. */
             border-color: #bfdbfe;
         }
 
-        /* ── Sol ve Sağ Solma Efekti ── */
+        /* ── SOL VE SAĞ SOLMA EFEKTİ (FADE) ── */
+        /* Listenin kenarlarında içerik olduğunu hissettiren beyaz gölgeler */
         .qa-fade-left, .qa-fade-right {
+            /* Kapsayıcıya göre konumlandır. */
             position: absolute;
+            /* Üstten 0. */
             top: 0;
+            /* Alttan 0 (tam boy). */
             bottom: 0;
+            /* Genişlik 40px. */
             width: 40px;
+            /* Diğer içeriklerin üzerinde görünsün. */
             z-index: 5;
+            /* Tıklamaları engelle (arkadaki butona tıklanabilsin). */
             pointer-events: none;
         }
 
+        /* Sol taraftaki beyaz geçiş */
         .qa-fade-left {
+            /* Sola yasla. */
             left: 0;
+            /* Soldan sağa beyazdan şeffafa geçiş. */
             background: linear-gradient(to right, white, transparent);
+            /* Köşeleri yuvarla. */
             border-radius: 2rem 0 0 2rem;
         }
 
+        /* Sağ taraftaki beyaz geçiş */
         .qa-fade-right {
+            /* Sağa yasla. */
             right: 0;
+            /* Sağdan sola beyazdan şeffafa geçiş. */
             background: linear-gradient(to left, white, transparent);
+            /* Köşeleri yuvarla. */
             border-radius: 0 2rem 2rem 0;
         }
 
-        /* ── Diğer Kartlar (Dept/Stat) ── */
+        /* ── BRANŞ KARTLARI TASARIMI ── */
         .dept-card {
+            /* Arka plan beyaz. */
             background: white;
+            /* Köşeler 1.5rem yuvarlatılmış. */
             border-radius: 1.5rem;
+            /* İnce gri kenarlık. */
             border: 1px solid #f1f5f9;
+            /* İçerik taşarsa (örneğin resim) gizle (köşelerin yuvarlak kalması için). */
             overflow: hidden;
+            /* Tüm değişimler 0.3sn sürsün. */
             transition: all 0.3s;
         }
-
+            /* Kart hover efekti: Mouse üzerine gelince */
             .dept-card:hover {
+                /* Kartı 5px yukarı kaldır. */
                 transform: translateY(-5px);
+                /* Altına gölge ekle. */
                 box-shadow: 0 20px 50px rgba(0,0,0,0.1);
             }
-
+                /* Kartın üzerine gelindiğinde içindeki resme (img) etki et. */
                 .dept-card:hover .dept-img {
+                    /* Resmi %6 oranında büyüt (Zoom efekti). */
                     transform: scale(1.06);
                 }
 
+        /* Bölüm resmi geçiş efekti */
         .dept-img {
+            /* Transform işlemi 0.5 saniye sürsün. */
             transition: transform 0.5s;
         }
 
+        /* Bölüm ana başlık etiketi (küçük üst yazı) */
         .sec-label {
+            /* Yazı boyutu çok küçük (0.6rem). */
             font-size: 0.6rem;
+            /* Yazı çok kalın. */
             font-weight: 900;
+            /* Büyük harf. */
             text-transform: uppercase;
+            /* Harf aralığı geniş. */
             letter-spacing: 0.22em;
+            /* Renk mavi. */
             color: #2563eb;
         }
 
+        /* ── Sağa sola gidip gelme (Bounce) Animasyonu ── */
+        /* Keyframes: Animasyonun karelerini tanımlar. */
         @@keyframes bounce-x {
+            /* Başlangıç ve bitişte (0% ve 100%) olduğu yerde dursun. */
             0%, 100% {
                 transform: translateX(0);
             }
-
+            /* Ortada (50%) 4px sağa kaysın. */
             50% {
                 transform: translateX(4px);
             }
         }
 
+        /* Animasyonu uygulayan sınıf */
         .bounce-x {
+            /* bounce-x animasyonunu 1.2 saniyede, sonsuz döngüde çalıştır. */
             animation: bounce-x 1.2s ease infinite;
         }
     </style>
 
+    <!-- JS: SÜRÜKLE VE KAYDIR (DRAG & SCROLL) -->
+    <!-- Hızlı erişim menüsünü mouse ile tutup sürükleyebilmek için gerekli JavaScript kodları -->
     <script>
+        // Sayfa tamamen yüklendiğinde çalışacak kod bloğu.
         document.addEventListener('DOMContentLoaded', function () {
+            // .qa-container sınıfına sahip elementi (kaydırılacak alan) seç.
             const slider = document.querySelector('.qa-container');
+            // Mouse'un basılı olup olmadığını tutan değişken.
             let isDown = false;
+            // Tıklama başlangıç X koordinatı.
             let startX;
+            // Tıklama anındaki kaydırma pozisyonu.
             let scrollLeft;
 
+            // Mouse tuşuna basıldığında tetiklenir.
             slider.addEventListener('mousedown', (e) => {
-                isDown = true;
-                slider.style.cursor = 'grabbing';
+                isDown = true; // Basılı durumda işaretle.
+                slider.style.cursor = 'grabbing'; // İmleci tutan el yap.
+                // Mouse'un sayfadaki X konumundan slider'ın sol boşluğunu çıkararak slider içindeki X'i bul.
                 startX = e.pageX - slider.offsetLeft;
+                // Şu anki kaydırma miktarını kaydet.
                 scrollLeft = slider.scrollLeft;
             });
+
+            // Mouse slider alanından dışarı çıktığında tetiklenir.
             slider.addEventListener('mouseleave', () => {
-                isDown = false;
-                slider.style.cursor = 'grab';
+                isDown = false; // Basılı durumunu iptal et.
+                slider.style.cursor = 'grab'; // İmleci normal tutma eli yap.
             });
+
+            // Mouse tuşu bırakıldığında tetiklenir.
             slider.addEventListener('mouseup', () => {
-                isDown = false;
-                slider.style.cursor = 'grab';
+                isDown = false; // Basılı durumunu iptal et.
+                slider.style.cursor = 'grab'; // İmleci normal tutma eli yap.
             });
+
+            // Mouse hareket ettirildiğinde tetiklenir (en önemli kısım).
             slider.addEventListener('mousemove', (e) => {
-                if (!isDown) return;
-                e.preventDefault();
+                if (!isDown) return; // Eğer mouse basılı değilse fonksiyondan çık.
+                e.preventDefault(); // Varsayılan seçim vb. davranışları engelle.
+                // Yeni X koordinatını al.
                 const x = e.pageX - slider.offsetLeft;
-                const walk = (x - startX) * 2;
+                // Ne kadar hareket edildiğini hesapla (hızlandırmak için 2 ile çarpılmış).
+                const walk = (x - startX) * 2; 
+                // Slider'ı hesaplanan miktar kadar kaydır.
                 slider.scrollLeft = scrollLeft - walk;
             });
         });
     </script>
 }
 
+<!-- ÜST KISIM (HEADER/HERO SECTION) -->
+<!-- Başlık alanı, hero-bg sınıfı ile arka planı alıyor, pt-16 ile üstten boşluk bırakıyor. -->
 <header class="hero-bg pt-16">
+    <!-- Arka plan dekoratif daireler (Biri sağ üstte, biri sol altta) -->
+    <!-- Mutlak konumlandırılmış süslemeler. w-[..] ve h-[..] Tailwind benzeri utility sınıfları olabilir veya CSS'de tanımlıdır. -->
     <div class="hero-orb w-[600px] h-[600px] -top-40 -right-32"></div>
     <div class="hero-orb w-[400px] h-[400px] bottom-0 -left-20"></div>
 
+    <!-- İçerik Kapsayıcısı: Genişliği sınırlar (max-w-7xl) ve ortalar (mx-auto). -->
+    <!-- z-10 ile süslemelerin üzerinde görünmesini sağlar. -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 relative z-10">
+        <!-- İki sütunlu yapı (Sol: Metin, Sağ: Resim). flex-col mobil için, lg:flex-row masaüstü için. -->
         <div class="flex flex-col lg:flex-row items-center gap-12">
 
+            <!-- SOL SÜTUN: METİN VE BUTONLAR -->
             <div class="flex-1 text-white space-y-7 text-center lg:text-left">
+                <!-- Üstteki küçük etiket (Yanıp sönen noktalı) -->
                 <div class="inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full border border-white/20 backdrop-blur">
+                    <!-- Yanıp sönen mavi nokta -->
                     <span class="w-2 h-2 bg-blue-300 rounded-full animate-pulse"></span>
+                    <!-- Etiket metni -->
                     <span class="text-[10px] font-black uppercase tracking-[0.18em]">Gazi Üniversitesi · 100 Yıllık Miras</span>
                 </div>
 
+                <!-- Ana Başlık -->
                 <h2 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.08] tracking-tight">
                     Sağlığın<br>
+                    <!-- "Geleceği Burada" kısmı için özel gradient metin efekti -->
+                    <!-- text-transparent ve bg-clip-text ile arka plan rengi sadece yazıya uygulanır. -->
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-sky-200 to-white">Geleceği Burada.</span>
                 </h2>
 
+                <!-- Alt Açıklama Metni -->
                 <p class="text-blue-100/80 text-base leading-relaxed max-w-lg mx-auto lg:mx-0 font-light">
                     Türkiye'nin sağlık hafızası olarak, en gelişmiş tıp teknolojilerini şefkatli bakım anlayışıyla birleştiriyoruz.
                 </p>
 
+                <!-- Buton Grubu -->
                 <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
+                    <!-- Randevu Butonu (Beyaz Arka Planlı) -->
+                    <!-- Link: /Randevu/Giris sayfasına gider. -->
                     <a href="/Randevu/Giris" class="flex items-center gap-2 bg-white text-blue-700 text-xs font-black px-6 py-3 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition">
+                        <!-- İkon -->
                         <i class="fa-solid fa-calendar-check text-xs"></i> Online Randevu
                     </a>
+                    <!-- Doktorlarımız Butonu (Saydam/Buzlu Cam Efektli) -->
+                    <!-- Link: /Home/Doktorlar sayfasına gider. -->
                     <a href="/Home/Doktorlar" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/25 text-white text-xs font-black px-6 py-3 rounded-full transition backdrop-blur">
                         <i class="fa-solid fa-user-doctor text-xs"></i> Doktorlarımız
+                        <!-- Sağa zıplayan ok ikonu (bounce-x animasyonu) -->
                         <i class="fa-solid fa-chevron-right text-[8px] bounce-x"></i>
                     </a>
                 </div>
 
+                <!-- Alt İstatistikler (Kuruluş Yılı, Doktor Sayısı vb.) -->
                 <div class="flex gap-6 sm:gap-10 justify-center lg:justify-start pt-2">
+                    <!-- İstatistik 1 -->
                     <div>
                         <p class="text-white text-2xl font-black">1926</p>
                         <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Kuruluş</p>
                     </div>
+                    <!-- Dikey Ayırıcı Çizgi -->
                     <div class="w-px bg-white/15"></div>
+                    <!-- İstatistik 2 -->
                     <div>
                         <p class="text-white text-2xl font-black">850+</p>
                         <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Uzman Hekim</p>
                     </div>
+                    <!-- Dikey Ayırıcı Çizgi -->
                     <div class="w-px bg-white/15"></div>
+                    <!-- İstatistik 3 -->
                     <div>
                         <p class="text-white text-2xl font-black">1.2M+</p>
                         <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Yıllık Hasta</p>
@@ -303,15 +501,24 @@
                 </div>
             </div>
 
+            <!-- SAĞ SÜTUN: HASRTANE GÖRSELİ -->
             <div class="flex-1 w-full max-w-lg lg:max-w-none relative">
+                <!-- Resim Çerçevesi -->
+                <!-- shadow-2xl ile büyük gölge, border-white/10 ile ince beyaz çerçeve. -->
                 <div class="relative rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white/10" style="box-shadow: 0 32px 80px rgba(0,0,0,0.35);">
+                    <!-- Hastane Görseli (Dosya yolu: assets/gazi3.jpg) -->
                     <img src="~/assets/gazi3.jpg" alt="Gazi Hastanesi" class="w-full h-72 sm:h-96 object-cover">
+                    <!-- Resmin alt kısmına hafif karartma (gradient overlay) eklendi, üzerindeki yazılar okunsun diye. -->
                     <div class="absolute inset-0 bg-gradient-to-t from-blue-900/40 to-transparent"></div>
                 </div>
+                
+                <!-- Yüzen Kalite Belgesi Rozeti (Sol alt köşede asılı duran kutu) -->
                 <div class="absolute -bottom-4 -left-4 bg-white rounded-2xl px-4 py-3 shadow-xl border border-slate-100 flex items-center gap-3">
+                    <!-- Yeşil ikon kutusu -->
                     <div class="w-9 h-9 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
                         <i class="fa-solid fa-shield-halved text-green-600 text-sm"></i>
                     </div>
+                    <!-- Yazılar -->
                     <div>
                         <p class="text-xs font-black text-slate-800">A++ Kalite Belgesi</p>
                         <p class="text-[9px] text-slate-500 font-semibold">JCI Akredite Kuruluş</p>
@@ -321,76 +528,102 @@
         </div>
     </div>
 
+    <!-- Alt kısımdaki beyaz dalga efekti (SVG) -->
+    <!-- Sayfanın alt kısmına kıvrımlı bir geçiş ekler. -->
     <div class="relative h-16">
+        <!-- SVG formatında dalga çizimi. preserveAspectRatio="none" ile genişliğe göre esner. -->
         <svg viewBox="0 0 1440 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute bottom-0 w-full" preserveAspectRatio="none">
+            <!-- Dalga yolu (path) -->
             <path d="M0 48 L0 24 C360 0 720 48 1080 24 L1440 0 L1440 48 Z" fill="#f8fafc" />
         </svg>
     </div>
 </header>
 
+<!-- HIZLI ERİŞİM MENÜSÜ BÖLÜMÜ -->
+<!-- Arka plan rengi #f8fafc (açık gri). -->
 <section class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10" style="background: #f8fafc;">
 
+    <!-- Hızlı Erişim Kapsayıcısı (Beyaz yuvarlak kutu) -->
     <div class="qa-wrapper">
+        <!-- Kenarlardaki Solma Efektleri (Listenin devam ettiğini gösteren beyaz geçişler) -->
         <div class="qa-fade-left"></div>
         <div class="qa-fade-right"></div>
 
+        <!-- Bölüm Başlığı -->
         <div class="qa-header">
+            <!-- Sol taraftaki başlık: Yıldırım ikonu ve text -->
             <h3 class="qa-title"><i class="fas fa-bolt"></i> Hızlı İşlem Merkezi</h3>
+            <!-- Sadece masaüstünde (d-md-inline-block) görünen, mobilde gizlenen (d-none) ipucu yazısı -->
             <span class="qa-scroll-hint d-none d-md-inline-block">Kaydırarak İnceleyin <i class="fas fa-arrows-alt-h ms-1"></i></span>
         </div>
 
+        <!-- Kaydırılabilir Buton Listesi (qa-container) -->
         <div class="qa-container">
 
+            <!-- Online Randevu Butonu -->
+            <!-- featured sınıfı ile öne çıkarılmış (farklı renkli) -->
             <a href="/Randevu/Giris" class="qa-item featured">
+                <!-- İkon -->
                 <div class="qa-icon-wrapper text-blue-600"><i class="fa-solid fa-calendar-check"></i></div>
+                <!-- Alt Yazı -->
                 <span class="qa-label">Online<br>Randevu</span>
             </a>
 
+            <!-- Güvenli Ödeme Butonu -->
             <a href="/Odeme/Giris" class="qa-item">
                 <div class="qa-icon-wrapper text-indigo-600"><i class="fa-solid fa-credit-card"></i></div>
                 <span class="qa-label">Güvenli<br>Ödeme</span>
             </a>
 
+            <!-- Test Sonuçları Butonu -->
             <a href="/Sonuc/Giris" class="qa-item">
                 <div class="qa-icon-wrapper text-teal-600"><i class="fa-solid fa-file-waveform"></i></div>
                 <span class="qa-label">Test<br>Sonuçları</span>
             </a>
 
+            <!-- Mobil HBYS (Dış bağlantı: target="_blank" ile yeni sekmede açılır) -->
             <a href="http://mobilhbys.com:20108/nucleus-mobile/login" target="_blank" class="qa-item">
                 <div class="qa-icon-wrapper text-violet-600"><i class="fa-solid fa-mobile-screen-button"></i></div>
                 <span class="qa-label">Mobil<br>HBYS</span>
             </a>
 
+            <!-- EBYS Sistemi (Öne Çıkarılmış - Featured) -->
             <a href="/EBYS/Giris" class="qa-item featured">
                 <div class="qa-icon-wrapper text-sky-600"><i class="fa-solid fa-laptop-file"></i></div>
                 <span class="qa-label">EBYS<br>Sistemi</span>
             </a>
 
+            <!-- Webmail Butonu -->
             <a href="/Mail/Giris" class="qa-item">
                 <div class="qa-icon-wrapper text-rose-600"><i class="fa-solid fa-envelope"></i></div>
                 <span class="qa-label">Gazi<br>WebMail</span>
             </a>
 
+            <!-- Eğitim Komitesi Butonu -->
             <a href="/Egitim/Komite" class="qa-item">
                 <div class="qa-icon-wrapper text-orange-600"><i class="fa-solid fa-graduation-cap"></i></div>
                 <span class="qa-label">Eğitim<br>Komitesi</span>
             </a>
 
+            <!-- Uluslararası Hasta Butonu -->
             <a href="https://www.gaziuniversityhospital.com/" target="_blank" class="qa-item">
                 <div class="qa-icon-wrapper text-emerald-600"><i class="fa-solid fa-globe"></i></div>
                 <span class="qa-label">Uluslararası<br>Hasta</span>
             </a>
 
+            <!-- Emzirme Destek Butonu -->
             <a href="https://gaziemzirmedestekmerkezi.gazi.edu.tr/" target="_blank" class="qa-item">
                 <div class="qa-icon-wrapper text-pink-600"><i class="fa-solid fa-hands-holding-child"></i></div>
                 <span class="qa-label">Emzirme<br>Destek</span>
             </a>
 
+            <!-- Yemek Listesi Butonu -->
             <a href="/Yemek/Liste" class="qa-item">
                 <div class="qa-icon-wrapper text-amber-600"><i class="fa-solid fa-utensils"></i></div>
                 <span class="qa-label">Yemek<br>Listesi</span>
             </a>
 
+            <!-- Kalite Yönetimi Butonu -->
             <a href="/Kalite" class="qa-item">
                 <div class="qa-icon-wrapper text-yellow-500"><i class="fa-solid fa-star-of-life"></i></div>
                 <span class="qa-label">Kalite<br>Yönetimi</span>
@@ -400,41 +633,62 @@
     </div>
 </section>
 
+<!-- BRANŞLAR VE BÖLÜMLER BÖLÜMÜ -->
 <section class="max-w-7xl mx-auto px-4 sm:px-6 py-16" style="background: #f8fafc;">
+    <!-- Üst Başlık ve "Tüm Bölümler" Butonu -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-7">
+        <!-- Başlık Metinleri -->
         <div>
+            <!-- Küçük üst başlık -->
             <p class="sec-label mb-1">Branşlarımız</p>
+            <!-- Büyük Ana Başlık -->
             <h2 class="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">Modern Tıbbın<br>Tüm Birimleri</h2>
         </div>
+        <!-- Sayfaya gitme butonu -->
+        <!-- Link: /Home/Bolumler. Sağ tarafta ok ikonu var. -->
         <a href="/Home/Bolumler" class="flex items-center gap-2 bg-white border border-slate-200 text-slate-700 hover:border-blue-300 hover:text-blue-600 text-xs font-black px-5 py-2.5 rounded-xl transition shadow-sm">
             Tüm Bölümler <i class="fa-solid fa-arrow-right text-[9px] bounce-x"></i>
         </a>
     </div>
 
+    <!-- Bölüm Kartları Izgarası (Grid Layout) -->
+    <!-- Mobilde 1, tablette 2 (sm:grid-cols-2), geniş ekranda 3 (lg:grid-cols-3) sütun. -->
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
+        <!-- Kart 1: Dahili Tıp Bilimleri -->
         <div class="dept-card">
+            <!-- Görsel Alanı -->
             <div class="relative overflow-hidden h-48">
+                <!-- Bölüm resmi -->
                 <img src="~/assets/gazi1.jpg" alt="Dahili Tıp" class="dept-img w-full h-full object-cover">
+                <!-- Resim Üzeri Gradient (Yazı okunması için karartma) -->
                 <div class="absolute inset-0 bg-gradient-to-t from-blue-900/70 via-blue-900/20 to-transparent"></div>
+                <!-- Etiket (Sol Üst Köşe) -->
                 <span class="absolute top-3 left-3 text-[9px] font-black bg-blue-600 text-white px-3 py-1 rounded-full uppercase tracking-wider">Popüler</span>
+                <!-- Başlık (Sol Alt) -->
                 <h4 class="absolute bottom-4 left-4 text-white text-base font-black">Dahili Tıp Bilimleri</h4>
             </div>
+            <!-- İçerik Alanı (Metin ve Buton) -->
             <div class="p-5">
+                <!-- Açıklama metni -->
                 <p class="text-slate-500 text-xs leading-relaxed mb-4">İç hastalıklarından kardiyolojiye, endokrinolojiden romatolojiye kapsamlı teşhis ve tedavi hizmetleri.</p>
+                <!-- İncele Butonu -->
                 <a href="/Home/Bolumler" class="flex items-center justify-between text-xs font-black text-slate-500 hover:text-blue-600 transition px-3 py-2 bg-slate-50 rounded-xl">
                     Birimi İncele <i class="fa-solid fa-chevron-right text-[8px]"></i>
                 </a>
             </div>
         </div>
 
+        <!-- Kart 2: Cerrahi Tıp Bilimleri -->
         <div class="dept-card">
+            <!-- Görsel Alanı -->
             <div class="relative overflow-hidden h-48">
                 <img src="~/assets/gazi4.jpg" alt="Cerrahi" class="dept-img w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-red-900/70 via-red-900/10 to-transparent"></div>
                 <span class="absolute top-3 left-3 text-[9px] font-black bg-red-500 text-white px-3 py-1 rounded-full uppercase tracking-wider">Cerrahi</span>
                 <h4 class="absolute bottom-4 left-4 text-white text-base font-black">Cerrahi Tıp Bilimleri</h4>
             </div>
+            <!-- İçerik Alanı -->
             <div class="p-5">
                 <p class="text-slate-500 text-xs leading-relaxed mb-4">Genel cerrahiden ortopediye, beyin cerrahisinden kalp damar cerrahisine geniş bir cerrahi yelpazesi.</p>
                 <a href="/Home/Bolumler" class="flex items-center justify-between text-xs font-black text-slate-500 hover:text-red-600 transition px-3 py-2 bg-slate-50 rounded-xl">
@@ -443,25 +697,36 @@
             </div>
         </div>
 
+        <!-- İstenirse Kart 3 eklenebilir -->
+        <!-- Dinamik olarak çoğaltılabilir -->
+
     </div>
 </section>
 
+<!-- ALT İLETİŞİM KUTUSU (Footer Öncesi Çağrı Merkezi Alanı) -->
 <section class="max-w-7xl mx-auto px-4 sm:px-6 pb-16" style="background: #f8fafc;">
+    <!-- Beyaz kutu, yuvarlatılmış köşeler ve gölge -->
     <div class="bg-white rounded-[1.75rem] border border-slate-100 p-6 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6" style="box-shadow: 0 8px 40px rgba(0,0,0,0.05);">
+        <!-- Sol taraf: Telefon bilgisi ve ikon -->
         <div class="flex items-center gap-5">
+            <!-- Telefon ikonu kapsayıcısı (kırmızı gradyan) -->
             <div class="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg shadow-red-200 flex-shrink-0">
                 <i class="fa-solid fa-phone-volume text-white text-lg"></i>
             </div>
+            <!-- Telefon numarası ve metinler -->
             <div>
                 <p class="text-slate-500 text-xs font-black uppercase tracking-widest mb-0.5">7/24 Kesintisiz Hizmet</p>
                 <p class="text-slate-900 text-2xl font-black">444 0 911</p>
                 <p class="text-slate-400 text-xs font-semibold">Acil & Çağrı Merkezi</p>
             </div>
         </div>
+        <!-- Sağ taraf: Hızlı Aksiyon butonları -->
         <div class="flex flex-wrap gap-3">
+            <!-- Randevu Butonu (Mavi) -->
             <a href="/Randevu/Giris" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black px-6 py-3 rounded-xl transition shadow-md shadow-blue-200/60">
                 <i class="fa-solid fa-calendar-check text-xs"></i> Randevu Al
             </a>
+            <!-- Bize Ulaşın Butonu (Beyaz) -->
             <a href="/Home/Iletisim" class="flex items-center gap-2 border border-slate-200 hover:border-blue-300 hover:text-blue-600 text-slate-700 text-xs font-black px-6 py-3 rounded-xl transition">
                 <i class="fa-solid fa-location-dot text-xs"></i> Bize Ulaşın
             </a>

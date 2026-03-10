@@ -1,51 +1,100 @@
+@* RAZOR KOD BLOÐU: Sunucu tarafýnda çalýþan ve sayfanýn temel ayarlarýný tutan bölüm *@
 @{
+    @* Tarayýcýnýn üst sekmesinde görünecek sayfanýn baþlýðýný (Title) belirliyoruz. 
+       Arama motorlarý ve kullanýcý deneyimi için önemlidir. *@
     ViewData["Title"] = "Gazi Saðlýk | Eðitim Komitesi Portalý";
 }
 
+<!-- SAYFA ÝÇERÝÐÝ BAÞLANGICI -->
+<!-- 'portal-viewport': Tüm sayfa içeriðini kapsayan ana dýþ katman. -->
 <div class="portal-viewport">
+
+    <!-- ARKA PLAN EFEKTLERÝ -->
+    <!-- 'abstract-sphere': Sað üst köþedeki bulanýk mavi yuvarlak görsel efekt. -->
     <div class="abstract-sphere"></div>
+    <!-- 'abstract-sphere-secondary': Sol alt köþedeki bulanýk lacivert yuvarlak görsel efekt. -->
     <div class="abstract-sphere-secondary"></div>
 
+    <!-- MERKEZÝ KONTEYNER -->
+    <!-- 'container': Ýçeriði ortalar.
+         'd-flex align-items-center justify-content-center': Ýçeriði hem yatay hem dikey olarak tam ortalar.
+         'min-vh-100': Sayfanýn yüksekliðinin en az ekran boyu kadar olmasýný saðlar.
+         'py-5': Yukarýdan ve aþaðýdan boþluk býrakýr. -->
     <div class="container d-flex align-items-center justify-content-center min-vh-100 py-5">
+
+        <!-- ANA KART (BEYAZ CAM PANEL) -->
+        <!-- 'portal-master-card': Tüm içeriði tutan cam görünümlü beyaz kart.
+             'animate__animated animate__fadeIn': Kartýn sayfa açýlýþýnda belirerek gelme animasyonu. -->
         <div class="portal-master-card animate__animated animate__fadeIn">
 
+            <!-- KART BAÞLIK ALANI -->
+            <!-- 'portal-header-premium': Baþlýk ve ikonun bulunduðu üst kýsým. -->
             <div class="portal-header-premium mb-4">
+
+                <!-- Baþlýk içeriðini iki yana yaslayan Flex yapýsý (Sola baþlýk, saða durum rozeti) -->
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+                    <!-- SOL TARA: ÝKON VE METÝN -->
                     <div class="d-flex align-items-center">
+
+                        <!-- Ýkon Kutusu -->
+                        <!-- 'header-icon-premium': Ýkonun içindeki lacivert kutu. -->
                         <div class="header-icon-premium me-3">
+                            <!-- Üniversite ikonu (FontAwesome) -->
                             <i class="fas fa-university"></i>
+                            <!-- Ýkonun etrafýndaki hareketli halka (pulse) efekti -->
                             <div class="pulse-ring"></div>
                         </div>
+
+                        <!-- Baþlýk Metinleri -->
                         <div>
+                            <!-- Ana baþlýk: Kalýn ve lacivert renkli -->
                             <h2 class="fw-900 color-navy mb-0">Eðitim Komitesi Portalý</h2>
+                            <!-- Alt baþlýk: Daha küçük ve gri tonlu, SEGM vurgulu -->
                             <p class="text-muted small mb-0">Sürekli Eðitim Merkezi <span class="text-primary fw-bold">| SEGM</span></p>
                         </div>
                     </div>
+
+                    <!-- SAÐ TARA: DURUM GÖSTERGESÝ -->
                     <div class="header-actions">
+                        <!-- 'Sistem Çevrimiçi' yazan yeþil hap þeklindeki rozet -->
                         <span class="status-indicator-badge">
+                            <!-- Yeþil nokta indikatörü -->
                             <span class="status-dot"></span> Sistem Çevrimiçi
                         </span>
                     </div>
                 </div>
             </div>
 
+            <!-- KARTLARIN LÝSTELENDÝÐÝ IZGARA (GRID) YAPISI -->
+            <!-- 'row': Satýr yapýsý.
+                 'row-cols-1': Mobilde (küçük ekran) yan yana 1 kart.
+                 'row-cols-md-2': Tablette (orta ekran) yan yana 2 kart.
+                 'row-cols-xl-3': Masaüstünde (geniþ ekran) yan yana 3 kart gösterir. -->
             <div class="row g-3 row-cols-1 row-cols-md-2 row-cols-xl-3">
 
+                <!-- 1. KART: Komite Üyeleri -->
                 <div class="col">
+                    <!-- Týklanabilir kart bileþeni. Link (#) þimdilik boþ. -->
                     <a href="#" class="committee-action-card">
+                        <!-- Ýkon Yuvasý: Mavi arka planlý (bg-soft-blue) -->
                         <div class="card-icon-wrapper bg-soft-blue">
                             <i class="fas fa-users-crown"></i>
                         </div>
+                        <!-- Kart Bilgi Alaný -->
                         <div class="card-info">
                             <h5>Komite Üyeleri</h5>
                             <p>Yürütme kurulu ve akademik temsilciler.</p>
                         </div>
+                        <!-- Saðdaki küçük ok ikonu -->
                         <div class="card-arrow"><i class="fas fa-chevron-right"></i></div>
                     </a>
                 </div>
 
+                <!-- 2. KART: Misyon & Vizyon -->
                 <div class="col">
                     <a href="#" class="committee-action-card">
+                        <!-- Ýkon Yuvasý: Mor arka planlý (bg-soft-purple) -->
                         <div class="card-icon-wrapper bg-soft-purple">
                             <i class="fas fa-lightbulb-on"></i>
                         </div>
@@ -57,8 +106,10 @@
                     </a>
                 </div>
 
+                <!-- 3. KART: Personel Þemasý -->
                 <div class="col">
                     <a href="#" class="committee-action-card">
+                        <!-- Ýkon Yuvasý: Turkuaz arka planlý (bg-soft-teal) -->
                         <div class="card-icon-wrapper bg-soft-teal">
                             <i class="fas fa-sitemap"></i>
                         </div>
@@ -70,8 +121,10 @@
                     </a>
                 </div>
 
+                <!-- 4. KART: Hemþirelik Eðitimi -->
                 <div class="col">
                     <a href="#" class="committee-action-card">
+                        <!-- Ýkon Yuvasý: Kýrmýzý arka planlý (bg-soft-red) -->
                         <div class="card-icon-wrapper bg-soft-red">
                             <i class="fas fa-user-nurse"></i>
                         </div>
@@ -83,8 +136,10 @@
                     </a>
                 </div>
 
+                <!-- 5. KART: Dijital Arþiv -->
                 <div class="col">
                     <a href="#" class="committee-action-card">
+                        <!-- Ýkon Yuvasý: Turuncu arka planlý (bg-soft-orange) -->
                         <div class="card-icon-wrapper bg-soft-orange">
                             <i class="fas fa-folder-open"></i>
                         </div>
@@ -96,8 +151,10 @@
                     </a>
                 </div>
 
+                <!-- 6. KART: Eðitim Takvimi -->
                 <div class="col">
                     <a href="#" class="committee-action-card">
+                        <!-- Ýkon Yuvasý: Lacivert/Gri arka planlý (bg-soft-navy) -->
                         <div class="card-icon-wrapper bg-soft-navy">
                             <i class="fas fa-calendar-alt"></i>
                         </div>
@@ -111,31 +168,49 @@
 
             </div>
 
+            <!-- ALT BÝLGÝ VE DUYURU ALANI -->
             <div class="row g-3 mt-2">
+
+                <!-- SOL TARA: SON DUYURULAR -->
+                <!-- 'col-md-8': Geniþliðin 3'te 2'sini kaplar (büyük alan). -->
                 <div class="col-md-8">
+                    <!-- 'announcement-glass': Duyuru kutusu için cam efekti -->
                     <div class="announcement-glass">
+                        <!-- Duyuru Baþlýk Kýsmý -->
                         <div class="d-flex align-items-center mb-3">
                             <i class="fas fa-bullhorn text-primary me-2"></i>
                             <h6 class="mb-0 fw-bold color-navy">Son Duyurular</h6>
                         </div>
+                        <!-- Duyurular Listesi -->
                         <div class="a-list">
+                            <!-- Tekil Duyuru Satýrý -->
                             <div class="a-row">
+                                <!-- 'Yeni' etiketi -->
                                 <span class="a-label">Yeni</span>
+                                <!-- Duyuru metni -->
                                 <p>2026 Yýlý Hizmet Ýçi Eðitim Planý yayýna alýndý.</p>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- SAÐ TARA: DESTEK BUTONU -->
+                <!-- 'col-md-4': Geniþliðin 3'te 1'ini kaplar (küçük alan). -->
                 <div class="col-md-4">
+                    <!-- 'support-glass': Destek kutusu için cam efekti -->
                     <div class="support-glass d-flex align-items-center justify-content-center">
                         <div class="text-center">
+                            <!-- Yardýmcý metin -->
                             <p class="small text-muted mb-2">Sorunuz mu var?</p>
+                            <!-- Destek butonu -->
                             <button class="btn btn-navy-premium btn-sm w-100">BÝLGÝ ÝÞLEM DESTEK</button>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- FOOTER (ALTYAZI) -->
+            <!-- Sayfanýn en altýndaki telif hakký yazýsý -->
             <div class="text-center mt-4">
                 <p class="extra-small text-muted opacity-75">© 2026 Gazi Üniversitesi Hastanesi | Bilgi Ýþlem Daire Baþkanlýðý</p>
             </div>
@@ -143,38 +218,45 @@
     </div>
 </div>
 
+@* ================= CSS BÖLÜMÜ (_Layout içindeki head kýsmýna eklenecek stiller) ================= *@
 @section Styles {
+    <!-- Animate.css: Animasyonlar için dýþ kütüphane -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
+        /* CSS DEÐÝÞKENLERÝ: Renk kodlarýný tek bir yerden yönetmek için tanýmlanmýþ deðiþkenler. */
         :root {
-            --navy-dark: #0f172a;
-            --navy-light: #1e293b;
-            --primary-blue: #2563eb;
-            --gazi-bg: #f1f5f9;
+            --navy-dark: #0f172a; /* Koyu lacivert (Metin ve butonlar) */
+            --navy-light: #1e293b; /* Açýk lacivert */
+            --primary-blue: #2563eb; /* Marka mavisi (Vurgular) */
+            --gazi-bg: #f1f5f9; /* Sayfanýn genel arka plan gri/mavi rengi */
         }
 
+        /* Sayfa Geneli Stilleri */
         body {
-            background-color: var(--gazi-bg);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden;
+            background-color: var(--gazi-bg); /* Arka plan rengini deðiþkenden alýr */
+            font-family: 'Plus Jakarta Sans', sans-serif; /* Modern yazý tipi */
+            overflow-x: hidden; /* Sayfanýn saða sola kaymasýný (yatay scroll) engeller */
         }
 
-        /* Arka Plan Sanatý */
+        /* ARKA PLAN SANATI (BLUR EFEKTLÝ LEKELER) */
+        /* Sað üstteki mavi devasa yuvarlak */
         .abstract-sphere {
             position: fixed;
             top: -10%;
-            right: -5%;
+            right: -5%; /* Sað üst köþeye sabitler */
             width: 500px;
-            height: 500px;
+            height: 500px; /* Boyutlarý */
+            /* Ortasý çok hafif mavi, kenarlarý þeffaf olan bir renk geçiþi (gradient) yaratýr */
             background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
-            z-index: -1;
-            filter: blur(60px);
+            z-index: -1; /* Her þeyin arkasýnda kalmasýný saðlar */
+            filter: blur(60px); /* Lekenin kenarlarýný 60px bulanýklaþtýrarak bulut/ýþýk efekti verir */
         }
 
+        /* Sol alttaki lacivert yuvarlak */
         .abstract-sphere-secondary {
             position: fixed;
             bottom: -10%;
-            left: -5%;
+            left: -5%; /* Sol alt köþeye sabitler */
             width: 400px;
             height: 400px;
             background: radial-gradient(circle, rgba(15, 23, 42, 0.05) 0%, transparent 70%);
@@ -182,92 +264,102 @@
             filter: blur(50px);
         }
 
-        /* Ana Konteynýr */
+        /* ANA BEYAZ KART (Glassmorphism Tasarýmý) */
         .portal-master-card {
             width: 100%;
-            max-width: 1200px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid white;
-            border-radius: 40px;
-            padding: 40px;
-            box-shadow: 0 40px 100px rgba(15, 23, 42, 0.08);
+            max-width: 1200px; /* Geniþliði maksimum 1200px ile sýnýrlandýrýr (Masaüstü görünümü) */
+            background: rgba(255, 255, 255, 0.9); /* %90 oranýnda opak (hafif saydam) beyaz arka plan */
+            backdrop-filter: blur(10px); /* Arka plandaki renk lekelerini (sphere) bu kartýn altýndan geçerken buzlu cam gibi bulanýklaþtýrýr */
+            border: 1px solid white; /* Kenarlýk rengi beyaz */
+            border-radius: 40px; /* Köþeleri büyük ölçüde yuvarlatýr */
+            padding: 40px; /* Ýçeriðin kenarlara deðmemesi için 40px iç boþluk */
+            box-shadow: 0 40px 100px rgba(15, 23, 42, 0.08); /* Karta derinlik katan, aþaðý doðru inen devasa ama çok hafif bir gölge */
         }
 
-        /* Header Tasarýmý */
+        /* HEADER ÝKONU VE ANÝMASYONU */
+        /* Ýkonun durduðu lacivert kutu */
         .header-icon-premium {
             width: 60px;
             height: 60px;
             background: var(--navy-dark);
             color: white;
-            border-radius: 18px;
+            border-radius: 18px; /* Oval köþeler */
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            position: relative;
+            justify-content: center; /* Ýkonu ortalar */
+            font-size: 1.5rem; /* Ýkon boyutu */
+            position: relative; /* Ýçindeki pulse halkasýnýn konumlanmasý için referans noktasý */
         }
 
+        /* Ýkonun etrafýndaki dýþa doðru büyüyen halka */
         .pulse-ring {
             position: absolute;
             width: 100%;
             height: 100%;
-            border: 2px solid var(--navy-dark);
-            border-radius: 18px;
-            animation: pulse-border 2s infinite;
+            border: 2px solid var(--navy-dark); /* Halkanýn çizgi rengi */
+            border-radius: 18px; /* Ýkon kutusuyla ayný ovallik */
+            animation: pulse-border 2s infinite; /* "pulse-border" isimli animasyonu 2 saniyede bir sonsuza kadar (infinite) tekrarla */
         }
 
+        /* Pulse (Kalp Atýþý/Yanký) Animasyonunun Kurallarý */
         @@keyframes pulse-border {
-            0% {
-                transform: scale(1);
-                opacity: 0.5;
-            }
+            0%
 
-            100% {
-                transform: scale(1.4);
-                opacity: 0;
-            }
+        {
+            transform: scale(1);
+            opacity: 0.5;
+        }
+        /* Baþlangýç: Boyut ayný, %50 görünür */
+        100% {
+            transform: scale(1.4);
+            opacity: 0;
+        }
+        /* Bitiþ: %40 daha büyük ve tamamen þeffaf (kaybolmuþ) */
         }
 
+        /* SÝSTEM ÇEVRÝMÝÇÝ ROZETÝ */
         .status-indicator-badge {
             background: #dcfce7;
-            color: #15803d;
+            color: #15803d; /* Açýk yeþil zemin, koyu yeþil yazý */
             padding: 6px 15px;
-            border-radius: 50px;
+            border-radius: 50px; /* Hap (hap) þeklinde tasarým */
             font-size: 11px;
-            font-weight: 800;
+            font-weight: 800; /* Küçük ve kalýn font */
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 8px; /* Yanýndaki nokta ile yazýyý yatay hizalar ve aralarýna 8px boþluk koyar */
         }
 
+        /* Rozetin içindeki yeþil nokta */
         .status-dot {
             width: 8px;
             height: 8px;
-            background: #22c55e;
-            border-radius: 50%;
+            background: #22c55e; /* Tam yeþil renk */
+            border-radius: 50%; /* Tam yuvarlak (nokta) yapar */
         }
 
-        /* YAN YANA AKSÝYON KARTLARI */
+        /* AKSÝYON KARTLARI (Menü Butonlarý) */
         .committee-action-card {
             background: white;
-            border: 1px solid #f1f5f9;
-            border-radius: 25px;
+            border: 1px solid #f1f5f9; /* Çok hafif grimsi bir kenar çizgisi */
+            border-radius: 25px; /* Yuvarlak köþeler */
             padding: 25px;
             display: flex;
             align-items: center;
-            gap: 20px;
-            text-decoration: none !important;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            height: 100%;
+            gap: 20px; /* Ýkon, yazý ve oku yan yana dizip aralarýný açar */
+            text-decoration: none !important; /* Linklerdeki alt çizgiyi kaldýrýr */
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Hover (üzerine gelme) animasyonu süresi ve yumuþaklýðý */
+            height: 100%; /* Kartlarýn ayný hizada ve boyda olmasýný saðlar */
         }
 
+            /* Fare Kartýn Üzerine Geldiðinde (Hover) */
             .committee-action-card:hover {
-                transform: translateY(-8px);
-                box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-                border-color: var(--primary-blue);
+                transform: translateY(-8px); /* Kartý 8 piksel yukarý kaldýrýr (Havalanma efekti) */
+                box-shadow: 0 20px 40px rgba(0,0,0,0.05); /* Altýna geniþ bir gölge ekler */
+                border-color: var(--primary-blue); /* Kenar çizgisini maviye çevirir */
             }
 
+        /* Kart Ýçindeki Ýkon Yuvalarý */
         .card-icon-wrapper {
             width: 60px;
             height: 60px;
@@ -276,40 +368,42 @@
             align-items: center;
             justify-content: center;
             font-size: 1.4rem;
-            flex-shrink: 0;
+            flex-shrink: 0; /* Yazýlar uzun olsa bile bu kutunun sýkýþýp küçülmesini engeller */
         }
 
-        /* Kart Renk Paleti */
+        /* RENKLÝ ÝKON KUTULARI (Her kart için farklý bir soft renk) */
         .bg-soft-blue {
             background: #eff6ff;
             color: #3b82f6;
         }
-
+        /* Mavi */
         .bg-soft-purple {
             background: #f5f3ff;
             color: #8b5cf6;
         }
-
+        /* Mor */
         .bg-soft-teal {
             background: #f0fdfa;
             color: #14b8a6;
         }
-
+        /* Turkuaz */
         .bg-soft-red {
             background: #fef2f2;
             color: #ef4444;
         }
-
+        /* Kýrmýzý */
         .bg-soft-orange {
             background: #fff7ed;
             color: #f97316;
         }
-
+        /* Turuncu */
         .bg-soft-navy {
             background: #f1f5f9;
             color: var(--navy-dark);
         }
+        /* Lacivert */
 
+        /* Kart Ýçindeki Baþlýk (h5) */
         .card-info h5 {
             font-size: 1.1rem;
             font-weight: 800;
@@ -317,6 +411,7 @@
             margin-bottom: 5px;
         }
 
+        /* Kart Ýçindeki Açýklama Yazýsý (p) */
         .card-info p {
             font-size: 0.85rem;
             color: #64748b;
@@ -324,32 +419,36 @@
             line-height: 1.4;
         }
 
+        /* Kartýn Saðýndaki Ok Ýkonu */
         .card-arrow {
-            margin-left: auto;
-            color: #cbd5e1;
+            margin-left: auto; /* Kendini en saða yaslar */
+            color: #cbd5e1; /* Pasifken açýk gri renk */
             transition: 0.3s;
         }
 
+        /* Fare Kartýn Üzerine Geldiðinde Oku Etkileyen Kýsým */
         .committee-action-card:hover .card-arrow {
-            transform: translateX(5px);
-            color: var(--primary-blue);
+            transform: translateX(5px); /* Oku saða doðru 5 piksel kaydýrýr */
+            color: var(--primary-blue); /* Rengini mavi yapar */
         }
 
-        /* Alt Glass Bölümler */
+        /* DUYURU VE DESTEK ALANLARI (Alt Bölümler) */
         .announcement-glass, .support-glass {
-            background: #f8fafc;
+            background: #f8fafc; /* Beyaza çok yakýn bir gri */
             border-radius: 25px;
             padding: 25px;
             height: 100%;
-            border: 1px solid rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,255,255,0.5); /* Sýnýrlarýna hafif bir beyazlýk katar */
         }
 
+        /* Duyuru Satýrý Yapýsý */
         .a-row {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
+        /* Duyurudaki "Yeni" Etiketi */
         .a-label {
             background: var(--primary-blue);
             color: white;
@@ -359,6 +458,7 @@
             border-radius: 6px;
         }
 
+        /* Duyuru Metni */
         .a-row p {
             font-size: 13px;
             font-weight: 600;
@@ -366,6 +466,7 @@
             margin: 0;
         }
 
+        /* DESTEK BUTONU (Lacivert Premium Tasarým) */
         .btn-navy-premium {
             background: var(--navy-dark);
             color: white;
@@ -377,11 +478,13 @@
             transition: 0.3s;
         }
 
+            /* Butonun Üzerine Gelince (Hover) */
             .btn-navy-premium:hover {
-                background: var(--primary-blue);
-                transform: scale(1.02);
+                background: var(--primary-blue); /* Maviye döner */
+                transform: scale(1.02); /* Çok az (%2) büyür */
             }
 
+        /* Yardýmcý Renk ve Yazý Sýnýflarý */
         .color-navy {
             color: var(--navy-dark);
         }
@@ -394,12 +497,18 @@
             font-size: 10px;
             letter-spacing: 0.5px;
         }
+        /* Footer telif hakký yazýsý için */
 
+        /* MOBÝL UYUM (Responsive Design) */
+        /* Ekran geniþliði 1200px'den küçükse (Tablet ve Telefonlar) devreye girer */
         @@media (max-width: 1200px) {
-            .portal-master-card {
-                padding: 30px;
-                margin: 15px;
-            }
+            .portal-master-card
+
+        {
+            padding: 30px; /* Ýç boþluðu küçültür ki ekrana daha rahat sýðsýn */
+            margin: 15px; /* Dýþ boþluk býrakarak ekran kenarlarýna yapýþmasýný engeller */
+        }
+
         }
     </style>
 }

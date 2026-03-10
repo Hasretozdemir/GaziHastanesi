@@ -1,57 +1,111 @@
+@* RAZOR BLOÐU: Sunucu tarafýnda (C#) çalýþacak kodlar burada baþlar. *@
 @{
+    @* Tarayýcýnýn üst sekmesinde yazacak olan baþlýðý belirler. Arama motorlarý ve kullanýcýlar için önemlidir. *@
     ViewData["Title"] = "Gazi Saðlýk | Kalite Yönetimi";
 }
 
+<!-- SAYFA YAPISI BAÞLANGICI -->
+<!-- 'quality-page-viewport': Tüm içeriði kapsayan ana dýþ div. Sayfa ortalamasý ve genel yapý burada kurulur. -->
 <div class="quality-page-viewport">
+
+    <!-- ARKA PLAN EFEKTLERÝ -->
+    <!-- 'bg-visuals': Sayfanýn arkasýndaki bulanýk renkli lekeleri (blob) tutan katman. -->
     <div class="bg-visuals">
+        <!-- Sað üst taraftaki mavi leke efekti -->
         <div class="blob blob-1"></div>
+        <!-- Sol alt taraftaki lacivert leke efekti -->
         <div class="blob blob-2"></div>
     </div>
 
+    <!-- MERKEZÝ ÝÇERÝK ALANI -->
+    <!-- 'container': Ýçeriði ekranýn ortasýnda tutar ve kenarlardan boþluk býrakýr. 
+         'position-relative' ve 'style="z-index: 2;"': Ýçeriðin arka plan efektlerinin (lekelerin) üstünde kalmasýný saðlar. -->
     <div class="container py-5 position-relative" style="z-index: 2;">
 
+        <!-- BAÞLIK BÖLÜMÜ -->
+        <!-- 'animate__animated animate__fadeIn': Sayfa açýldýðýnda bu bölümün yumuþakça belirmesini saðlayan animasyon. -->
         <div class="header-section text-center mb-5 animate__animated animate__fadeIn">
+
+            <!-- ÝKON ALANI -->
+            <!-- 'quality-icon-circle': Baþlýðýn üzerindeki ikonun içinde durduðu yuvarlak. -->
             <div class="quality-icon-circle mx-auto mb-3">
+                <!-- 'fa-award': FontAwesome ödül ikonu. 'fa-2x': Ýkonu büyütme. 'text-primary': Mavi renk. -->
                 <i class="fas fa-award fa-2x text-primary"></i>
             </div>
+
+            <!-- SAYFA BAÞLIÐI -->
+            <!-- 'h1': Sayfanýn ana baþlýðý. 'text-navy': Lacivert renk. 'fw-900': Çok kalýn font. -->
             <h1 class="fw-900 text-navy display-5 mb-2">Kalite Yönetimi</h1>
+
+            <!-- ALT BAÞLIK / SLOGAN -->
+            <!-- 'text-muted': Gri renkli metin. -->
             <p class="text-muted fw-bold">Sürekli Ýyileþtirme ve Mükemmeliyet Odaklý Hizmet Anlayýþý</p>
+
+            <!-- GÜNCELLEME BÝLGÝSÝ -->
             <div class="mt-2">
+                <!-- 'badge': Rozet görünümü. 'rounded-pill': Hap þeklinde kenarlar. -->
                 <span class="badge rounded-pill bg-white text-muted border shadow-sm px-3 py-2" style="font-size: 0.75rem;">
                     <i class="far fa-clock me-1"></i> Son Güncelleme: 13.08.2025
                 </span>
             </div>
         </div>
 
+        <!-- MENÜ BUTONLARI (KARTLAR) -->
+        <!-- 'row': Kartlarýn dizileceði satýr yapýsý. 
+             'justify-content-center': Kartlarý ortalar. 
+             'animate__fadeInUp': Kartlarýn aþaðýdan yukarý doðru kayarak gelme animasyonu. -->
         <div class="row g-3 justify-content-center animate__animated animate__fadeInUp">
+
+            @* C# DÝZÝSÝ (VERÝ KAYNAÐI):
+               Sayfadaki 14 butonu tek tek HTML ile yazmak yerine, C# tarafýnda bir dizi (array) tanýmlýyoruz.
+               Bu yöntem kod tekrarýný önler (DRY - Don't Repeat Yourself) ve yönetimi kolaylaþtýrýr. *@
             @{
                 var kaliteMaddeleri = new[] {
-                    new { Icon = "fa-sitemap", Title = "Organizasyon Þemasý", Color = "blue" },
-                    new { Icon = "fa-route", Title = "Kalite Yolculuðu", Color = "purple" },
-                    new { Icon = "fa-cogs", Title = "Kalite Yönetim Sistemi", Color = "orange" },
-                    new { Icon = "fa-user-check", Title = "Görev, Yetki ve Sorumluluklar", Color = "green" },
-                    new { Icon = "fa-users-cog", Title = "Kalite Ekibi", Color = "blue" },
-                    new { Icon = "fa-external-link-alt", Title = "Faydalý Baðlantýlar ve Yayýnlar", Color = "purple" },
-                    new { Icon = "fa-tasks", Title = "Faaliyetler", Color = "orange" },
-                    new { Icon = "fa-users", Title = "Kalite Komiteleri", Color = "green" },
-                    new { Icon = "fa-project-diagram", Title = "Akýþ Þemasý", Color = "blue" },
-                    new { Icon = "fa-envelope-open-text", Title = "Ýletiþim", Color = "purple" },
-                    new { Icon = "fa-clipboard-list", Title = "Görev Tanýmlarý", Color = "orange" },
-                    new { Icon = "fa-user-tie", Title = "Kalite Komisyonu", Color = "green" },
-                    new { Icon = "fa-hand-holding-heart", Title = "Toplumsal Katký", Color = "blue" },
-                    new { Icon = "fa-file-medical-alt", Title = "Raporlar", Color = "purple" }
-                };
+                        new { Icon = "fa-sitemap", Title = "Organizasyon Þemasý", Color = "blue" },
+                        new { Icon = "fa-route", Title = "Kalite Yolculuðu", Color = "purple" },
+                        new { Icon = "fa-cogs", Title = "Kalite Yönetim Sistemi", Color = "orange" },
+                        new { Icon = "fa-user-check", Title = "Görev, Yetki ve Sorumluluklar", Color = "green" },
+                        new { Icon = "fa-users-cog", Title = "Kalite Ekibi", Color = "blue" },
+                        new { Icon = "fa-external-link-alt", Title = "Faydalý Baðlantýlar ve Yayýnlar", Color = "purple" },
+                        new { Icon = "fa-tasks", Title = "Faaliyetler", Color = "orange" },
+                        new { Icon = "fa-users", Title = "Kalite Komiteleri", Color = "green" },
+                        new { Icon = "fa-project-diagram", Title = "Akýþ Þemasý", Color = "blue" },
+                        new { Icon = "fa-envelope-open-text", Title = "Ýletiþim", Color = "purple" },
+                        new { Icon = "fa-clipboard-list", Title = "Görev Tanýmlarý", Color = "orange" },
+                        new { Icon = "fa-user-tie", Title = "Kalite Komisyonu", Color = "green" },
+                        new { Icon = "fa-hand-holding-heart", Title = "Toplumsal Katký", Color = "blue" },
+                        new { Icon = "fa-file-medical-alt", Title = "Raporlar", Color = "purple" }
+                        };
             }
 
+            @* DÖNGÜ (FOREACH):
+               Yukarýda tanýmlanan 'kaliteMaddeleri' dizisindeki her bir eleman için aþaðýdaki HTML bloðunu oluþturur.
+               Böylece her kart için tekrar kod yazmaya gerek kalmaz. *@
             @foreach (var madde in kaliteMaddeleri)
             {
+                <!-- SÜTUN AYARLARI (RESPONSIVE) -->
+                <!-- col-xl-3: Geniþ masaüstünde yan yana 4 tane.
+                     col-lg-4: Laptopta yan yana 3 tane.
+                     col-md-6: Tablette yan yana 2 tane.
+                     col-sm-12: Telefonda alt alta tek sütun. -->
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+
+                    <!-- KART LÝNKÝ -->
+                    <!-- 'quality-link-card': Kartýn tasarýmýný belirleyen özel CSS sýnýfý. -->
                     <a href="#" class="quality-link-card h-100 shadow-sm">
+
+                        <!-- ÝKON KUTUSU -->
+                        <!-- @madde.Color: Diziden gelen renk verisini (blue, purple vb.) buraya class olarak ekler. -->
                         <div class="card-icon @madde.Color">
+                            <!-- @madde.Icon: Diziden gelen ikon adýný (fa-sitemap vb.) buraya ekler. -->
                             <i class="fas @madde.Icon"></i>
                         </div>
+
+                        <!-- KART BÝLGÝ ALANI (BAÞLIK ve OK) -->
                         <div class="card-info">
+                            <!-- @madde.Title: Diziden gelen baþlýk metnini yazar. -->
                             <span class="card-title">@madde.Title</span>
+                            <!-- Saðdaki küçük ok ikonu -->
                             <i class="fas fa-chevron-right arrow-icon"></i>
                         </div>
                     </a>
@@ -61,99 +115,146 @@
     </div>
 </div>
 
+@* ================= CSS BÖLÜMÜ (ÖZEL TASARIM KODLARI) ================= *@
 @section Styles {
+    <!-- Animasyon kütüphanesi (Animate.css) çaðrýlýyor. -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
     <style>
+        /* CSS DEÐÝÞKENLERÝ (ROOT):
+           Renklerin tek bir yerden yönetilmesini saðlar. Temayý deðiþtirmek kolaylaþýr. */
         :root {
-            --navy: #0f172a;
-            --primary: #2563eb;
-            --bg-gray: #f4f7fa;
+            --navy: #0f172a; /* Koyu lacivert (Metinler için) */
+            --primary: #2563eb; /* Marka mavisi */
+            --bg-gray: #f4f7fa; /* Sayfanýn arka plan gri/mavi rengi */
         }
 
+        /* SAYFA GENELÝ */
         body, html {
             margin: 0;
-            padding: 0;
-            background-color: var(--bg-gray);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            min-height: 100vh;
+            padding: 0; /* Sayfa kenarlarýndaki beyaz boþluklarý sýfýrlar */
+            background-color: var(--bg-gray); /* Arka plan rengini atar */
+            font-family: 'Plus Jakarta Sans', sans-serif; /* Okunabilir, modern font */
+            min-height: 100vh; /* Sayfanýn en az ekran yüksekliði kadar olmasýný saðlar */
         }
 
+        /* ANA KAPSAYICI (VIEWPORT) */
         .quality-page-viewport {
-            min-height: 100vh;
+            min-height: 100vh; /* Tam ekran yüksekliði */
             display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow-x: hidden;
+            align-items: center; /* Dikey ortalama */
+            justify-content: center; /* Yatay ortalama */
+            position: relative; /* Bloblarýn (lekelerin) buna göre konumlanmasýný saðlar */
+            overflow-x: hidden; /* Taþmalarý gizler */
         }
 
+        /* ARKA PLAN LEKELERÝ (BLOB) */
         .bg-visuals .blob {
-            position: fixed;
-            width: 500px; height: 500px;
-            filter: blur(100px);
-            z-index: 1;
-            opacity: 0.5;
-            border-radius: 50%;
+            position: fixed; /* Sayfa kaydýrýlsa bile ekrandaki yeri sabit kalýr */
+            width: 500px;
+            height: 500px; /* Lekelerin boyutlarý */
+            filter: blur(100px); /* 100 piksel bulanýklaþtýrarak bulut görünümü verir */
+            z-index: 1; /* Diðer içeriklerin arkasýnda kalmasýný saðlar */
+            opacity: 0.5; /* Yarý saydam */
+            border-radius: 50%; /* Tam yuvarlak */
         }
-        .blob-1 { top: -100px; right: -50px; background: rgba(37, 99, 235, 0.08); }
-        .blob-2 { bottom: -100px; left: -50px; background: rgba(15, 23, 42, 0.04); }
 
+        /* 1. Lekenin Konumu ve Rengi (Mavi - Sað Üst) */
+        .blob-1 {
+            top: -100px;
+            right: -50px;
+            background: rgba(37, 99, 235, 0.08);
+        }
+
+        /* 2. Lekenin Konumu ve Rengi (Lacivert - Sol Alt) */
+        .blob-2 {
+            bottom: -100px;
+            left: -50px;
+            background: rgba(15, 23, 42, 0.04);
+        }
+
+        /* BAÞLIKTAKÝ ÝKON YUVASI (Beyaz Kutu) */
         .quality-icon-circle {
-            width: 80px; height: 80px;
+            width: 80px;
+            height: 80px;
             background: #fff;
-            border-radius: 25px;
+            border-radius: 25px; /* Köþeleri yuvarlatýr */
             display: flex;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            justify-content: center; /* Ýkonu ortalar */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Altýna hafif gölge verir */
         }
 
+        /* LÝNK KARTLARI TASARIMI */
         .quality-link-card {
-            background: #fff;
+            background: #fff; /* Beyaz kart */
             border-radius: 20px;
             padding: 20px;
             display: flex;
-            align-items: center;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(255,255,255,0.8);
+            align-items: center; /* Ýkonu ve yazýyý dikeyde ortalar */
+            text-decoration: none; /* Link alt çizgisini kaldýrýr */
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Hover animasyonunun yaylanma efekti */
+            border: 1px solid rgba(255,255,255,0.8); /* Ýnce beyaz çerçeve */
         }
 
-        .quality-link-card:hover {
-            transform: translateY(-5px);
-            background: #fff;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important;
-            border-color: var(--primary);
-        }
+            /* HAREKET EFEKTÝ (HOVER): Mouse üzerine gelince çalýþýr */
+            .quality-link-card:hover {
+                transform: translateY(-5px); /* Kartý 5 piksel yukarý kaldýrýr */
+                background: #fff;
+                box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important; /* Gölgeyi büyütür */
+                border-color: var(--primary); /* Kenar rengini mavi yapar */
+            }
 
-        .quality-link-card:hover .arrow-icon {
-            transform: translateX(5px);
-            color: var(--primary);
-        }
+                /* OK ÝKONU HAREKETÝ (Kart üzerine gelince) */
+                .quality-link-card:hover .arrow-icon {
+                    transform: translateX(5px); /* Oku saða doðru kaydýrýr */
+                    color: var(--primary); /* Ok rengini mavi yapar */
+                }
 
+        /* ÝKON KUTUCUKLARI (Kart içindeki renkli kareler) */
         .card-icon {
-            width: 45px; height: 45px;
+            width: 45px;
+            height: 45px;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.1rem;
-            margin-right: 15px;
-            flex-shrink: 0;
+            margin-right: 15px; /* Yazý ile ikon arasýna boþluk koyar */
+            flex-shrink: 0; /* Alan daralsa bile ikonun ezilmesini engeller */
         }
 
-        .card-icon.blue { background: #eff6ff; color: #2563eb; }
-        .card-icon.purple { background: #faf5ff; color: #9333ea; }
-        .card-icon.orange { background: #fff7ed; color: #ea580c; }
-        .card-icon.green { background: #f0fdf4; color: #16a34a; }
+            /* RENK TEMALARI (Döngüden gelen renklere göre) */
+            .card-icon.blue {
+                background: #eff6ff;
+                color: #2563eb;
+            }
+            /* Mavi Tema */
+            .card-icon.purple {
+                background: #faf5ff;
+                color: #9333ea;
+            }
+            /* Mor Tema */
+            .card-icon.orange {
+                background: #fff7ed;
+                color: #ea580c;
+            }
+            /* Turuncu Tema */
+            .card-icon.green {
+                background: #f0fdf4;
+                color: #16a34a;
+            }
+        /* Yeþil Tema */
 
+        /* KART ÝÇÝ YERLEÞÝM */
         .card-info {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* Yazýyý sola, oku saða yaslar */
             align-items: center;
             width: 100%;
         }
 
+        /* KART BAÞLIÐI */
         .card-title {
             color: var(--navy);
             font-weight: 700;
@@ -161,18 +262,36 @@
             line-height: 1.2;
         }
 
+        /* YÖNLENDÝRME OKU */
         .arrow-icon {
-            color: #cbd5e1;
+            color: #cbd5e1; /* Pasif gri renk */
             font-size: 0.8rem;
             transition: 0.3s;
         }
 
-        .fw-900 { font-weight: 900; }
-        .text-navy { color: var(--navy); }
+        /* YARDIMCI SINIFLAR */
+        .fw-900 {
+            font-weight: 900;
+        }
 
+        .text-navy {
+            color: var(--navy);
+        }
+
+        /* MOBÝL UYUMLULUK (RESPONSIVE) */
+        /* Ekran geniþliði 768px ve altýndaysa (Tablet ve Telefonlar) */
         @@media (max-width: 768px) {
-            .quality-page-viewport { align-items: flex-start; padding-top: 40px; }
-            .header-section h1 { font-size: 2rem; }
+            .quality-page-viewport
+
+        {
+            align-items: flex-start; /* Ortalamayý iptal edip üstten baþlatýr */
+            padding-top: 40px; /* Üstten boþluk býrakýr */
+        }
+
+        .header-section h1 {
+            font-size: 2rem; /* Baþlýk fontunu küçültür */
+        }
+
         }
     </style>
 }

@@ -18,3 +18,4 @@ namespace GaziHastane.Controllers
         public IActionResult Panel() { return View(); }
     }
 }
+//Hastalarýn kan veya görüntüleme (röntgen, MR) sonuçlarýna internet üzerinden eriþebileceði tahlil sonuç ekranýdýr.

@@ -1,46 +1,64 @@
 ﻿<!DOCTYPE html>
+<!-- HTML5 Doküman Tipi: Tarayıcıya bu belgenin modern HTML standartlarında olduğunu bildirir. -->
 <html lang="tr">
+    <!-- Sayfa Dili: Türkçe olarak ayarlandı. Arama motorları ve tarayıcılar için önemlidir. -->
 <head>
+    <!-- Karakter Seti: Türkçe karakterlerin düzgün görünmesi için UTF-8 kullanılır. -->
     <meta charset="UTF-8">
+    <!-- Viewport: Mobil uyumluluk için gereklidir. Sayfanın cihaz genişliğine göre ölçeklenmesini sağlar. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Sayfa Başlığı: Her sayfadan gelen "Title" verisi burada dinamik olarak gösterilir. -->
     <title>@ViewData["Title"] | Gazi Sağlık</title>
+    
+    <!-- Tailwind CSS: Hızlı tasarım yapmak için kullanılan CSS kütüphanesi (CDN üzerinden çekiliyor). -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome: İkon kütüphanesi (Telefon, ev, doktor ikonları vb. için). -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
+        /* Yazı Tipi: Google Fonts üzerinden 'Plus Jakarta Sans' fontunu içe aktarıyoruz. */
         @@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@300;400;500;600;700;800&display=swap');
 
+        /* Tüm elementler için kutu modelini ayarlar (padding ve border genişliğe dahil edilir). */
         * {
             box-sizing: border-box;
         }
 
+        /* Sayfa içi linklerde yumuşak kaydırma efekti sağlar. */
         html {
             scroll-behavior: smooth;
         }
 
+        /* Genel Sayfa Stilleri: Arka plan rengi ve varsayılan yazı tipi. */
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #f0f4f8;
+            background: #f0f4f8; /* Açık mavimsi gri arka plan */
         }
 
-        /* ── Navbar ── */
+        /* ── Navbar (Üst Menü) Stilleri ── */
+        /* Glassmorphism (Buzlu Cam)Efekti: Menünün arkasını bulanıklaştırır. */
         .glass-nav {
-            background: rgba(255,255,255,0.94);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 2px 24px rgba(0,0,0,0.07);
+            background: rgba(255,255,255,0.94); /* Yarı saydam beyaz */
+            backdrop-filter: blur(20px); /* Arka plan bulanıklığı */
+            -webkit-backdrop-filter: blur(20px); /* Safari desteği */
+            box-shadow: 0 2px 24px rgba(0,0,0,0.07); /* Hafif gölge */
         }
 
+        /* Menü Linkleri */
         .nav-link {
             font-size: 0.65rem;
             font-weight: 800;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: #64748b;
+            letter-spacing: 0.12em; /* Harf aralığı */
+            text-transform: uppercase; /* Hepsi büyük harf */
+            color: #64748b; /* Gri renk */
             padding: 6px 0;
             position: relative;
-            transition: color 0.2s;
+            transition: color 0.2s; /* Renk geçiş animasyonu */
         }
 
+            /* Linklerin altındaki mavi çizgi animasyonu (Hover efekti) */
             .nav-link::after {
                 content: '';
                 position: absolute;
@@ -48,54 +66,61 @@
                 left: 0;
                 right: 0;
                 height: 2px;
-                background: #2563eb;
+                background: #2563eb; /* Mavi çizgi */
                 border-radius: 99px;
-                transform: scaleX(0);
-                transition: transform 0.2s;
+                transform: scaleX(0); /* Başlangıçta gizli */
+                transition: transform 0.2s; /* Çizgi büyüme hızı */
             }
 
+            /* Linkin üzerine gelince veya aktif sayfadaysa */
             .nav-link:hover, .nav-link.active {
-                color: #2563eb;
+                color: #2563eb; /* Mavi renk */
             }
 
+                /* Çizgiyi görünür yap */
                 .nav-link:hover::after, .nav-link.active::after {
                     transform: scaleX(1);
                 }
 
-        /* ── Mobile Menu ── */
+        /* ── Mobil Menü Stilleri ── */
+        /* Arka plan karartma katmanı (Overlay) */
         #mob-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(15,23,42,0.45);
+            background: rgba(15,23,42,0.45); /* Yarı saydam koyu lacivert */
             z-index: 40;
-            opacity: 0;
-            pointer-events: none;
+            opacity: 0; /* Başlangıçta görünmez */
+            pointer-events: none; /* Tıklamayı engelle */
             transition: opacity 0.3s;
         }
 
+            /* Menü açıldığında görünür olur */
             #mob-overlay.open {
                 opacity: 1;
                 pointer-events: all;
             }
 
+        /* Mobil Yan Menü (Sidebar) */
         #mob-sidebar {
             position: fixed;
             top: 0;
-            left: -100%;
+            left: -100%; /* Ekranın solundan dışarıda başlar */
             width: 280px;
             height: 100vh;
             background: white;
             z-index: 50;
-            transition: left 0.35s cubic-bezier(0.4,0,0.2,1);
+            transition: left 0.35s cubic-bezier(0.4,0,0.2,1); /* Kayma animasyonu */
             overflow-y: auto;
             box-shadow: 8px 0 40px rgba(0,0,0,0.12);
         }
 
+            /* Menü açıldığında ekrana gelir */
             #mob-sidebar.open {
                 left: 0;
             }
 
-        /* ── Pulse ── */
+        /* ── Nabız (Pulse) Animasyonu ── */
+        /* Telefon butonu için daire genişleme efekti */
         @@keyframes pulse-ring {
             0% {
                 box-shadow: 0 0 0 0 rgba(239,68,68,0.4);
@@ -111,28 +136,38 @@
         }
 
         .pulse-icon {
-            animation: pulse-ring 2s ease infinite;
+            animation: pulse-ring 2s ease infinite; /* Sürekli tekrar eder */
         }
     </style>
     
+    <!-- Sayfaya özel stillerin ekleneceği yer (Opsiyonel) -->
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
 
+    <!-- ÜST MENÜ (NAVBAR) -->
+    <!-- fixed: Sayfa kaydırılsa da üstte sabit kalır. z-30: Diğer öğelerin üstünde durur. -->
     <nav class="glass-nav fixed w-full top-0 z-30 border-b border-slate-200/60">
+        <!-- İçerik Kapsayıcısı: Genişliği sınırlar ve ortalar -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
 
+            <!-- LOGO VE HASTANE ADI -->
             <a href="/Home/Index" class="flex items-center gap-3 flex-shrink-0">
+                <!-- Logo Kutusu -->
                 <div class="w-9 h-9 bg-white rounded-xl shadow-md shadow-blue-100 overflow-hidden flex items-center justify-center border border-slate-100">
                     <img src="~/assets/gazilogo.jpg" alt="Gazi Logo" class="h-8 w-auto object-contain">
                 </div>
+                <!-- Yazılar -->
                 <div class="leading-none">
                     <p class="text-sm font-extrabold tracking-tight uppercase text-slate-900">Gazi <span class="text-blue-600">Hastanesi</span></p>
                     <p class="text-[9px] text-slate-400 font-bold tracking-widest uppercase">Gazi Üniversitesi</p>
                 </div>
             </a>
 
+            <!-- MASAÜSTÜ MENÜ LİNKLERİ -->
+            <!-- hidden lg:flex: Mobil ekranda gizlenir, geniş ekranda görünür. -->
             <div class="hidden lg:flex items-center gap-7">
+                <!-- Aktif sayfa kontrolü: Eğer o anki sayfa ise 'active' sınıfı eklenir. -->
                 <a href="/Home/Index" class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" && ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")">Anasayfa</a>
                 <a href="/Kurumsal/Index" class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Kurumsal" ? "active" : "")">Hastanemiz</a>
                 <a href="/Home/Bolumler" class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Bolumler" ? "active" : "")">Bölümlerimiz</a>
@@ -141,13 +176,20 @@
                 <a href="/Home/Iletisim" class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Iletisim" ? "active" : "")">İletişim</a>
             </div>
 
+            <!-- SAĞ TARAFTAKİ AKSİYON BUTONLARI -->
             <div class="flex items-center gap-3">
+                <!-- ACİL Telefon Butonu (Sadece tablet/bilgisayarda görünür: hidden sm:flex) -->
                 <a href="tel:4440911" class="hidden sm:flex items-center gap-2 border border-red-200 text-red-600 text-[10px] font-black px-3 py-2 rounded-xl hover:bg-red-50 transition pulse-icon">
                     <i class="fa-solid fa-phone text-[9px]"></i> ACİL: 444 0 911
                 </a>
+                
+                <!-- RANDEVU AL Butonu (Mavi gradyan arka plan) -->
                 <a href="/Randevu/Giris" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-full text-[10px] font-black tracking-widest hover:from-blue-700 hover:to-blue-800 transition shadow-md shadow-blue-200/60 flex-shrink-0">
                     RANDEVU AL
                 </a>
+                
+                <!-- MOBİL MENÜYÜ AÇMA BUTONU (Hamburger İkonu) -->
+                <!-- lg:hidden: Sadece mobil ve tablette görünür. -->
                 <button onclick="openMob()" class="lg:hidden w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center">
                     <i class="fa-solid fa-bars text-slate-600 text-sm"></i>
                 </button>
@@ -155,8 +197,13 @@
         </div>
     </nav>
 
+    <!-- MOBİL MENÜ BİLEŞENLERİ -->
+    <!-- Karartma Katmanı (Tıklayınca menü kapanır) -->
     <div id="mob-overlay" onclick="closeMob()"></div>
+    
+    <!-- Yan Açılır Menü (Sidebar) -->
     <div id="mob-sidebar">
+        <!-- Menü Başlığı ve Kapatma Butonu -->
         <div class="p-5 border-b border-slate-100 flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
@@ -164,10 +211,13 @@
                 </div>
                 <span class="text-sm font-black text-slate-800 uppercase">Gazi <span class="text-blue-600">Sağlık</span></span>
             </div>
+            <!-- Kapatma Butonu (X İkonu) -->
             <button onclick="closeMob()" class="w-8 h-8 bg-slate-100 rounded-xl flex items-center justify-center">
                 <i class="fa-solid fa-xmark text-slate-500 text-sm"></i>
             </button>
         </div>
+        
+        <!-- Mobil Menü Linkleri -->
         <div class="p-5 space-y-1">
             <a href="/Home/Index" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-black transition"><i class="fa-solid fa-house w-4 text-slate-400"></i> Anasayfa</a>
             <a href="/Kurumsal/Index" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-black transition"><i class="fa-solid fa-hospital w-4 text-slate-400"></i> Hastanemiz</a>
@@ -176,6 +226,8 @@
             <a href="/Home/Rehber" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-black transition"><i class="fa-solid fa-book-open w-4 text-slate-400"></i> Hasta Rehberi</a>
             <a href="/Home/Iletisim" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-black transition"><i class="fa-solid fa-phone w-4 text-slate-400"></i> İletişim</a>
         </div>
+        
+        <!-- Mobil Menü Altındaki Randevu Butonu -->
         <div class="px-5 pb-5">
             <a href="/Randevu/Giris" class="flex items-center justify-center gap-2 bg-blue-600 text-white text-xs font-black py-3 rounded-xl shadow-md shadow-blue-200/60">
                 <i class="fa-solid fa-calendar-check text-xs"></i> Randevu Al
@@ -183,11 +235,17 @@
         </div>
     </div>
 
+    <!-- ANA İÇERİK ALANI -->
+    <!-- Diğer view sayfalarının (Index.cshtml, Iletisim.cshtml vb.) içeriği tam buraya yüklenir. -->
     @RenderBody()
 
+    <!-- FOOTER (ALT BİLGİ ALANI) -->
     <footer class="bg-white border-t border-slate-100" style="box-shadow: 0 -2px 20px rgba(0,0,0,0.03);">
         <div class="max-w-7xl mx-auto px-6 py-8">
+            <!-- Üst Footer Bölümü: Logo, Adres ve Linkler -->
             <div class="flex flex-col sm:flex-row justify-between items-start gap-8 mb-8">
+                
+                <!-- Sol Taraf: Marka ve İletişim Bilgileri -->
                 <div class="space-y-3">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
@@ -198,6 +256,8 @@
                     <p class="text-xs text-slate-400 font-medium max-w-xs leading-relaxed">Emniyet Mah., Mevlana Bulvarı No:29,<br>06560 Yenimahalle / ANKARA</p>
                     <p class="text-xs font-black text-slate-600">0312 202 40 00</p>
                 </div>
+                
+                <!-- Sağ Taraf: Link Grupları (Grid Yapısı) -->
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-6">
                     <div>
                         <p class="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 mb-3">Kurumsal</p>
@@ -222,6 +282,8 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Alt Footer Bölümü: Telif Hakkı ve Sosyal Medya -->
             <div class="border-t border-slate-100 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                 <p class="text-slate-400 font-bold text-[10px] uppercase tracking-[0.25em]">© 2026 Gazi Üniversitesi Hastanesi · Tüm Hakları Saklıdır</p>
                 <div class="flex items-center gap-3">
@@ -236,10 +298,24 @@
         </div>
     </footer>
 
+    <!-- JAVASCRIPT KODLARI -->
     <script>
-        function openMob()  { document.getElementById('mob-sidebar').classList.add('open'); document.getElementById('mob-overlay').classList.add('open'); document.body.style.overflow='hidden'; }
-        function closeMob() { document.getElementById('mob-sidebar').classList.remove('open'); document.getElementById('mob-overlay').classList.remove('open'); document.body.style.overflow=''; }
+        // Mobil menüyü açma fonksiyonu
+        function openMob()  { 
+            document.getElementById('mob-sidebar').classList.add('open'); // Menüyü kaydırarak getir
+            document.getElementById('mob-overlay').classList.add('open'); // Arka planı karart
+            document.body.style.overflow='hidden'; // Sayfanın kaydırılmasını (scroll) engelle
+        }
+        
+        // Mobil menüyü kapatma fonksiyonu
+        function closeMob() { 
+            document.getElementById('mob-sidebar').classList.remove('open'); // Menüyü gizle
+            document.getElementById('mob-overlay').classList.remove('open'); // Karartmayı kaldır
+            document.body.style.overflow=''; // Sayfa kaydırmasını tekrar aktif et
+        }
     </script>
+    
+    <!-- Sayfaya özel scriptlerin ekleneceği alan (Opsiyonel) -->
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

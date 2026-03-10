@@ -7,3 +7,4 @@ namespace GaziHastane.Controllers
         public IActionResult Komite() { return View(); }
     }
 }
+// Hastanenin eðitim komitesi iþleyiþine ayrýlmýþ özel bilgi sayfasý.

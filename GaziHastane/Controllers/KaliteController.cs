@@ -7,3 +7,4 @@ namespace GaziHastane.Controllers
         public IActionResult Index() { return View(); }
     }
 }
+//Hastanenin zorunlu kalite standartlarý belgelerine  ayrýlmýþ özel bilgi sayfasý.

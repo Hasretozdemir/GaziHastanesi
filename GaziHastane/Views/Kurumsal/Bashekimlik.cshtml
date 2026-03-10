@@ -1,35 +1,43 @@
-﻿@{
+﻿@* RAZOR KOD BLOĞU: Sunucu tarafında (C#) sayfa ayarlarının yapıldığı kısım. *@
+@{
+    // Sayfanın başlığını "Başhekimlik" olarak ayarlıyoruz.
     ViewData["Title"] = "Başhekimlik";
 }
 
 @section Scripts {
+    <!-- SAYFAYA ÖZEL STİLLER (CSS) -->
     <style>
-        /* ── Sidebar (Kurumsal Menü) CSS ── */
+        /* ── YAN MENÜ (SIDEBAR) STİLLERİ ── */
+        /* Menü linklerinin temel görünümü */
         .sidebar-link {
             transition: all 0.2s ease;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            align-items: center; /* İkon ve metni dikey ortala */
+            justify-content: space-between; /* İkon ve metni iki uca yasla */
             padding: 0.65rem 0.9rem;
             border-radius: 12px;
             font-size: 0.82rem;
             font-weight: 600;
-            color: #64748b;
+            color: #64748b; /* Pasif link rengi (Gri) */
             text-decoration: none;
         }
 
+            /* Link üzerine gelince (Hover) */
             .sidebar-link:hover {
-                background: #eff6ff;
-                color: #2563eb;
-                transform: translateX(4px);
+                background: #eff6ff; /* Açık mavi arka plan */
+                color: #2563eb; /* Mavi yazı rengi */
+                transform: translateX(4px); /* Sağa doğru hafif kayma efekti */
             }
-            /* DİKKAT: Başhekimlik sayfasında olduğumuz için bu menü aktif olacak */
+            
+            /* AKTİF LİNK DURUMU */
+            /* Şu an "Başhekimlik" sayfasında olduğumuz için bu linki özel olarak vurguluyoruz. */
             .sidebar-link[href="/Kurumsal/Bashekimlik"] {
-                background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); /* Mavi gradyan */
                 color: white;
-                box-shadow: 0 4px 14px rgba(37,99,235,0.25);
+                box-shadow: 0 4px 14px rgba(37,99,235,0.25); /* Gölge efekti */
             }
 
+        /* YAN MENÜ KATEGORİ BAŞLIKLARI */
         .section-title {
             font-size: 0.68rem;
             font-weight: 800;
@@ -39,6 +47,7 @@
             margin: 1.4rem 0.9rem 0.4rem;
         }
 
+        /* ÖZEL KAYDIRMA ÇUBUĞU (Scrollbar) */
         .custom-scroll::-webkit-scrollbar {
             width: 4px;
         }
@@ -52,7 +61,8 @@
             border-radius: 10px;
         }
 
-        /* ── Head card (Başhekim Kartı) ── */
+        /* ── BAŞHEKİM PROFİL KARTI ── */
+        /* Başhekimin fotoğrafının ve bilgilerinin olduğu büyük kart */
         .head-card {
             background: white;
             border-radius: 1.75rem;
@@ -62,11 +72,13 @@
             position: relative;
         }
 
+            /* Kartın üzerine gelince (Hover) */
             .head-card:hover {
-                transform: translateY(-6px);
-                box-shadow: 0 24px 60px rgba(37,99,235,0.15) !important;
+                transform: translateY(-6px); /* Yukarı doğru kalkar */
+                box-shadow: 0 24px 60px rgba(37,99,235,0.15) !important; /* Büyük bir gölge oluşur */
             }
 
+            /* Kartın en üstündeki dekoratif mavi çizgi */
             .head-card::before {
                 content: '';
                 position: absolute;
@@ -78,18 +90,19 @@
                 z-index: 2;
             }
 
-        /* ── Assistant card (Yardımcı Kartı) ── */
+        /* ── YARDIMCI KARTLARI (Küçük Kartlar) ── */
         .asst-card {
             background: white;
             border-radius: 1.25rem;
             border: 1px solid #f1f5f9;
             overflow: hidden;
             display: flex;
-            align-items: stretch;
+            align-items: stretch; /* İçerikleri dikey olarak esnet */
             transition: all 0.25s ease;
             position: relative;
         }
 
+            /* Sol taraftaki dekoratif dikey çizgi (Başlangıçta gizli) */
             .asst-card::before {
                 content: '';
                 position: absolute;
@@ -98,20 +111,23 @@
                 bottom: 0;
                 width: 3px;
                 background: linear-gradient(180deg, #2563eb, #93c5fd);
-                opacity: 0;
+                opacity: 0; /* Gizli */
                 transition: opacity 0.25s;
             }
 
+            /* Yardımcı kartı hover efekti */
             .asst-card:hover {
                 transform: translateY(-3px);
                 box-shadow: 0 12px 36px rgba(37,99,235,0.10);
             }
 
+                /* Hover olunca sol çizgiyi göster */
                 .asst-card:hover::before {
                     opacity: 1;
                 }
 
-        /* ── Avatar ring ── */
+        /* ── AVATAR HALKASI ── */
+        /* Profil resminin etrafındaki renkli çerçeve (Hover'da görünür) */
         .avatar-ring {
             position: absolute;
             inset: -3px;
@@ -129,7 +145,7 @@
             opacity: 1;
         }
 
-        /* ── Badge ── */
+        /* ── ROZETLER (Badges) ── */
         .badge {
             display: inline-flex;
             align-items: center;
@@ -142,17 +158,19 @@
             border-radius: 99px;
         }
 
+        /* Mavi Rozet */
         .badge-blue {
             background: #dbeafe;
             color: #1d4ed8;
         }
 
+        /* Altın Sarısı Rozet */
         .badge-gold {
             background: #fef9c3;
             color: #92400e;
         }
 
-        /* ── Section bar ── */
+        /* ── BÖLÜM AYIRICI ÇİZGİSİ ── */
         .section-bar {
             display: flex;
             align-items: center;
@@ -160,13 +178,14 @@
             margin-bottom: 1.25rem;
         }
 
+        /* Çizginin kendisi (sağa doğru şeffaflaşan gri çizgi) */
         .section-bar-line {
             flex: 1;
             height: 1px;
             background: linear-gradient(to right,#e2e8f0,transparent);
         }
 
-        /* ── Org line (connector) ── */
+        /* ── ORGANİZASYON ŞEMASI BAĞLANTI ÇİZGİLERİ ── */
         .org-connector {
             display: flex;
             flex-direction: column;
@@ -174,6 +193,7 @@
             gap: 0;
         }
 
+        /* Bağlantı noktası (Yuvarlak) */
         .org-dot {
             width: 10px;
             height: 10px;
@@ -181,13 +201,14 @@
             background: #2563eb;
         }
 
+        /* Dikey bağlantı çizgisi */
         .org-line {
             width: 2px;
             height: 24px;
             background: linear-gradient(to bottom,#2563eb,#bfdbfe);
         }
 
-        /* ── Info row ── */
+        /* ── BİLGİ SATIRI (E-posta, Telefon vb.) ── */
         .info-row {
             display: flex;
             align-items: center;
@@ -200,13 +221,19 @@
     </style>
 }
 
+<!-- ANA İÇERİK ALANI -->
 <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 mt-24">
+    <!-- İki sütunlu düzen: Sidebar (Sol) ve İçerik (Sağ) -->
     <div class="flex flex-col lg:flex-row gap-7">
 
+        <!-- SOL SIDEBAR -->
+        <!-- '_KurumsalSidebar.cshtml' bileşenini buraya dahil ediyoruz. -->
         @await Html.PartialAsync("_KurumsalSidebar")
 
+        <!-- SAĞ İÇERİK ALANI: BAŞHEKİMLİK -->
         <section class="flex-1 min-w-0 space-y-8">
 
+            <!-- EKMEK KIRINTISI (BREADCRUMB) -->
             <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
                 <i class="fa-solid fa-house text-[9px]"></i>
                 <i class="fa-solid fa-chevron-right text-[8px]"></i>
@@ -215,15 +242,20 @@
                 <span class="text-blue-600">Başhekimlik</span>
             </nav>
 
+            <!-- ÜST BAŞLIK KARTI (Mavi Gradyan) -->
             <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-[1.75rem] p-6 sm:p-10 relative overflow-hidden" style="box-shadow:0 12px 40px rgba(37,99,235,0.25);">
+                <!-- Arka plan süslemeleri (Yuvarlak şekiller) -->
                 <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full translate-x-20 -translate-y-20"></div>
                 <div class="absolute bottom-0 right-24 w-32 h-32 bg-white/5 rounded-full translate-y-12"></div>
+                
+                <!-- Kart İçeriği -->
                 <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
                     <div>
                         <p class="text-blue-300 text-[10px] font-black tracking-[0.2em] uppercase mb-1">Yönetim Kadrosu</p>
                         <h2 class="text-white text-2xl sm:text-4xl font-black leading-tight tracking-tight">Başhekimlik</h2>
                         <p class="text-blue-200/80 text-sm font-medium mt-2 max-w-lg">Gazi Üniversitesi Hastanesi'nin liderlik kadrosu ve idari yapılanması.</p>
                     </div>
+                    <!-- Sağdaki İstatistik Alanı -->
                     <div class="flex gap-5 flex-shrink-0">
                         <div class="text-center">
                             <p class="text-white text-2xl font-black">1</p>
@@ -238,37 +270,53 @@
                 </div>
             </div>
 
+            <!-- BAŞHEKİM BÖLÜMÜ -->
             <div>
+                <!-- Bölüm Başlığı Çizgisi -->
                 <div class="section-bar">
                     <span class="badge badge-gold"><i class="fa-solid fa-star text-[8px]"></i> Başhekim</span>
                     <h2 class="text-lg font-black text-slate-800">Hastane Başhekimi</h2>
                     <div class="section-bar-line"></div>
                 </div>
 
+                <!-- BAŞHEKİM PROFİL KARTI -->
                 <div class="flex justify-center">
                     <div class="head-card w-full max-w-sm" style="box-shadow:0 8px 40px rgba(0,0,0,0.07);">
+                        <!-- Profil Fotoğrafı Alanı -->
                         <div class="relative overflow-hidden" style="height:320px;">
+                            <!-- Placeholder resim kullanılıyor (UI Avatars) -->
                             <img src="https://ui-avatars.com/api/?name=Hakan+Atalar&background=dbeafe&color=1d4ed8&bold=true&size=256"
                                  alt="Prof. Dr. Hakan ATALAR"
                                  class="w-full h-full object-cover">
+                            <!-- Fotoğrafın alt kısmındaki karartma efekti (yazı okunurluğu için) -->
                             <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+                            
+                            <!-- Sağ üst köşe "BAŞHEKİM" etiketi -->
                             <div class="absolute top-4 right-4 flex items-center gap-1.5 bg-blue-600 text-white text-[9px] font-black px-3 py-1.5 rounded-full shadow-md">
                                 <i class="fa-solid fa-crown text-[8px]"></i> BAŞHEKİM
                             </div>
+                            
+                            <!-- İsim ve Unvan -->
                             <div class="absolute bottom-4 left-4 right-4">
                                 <p class="text-white text-base font-black leading-snug drop-shadow-md">Prof. Dr. Hakan ATALAR</p>
                                 <p class="text-blue-200 text-[10px] font-bold">Hastane Başhekimi</p>
                             </div>
                         </div>
+                        
+                        <!-- Alt Bilgi Kısmı -->
                         <div class="p-5 space-y-3">
+                            <!-- Uzmanlık Alanı -->
                             <div class="info-row">
                                 <i class="fa-solid fa-stethoscope text-blue-500 text-xs flex-shrink-0"></i>
                                 <p class="text-slate-600 text-xs font-semibold">Ortopedi ve Travmatoloji Uzmanı</p>
                             </div>
+                            <!-- Kurum Bilgisi -->
                             <div class="info-row">
                                 <i class="fa-solid fa-university text-blue-500 text-xs flex-shrink-0"></i>
                                 <p class="text-slate-600 text-xs font-semibold">Gazi Üniversitesi Tıp Fakültesi</p>
                             </div>
+                            
+                            <!-- Butonlar (E-posta ve Özgeçmiş) -->
                             <div class="flex gap-2 pt-1">
                                 <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 text-[10px] font-black py-2 rounded-xl transition border border-blue-100">
                                     <i class="fa-solid fa-envelope text-[9px]"></i> E-posta
@@ -281,10 +329,11 @@
                     </div>
                 </div>
 
+                <!-- ORGANİZASYON BAĞLANTI ÇİZGİSİ (Ağaç Yapısı Görünümü) -->
                 <div class="org-connector mt-6 mb-2">
-                    <div class="org-dot"></div>
-                    <div class="org-line"></div>
-                    <div class="flex gap-8">
+                    <div class="org-dot"></div> <!-- Üst nokta -->
+                    <div class="org-line"></div> <!-- Dikey çizgi -->
+                    <div class="flex gap-8"> <!-- Alt noktalar -->
                         <div class="org-dot"></div>
                         <div class="org-dot"></div>
                         <div class="org-dot"></div>
@@ -292,6 +341,7 @@
                 </div>
             </div>
 
+            <!-- BAŞHEKİM YARDIMCILARI BÖLÜMÜ -->
             <div>
                 <div class="section-bar">
                     <span class="badge badge-blue"><i class="fa-solid fa-circle-dot"></i> Yardımcılar</span>
@@ -299,15 +349,19 @@
                     <div class="section-bar-line"></div>
                 </div>
 
+                <!-- YARDIMCI KARTLARI GRİD YAPISI -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
 
+                    <!-- YARDIMCI 1 -->
                     <div class="asst-card" style="box-shadow:0 2px 16px rgba(0,0,0,0.04);">
+                        <!-- Fotoğraf Alanı -->
                         <div class="relative flex-shrink-0" style="width:120px;">
                             <img src="https://ui-avatars.com/api/?name=Ozlem+Guzel&background=f3e8ff&color=7c3aed&bold=true&size=128"
                                  alt="Prof. Dr. Özlem GÜZEL TUNÇCAN"
                                  class="w-full h-full object-cover" style="min-height:130px;">
                             <div class="absolute inset-0 bg-gradient-to-r from-transparent to-white/10"></div>
                         </div>
+                        <!-- Bilgi Alanı -->
                         <div class="p-4 flex flex-col justify-center gap-2 flex-1">
                             <div>
                                 <p class="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400 mb-1">Başhekim Yardımcısı</p>
@@ -316,6 +370,7 @@
                             <div class="flex flex-wrap gap-1.5">
                                 <span class="text-[9px] font-black bg-purple-50 text-purple-700 px-2 py-0.5 rounded-full">İnfeksiyon</span>
                             </div>
+                            <!-- Minik Butonlar -->
                             <div class="flex gap-1.5 mt-1">
                                 <a href="#" class="w-7 h-7 bg-slate-100 hover:bg-blue-100 rounded-lg flex items-center justify-center transition">
                                     <i class="fa-solid fa-envelope text-[9px] text-slate-500 hover:text-blue-600"></i>
@@ -327,6 +382,7 @@
                         </div>
                     </div>
 
+                    <!-- YARDIMCI 2 -->
                     <div class="asst-card" style="box-shadow:0 2px 16px rgba(0,0,0,0.04);">
                         <div class="relative flex-shrink-0" style="width:120px;">
                             <img src="https://ui-avatars.com/api/?name=Ilyas+Okur&background=dcfce7&color=166534&bold=true&size=128"
@@ -352,6 +408,7 @@
                         </div>
                     </div>
 
+                    <!-- YARDIMCI 3 -->
                     <div class="asst-card" style="box-shadow:0 2px 16px rgba(0,0,0,0.04);">
                         <div class="relative flex-shrink-0" style="width:120px;">
                             <img src="https://ui-avatars.com/api/?name=Abdullah+Ozer&background=fef9c3&color=92400e&bold=true&size=128"
@@ -380,7 +437,9 @@
                 </div>
             </div>
 
+            <!-- ALT İLETİŞİM KARTI (Sekreterlik Bilgileri) -->
             <div class="bg-white rounded-[1.5rem] border border-slate-100 p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5" style="box-shadow:0 4px 24px rgba(0,0,0,0.04);">
+                <!-- İletişim Bilgileri -->
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center flex-shrink-0">
                         <i class="fa-solid fa-comment-medical text-blue-600 text-lg"></i>
@@ -391,6 +450,7 @@
                         <p class="text-slate-400 text-xs font-semibold">Pzt–Cuma · 08:30 – 17:00</p>
                     </div>
                 </div>
+                <!-- Aksiyon Butonları -->
                 <div class="flex flex-wrap gap-3">
                     <a href="/Home/Iletisim" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black px-5 py-2.5 rounded-xl transition shadow-md shadow-blue-200/60">
                         <i class="fa-solid fa-phone text-xs"></i> İletişime Geç

@@ -1,104 +1,166 @@
 @{
+    // Sayfanýn baþlýðýný (title) belirliyoruz, bu "ViewData" koleksiyonu üzerinden Layout'a taþýnýr.
     ViewData["Title"] = "Gazi Saðlýk | Profesyonel Sonuç Portalý";
 }
 
+<!-- Tüm sonuç ekranýný kaplayan ana kapsayýcý (viewport) -->
 <div class="results-viewport">
+    <!-- Arka plandaki bulanýk mavi daire efekti -->
     <div class="bg-blob"></div>
+    <!-- Arka plandaki bulanýk altýn rengi daire efekti -->
     <div class="bg-blob-2"></div>
 
+    <!-- Ýçerik kartýnýn kendisi. Animasyonlu giriþ (zoomIn) efekti verilmiþ. -->
     <div class="results-container animate__animated animate__zoomIn">
 
+        <!-- Sol taraftaki bilgi paneli (koyu renkli alan) -->
         <div class="info-side-panel">
+            <!-- Bilgi içeriðini hizalamak ve düzenlemek için iç kapsayýcý -->
             <div class="info-inner">
+                <!-- Logo ve marka isminin bulunduðu üst grup -->
                 <div class="brand-group-premium mb-4 mb-md-5">
+                    <!-- Logo resmini tutan kutu -->
                     <div class="logo-wrapper">
+                        <!-- Gazi Hastanesi logosu -->
                         <img src="/assets/gazilogo.jpg" alt="Gazi Logo">
                     </div>
+                    <!-- Marka adý ve durumu gösteren metin grubu -->
                     <div class="brand-info">
+                        <!-- Kurum adý baþlýðý -->
                         <h4 class="fw-900 m-0">GAZÝ ÜNÝVERSÝTESÝ</h4>
+                        <!-- Altýndaki durum rozeti (Laboratuvar Aðý) -->
                         <span class="badge-online"><span class="pulse-dot"></span> LABORATUVAR AÐI</span>
                     </div>
                 </div>
 
+                <!-- Sayfanýn slogan ve açýklama bölümü (Hero Section) -->
                 <div class="hero-section mt-2 mt-md-4">
+                    <!-- Büyük baþlýk. "Merkezi" kelimesi altýn rengi gradient ile vurgulanmýþ. -->
                     <h1 class="display-5 fw-900 text-white">Analiz <br><span class="text-gradient-gold">Merkezi.</span></h1>
+                    <!-- Açýklama metni -->
                     <p class="text-white-50 lead-custom mt-3">Raporlarýnýz hazýr. Dijital arþivinize eriþerek tüm týbbi süreçlerinizi anlýk olarak takip edebilirsiniz.</p>
                 </div>
 
+                <!-- Öne çýkan özelliklerin listelendiði bölüm -->
                 <div class="feature-stack mt-4 mt-md-5">
+                    <!-- Özellik kartý: Akýllý PDF -->
                     <div class="feature-card-mini">
+                        <!-- Ýkon -->
                         <div class="f-icon"><i class="fas fa-file-pdf"></i></div>
+                        <!-- Metin -->
                         <div class="f-text"><h6>Akýllý PDF</h6><p>HD Çözünürlük</p></div>
                     </div>
+                    <!-- Özellik kartý: Uçtan Uca Þifreleme (Aktif görünümlü) -->
                     <div class="feature-card-mini active d-none d-sm-flex">
+                        <!-- Ýkon -->
                         <div class="f-icon"><i class="fas fa-shield-alt"></i></div>
+                        <!-- Metin -->
                         <div class="f-text"><h6>Uçtan Uca</h6><p>Þifreli Veri</p></div>
                     </div>
                 </div>
 
+                <!-- Alt kýsýmda sistem durumunu gösteren alan (sadece masaüstünde görünür) -->
                 <div class="mt-auto pt-4 border-top border-white-10 d-none d-md-block">
+                    <!-- Sistem saðlýk durumu göstergesi -->
                     <div class="system-health d-flex align-items-center">
+                        <!-- Sunucu ikonu (yeþil renk) -->
                         <i class="fas fa-server text-success me-3"></i>
+                        <!-- Durum metni -->
                         <span class="small fw-bold text-white-50">Merkezi Sunucu Baðlantýsý Aktif</span>
                     </div>
                 </div>
             </div>
+            <!-- Panelin üzerine gelen cam efekti katmaný -->
             <div class="panel-overlay-glass"></div>
         </div>
 
+        <!-- Sað taraftaki form paneli (beyaz alan) -->
         <div class="form-side-panel">
+            <!-- Formun taþmasýný önlemek ve kaydýrma özelliði için kapsayýcý -->
             <div class="form-scroll-wrapper">
+                <!-- Formun ana kutusu -->
                 <div class="form-main-box">
 
+                    <!-- Baþlýk grubu (G sembolü ve baþlýk) -->
                     <div class="header-minimal text-center mb-4 mb-md-5">
+                        <!-- Dekoratif G harfi sembolü -->
                         <div class="g-symbol">G</div>
+                        <!-- Baþlýk metni -->
                         <h2 class="fw-900 text-navy mt-4">Sonuç Sorgula</h2>
+                        <!-- Alt açýklama metni -->
                         <p class="text-muted small">Güvenli protokol ile sonuçlarýnýza eriþin</p>
                     </div>
 
+                    <!-- Giriþ yöntemi seçimi (TC veya Pasaport) -->
                     <div class="toggle-wrapper-premium mb-4 mb-md-5">
+                        <!-- T.C. Kimlik seçeneði radio butonu -->
                         <input type="radio" name="loginType" id="tcMethod" checked onchange="updateUI('TC')">
+                        <!-- T.C. Kimlik etiketi -->
                         <label for="tcMethod" class="toggle-btn">T.C. KÝMLÝK</label>
 
+                        <!-- Pasaport seçeneði radio butonu -->
                         <input type="radio" name="loginType" id="passportMethod" onchange="updateUI('PASSPORT')">
+                        <!-- Pasaport etiketi -->
                         <label for="passportMethod" class="toggle-btn">PASAPORT</label>
 
+                        <!-- Seçili olanýn arkasýnda kayan beyaz arka plan -->
                         <div class="glider-premium"></div>
                     </div>
 
+                    <!-- Giriþ formu -->
                     <form id="sonucForm" action="/Sonuc/Login" method="post" class="auth-form-premium">
+                        <!-- Kimlik numarasý giriþ alaný grubu -->
                         <div class="floating-group mb-4">
+                            <!-- Etiket (Javascript ile deðiþebilir) -->
                             <label id="idLabel" class="label-premium">KÝMLÝK NUMARASI</label>
+                            <!-- Girdi alaný ve ikonu -->
                             <div class="input-field">
+                                <!-- Ýkon (Javascript ile deðiþebilir) -->
                                 <i id="idIcon" class="far fa-id-card"></i>
+                                <!-- Input alaný -->
                                 <input type="text" placeholder="11 Haneli T.C. Kimlik" required maxlength="11" class="w-100">
+                                <!-- Alt çizgi efekti -->
                                 <div class="input-line"></div>
                             </div>
                         </div>
 
+                        <!-- Þifre giriþ alaný grubu -->
                         <div class="floating-group mb-4 mb-md-5">
+                            <!-- Etiket -->
                             <label class="label-premium">SONUÇ ÞÝFRESÝ</label>
+                            <!-- Girdi alaný kapsayýcýsý -->
                             <div class="input-field">
+                                <!-- Kilit ikonu -->
                                 <i class="fas fa-unlock-alt"></i>
+                                <!-- Þifre input alaný -->
                                 <input type="password" placeholder="Þifrenizi giriniz" required class="w-100">
+                                <!-- Alt çizgi efekti -->
                                 <div class="input-line"></div>
                             </div>
                         </div>
 
+                        <!-- Gönder butonu (Submit) -->
                         <button type="submit" class="btn-glow-premium">
+                            <!-- Buton üzerindeki yazý -->
                             <span class="b-text">SONUÇLARI LÝSTELE</span>
+                            <!-- Butonun saðýndaki ok ikonu -->
                             <div class="b-icon"><i class="fas fa-chevron-right"></i></div>
                         </button>
                     </form>
 
+                    <!-- Ekstra iþlemler (Þifre yenileme, Kayýt ol) -->
                     <div class="extra-actions mt-4 text-center">
                         <a href="#" class="link-luxury me-3 me-md-4">Þifremi Unuttum</a>
                         <a href="#" class="link-luxury">Kayýt Ol</a>
                     </div>
 
+                    <!-- Alt kýsýmdaki partner logolarý (E-Nabýz) -->
                     <div class="partner-footer mt-5">
+                        <!-- Bölücü metin -->
                         <div class="divider-text">GÜVENLÝ ENTEGRASYON</div>
+                        <!-- Logo kapsayýcýsý -->
                         <div class="d-flex justify-content-center align-items-center gap-3 gap-md-4 mt-3">
+                            <!-- E-Nabýz logosu -->
                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/E-Nab%C4%B1z_logo.png/640px-E-Nab%C4%B1z_logo.png" class="partner-img grayscale">
                         </div>
                     </div>
@@ -110,23 +172,27 @@
 </div>
 
 @section Styles {
+    <!-- Animate.css kütüphanesi (animasyonlar için) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
+        /* CSS Deðiþken tanýmlarý (renkler) */
         :root {
-            --navy: #0f172a;
-            --primary: #2563eb;
-            --gold: #c5a059;
-            --soft-white: rgba(255,255,255,0.9);
+            --navy: #0f172a; /* Koyu lacivert */
+            --primary: #2563eb; /* Ana mavi */
+            --gold: #c5a059; /* Altýn rengi */
+            --soft-white: rgba(255,255,255,0.9); /* Yumuþak beyaz */
         }
 
+        /* Sayfa geneli gövde ayarlarý */
         body {
-            background: #f1f5f9;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #f1f5f9; /* Arka plan rengi */
+            font-family: 'Plus Jakarta Sans', sans-serif; /* Yazý tipi */
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Yatay taþmayý engelle */
         }
 
+        /* Sonuç ekranýný ortalayan dýþ kapsayýcý */
         .results-viewport {
             min-height: 100vh;
             display: flex;
@@ -136,6 +202,7 @@
             position: relative;
         }
 
+        /* Ýçerik kartýnýn kendisi */
         .results-container {
             width: 100%;
             max-width: 1150px;
@@ -148,8 +215,9 @@
             min-height: 700px;
         }
 
+        /* Sol taraftaki bilgi paneli */
         .info-side-panel {
-            flex: 1.1;
+            flex: 1.1; /* Geniþlik oraný */
             background: var(--navy);
             padding: 50px;
             position: relative;
@@ -158,17 +226,19 @@
             flex-direction: column;
         }
 
+        /* Sað taraftaki form paneli */
         .form-side-panel {
-            flex: 1;
+            flex: 1; /* Geniþlik oraný */
             background: white;
             display: flex;
             flex-direction: column;
             min-width: 0;
         }
 
+        /* Mobil uyumluluk (Tablet ve altý) */
         @@media (max-width: 991px) {
             .results-container {
-                flex-direction: column;
+                flex-direction: column; /* Dikey yerleþim */
                 height: auto;
                 border-radius: 30px;
                 margin-top: 20px;
@@ -177,12 +247,12 @@
 
             .info-side-panel {
                 padding: 40px 30px;
-                order: 1;
+                order: 1; /* Önce bilgi paneli */
             }
 
             .form-side-panel {
                 padding: 10px;
-                order: 2;
+                order: 2; /* Sonra form paneli */
             }
 
             .results-viewport {
@@ -191,10 +261,11 @@
             }
 
             .hero-section h1 {
-                font-size: 2rem;
+                font-size: 2rem; /* Baþlýk boyutunu küçült */
             }
         }
 
+        /* Arka plan bulanýk daire 1 */
         .bg-blob {
             position: absolute;
             top: -10%;
@@ -203,10 +274,11 @@
             height: 500px;
             background: rgba(37,99,235,0.05);
             border-radius: 50%;
-            filter: blur(80px);
+            filter: blur(80px); /* Bulanýklýk */
             z-index: -1;
         }
 
+        /* Arka plan bulanýk daire 2 */
         .bg-blob-2 {
             position: absolute;
             bottom: -10%;
@@ -215,10 +287,11 @@
             height: 400px;
             background: rgba(197,160,89,0.05);
             border-radius: 50%;
-            filter: blur(80px);
+            filter: blur(80px); /* Bulanýklýk */
             z-index: -1;
         }
 
+        /* Panelin üzerindeki cam efekti */
         .panel-overlay-glass {
             position: absolute;
             top: 0;
@@ -229,14 +302,16 @@
             z-index: 0;
         }
 
+        /* Bilgi panelinin içeriði */
         .info-inner {
             position: relative;
-            z-index: 1;
+            z-index: 1; /* Cam efektinin üzerinde kalmasý için */
             height: 100%;
             display: flex;
             flex-direction: column;
         }
 
+        /* Logo kapsayýcýsý */
         .logo-wrapper {
             width: 60px;
             height: 60px;
@@ -244,19 +319,21 @@
             border-radius: 18px;
             padding: 7px;
         }
-
+            /* Logo resmi */
             .logo-wrapper img {
                 width: 100%;
                 height: 100%;
                 object-fit: contain;
             }
 
+        /* Marka grup kapsayýcýsý */
         .brand-group-premium {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
+        /* Online rozeti */
         .badge-online {
             font-size: 10px;
             font-weight: 800;
@@ -267,26 +344,30 @@
             gap: 8px;
         }
 
+        /* Yanýp sönen nokta animasyonu için element */
         .pulse-dot {
             width: 6px;
             height: 6px;
             background: var(--gold);
             border-radius: 50%;
-            animation: pulse-gold 2s infinite;
+            animation: pulse-gold 2s infinite; /* Animasyon tanýmý */
         }
 
+        /* Altýn rengi gradient metin */
         .text-gradient-gold {
             background: linear-gradient(to right, #e2c27d, #c5a059);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
+        /* Özellik kartlarý yýðýný */
         .feature-stack {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
+        /* Küçük özellik kartý */
         .feature-card-mini {
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.08);
@@ -296,11 +377,12 @@
             align-items: center;
             gap: 15px;
         }
-
+            /* Aktif kart görünümü */
             .feature-card-mini.active {
-                background: rgba(255,255,255,0.08);
+                background: rgba(255,255,255,0.08); /* Biraz daha açýk */
             }
 
+        /* Ýkon kutusu */
         .f-icon {
             width: 40px;
             height: 40px;
@@ -311,6 +393,7 @@
             justify-content: center;
         }
 
+        /* Yazý alanlarý */
         .f-text h6 {
             margin: 0;
             font-weight: 800;
@@ -324,11 +407,13 @@
             opacity: 0.5;
         }
 
+        /* Form kaydýrma alaný */
         .form-scroll-wrapper {
             flex: 1;
             padding: 40px;
         }
 
+        /* G sembolü kutusu */
         .g-symbol {
             width: 65px;
             height: 65px;
@@ -344,6 +429,7 @@
             border: 1px solid #e2e8f0;
         }
 
+        /* Radio buton kapsayýcýsý (Toggle) */
         .toggle-wrapper-premium {
             background: #f1f5f9;
             padding: 6px;
@@ -352,11 +438,12 @@
             position: relative;
             border: 1px solid #e2e8f0;
         }
-
+            /* Radio inputlarýný gizle */
             .toggle-wrapper-premium input {
                 display: none;
             }
 
+        /* Seçenek butonlarý */
         .toggle-btn {
             flex: 1;
             text-align: center;
@@ -364,11 +451,12 @@
             font-size: 11px;
             font-weight: 800;
             cursor: pointer;
-            z-index: 2;
+            z-index: 2; /* Kaydýrýcýnýn üstünde */
             color: #64748b;
             transition: 0.3s;
         }
 
+        /* Kayan beyaz arka plan (Glider) */
         .glider-premium {
             position: absolute;
             height: calc(100% - 12px);
@@ -381,14 +469,17 @@
             transition: 0.3s;
         }
 
+        /* Seçime göre kaydýrýcýnýn yerini deðiþtir */
         #passportMethod:checked ~ .glider-premium {
             transform: translateX(100%);
         }
 
+        /* Seçili elemanýn rengini koyulaþtýr */
         #tcMethod:checked ~ label[for="tcMethod"], #passportMethod:checked ~ label[for="passportMethod"] {
             color: var(--navy);
         }
 
+        /* Input etiketleri */
         .label-premium {
             font-size: 11px;
             font-weight: 800;
@@ -397,10 +488,11 @@
             display: block;
         }
 
+        /* Input alaný kapsayýcýsý */
         .input-field {
             position: relative;
         }
-
+            /* Input ikonu */
             .input-field i {
                 position: absolute;
                 left: 0;
@@ -408,7 +500,7 @@
                 color: #cbd5e1;
                 font-size: 1rem;
             }
-
+            /* Input stil */
             .input-field input {
                 width: 100%;
                 border: none;
@@ -419,6 +511,7 @@
                 outline: none;
             }
 
+        /* Alt çizgi animasyonu için element */
         .input-line {
             position: absolute;
             bottom: 0;
@@ -429,10 +522,12 @@
             transition: 0.3s;
         }
 
+        /* Focus olunca çizgi rengi deðiþsin */
         .input-field input:focus ~ .input-line {
             background: var(--primary);
         }
 
+        /* Buton stili */
         .btn-glow-premium {
             width: 100%;
             height: 65px;
@@ -447,13 +542,14 @@
             padding: 0 25px;
             transition: 0.4s;
         }
-
+            /* Buton hover efekti */
             .btn-glow-premium:hover {
                 background: var(--primary);
                 transform: translateY(-3px);
                 box-shadow: 0 15px 30px rgba(37,99,235,0.25);
             }
 
+        /* Buton ikonu */
         .b-icon {
             width: 35px;
             height: 35px;
@@ -464,6 +560,7 @@
             justify-content: center;
         }
 
+        /* Alt linkler */
         .link-luxury {
             font-size: 11px;
             font-weight: 700;
@@ -471,6 +568,7 @@
             text-decoration: none;
         }
 
+        /* Ayýrýcý metin */
         .divider-text {
             display: flex;
             align-items: center;
@@ -479,28 +577,28 @@
             font-size: 10px;
             font-weight: 800;
         }
-
+            /* Çizgiler */
             .divider-text::before, .divider-text::after {
                 content: '';
                 flex: 1;
                 border-bottom: 1px solid #f1f5f9;
             }
 
+        /* Partner görseli */
         .partner-img {
             height: 25px;
             filter: grayscale(1);
             opacity: 0.5;
         }
 
+        /* Nokta animasyonu (keyframe) */
         @@keyframes pulse-gold {
             0% {
                 box-shadow: 0 0 0 0 rgba(197,160,89,0.5);
             }
-
             70% {
                 box-shadow: 0 0 0 10px rgba(197,160,89,0);
             }
-
             100% {
                 box-shadow: 0 0 0 0 rgba(197,160,89,0);
             }
@@ -509,17 +607,22 @@
 }
 
 @section Scripts {
+    <!-- Javascript kodlarý -->
     <script>
+        // UI güncelleme fonksiyonu (TC/Pasaport geçiþi için)
         function updateUI(type) {
+            // Ýlgili elementleri seç
             const label = document.getElementById('idLabel');
             const input = document.querySelector('.input-field input');
             const icon = document.getElementById('idIcon');
 
+            // Eðer Pasaport seçildiyse:
             if (type === 'PASSPORT') {
                 label.innerText = 'PASAPORT NUMARASI';
                 input.placeholder = 'Pasaport numaranýzý giriniz';
                 icon.className = 'fas fa-passport';
             } else {
+                // TC Kimlik seçildiyse:
                 label.innerText = 'KÝMLÝK NUMARASI';
                 input.placeholder = '11 Haneli T.C. Kimlik';
                 icon.className = 'far fa-id-card';

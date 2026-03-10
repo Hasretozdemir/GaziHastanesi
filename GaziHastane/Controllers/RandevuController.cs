@@ -18,3 +18,4 @@ namespace GaziHastane.Controllers
         }
     }
 }
+//Hastalarýn T.C. kimlik numaralarýyla sisteme girip uygun poliklinik ve doktordan randevu seçebilmesi için tasarlanmýþ.

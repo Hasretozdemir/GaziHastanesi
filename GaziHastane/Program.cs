@@ -1,3 +1,6 @@
+using GaziHastane.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace GaziHastane
 {
     public class Program
@@ -7,9 +10,29 @@ namespace GaziHastane
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            // PostgreSQL veritabaný servisi ekleniyor
+            builder.Services.AddDbContext<GaziHastaneContext>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
+
+            // Veritabanýna baþlangýç verilerini ekle (Seed Data)
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<GaziHastaneContext>();
+                    DbInitializer.Initialize(context);
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "Veritabaný oluþturulurken veya veri eklenirken hata: " + ex.Message);
+                }
+            }
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

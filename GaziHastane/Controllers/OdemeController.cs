@@ -18,3 +18,4 @@ namespace GaziHastane.Controllers
         public IActionResult Icerik() { return View(); }
     }
 }
+//Muayene veya ek tetkik ücretlerinin online olarak ödenebileceði bir vezne altyapýsýdýr.

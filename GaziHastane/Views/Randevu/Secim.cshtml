@@ -1,49 +1,82 @@
-﻿@{
+﻿@* RAZOR KOD BLOĞU: Sunucu (C#) tarafında çalışan kodlar. *@
+@{
+    // Sayfanın başlığı belirleniyor. Bu başlık tarayıcı sekmesinde görünür.
     ViewData["Title"] = "Gazi Sağlık | Randevu Planlama";
 }
 
+<!-- Randevu Paneli Ana Kapsayıcısı -->
+<!-- Tüm sayfa içeriğini ortalamak ve arka plan rengini yönetmek için kullanılır. -->
 <div class="appointment-dashboard">
+    
+    <!-- İçeriği sınırlayan ve alt kısımdan boşluk bırakan container -->
+    <!-- "dashboard-safe-area" sınıfı üstteki navbar'ın altında kalmasını engeller. -->
     <div class="container pb-5 dashboard-safe-area">
+        
+        <!-- İçeriği yatayda ortalayan ve maksimum genişliği sınırlayan sarmalayıcı -->
         <div class="dashboard-center-wrapper mx-auto" style="max-width: 1150px;">
 
+            <!-- Üst Bilgi Barı (Header) -->
+            <!-- "glass-nav" sınıfı ile buzlu cam efekti verilir. animate__fadeIn ile açılış animasyonu eklenir. -->
             <header class="glass-nav d-flex justify-content-between align-items-center mb-5 p-3 animate__animated animate__fadeIn">
+                
+                <!-- Sol Taraf: Marka ve Logo Alanı -->
                 <div class="d-flex align-items-center ms-md-3 flex-wrap">
+                    <!-- Hastane İkonu -->
                     <div class="brand-box me-3"><i class="fas fa-h-square fa-2x text-primary"></i></div>
+                    
+                    <!-- Hastane Adı ve Alt Başlık -->
                     <div class="brand-text">
                         <h4 class="fw-800 mb-0 text-navy">GAZİ ÜNİVERSİTESİ</h4>
                         <span class="status-badge small text-muted">Hastane Randevu Sistemi</span>
                     </div>
                 </div>
+
+                <!-- Sağ Taraf: Kullanıcı Profili Alanı -->
                 <div class="user-profile me-md-3 d-flex align-items-center">
+                    <!-- Kullanıcı Adı ve Durumu (Sadece masaüstünde görünür: d-none d-md-block) -->
                     <div class="text-end me-3 d-none d-md-block">
                         <p class="mb-0 fw-bold small">Murat SARI</p>
                         <span class="text-success extra-small">● Çevrimiçi</span>
                     </div>
+                    <!-- Kullanıcı Baş Harfleri (Avatar) -->
                     <div class="avatar-circle">MS</div>
                 </div>
             </header>
 
+            <!-- Ana İçerik Grid Yapısı (Sol: Form, Sağ: Özet) -->
             <div class="row g-4 justify-content-center">
+                
+                <!-- SOL KOLON: Randevu Seçim Formu (Geniş alan) -->
                 <div class="col-xl-8 col-lg-7">
+                    <!-- İçerik Kartı: Gölge ve yuvarlak köşeler içerir. Soldan gelme animasyonu var. -->
                     <div class="content-card shadow-sm border-0 animate__animated animate__fadeInLeft">
+                        
+                        <!-- Form Başlığı ve Açıklaması -->
                         <div class="mb-4">
                             <h3 class="fw-800 text-navy">Randevu Detayları</h3>
                             <p class="text-muted small">Lütfen poliklinik ve hekim seçiminizi yapınız.</p>
                         </div>
 
+                        <!-- Form Elemanları Grid Yapısı -->
                         <div class="row g-4">
+                            
+                            <!-- Bölüm Seçimi -->
                             <div class="col-md-6">
                                 <label class="section-label-small">Tıbbi Birim</label>
+                                <!-- Birim seçildiğinde "updateSelection()" fonksiyonu çalışır ve özeti günceller. -->
                                 <select class="form-select-modern" id="birimSelect" onchange="updateSelection()">
                                     <option selected disabled>Birim Seçiniz</option>
+                                    <!-- data-blok, data-kat gibi özel öznitelikler (attributes) ile konum bilgisi tutuluyor. -->
                                     <option data-blok="A Blok" data-kat="3. Kat" data-oda="302">Kardiyoloji</option>
                                     <option data-blok="B Blok" data-kat="Zemin Kat" data-oda="12">Ortopedi</option>
                                     <option data-blok="C Blok" data-kat="2. Kat" data-oda="215">Dermatoloji</option>
                                 </select>
                             </div>
 
+                            <!-- Doktor Seçimi -->
                             <div class="col-md-6">
                                 <label class="section-label-small">Uzman Doktor</label>
+                                <!-- Doktor seçildiğinde özet alanını güncellemek için fonksiyon tetiklenir. -->
                                 <select class="form-select-modern" id="drSelect" onchange="updateSelection()">
                                     <option selected disabled>Hekim Seçiniz</option>
                                     <option>Prof. Dr. Ahmet Yılmaz</option>
@@ -51,6 +84,8 @@
                                 </select>
                             </div>
 
+                            <!-- Dinamik Konum Uyarısı (Başlangıçta gizli: style="display:none") -->
+                            <!-- Birim seçildiğinde Javascript ile görünür hale gelir. -->
                             <div class="col-12" id="locationAlert" style="display:none;">
                                 <div class="location-notif d-flex align-items-center">
                                     <div class="loc-icon-mini me-3"><i class="fas fa-map-marker-alt"></i></div>
@@ -61,25 +96,33 @@
                                 </div>
                             </div>
 
+                            <!-- Tarih Seçimi (Yatay Kaydırmalı Liste) -->
                             <div class="col-12 mt-4">
                                 <label class="section-label">Uygun Tarihler</label>
                                 <div class="date-swipe-wrapper">
+                                    <!-- Razor Döngüsü: Bugünden itibaren gelecek 7 günü listeler. -->
                                     @for (int i = 0; i < 7; i++)
                                     {
+                                        <!-- İlk gün (bugün) varsayılan olarak seçili (active) gelir. -->
                                         <div class="date-card @(i == 0 ? "active" : "")">
+                                            <!-- Gün Adı (Pzt, Sal vb.) -->
                                             <span class="day">@DateTime.Now.AddDays(i).ToString("ddd")</span>
+                                            <!-- Gün Numarası -->
                                             <span class="number">@DateTime.Now.AddDays(i).Day</span>
+                                            <!-- Ay Adı -->
                                             <span class="month">@DateTime.Now.AddDays(i).ToString("MMM")</span>
                                         </div>
                                     }
                                 </div>
                             </div>
 
+                            <!-- Saat Seçimi (Grid Yapısı) -->
                             <div class="col-12 mt-4">
                                 <label class="section-label">Müsait Saatler</label>
                                 <div class="time-grid-modern">
+                                    <!-- Örnek saat dilimleri butonları -->
                                     <button class="time-chip">09:00</button>
-                                    <button class="time-chip active">09:30</button>
+                                    <button class="time-chip active">09:30</button> <!-- Örnek olarak seçili -->
                                     <button class="time-chip">10:00</button>
                                     <button class="time-chip">11:00</button>
                                     <button class="time-chip">14:00</button>
@@ -88,6 +131,8 @@
                             </div>
                         </div>
 
+                        <!-- Onay Butonu -->
+                        <!-- Tıklandığında "confirmAppointment()" fonksiyonunu çalıştırır. -->
                         <button class="btn-confirm-modern mt-5 shadow-lg" onclick="confirmAppointment()">
                             <span>RANDEVUYU ONAYLA</span>
                             <i class="fas fa-check-circle ms-2"></i>
@@ -95,27 +140,39 @@
                     </div>
                 </div>
 
+                <!-- SAĞ KOLON: Özet Paneli (Daha dar alan) -->
                 <div class="col-xl-4 col-lg-5">
+                    <!-- Sağdan gelme animasyonlu özet kartı -->
                     <div class="summary-panel-modern shadow-sm animate__animated animate__fadeInRight">
                         <h5 class="fw-800 text-navy mb-4">Seçim Özeti</h5>
+                        
                         <div class="summary-list">
+                            <!-- Poliklinik Özeti -->
                             <div class="summary-item mb-3">
                                 <div class="s-icon blue"><i class="fas fa-stethoscope"></i></div>
                                 <div><small>Poliklinik</small><p id="sumBirim" class="m-0 fw-bold">-</p></div>
                             </div>
+                            
+                            <!-- Hekim Özeti -->
                             <div class="summary-item mb-3">
                                 <div class="s-icon purple"><i class="fas fa-user-md"></i></div>
                                 <div><small>Hekim</small><p id="sumHekim" class="m-0 fw-bold">-</p></div>
                             </div>
+                            
+                            <!-- Tarih Özeti -->
                             <div class="summary-item mb-4">
                                 <div class="s-icon orange"><i class="fas fa-calendar-day"></i></div>
                                 <div><small>Tarih & Saat</small><p class="m-0 fw-bold text-primary">05 Mart - 09:30</p></div>
                             </div>
+                            
+                            <!-- Konum Bilgisi (Başlangıçta Gizli) -->
+                            <!-- JS ile birim seçilince görünür olur. -->
                             <div id="sumLocation" class="location-summary-box animate__animated animate__zoomIn" style="display:none;">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-building text-muted me-2"></i>
                                     <span class="extra-small fw-bold text-muted">HASTANE KONUM BİLGİSİ</span>
                                 </div>
+                                <!-- Dinamik olarak JS ile doldurulacak alanlar -->
                                 <p id="txtSumKonum" class="m-0 mt-1 fw-800 text-success">A Blok - Kat: 3</p>
                                 <small class="text-muted" style="font-size: 11px;">Oda Numarası: <span id="txtSumOda">302</span></small>
                             </div>
@@ -128,22 +185,26 @@
 </div>
 
 @section Styles {
+    <!-- Sayfaya Özel CSS Stilleri -->
     <style>
+        /* CSS Değişkenleri: Renkleri ve boyutları merkezi yönetmek için */
         :root {
-            --navy: #0f172a;
-            --primary: #2563eb;
-            --bg-gray: #eef2f6;
-            --navbar-height: 90px; /* Üst Appbar yüksekliği (Gerekirse bu değeri artırabilirsiniz) */
+            --navy: #0f172a; /* Koyu lacivert tema rengi */
+            --primary: #2563eb; /* Ana mavi vurgu rengi */
+            --bg-gray: #eef2f6; /* Sayfa arka plan rengi */
+            --navbar-height: 90px; /* Üst Appbar yüksekliği (Layout'a göre ayarlanabilir) */
         }
 
+        /* Genel Sayfa Ayarları */
         body, html {
             height: 100%;
             margin: 0;
             background-color: var(--bg-gray);
             font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Yatay kaydırmayı engelle */
         }
 
+        /* Ana Kapsayıcı Flex Ayarları (Dikey Ortalama) */
         .appointment-dashboard {
             min-height: 100vh;
             display: flex;
@@ -152,36 +213,41 @@
             background-color: var(--bg-gray);
         }
 
-        /* UYGULANAN YENİ KURAL: Navbar'ın altında kalmasını engelleyen güvenli alan */
+        /* Güvenli Alan: İçeriğin, üstteki sabit navbarın altında kalmasını engeller */
         .dashboard-safe-area {
             padding-top: calc(var(--navbar-height) + 30px);
         }
 
+        /* Merkez Hizalama Kutusu */
         .dashboard-center-wrapper {
             width: 100%;
             z-index: 2;
         }
 
+        /* Marka Başlığı Ayarları */
         .brand-text h4 {
             line-height: 1.2;
-            white-space: nowrap;
+            white-space: nowrap; /* Metnin alt satıra geçmesini engelle */
         }
 
+        /* İçerik ve Özet Kartlarının Ortak Stili */
         .content-card, .summary-panel-modern {
             background: #ffffff;
-            border-radius: 35px;
-            padding: 40px;
-            height: 100%;
+            border-radius: 35px; /* Köşeleri yuvarla */
+            padding: 40px; /* İç boşluğu artır */
+            height: 100%; /* Kartların yüksekliğini eşitle */
         }
 
+        /* Header (Nav) için Buzlu Cam Efekti */
         .glass-nav {
             background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px); /* Arka planı bulanıklaştır */
             border-radius: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
-            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03); /* Hafif gölge */
+            border: 1px solid rgba(255,255,255,0.5); /* Hafif kenarlık */
         }
 
+        /* Küçük Etiket Stili (Tıbbi Birim vb.) */
         .section-label-small {
             font-size: 11px;
             font-weight: 800;
@@ -192,6 +258,7 @@
             letter-spacing: 1px;
         }
 
+        /* Normal Etiket Stili (Uygun Tarihler vb.) */
         .section-label {
             font-size: 13px;
             font-weight: 800;
@@ -200,6 +267,7 @@
             display: block;
         }
 
+        /* Modern Select Kutusu */
         .form-select-modern {
             width: 100%;
             padding: 15px;
@@ -211,19 +279,21 @@
             outline: none;
             transition: 0.3s;
         }
-
+            /* Select kutusu odaklanınca (focus) */
             .form-select-modern:focus {
-                border-color: var(--primary);
+                border-color: var(--primary); /* Çerçeveyi mavi yap */
                 background: white;
             }
 
+        /* Tarihlerin Yatay Kaydırılabilir Alanı */
         .date-swipe-wrapper {
             display: flex;
             gap: 12px;
-            overflow-x: auto;
+            overflow-x: auto; /* Yatay scroll */
             padding-bottom: 10px;
         }
 
+        /* Tarih Kartı */
         .date-card {
             min-width: 80px;
             padding: 15px 10px;
@@ -236,7 +306,7 @@
             display: flex;
             flex-direction: column;
         }
-
+            /* Tarih Kartı İçerikleri */
             .date-card .day {
                 font-size: 11px;
                 font-weight: 700;
@@ -256,23 +326,26 @@
                 font-weight: 700;
                 color: #94a3b8;
             }
-
+            
+            /* Seçili Tarih Kartı */
             .date-card.active {
                 background: var(--primary);
                 border-color: var(--primary);
                 box-shadow: 0 10px 20px rgba(37,99,235,0.2);
             }
-
+                /* Seçili kartın içindeki yazıları beyaz yap */
                 .date-card.active span {
                     color: white !important;
                 }
 
+        /* Saatlerin Izgara (Grid) Yapısı */
         .time-grid-modern {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); /* Sığdıkça yan yana diz */
             gap: 10px;
         }
 
+        /* Saat Butonu (Chip) */
         .time-chip {
             background: #f1f5f9;
             border: 2px solid transparent;
@@ -282,18 +355,19 @@
             color: #64748b;
             transition: 0.3s;
         }
-
+            /* Saat Üzerine Gelince */
             .time-chip:hover {
                 border-color: var(--navy);
                 color: var(--navy);
             }
-
+            /* Seçili Saat */
             .time-chip.active {
                 background: var(--navy);
                 color: #fff;
                 border-color: var(--navy);
             }
 
+        /* Onay Butonu */
         .btn-confirm-modern {
             width: 100%;
             height: 65px;
@@ -308,13 +382,14 @@
             justify-content: center;
             font-size: 1.1rem;
         }
-
+            /* Onay Butonu Hover */
             .btn-confirm-modern:hover {
                 background: var(--primary);
-                transform: translateY(-3px);
+                transform: translateY(-3px); /* Hafif yukarı kalkar */
                 box-shadow: 0 15px 30px rgba(37,99,235,0.2) !important;
             }
 
+        /* Kullanıcı Avatarı (Yuvarlak) */
         .avatar-circle {
             width: 45px;
             height: 45px;
@@ -327,6 +402,7 @@
             font-weight: 800;
         }
 
+        /* Özet Listesi Öğesi */
         .summary-item {
             display: flex;
             align-items: center;
@@ -340,6 +416,7 @@
                 letter-spacing: 1px;
             }
 
+        /* Simgelerin Kutusu */
         .s-icon {
             width: 45px;
             height: 45px;
@@ -351,6 +428,7 @@
             font-size: 1.2rem;
         }
 
+        /* Renk Temaları */
         .blue {
             background: #eff6ff;
             color: #2563eb;
@@ -366,6 +444,7 @@
             color: #ea580c;
         }
 
+        /* Konum Bildirim Alanı */
         .location-notif {
             background: #f0fdf4;
             border: 1px dashed #22c55e;
@@ -373,6 +452,7 @@
             border-radius: 20px;
         }
 
+        /* Konum Özeti Alanı */
         .location-summary-box {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -380,6 +460,7 @@
             border-radius: 20px;
         }
 
+        /* Küçük Yeşil Konum İkonu */
         .loc-icon-mini {
             color: #22c55e;
             background: #dcfce7;
@@ -391,6 +472,7 @@
             justify-content: center;
         }
 
+        /* Yardımcı Sınıflar */
         .fw-800 {
             font-weight: 800;
         }
@@ -399,48 +481,61 @@
             color: var(--navy);
         }
 
+        /* Mobil Cihaz Uyumluluğu (Responsive) */
         @@media (max-width: 768px) {
             .content-card, .summary-panel-modern {
-                padding: 25px;
+                padding: 25px; /* Kart iç boşluğunu azalt */
             }
 
             .dashboard-safe-area {
-                padding-top: calc(var(--navbar-height) + 15px);
+                padding-top: calc(var(--navbar-height) + 15px); /* Üst boşluğu ayarla */
             }
         }
     </style>
 }
 
 @section Scripts {
+    <!-- Sayfa İçi Javascript Mantığı -->
     <script>
+        // Seçimler değiştiğinde çalışacak fonksiyon
         function updateSelection() {
             var birim = document.getElementById("birimSelect");
             var hekim = document.getElementById("drSelect");
 
+            // Eğer bir birim seçildiyse;
             if(birim.selectedIndex > 0) {
+                // Seçilen opsiyonu al
                 var selectedBirim = birim.options[birim.selectedIndex];
+                
+                // Sağ taraftaki özete birim adını yaz
                 document.getElementById("sumBirim").innerText = selectedBirim.text;
 
-                // Konum bilgilerini göster
+                // Seçilen birimin "data-" özelliklerinden konum bilgilerini al
                 var blok = selectedBirim.getAttribute("data-blok");
                 var kat = selectedBirim.getAttribute("data-kat");
                 var oda = selectedBirim.getAttribute("data-oda");
 
+                // Formun içindeki konum uyarısını göster ve güncelle
                 document.getElementById("locationAlert").style.display = "block";
                 document.getElementById("txtFormKonum").innerText = blok + " - " + kat;
 
+                // Sağ taraftaki konum özet kutusunu göster ve güncelle
                 document.getElementById("sumLocation").style.display = "block";
                 document.getElementById("txtSumKonum").innerText = blok + " - " + kat;
                 document.getElementById("txtSumOda").innerText = oda;
             }
 
+            // Eğer bir hekim seçildiyse;
             if(hekim.selectedIndex > 0) {
+                // Sağ taraftaki özete hekim adını yaz
                 document.getElementById("sumHekim").innerText = hekim.options[hekim.selectedIndex].text;
             }
         }
 
+        // Onay butonuna basıldığında çalışacak fonksiyon
         function confirmAppointment() {
-            // Animasyonlu onay butonu efekti için eklenebilir
+            // Şimdilik sadece basit bir uyarı mesajı gösteriyoruz.
+            // Gerçek senaryoda burada sunucuya form post işlemi yapılır.
             alert("Randevunuz başarıyla oluşturulmuştur.");
         }
     </script>
