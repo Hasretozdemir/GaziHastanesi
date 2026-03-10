@@ -87,50 +87,59 @@ namespace GaziHastane.Models
         public virtual ICollection<Randevu> Randevular { get; set; } = new List<Randevu>();
     }
 
-    // 3. Doktorlar Table
-    [Table("doktorlar")]
-    public class Doktor
-    {
-        [Key]
-        [Column("id")]
-        public int Id { get; set; }
+ 
+        // 3. Doktorlar Table
+        [Table("doktorlar")]
+        public class Doktor
+        {
+            [Key]
+            [Column("id")]
+            public int Id { get; set; }
 
-        public int? KullaniciId { get; set; }
-        [ForeignKey("KullaniciId")]
-        public virtual User? Kullanici { get; set; }
+            [Column("kullaniciid")]
+            public int? KullaniciId { get; set; }
+            [ForeignKey("KullaniciId")]
+            public virtual User? Kullanici { get; set; }
 
-        public int? BolumId { get; set; }
-        [ForeignKey("BolumId")]
-        public virtual Bolum? Bolum { get; set; }
+            [Column("bolumid")]
+            public int? BolumId { get; set; }
+            [ForeignKey("BolumId")]
+            public virtual Bolum? Bolum { get; set; }
 
-        [StringLength(50)]
-        public string? Unvan { get; set; }
+            [StringLength(50)]
+            [Column("unvan")]
+            public string? Unvan { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string Ad { get; set; } = null!;
+            [Required]
+            [StringLength(100)]
+            [Column("ad")]
+            public string Ad { get; set; } = null!;
 
-        [Required]
-        [StringLength(100)]
-        public string Soyad { get; set; } = null!;
+            [Required]
+            [StringLength(100)]
+            [Column("soyad")]
+            public string Soyad { get; set; } = null!;
 
-        [StringLength(150)]
-        public string? UzmanlikAlani { get; set; }
+            [StringLength(150)]
+            [Column("uzmanlikalani")]
+            public string? UzmanlikAlani { get; set; }
 
-        public string? Ozgecmis { get; set; }
+            [Column("ozgecmis")]
+            public string? Ozgecmis { get; set; }
 
-        [StringLength(255)]
-        public string? FotografUrl { get; set; }
+            [StringLength(255)]
+            [Column("fotografurl")]
+            public string? FotografUrl { get; set; }
 
-        public bool IsActive { get; set; } = true;
+            [Column("isactive")]
+            public bool IsActive { get; set; } = true;
 
-        // Navigation properties
-        public virtual ICollection<Randevu> Randevular { get; set; } = new List<Randevu>();
-        public virtual ICollection<TahlilSonuc> TahlilSonuclari { get; set; } = new List<TahlilSonuc>();
-    }
-
-    // 4. Randevular Table
-    [Table("Randevular")]
+            // Navigation properties
+            public virtual ICollection<Randevu> Randevular { get; set; } = new List<Randevu>();
+            public virtual ICollection<TahlilSonuc> TahlilSonuclari { get; set; } = new List<TahlilSonuc>();
+        }
+        // 4. Randevular Table
+        [Table("Randevular")]
     public class Randevu
     {
         [Key]

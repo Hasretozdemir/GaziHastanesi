@@ -36,15 +36,14 @@ namespace GaziHastane.Controllers
         }
         public async Task<IActionResult> Doktorlar()
         {
-            // Veritabanındaki Bolumler tablosundan aktif olanları listeye çevirip çekiyoruz
+            // Include ile doktorların bölümlerini de çekiyoruz
             var aktifDoktorlar = await _context.Doktorlar
+                                              .Include(d => d.Bolum)
                                               .Where(b => b.IsActive)
                                               .ToListAsync();
 
-            // Çekilen veriyi View'a gönderiyoruz
             return View(aktifDoktorlar);
         }
-       
         public IActionResult Rehber() { return View(); }
         public IActionResult Iletisim() { return View(); }
         public IActionResult Privacy() { return View(); }
