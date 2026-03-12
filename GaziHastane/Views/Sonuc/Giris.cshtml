@@ -3,164 +3,110 @@
     ViewData["Title"] = "Gazi Saðlýk | Profesyonel Sonuç Portalý";
 }
 
-<!-- Tüm sonuç ekranýný kaplayan ana kapsayýcý (viewport) -->
 <div class="results-viewport">
-    <!-- Arka plandaki bulanýk mavi daire efekti -->
     <div class="bg-blob"></div>
-    <!-- Arka plandaki bulanýk altýn rengi daire efekti -->
     <div class="bg-blob-2"></div>
 
-    <!-- Ýçerik kartýnýn kendisi. Animasyonlu giriþ (zoomIn) efekti verilmiþ. -->
     <div class="results-container animate__animated animate__zoomIn">
 
-        <!-- Sol taraftaki bilgi paneli (koyu renkli alan) -->
         <div class="info-side-panel">
-            <!-- Bilgi içeriðini hizalamak ve düzenlemek için iç kapsayýcý -->
             <div class="info-inner">
-                <!-- Logo ve marka isminin bulunduðu üst grup -->
                 <div class="brand-group-premium mb-4 mb-md-5">
-                    <!-- Logo resmini tutan kutu -->
                     <div class="logo-wrapper">
-                        <!-- Gazi Hastanesi logosu -->
                         <img src="/assets/gazilogo.jpg" alt="Gazi Logo">
                     </div>
-                    <!-- Marka adý ve durumu gösteren metin grubu -->
                     <div class="brand-info">
-                        <!-- Kurum adý baþlýðý -->
                         <h4 class="fw-900 m-0">GAZÝ ÜNÝVERSÝTESÝ</h4>
-                        <!-- Altýndaki durum rozeti (Laboratuvar Aðý) -->
                         <span class="badge-online"><span class="pulse-dot"></span> LABORATUVAR AÐI</span>
                     </div>
                 </div>
 
-                <!-- Sayfanýn slogan ve açýklama bölümü (Hero Section) -->
                 <div class="hero-section mt-2 mt-md-4">
-                    <!-- Büyük baþlýk. "Merkezi" kelimesi altýn rengi gradient ile vurgulanmýþ. -->
                     <h1 class="display-5 fw-900 text-white">Analiz <br><span class="text-gradient-gold">Merkezi.</span></h1>
-                    <!-- Açýklama metni -->
                     <p class="text-white-50 lead-custom mt-3">Raporlarýnýz hazýr. Dijital arþivinize eriþerek tüm týbbi süreçlerinizi anlýk olarak takip edebilirsiniz.</p>
                 </div>
 
-                <!-- Öne çýkan özelliklerin listelendiði bölüm -->
                 <div class="feature-stack mt-4 mt-md-5">
-                    <!-- Özellik kartý: Akýllý PDF -->
                     <div class="feature-card-mini">
-                        <!-- Ýkon -->
                         <div class="f-icon"><i class="fas fa-file-pdf"></i></div>
-                        <!-- Metin -->
                         <div class="f-text"><h6>Akýllý PDF</h6><p>HD Çözünürlük</p></div>
                     </div>
-                    <!-- Özellik kartý: Uçtan Uca Þifreleme (Aktif görünümlü) -->
                     <div class="feature-card-mini active d-none d-sm-flex">
-                        <!-- Ýkon -->
                         <div class="f-icon"><i class="fas fa-shield-alt"></i></div>
-                        <!-- Metin -->
                         <div class="f-text"><h6>Uçtan Uca</h6><p>Þifreli Veri</p></div>
                     </div>
                 </div>
 
-                <!-- Alt kýsýmda sistem durumunu gösteren alan (sadece masaüstünde görünür) -->
                 <div class="mt-auto pt-4 border-top border-white-10 d-none d-md-block">
-                    <!-- Sistem saðlýk durumu göstergesi -->
                     <div class="system-health d-flex align-items-center">
-                        <!-- Sunucu ikonu (yeþil renk) -->
                         <i class="fas fa-server text-success me-3"></i>
-                        <!-- Durum metni -->
                         <span class="small fw-bold text-white-50">Merkezi Sunucu Baðlantýsý Aktif</span>
                     </div>
                 </div>
             </div>
-            <!-- Panelin üzerine gelen cam efekti katmaný -->
             <div class="panel-overlay-glass"></div>
         </div>
 
-        <!-- Sað taraftaki form paneli (beyaz alan) -->
         <div class="form-side-panel">
-            <!-- Formun taþmasýný önlemek ve kaydýrma özelliði için kapsayýcý -->
             <div class="form-scroll-wrapper">
-                <!-- Formun ana kutusu -->
                 <div class="form-main-box">
 
-                    <!-- Baþlýk grubu (G sembolü ve baþlýk) -->
                     <div class="header-minimal text-center mb-4 mb-md-5">
-                        <!-- Dekoratif G harfi sembolü -->
                         <div class="g-symbol">G</div>
-                        <!-- Baþlýk metni -->
                         <h2 class="fw-900 text-navy mt-4">Sonuç Sorgula</h2>
-                        <!-- Alt açýklama metni -->
                         <p class="text-muted small">Güvenli protokol ile sonuçlarýnýza eriþin</p>
                     </div>
 
-                    <!-- Giriþ yöntemi seçimi (TC veya Pasaport) -->
                     <div class="toggle-wrapper-premium mb-4 mb-md-5">
-                        <!-- T.C. Kimlik seçeneði radio butonu -->
                         <input type="radio" name="loginType" id="tcMethod" checked onchange="updateUI('TC')">
-                        <!-- T.C. Kimlik etiketi -->
                         <label for="tcMethod" class="toggle-btn">T.C. KÝMLÝK</label>
 
-                        <!-- Pasaport seçeneði radio butonu -->
                         <input type="radio" name="loginType" id="passportMethod" onchange="updateUI('PASSPORT')">
-                        <!-- Pasaport etiketi -->
                         <label for="passportMethod" class="toggle-btn">PASAPORT</label>
 
-                        <!-- Seçili olanýn arkasýnda kayan beyaz arka plan -->
                         <div class="glider-premium"></div>
                     </div>
 
-                    <!-- Giriþ formu -->
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger mb-4 p-3 text-center" style="border-radius: 15px; font-size: 12px; font-weight: 700; background-color: #fef2f2; color: #ef4444; border: 1px dashed #f87171;">
+                            <i class="fas fa-exclamation-circle me-1"></i> @TempData["Error"]
+                        </div>
+                    }
+
                     <form id="sonucForm" action="/Sonuc/Login" method="post" class="auth-form-premium">
-                        <!-- Kimlik numarasý giriþ alaný grubu -->
                         <div class="floating-group mb-4">
-                            <!-- Etiket (Javascript ile deðiþebilir) -->
                             <label id="idLabel" class="label-premium">KÝMLÝK NUMARASI</label>
-                            <!-- Girdi alaný ve ikonu -->
                             <div class="input-field">
-                                <!-- Ýkon (Javascript ile deðiþebilir) -->
                                 <i id="idIcon" class="far fa-id-card"></i>
-                                <!-- Input alaný -->
-                                <input type="text" placeholder="11 Haneli T.C. Kimlik" required maxlength="11" class="w-100">
-                                <!-- Alt çizgi efekti -->
+                                <input type="text" name="identityNumber" placeholder="11 Haneli T.C. Kimlik" required maxlength="11" class="w-100">
                                 <div class="input-line"></div>
                             </div>
                         </div>
 
-                        <!-- Þifre giriþ alaný grubu -->
                         <div class="floating-group mb-4 mb-md-5">
-                            <!-- Etiket -->
                             <label class="label-premium">SONUÇ ÞÝFRESÝ</label>
-                            <!-- Girdi alaný kapsayýcýsý -->
                             <div class="input-field">
-                                <!-- Kilit ikonu -->
                                 <i class="fas fa-unlock-alt"></i>
-                                <!-- Þifre input alaný -->
-                                <input type="password" placeholder="Þifrenizi giriniz" required class="w-100">
-                                <!-- Alt çizgi efekti -->
+                                <input type="password" name="password" placeholder="Þifrenizi giriniz" required class="w-100">
                                 <div class="input-line"></div>
                             </div>
                         </div>
 
-                        <!-- Gönder butonu (Submit) -->
                         <button type="submit" class="btn-glow-premium">
-                            <!-- Buton üzerindeki yazý -->
                             <span class="b-text">SONUÇLARI LÝSTELE</span>
-                            <!-- Butonun saðýndaki ok ikonu -->
                             <div class="b-icon"><i class="fas fa-chevron-right"></i></div>
                         </button>
                     </form>
 
-                    <!-- Ekstra iþlemler (Þifre yenileme, Kayýt ol) -->
                     <div class="extra-actions mt-4 text-center">
                         <a href="#" class="link-luxury me-3 me-md-4">Þifremi Unuttum</a>
                         <a href="#" class="link-luxury">Kayýt Ol</a>
                     </div>
 
-                    <!-- Alt kýsýmdaki partner logolarý (E-Nabýz) -->
                     <div class="partner-footer mt-5">
-                        <!-- Bölücü metin -->
                         <div class="divider-text">GÜVENLÝ ENTEGRASYON</div>
-                        <!-- Logo kapsayýcýsý -->
                         <div class="d-flex justify-content-center align-items-center gap-3 gap-md-4 mt-3">
-                            <!-- E-Nabýz logosu -->
                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/E-Nab%C4%B1z_logo.png/640px-E-Nab%C4%B1z_logo.png" class="partner-img grayscale">
                         </div>
                     </div>
@@ -172,8 +118,7 @@
 </div>
 
 @section Styles {
-    <!-- Animate.css kütüphanesi (animasyonlar için) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
         /* CSS Deðiþken tanýmlarý (renkler) */
         :root {
@@ -596,9 +541,11 @@
             0% {
                 box-shadow: 0 0 0 0 rgba(197,160,89,0.5);
             }
+
             70% {
                 box-shadow: 0 0 0 10px rgba(197,160,89,0);
             }
+
             100% {
                 box-shadow: 0 0 0 0 rgba(197,160,89,0);
             }
@@ -607,7 +554,6 @@
 }
 
 @section Scripts {
-    <!-- Javascript kodlarý -->
     <script>
         // UI güncelleme fonksiyonu (TC/Pasaport geçiþi için)
         function updateUI(type) {

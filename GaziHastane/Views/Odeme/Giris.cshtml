@@ -1,51 +1,30 @@
-@* RAZOR KOD BLOÐU: Sunucu tarafýnda çalýþan ve sayfa ayarlarýný tutan bölüm *@
 @{
-    @* Sayfanýn tarayýcý sekmesinde görünecek baþlýðýný belirler. SEO ve kullanýcý deneyimi için gereklidir. *@
-    ViewData["Title"] = "Gazi Saðlýk | Güvenli Ödeme";
+    ViewData["Title"] = "Gazi Saðlýk | Güvenli Ödeme Giriþi";
 }
 
-<!-- SAYFA YAPISI BAÞLANGICI -->
-<!-- 'payment-viewport': Tüm ödeme sayfasýný ortalayan ve arkaplanýný ayarlayan dýþ kapsayýcý (wrapper). -->
 <div class="payment-viewport">
-
-    <!-- ÖDEME KARTI (ANA BEYAZ KUTU) -->
-    <!-- 'payment-container': Sayfanýn ortasýndaki iki panelli (sol bilgi, sað form) ana kart. -->
-    <!-- 'shadow-2xl': Büyük bir gölge efekti verir. 'animate__fadeIn': Sayfa açýlýþ animasyonu. -->
     <div class="payment-container shadow-2xl animate__animated animate__fadeIn">
-
-        <!-- SOL PANEL: BÝLGÝLENDÝRME VE MARKA ALANI -->
-        <!-- 'side-info-panel': Lacivert arka planlý, logonun ve sloganlarýn olduðu sol taraf. -->
         <div class="side-info-panel">
-
             <div class="info-inner">
-
-                <!-- MARKA BAÞLIÐI (HEADER) -->
                 <div class="brand-header mb-5">
-                    <!-- Logo görseli -->
                     <img src="/assets/gazilogo.jpg" alt="Gazi Logo" class="brand-logo">
-                    <!-- Baþlýk ve alt baþlýk metinleri -->
                     <div class="brand-text">
                         <h5 class="fw-800 m-0">GAZÝ ÜNÝVERSÝTESÝ</h5>
                         <p class="m-0 extra-small text-gold">TIP FAKÜLTESÝ HASTANESÝ</p>
                     </div>
                 </div>
 
-                <!-- ANA MESAJ (HERO CONTENTS) -->
                 <div class="hero-content mt-4">
-                    <!-- 'display-6': Büyük font boyutu. 'text-gold': Altýn rengi vurgu. -->
                     <h1 class="display-6 fw-800 text-white">Güvenli <br><span class="text-gold">Ödeme Merkezi</span></h1>
                     <p class="text-white-50 small mt-3">Tetkik, muayene ve diðer tüm saðlýk ödemelerinizi güvenle sorgulayýp tamamlayabilirsiniz.</p>
                 </div>
 
-                <!-- GÜVENLÝK ÖZELLÝKLERÝ LÝSTESÝ -->
                 <div class="feature-list mt-5">
                     <div class="f-item"><i class="fas fa-check-circle"></i> <span>3D Secure</span></div>
                     <div class="f-item"><i class="fas fa-check-circle"></i> <span>256-Bit SSL</span></div>
                     <div class="f-item"><i class="fas fa-check-circle"></i> <span>Tüm Kartlar</span></div>
                 </div>
 
-                <!-- GÜVENCE ROZETÝ (ALT KISIM) -->
-                <!-- 'mt-auto': Bu bloðu panelin en altýna iter (Flexbox özelliði). -->
                 <div class="mt-auto pt-5">
                     <div class="security-card p-3 rounded-4">
                         <i class="fas fa-shield-alt text-gold me-2"></i>
@@ -53,22 +32,13 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Arka plandaki þeffaf hastane fotoðrafý kaplamasý -->
             <div class="panel-bg-overlay"></div>
         </div>
 
-        <!-- SAÐ PANEL: HASTA GÝRÝÞ FORMU -->
-        <!-- 'side-form-panel': Beyaz arka planlý, TC no ve Protokol no girilen sað taraf. -->
         <div class="side-form-panel">
-
-            <!-- 'form-scroll-area': Ýçerik çok uzun olursa sadece sað tarafýn kaydýrýlmasýný (scroll) saðlar. -->
             <div class="form-scroll-area">
                 <div class="form-inner">
-
-                    <!-- FORM BAÞLIÐI -->
                     <div class="form-header text-center mb-5">
-                        <!-- Parmak izi ikonu -->
                         <div class="icon-circle-main mb-3">
                             <i class="fas fa-fingerprint text-navy"></i>
                         </div>
@@ -76,121 +46,106 @@
                         <p class="text-muted small">Borç sorgulamak için bilgileri doldurun</p>
                     </div>
 
-                    <!-- GÝRÝÞ FORMU -->
-                    <!-- action="/Odeme/Login": Formun gönderileceði sunucu adresi. -->
                     <form id="paymentForm" action="/Odeme/Login" method="post" class="modern-form">
-
-                        <!-- TC KÝMLÝK GÝRÝÞÝ -->
                         <div class="floating-input mb-4">
                             <label>T.C. Kimlik / Pasaport No</label>
                             <div class="input-box">
-                                <!-- Kimlik kartý ikonu -->
-                                <i class="far fa-id-card"></i> <input type="text" placeholder="Giriþ yapýnýz..." required maxlength="11">
+                                <i class="far fa-id-card"></i>
+                                <input type="text" name="tcKimlik" placeholder="Giriþ yapýnýz..." required maxlength="11">
                             </div>
                         </div>
 
-                        <!-- PROTOKOL NO GÝRÝÞÝ -->
-                        <div class="floating-input mb-5">
+                        <div class="floating-input mb-4">
                             <label>Protokol No</label>
                             <div class="input-box">
-                                <!-- Belge ikonu -->
-                                <i class="far fa-file-alt"></i> <input type="text" placeholder="Örn: 2024-550..." required>
+                                <i class="far fa-file-alt"></i>
+                                <input type="text" name="protokolNo" placeholder="Örn: 2024-550..." required>
                             </div>
                         </div>
 
-                        <!-- SORGULAMA BUTONU -->
-                        <!-- 'btn-main-payment': Ana aksiyon butonu stili. -->
-                        <button type="submit" class="btn-main-payment">
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger p-3 mb-4" style="border-radius: 15px; font-size: 13px; font-weight: 700; background-color: #fef2f2; color: #ef4444; border: 1px dashed #f87171; text-align: center;">
+                                <i class="fas fa-exclamation-circle me-1"></i> @TempData["Error"]
+                            </div>
+                        }
+
+                        <button type="submit" class="btn-main-payment mt-2">
                             <span class="btn-label">BORÇ SORGULA</span>
-                            <!-- Saðdaki ikon kutusu -->
                             <span class="btn-icon"><i class="fas fa-search-dollar"></i></span>
                         </button>
                     </form>
 
-                    <!-- ALT BÖLÜM: PARTNER LOGOLARI -->
                     <div class="text-center mt-5">
-                        <!-- 'divider': Çizgili ayýrýcý baþlýk. -->
                         <div class="divider"><span>Ödeme Partnerleri</span></div>
-
-                        <!-- Kredi kartý logolarý (Visa, Mastercard, Amex) -->
                         <div class="partner-logos opacity-50 d-flex justify-content-center gap-4 mt-3">
                             <i class="fab fa-cc-visa fa-2x"></i>
                             <i class="fab fa-cc-mastercard fa-2x"></i>
                             <i class="fab fa-cc-amex fa-2x"></i>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
-@* ================= CSS BÖLÜMÜ (ÖZEL STÝLLER) ================= *@
 @section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
-        /* CSS DEÐÝÞKENLERÝ: Renk kodlarýný tek bir yerde tanýmlayýp her yerden çaðýrýyoruz. */
         :root {
-            --navy: #0f172a; /* Hastanenin koyu lacivert kurumsal rengi */
-            --gold: #d4af37; /* Kalite ve güven hissi veren altýn rengi */
-            --soft-bg: #f8fafc; /* Form alanlarýndaki çok hafif gri arka plan */
-            --input-border: #e2e8f0; /* Çizgi renkleri için açýk gri */
+            --navy: #0f172a;
+            --gold: #d4af37;
+            --soft-bg: #f8fafc;
+            --input-border: #e2e8f0;
         }
 
-        /* SAYFA GENELÝ */
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif; /* Modern ve okunabilir font */
-            background: #eef2f6; /* Sayfanýn en arkasýndaki hafif mavi/gri fon */
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #eef2f6;
         }
 
-        /* DIÞ TAÞIYICI: Ýçindeki kartý sayfanýn ortasýnda tutar. */
         .payment-viewport {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px; /* Ekran küçüldüðünde kartýn köþelere deðmesini engeller */
+            padding: 20px;
         }
 
-        /* ANA BEYAZ KART */
         .payment-container {
             width: 100%;
-            max-width: 1100px; /* Geniþliði 1100 piksele sýnýrlar */
+            max-width: 1100px;
             background: white;
-            border-radius: 40px; /* Oval köþeler */
-            display: flex; /* Ýçindeki sað ve sol panelleri yan yana dizer */
+            border-radius: 40px;
+            display: flex;
             min-height: 700px;
-            overflow: hidden; /* Sað/sol panellerin içindeki resimlerin kartýn oval köþelerinden taþmasýný keser */
+            overflow: hidden;
         }
 
-        /* ================= SOL PANEL STÝLLERÝ ================= */
         .side-info-panel {
-            flex: 1; /* Sað panelle alaný %50 - %50 eþit paylaþmasýný saðlar */
+            flex: 1;
             background: var(--navy);
             position: relative;
             padding: 50px;
             color: white;
             display: flex;
-            flex-direction: column; /* Ýçindeki yazýlarý alt alta dizers */
+            flex-direction: column;
             z-index: 1;
         }
 
-        /* Sol Panelin Arka Planýndaki Yarý Saydam Resim */
         .panel-bg-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            /* Ýnternetten alýnan geçici bir hastane fotoðrafý (Unsplash) */
             background: url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1000');
             background-size: cover;
-            opacity: 0.1; /* Resmi sadece %10 görünür yaparak doku hissi verir */
-            z-index: -1; /* Yazýlarýn arkasýnda kalmasýný saðlar */
+            opacity: 0.1;
+            z-index: -1;
         }
 
-        /* Sol Üstteki Hastane Logosu */
         .brand-logo {
             width: 55px;
             height: 55px;
@@ -198,10 +153,9 @@
             background: white;
             padding: 5px;
             margin-right: 15px;
-            float: left; /* Saðýndaki yazýnýn logonun yanýna kaymasýný saðlar */
+            float: left;
         }
 
-        /* Yardýmcý Renk ve Yazý Sýnýflarý */
         .text-gold {
             color: var(--gold);
         }
@@ -210,7 +164,6 @@
             font-weight: 800;
         }
 
-        /* Güvenlik Listesi Öðeleri (3D Secure vs.) */
         .f-item {
             margin-bottom: 12px;
             font-weight: 600;
@@ -221,9 +174,7 @@
                 color: var(--gold);
                 margin-right: 10px;
             }
-        /* Ýkonlar altýn rengi */
 
-        /* ================= SAÐ PANEL (FORM) STÝLLERÝ ================= */
         .side-form-panel {
             flex: 1;
             background: white;
@@ -231,19 +182,17 @@
             flex-direction: column;
         }
 
-        /* Kaydýrma Alaný */
         .form-scroll-area {
             flex: 1;
-            overflow-y: auto; /* Ekran küçükse formun kendi içinde kaymasýný (scroll) saðlar */
+            overflow-y: auto;
             padding: 60px;
-            scrollbar-width: none; /* Firefox'ta kaydýrma çubuðunu gizler (çirkin durmasýn diye) */
+            scrollbar-width: none;
         }
-            /* Chrome, Safari ve Edge'de kaydýrma çubuðunu gizler */
+
             .form-scroll-area::-webkit-scrollbar {
                 display: none;
             }
 
-        /* Hasta Giriþi Baþlýðýndaki Yuvarlak Ýkon */
         .icon-circle-main {
             width: 75px;
             height: 75px;
@@ -256,8 +205,6 @@
             font-size: 2rem;
         }
 
-        /* ÝNPUT TASARIMLARI */
-        /* Input'un üstündeki açýklayýcý küçük etiketler (TC no vb.) */
         .floating-input label {
             display: block;
             font-size: 11px;
@@ -268,7 +215,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Ýkon ve Metin Kutusunun Taþýyýcýsý */
         .input-box {
             position: relative;
             display: flex;
@@ -282,28 +228,25 @@
                 font-size: 1.1rem;
             }
 
-            /* Metin Kutularý (Inputlar) */
             .input-box input {
                 width: 100%;
                 height: 60px;
-                background: var(--soft-bg); /* Hafif gri arka plan */
-                border: 2px solid transparent; /* Varsayýlan olarak çerçevesiz */
+                background: var(--soft-bg);
+                border: 2px solid transparent;
                 border-radius: 18px;
-                padding: 0 20px 0 55px; /* Ýkona yazý binmesin diye soldan boþluk býrakýr */
+                padding: 0 20px 0 55px;
                 font-weight: 700;
                 color: var(--navy);
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
-                /* Input'a Týklanýnca (Yazý Yazarken) Olanlar */
                 .input-box input:focus {
                     background: #fff;
-                    border-color: var(--gold); /* Kenarlýk altýn rengi olur */
-                    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.1); /* Altýn rengi gölge/parlama atar */
-                    outline: none; /* Tarayýcýnýn varsayýlan mavi çerçevesini kapatýr */
+                    border-color: var(--gold);
+                    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.1);
+                    outline: none;
                 }
 
-        /* ANA ONAY BUTONU */
         .btn-main-payment {
             width: 100%;
             height: 65px;
@@ -319,57 +262,48 @@
             transition: 0.4s;
         }
 
-            /* Fare Butonun Üzerine Gelince (Hover) */
             .btn-main-payment:hover {
-                background: var(--gold); /* Lacivertten altýn rengine döner */
-                transform: translateY(-3px); /* 3 piksel havaya kalkar */
+                background: var(--gold);
+                transform: translateY(-3px);
                 box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
             }
 
-        /* Buton Ýçindeki Ýkon Kutusu */
         .btn-icon {
             width: 35px;
             height: 35px;
-            background: rgba(255,255,255,0.1); /* Buton içinde hafif þeffaf kutu */
+            background: rgba(255,255,255,0.1);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* ================= MOBÝL UYUM (RESPONSIVE) ================= */
-        /* Ekran 991px'den (Tablet/Telefon) küçükse sað-sol panelleri alt alta alýr. */
         @@media (max-width: 991px) {
-            .payment-container
+            .payment-container {
+                flex-direction: column;
+                height: auto;
+                min-height: unset;
+                border-radius: 30px;
+            }
 
-        {
-            flex-direction: column; /* Yan yana dizilimi iptal edip dikey (alt alta) diler */
-            height: auto;
-            min-height: unset;
-            border-radius: 30px;
+            .side-info-panel {
+                padding: 40px 30px;
+                flex: none;
+            }
+
+            .side-form-panel {
+                flex: 1;
+            }
+
+            .form-scroll-area {
+                padding: 40px 25px;
+            }
+
+            .display-6 {
+                font-size: 1.8rem;
+            }
         }
 
-        .side-info-panel {
-            padding: 40px 30px;
-            flex: none; /* Sol panel (artýk üstte) kendi yazýlarý kadar yer kaplar */
-        }
-
-        .side-form-panel {
-            flex: 1;
-        }
-
-        .form-scroll-area {
-            padding: 40px 25px; /* Ýç boþluklar telefonda küçültülür */
-        }
-
-        .display-6 {
-            font-size: 1.8rem; /* Ana slogan küçültülür */
-        }
-
-        }
-
-        /* ================= EKSTRA GÖRSELLER ================= */
-        /* Bölücü Çizgi (Ödeme Partnerleri yazýsý için) */
         .divider {
             display: flex;
             align-items: center;
@@ -378,7 +312,7 @@
             color: #cbd5e1;
             text-transform: uppercase;
         }
-            /* Yazýnýn saðýna ve soluna otomatik çizgi çeker (Flexbox avantajý) */
+
             .divider::before, .divider::after {
                 content: '';
                 flex: 1;
@@ -388,12 +322,10 @@
             .divider span {
                 padding: 0 10px;
             }
-        /* Çizgilerle yazý arasýnda 10px boþluk */
 
-        /* Güvenlik Uyarý Kartý (Sol panelin en altýndaki kalkanlý alan) */
         .security-card {
-            background: rgba(255,255,255,0.05); /* Çok þeffaf beyaz dolgu */
-            border: 1px solid rgba(255,255,255,0.1); /* Çok þeffaf beyaz kenarlýk */
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
         }
     </style>
 }

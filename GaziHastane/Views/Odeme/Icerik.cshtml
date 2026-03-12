@@ -1,130 +1,78 @@
-@* RAZOR KOD BLOÐU: Sunucu (C#) tarafýnda çalýþan sayfa yapýlandýrmasý *@
+@model IEnumerable<GaziHastane.Models.BorcOdeme>
 @{
-    @* Tarayýcýnýn üst sekmesinde görünecek olan baþlýk yazýsý. SEO ve kullanýcý deneyimi için önemlidir. *@
     ViewData["Title"] = "Gazi Saðlýk | Güvenli Ödeme";
 }
 
-<!-- SAYFA ANA KAPSAYICISI -->
-<!-- 'payment-master-wrapper': Tüm sayfanýn arka planýný ve yapýsýný tutan dýþ katman. -->
 <div class="payment-master-wrapper">
-
-    <!-- ARKA PLAN KAPLAMASI -->
-    <!-- 'payment-bg-overlay': Arka plan resimlerini veya gradientleri tutan þeffaf katman. -->
     <div class="payment-bg-overlay"></div>
-
-    <!-- MERKEZÝ HÝZALAMA KUTUSU -->
-    <!-- 'payment-center-container': Ýçindeki ödeme kartýný sayfanýn tam ortasýnda tutar. -->
     <div class="payment-center-container">
-
-        <!-- ANA ÖDEME KARTI -->
-        <!-- 'payment-card-container': Beyaz ve Lacivert iki bölüme ayrýlan ana kart. -->
-        <!-- 'animate__zoomIn': Sayfa açýlýþýnda kartýn büyüyerek gelme efekti. -->
         <div class="payment-card-container animate__animated animate__zoomIn">
-
-            <!-- ÝKÝ KOLONLU IZGARA (GRID) -->
-            <!-- 'row g-0': Bitiþik iki sütun (Sol: Liste, Sað: Form). -->
             <div class="row g-0">
 
-                <!-- SOL PANEL: ÖDEME LÝSTESÝ (BEYAZ) -->
-                <!-- 'col-lg-7': Geniþliðin %58'ini kaplar. -->
                 <div class="col-lg-7 p-4 p-md-5 bg-white">
-
-                    <!-- BAÞLIK VE HASTA BÝLGÝSÝ -->
-                    <!-- 'justify-content-between': Sol ve sað uca yaslama. -->
                     <div class="d-flex justify-content-between align-items-start mb-4">
-                        <!-- Sol taraf: Logo ve baþlýk -->
                         <div>
                             <img src="/assets/gazilogo.jpg" alt="Logo" style="height: 40px;" class="mb-3">
                             <h4 class="fw-800 color-navy mb-1">Ödeme Detaylarý</h4>
                             <p class="text-muted small">Lütfen ödemek istediðiniz kalemleri seçiniz.</p>
                         </div>
-
-                        <!-- Sað taraf: Protokol numarasý rozeti -->
                         <div class="text-end">
-                            <span class="badge bg-soft-gold text-gold p-2 rounded-pill px-3">Protokol: 1234567</span>
+                            <span class="badge bg-soft-gold text-gold p-2 rounded-pill px-3">Protokol: @ViewBag.Protokol</span>
                         </div>
                     </div>
 
-                    <!-- ÝÞLEM LÝSTESÝ (SEÇÝLEBÝLÝR KALEMLER) -->
                     <div class="transaction-list mb-4">
-
-                        <!-- 1. ÝÞLEM KALEMÝ (SEÇÝLÝ - ACTIVE) -->
-                        <div class="transaction-item active">
-                            <div class="d-flex align-items-center">
-
-                                <!-- ÖZEL CHECKBOX (TÝK KUTUSU) -->
-                                <div class="custom-check-wrapper">
-                                    <input type="checkbox" checked id="item1">
-                                    <label for="item1"></label>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var borc in Model)
+                            {
+                                <div class="transaction-item active">
+                                    <div class="d-flex align-items-center">
+                                        <div class="custom-check-wrapper">
+                                            <input type="checkbox" checked id="item_@borc.Id" class="debt-checkbox" data-price="@borc.Tutar.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)">
+                                            <label for="item_@borc.Id"></label>
+                                        </div>
+                                        <div class="ms-3">
+                                            <h6 class="mb-0 fw-bold">@borc.IslemTipi</h6>
+                                            <small class="text-muted">Tarih: @(borc.SonOdemeTarihi?.ToString("dd.MM.yyyy") ?? "Belirtilmemiþ")</small>
+                                        </div>
+                                    </div>
+                                    <span class="fw-800 color-navy">@borc.Tutar.ToString("N2") TL</span>
                                 </div>
-
-                                <!-- ÝÞLEM ADI VE DETAYI -->
-                                <div class="ms-3">
-                                    <h6 class="mb-0 fw-bold">Check-up Paketi (Standart)</h6>
-                                    <small class="text-muted">Kardiyoloji Birimi - 04.03.2026</small>
-                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-success rounded-4" style="background: #f0fdf4; border: 1px dashed #22c55e; color: #166534; font-weight: 600;">
+                                <i class="fas fa-check-circle me-2"></i> Size ait ödenmemiþ herhangi bir borç kaydý bulunmamaktadýr. Saðlýklý günler dileriz!
                             </div>
-                            <!-- ÜCRET BÝLGÝSÝ -->
-                            <span class="fw-800 color-navy">850,00 TL</span>
-                        </div>
-
-                        <!-- 2. ÝÞLEM KALEMÝ -->
-                        <div class="transaction-item">
-                            <div class="d-flex align-items-center">
-                                <!-- Seçim kutusu -->
-                                <div class="custom-check-wrapper">
-                                    <input type="checkbox" id="item2">
-                                    <label for="item2"></label>
-                                </div>
-                                <!-- Detaylar -->
-                                <div class="ms-3">
-                                    <h6 class="mb-0 fw-bold">EKO / EKG Tetkik Ücreti</h6>
-                                    <small class="text-muted">Tetkik Hizmetleri - 04.03.2026</small>
-                                </div>
-                            </div>
-                            <span class="fw-800 color-navy">400,00 TL</span>
-                        </div>
+                        }
                     </div>
 
-                    <!-- TOPLAM TUTAR ALANI -->
-                    <!-- 'total-section': Alt kýsýmdaki toplam fiyatý gösteren gri kutu. -->
                     <div class="total-section p-3 rounded-4 bg-light d-flex justify-content-between align-items-center">
                         <span class="fw-600 text-muted">Toplam Ödenecek</span>
-                        <h3 class="fw-900 color-navy mb-0">1.250,00 <small class="fs-6">TL</small></h3>
+                        <h3 class="fw-900 color-navy mb-0" id="totalAmountDisplay">0,00 <small class="fs-6">TL</small></h3>
                     </div>
                 </div>
 
-                <!-- SAÐ PANEL: KREDÝ KARTI FORMU (LACÝVERT) -->
-                <!-- 'col-lg-5': Geniþliðin %42'sini kaplar. 'bg-navy text-white': Koyu lacivert zemin, beyaz yazý. -->
                 <div class="col-lg-5 p-4 p-md-5 bg-navy text-white d-flex flex-column justify-content-center">
-
-                    <!-- SAÐ TARAFTAKÝ BAÞLIK VE GÜVENLÝK ÝKONU -->
                     <h5 class="fw-bold mb-4 d-flex align-items-center">
                         <i class="fas fa-shield-check text-gold me-2"></i> Güvenli Ödeme
                     </h5>
 
-                    <!-- GÖRSEL KREDÝ KARTI SÝMÜLASYONU -->
-                    <!-- 'visual-card': Kullanýcýya kart bilgilerinin nereye yazýlacaðýný gösteren temsil, görsel kart. -->
-                    <!-- 'animate__flipInX': Kartýn dönerek gelme efekti. -->
                     <div class="visual-card mb-4 animate__animated animate__flipInX">
-
-                        <!-- KART ÜZERÝNDEKÝ ÝKONLAR (Çip ve Visa Logosu) -->
                         <div class="d-flex justify-content-between align-items-start">
                             <i class="fas fa-chip-card fs-1 text-gold"></i>
                             <i class="fab fa-cc-visa fs-2 opacity-50"></i>
                         </div>
-
-                        <!-- KART NUMARASI GÖSTERÝMÝ -->
                         <div class="mt-4">
                             <div class="card-number-display small opacity-75">KART NUMARASI</div>
                             <div class="fs-5 fw-bold letter-spacing-2">**** **** **** ****</div>
                         </div>
-
-                        <!-- KART SAHÝBÝ VE SON KULLANMA TARÝHÝ BÝLGÝLERÝ -->
                         <div class="d-flex justify-content-between mt-3">
                             <div>
                                 <div class="small opacity-50">AD SOYAD</div>
-                                <div class="small fw-bold">MURAT SARI</div>
+                                <div class="small fw-bold">@(ViewBag.KullaniciAdSoyad ?? "ÝSÝM SOYÝSÝM")</div>
                             </div>
                             <div>
                                 <div class="small opacity-50">SKT</div>
@@ -133,42 +81,32 @@
                         </div>
                     </div>
 
-                    <!-- ÖDEME FORMU BAÞLANGICI -->
                     <form>
-                        <!-- KART SAHÝBÝ ADI -->
                         <div class="mb-3">
                             <label class="premium-label">KART ÜZERÝNDEKÝ ÝSÝM</label>
                             <input type="text" class="premium-input" placeholder="AD SOYAD">
                         </div>
-
-                        <!-- KART NUMARASI GÝRÝÞÝ -->
                         <div class="mb-3">
                             <label class="premium-label">KART NUMARASI</label>
                             <input type="text" class="premium-input" placeholder="0000 0000 0000 0000">
                         </div>
-
-                        <!-- SKT VE CVV (YAN YANA ÝKÝ KUTU) -->
                         <div class="row g-3 mb-4">
-                            <!-- Son Kullanma Tarihi -->
                             <div class="col-7">
                                 <label class="premium-label">SON KULLANMA</label>
                                 <input type="text" class="premium-input" placeholder="AA / YY">
                             </div>
-                            <!-- Güvenlik Kodu (CVV) -->
                             <div class="col-5">
                                 <label class="premium-label">CVV</label>
                                 <input type="password" class="premium-input" placeholder="***">
                             </div>
                         </div>
 
-                        <!-- ÖDEME ONAY BUTONU -->
-                        <button type="submit" class="btn-pay-now">
+                        <button type="button" class="btn-pay-now" onclick="alert('Ödeme altyapýsý baþarýyla test edildi!')">
                             <span>ÖDEMEYÝ ONAYLA</span>
                             <i class="fas fa-lock"></i>
                         </button>
                     </form>
 
-                    <!-- ALTTAKÝ GÜVENLÝK BÝLGÝSÝ (SSL) -->
                     <p class="text-center mt-4 small opacity-50">
                         <i class="fas fa-lock-alt me-1"></i> 256-bit SSL ile korunmaktadýr.
                     </p>
@@ -178,44 +116,69 @@
     </div>
 </div>
 
-@* ================= CSS BÖLÜMÜ (ÖZEL TASARIM STÝLLERÝ) ================= *@
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Seçili borçlarýn tutarýný hesaplayýp ekrana yazan fonksiyon
+            function calculateTotal() {
+                let total = 0;
+                document.querySelectorAll('.debt-checkbox:checked').forEach(function (cb) {
+                    var priceString = cb.getAttribute('data-price');
+                    total += parseFloat(priceString);
+                });
+                document.getElementById('totalAmountDisplay').innerHTML = total.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' <small class="fs-6">TL</small>';
+            }
+
+            // Sayfa ilk yüklendiðinde hesapla
+            calculateTotal();
+
+            // Checkbox durumlarý deðiþtiðinde (týklandýðýnda) çalýþacak olaylar
+            document.querySelectorAll('.debt-checkbox').forEach(function (cb) {
+                cb.addEventListener('change', function () {
+                    var transactionItem = this.closest('.transaction-item');
+                    if (this.checked) {
+                        transactionItem.classList.add('active');
+                    } else {
+                        transactionItem.classList.remove('active');
+                    }
+                    calculateTotal();
+                });
+            });
+        });
+    </script>
+}
+
 @section Styles {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
-        /* CSS DEÐÝÞKENLERÝ: Renkleri ve ölçüleri standartlaþtýrmak için */
         :root {
-            --gazi-navy: #0f172a; /* Koyu lacivert */
-            --gazi-gold: #c5a059; /* Kurumsal altýn rengi */
-            --soft-gold: rgba(197, 160, 89, 0.15); /* Seçili iþlemlerin arka planý için þeffaf altýn rengi */
-            --navbar-height: 80px; /* Üst menünün yüksekliði (sayfayý ortalarken hesaba katmak için) */
+            --gazi-navy: #0f172a;
+            --gazi-gold: #c5a059;
+            --soft-gold: rgba(197, 160, 89, 0.15);
+            --navbar-height: 80px;
         }
 
-        /* Sayfanýn temel sýfýrlamalarý */
         body, html {
             height: 100%;
             margin: 0;
-            overflow-x: hidden; /* Yatayda taþmayý engeller */
+            overflow-x: hidden;
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        /* Ana Arka Plan */
         .payment-master-wrapper {
-            background: #f1f5f9; /* Tüm sayfanýn en arkasýndaki açýk gri/mavi ton */
+            background: #f1f5f9;
             min-height: 100vh;
             position: relative;
         }
 
-        /* KARTI TAM ORTAYA GETÝREN HÝZALAMA KUTUSU */
         .payment-center-container {
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            /* Kartýn üst menünün (navbar) altýnda kalmamasý için padding-top ayarý */
             padding: calc(var(--navbar-height) + 20px) 20px 40px 20px;
         }
 
-        /* Yardýmcý Renk Sýnýflarý */
         .bg-navy {
             background: var(--gazi-navy);
         }
@@ -240,52 +203,46 @@
             font-weight: 900;
         }
 
-        /* ANA BEYAZ KARTIN TASARIMI */
         .payment-card-container {
             width: 100%;
-            max-width: 1000px; /* Kart en fazla 1000px geniþliðinde olabilir */
+            max-width: 1000px;
             background: white;
-            border-radius: 40px; /* Köþeleri yuvarlaktýr */
-            overflow: hidden; /* Ýçindeki resimlerin oval köþelerden dýþarý taþmasýný keser */
-            box-shadow: 0 40px 100px rgba(15, 23, 42, 0.15); /* Alta devasa bir gölge vurur */
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(15, 23, 42, 0.15);
             z-index: 10;
         }
 
-        /* SOL TARAFTAKÝ ÖDEME KALEMLERÝ (Örn: Checkup Paketi satýrý) */
         .transaction-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px;
             border-radius: 20px;
-            border: 2px solid #f1f5f9; /* Pasifken gri kenarlýk */
+            border: 2px solid #f1f5f9;
             margin-bottom: 15px;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Hover ve týklama animasyonu hýzý */
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-            /* Ödeme Kalemi Seçildiðinde (Aktif olduðunda) */
             .transaction-item.active {
-                border-color: var(--gazi-gold); /* Kenarlýk altýn rengi olur */
-                background: var(--soft-gold); /* Ýçi hafif sararýr */
+                border-color: var(--gazi-gold);
+                background: var(--soft-gold);
             }
 
-            /* Farenin Ýmleci Ödeme Kaleminin Üstüne Geldiðinde */
             .transaction-item:hover {
-                transform: scale(1.02); /* Çok az (%2) büyür */
-                border-color: var(--gazi-gold); /* Kenarlýðý altýn rengi olur */
+                transform: scale(1.02);
+                border-color: var(--gazi-gold);
             }
 
-        /* SAÐ TARAFTAKÝ GÖRSEL KREDÝ KARTI */
         .visual-card {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%); /* Ýki farklý gri/lacivert ton geçiþi */
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
             border-radius: 24px;
             padding: 25px;
-            border: 1px solid rgba(255,255,255,0.1); /* Hafif parlak bir kenar çizgisi */
+            border: 1px solid rgba(255,255,255,0.1);
             position: relative;
-            overflow: hidden; /* Taþan ::before efektini kesmek için */
+            overflow: hidden;
         }
 
-            /* Görsel kartýn üstündeki altýn rengi parlama efekti (ýþýk süzmesi) */
             .visual-card::before {
                 content: '';
                 position: absolute;
@@ -293,26 +250,23 @@
                 left: -50%;
                 width: 200%;
                 height: 200%;
-                /* Kartýn sol üstünden yayýlan dairesel yarý saydam altýn rengi ýþýk */
                 background: radial-gradient(circle, rgba(197, 160, 89, 0.1) 0%, transparent 70%);
             }
 
-        /* SAÐ TARAFTAKÝ FORM ÝNPUT BAÞLIKLARI (Kart Numarasý vb.) */
         .premium-label {
             font-size: 10px;
             font-weight: 800;
-            color: rgba(255,255,255,0.4); /* Yarý saydam gri/beyaz */
+            color: rgba(255,255,255,0.4);
             letter-spacing: 1px;
             margin-bottom: 8px;
             display: block;
         }
 
-        /* SAÐ TARAFTAKÝ ÝNPUTLARIN (Metin kutularýnýn) KENDÝSÝ */
         .premium-input {
             width: 100%;
             height: 50px;
-            background: rgba(255, 255, 255, 0.05); /* Çok koyu/þeffaf arka plan */
-            border: 1px solid rgba(255, 255, 255, 0.1); /* Ýnce þeffaf beyaz kenarlýk */
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             padding: 0 15px;
             color: white;
@@ -320,19 +274,17 @@
             transition: 0.3s;
         }
 
-            /* Ýnputa týklandýðýnda (Yazý yazarken) */
             .premium-input:focus {
-                background: rgba(255, 255, 255, 0.1); /* Biraz aydýnlanýr */
-                border-color: var(--gazi-gold); /* Kenarý altýn rengi olur */
-                outline: none; /* Tarayýcýlarýn varsayýlan mavi çizgisini yok eder */
+                background: rgba(255, 255, 255, 0.1);
+                border-color: var(--gazi-gold);
+                outline: none;
             }
 
-        /* ÖDEMEYÝ ONAYLA BUTONU */
         .btn-pay-now {
             width: 100%;
             height: 60px;
-            background: var(--gazi-gold); /* Altýn rengi buton */
-            color: var(--gazi-navy); /* Üzerindeki yazý lacivert */
+            background: var(--gazi-gold);
+            color: var(--gazi-navy);
             border: none;
             border-radius: 15px;
             font-weight: 800;
@@ -343,60 +295,50 @@
             transition: 0.4s;
         }
 
-            /* Butonun üstüne fare ile gelindiðinde */
             .btn-pay-now:hover {
-                background: #fff; /* Buton bembeyaz olur */
-                transform: translateY(-5px); /* Havaya kalkar */
-                box-shadow: 0 15px 30px rgba(0,0,0,0.3); /* Alta gölge verir */
+                background: #fff;
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.3);
             }
 
-        /* ÖZEL TASARIM CHECKBOX (Seçim Kutusu) SÝHÝRLÝ KISMI */
-        /* Tarayýcýnýn varsayýlan, standart tik kutusunu tamamen gizler */
         .custom-check-wrapper input {
             display: none;
         }
 
-        /* Gizlenen inputun yerine bizim çizdiðimiz boþ kare kutu (Label) */
         .custom-check-wrapper label {
             width: 24px;
             height: 24px;
-            border: 2px solid #cbd5e1; /* Gri kenarlýk */
-            border-radius: 8px; /* Köþeleri hafif yuvarlak */
-            cursor: pointer; /* Üstüne gelince el iþareti çýkar */
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            cursor: pointer;
             position: relative;
+            display: block;
         }
 
-        /* Eðer gizli olan input 'checked' (seçili) durumdaysa, hemen yanýndaki label'ýn rengini deðiþtir */
         .custom-check-wrapper input:checked + label {
-            background: var(--gazi-gold); /* Ýçi altýn rengi dolar */
-            border-color: var(--gazi-gold); /* Çizgisi altýn rengi olur */
+            background: var(--gazi-gold);
+            border-color: var(--gazi-gold);
         }
 
-            /* Kutu seçiliyken içine FontAwesome kütüphanesinden 'Onay Tiki' (Check) ikonunu çiz */
             .custom-check-wrapper input:checked + label::after {
-                content: '\f00c'; /* FontAwesome'daki Check ikonunun kodu */
+                content: '\f00c';
                 font-family: 'Font Awesome 5 Free';
                 font-weight: 900;
-                color: white; /* Tik rengi beyaz */
+                color: white;
                 font-size: 12px;
                 position: absolute;
                 left: 4px;
                 top: 1px;
             }
 
-        /* MOBÝL UYUM (RESPONSIVE) - Tablet ve Telefonlar için */
         @@media (max-width: 991px) {
-            .payment-card-container
+            .payment-card-container {
+                border-radius: 20px;
+            }
 
-        {
-            border-radius: 20px; /* Ekran küçük olduðu için ovalliði düþür */
-        }
-
-        .payment-center-container {
-            /* Mobilde navbar yüksekliði deðiþebileceði için üstten biraz daha boþluk býrak */
-            padding-top: calc(var(--navbar-height) + 30px);
-        }
-
+            .payment-center-container {
+                padding-top: calc(var(--navbar-height) + 30px);
+            }
         }
     </style>
 }

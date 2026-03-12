@@ -328,6 +328,10 @@ namespace GaziHastane.Models
         [StringLength(150)]
         public string Gorev { get; set; } = null!;
 
+        // Ekran görüntüsündeki "Unvaný" sütunu için bu alaný ekliyoruz
+        [StringLength(150)]
+        public string? Unvan { get; set; }
+
         [StringLength(255)]
         public string? FotografUrl { get; set; }
     }

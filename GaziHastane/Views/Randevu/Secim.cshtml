@@ -4,88 +4,67 @@
     ViewData["Title"] = "Gazi Sağlık | Randevu Planlama";
 }
 
-<!-- Randevu Paneli Ana Kapsayıcısı -->
-<!-- Tüm sayfa içeriğini ortalamak ve arka plan rengini yönetmek için kullanılır. -->
 <div class="appointment-dashboard">
-    
-    <!-- İçeriği sınırlayan ve alt kısımdan boşluk bırakan container -->
-    <!-- "dashboard-safe-area" sınıfı üstteki navbar'ın altında kalmasını engeller. -->
+
     <div class="container pb-5 dashboard-safe-area">
-        
-        <!-- İçeriği yatayda ortalayan ve maksimum genişliği sınırlayan sarmalayıcı -->
+
         <div class="dashboard-center-wrapper mx-auto" style="max-width: 1150px;">
 
-            <!-- Üst Bilgi Barı (Header) -->
-            <!-- "glass-nav" sınıfı ile buzlu cam efekti verilir. animate__fadeIn ile açılış animasyonu eklenir. -->
             <header class="glass-nav d-flex justify-content-between align-items-center mb-5 p-3 animate__animated animate__fadeIn">
-                
-                <!-- Sol Taraf: Marka ve Logo Alanı -->
+
                 <div class="d-flex align-items-center ms-md-3 flex-wrap">
-                    <!-- Hastane İkonu -->
                     <div class="brand-box me-3"><i class="fas fa-h-square fa-2x text-primary"></i></div>
-                    
-                    <!-- Hastane Adı ve Alt Başlık -->
+
                     <div class="brand-text">
                         <h4 class="fw-800 mb-0 text-navy">GAZİ ÜNİVERSİTESİ</h4>
                         <span class="status-badge small text-muted">Hastane Randevu Sistemi</span>
                     </div>
                 </div>
 
-                <!-- Sağ Taraf: Kullanıcı Profili Alanı -->
                 <div class="user-profile me-md-3 d-flex align-items-center">
-                    <!-- Kullanıcı Adı ve Durumu (Sadece masaüstünde görünür: d-none d-md-block) -->
                     <div class="text-end me-3 d-none d-md-block">
-                        <p class="mb-0 fw-bold small">Murat SARI</p>
+                        <p class="mb-0 fw-bold small">@ViewBag.KullaniciAdSoyad</p>
                         <span class="text-success extra-small">● Çevrimiçi</span>
                     </div>
-                    <!-- Kullanıcı Baş Harfleri (Avatar) -->
-                    <div class="avatar-circle">MS</div>
+                    <div class="avatar-circle">@ViewBag.KullaniciBasHarfler</div>
                 </div>
             </header>
 
-            <!-- Ana İçerik Grid Yapısı (Sol: Form, Sağ: Özet) -->
+            <input type="hidden" id="aktifHastaId" value="@ViewBag.KullaniciId" />
+
             <div class="row g-4 justify-content-center">
-                
-                <!-- SOL KOLON: Randevu Seçim Formu (Geniş alan) -->
+
                 <div class="col-xl-8 col-lg-7">
-                    <!-- İçerik Kartı: Gölge ve yuvarlak köşeler içerir. Soldan gelme animasyonu var. -->
                     <div class="content-card shadow-sm border-0 animate__animated animate__fadeInLeft">
-                        
-                        <!-- Form Başlığı ve Açıklaması -->
+
                         <div class="mb-4">
                             <h3 class="fw-800 text-navy">Randevu Detayları</h3>
                             <p class="text-muted small">Lütfen poliklinik ve hekim seçiminizi yapınız.</p>
                         </div>
 
-                        <!-- Form Elemanları Grid Yapısı -->
                         <div class="row g-4">
-                            
-                            <!-- Bölüm Seçimi -->
+
                             <div class="col-md-6">
                                 <label class="section-label-small">Tıbbi Birim</label>
-                                <!-- Birim seçildiğinde "updateSelection()" fonksiyonu çalışır ve özeti günceller. -->
-                                <select class="form-select-modern" id="birimSelect" onchange="updateSelection()">
-                                    <option selected disabled>Birim Seçiniz</option>
-                                    <!-- data-blok, data-kat gibi özel öznitelikler (attributes) ile konum bilgisi tutuluyor. -->
-                                    <option data-blok="A Blok" data-kat="3. Kat" data-oda="302">Kardiyoloji</option>
-                                    <option data-blok="B Blok" data-kat="Zemin Kat" data-oda="12">Ortopedi</option>
-                                    <option data-blok="C Blok" data-kat="2. Kat" data-oda="215">Dermatoloji</option>
+                                <select class="form-select-modern" name="BolumId" id="birimSelect" onchange="updateSelection()">
+                                    <option value="" selected disabled>Birim Seçiniz</option>
+                                    @if (ViewBag.Bolumler != null)
+                                    {
+                                        foreach (var bolum in ViewBag.Bolumler)
+                                        {
+                                            <option value="@bolum.Id" data-blok="Ana Bina" data-kat="Zemin" data-oda="100">@bolum.Ad</option>
+                                        }
+                                    }
                                 </select>
                             </div>
 
-                            <!-- Doktor Seçimi -->
                             <div class="col-md-6">
                                 <label class="section-label-small">Uzman Doktor</label>
-                                <!-- Doktor seçildiğinde özet alanını güncellemek için fonksiyon tetiklenir. -->
-                                <select class="form-select-modern" id="drSelect" onchange="updateSelection()">
-                                    <option selected disabled>Hekim Seçiniz</option>
-                                    <option>Prof. Dr. Ahmet Yılmaz</option>
-                                    <option>Doç. Dr. Ayşe Kaya</option>
+                                <select class="form-select-modern" name="DoktorId" id="drSelect" onchange="updateDoctorSelection()">
+                                    <option value="" selected disabled>Önce Birim Seçiniz</option>
                                 </select>
                             </div>
 
-                            <!-- Dinamik Konum Uyarısı (Başlangıçta gizli: style="display:none") -->
-                            <!-- Birim seçildiğinde Javascript ile görünür hale gelir. -->
                             <div class="col-12" id="locationAlert" style="display:none;">
                                 <div class="location-notif d-flex align-items-center">
                                     <div class="loc-icon-mini me-3"><i class="fas fa-map-marker-alt"></i></div>
@@ -96,43 +75,34 @@
                                 </div>
                             </div>
 
-                            <!-- Tarih Seçimi (Yatay Kaydırmalı Liste) -->
                             <div class="col-12 mt-4">
                                 <label class="section-label">Uygun Tarihler</label>
                                 <div class="date-swipe-wrapper">
-                                    <!-- Razor Döngüsü: Bugünden itibaren gelecek 7 günü listeler. -->
                                     @for (int i = 0; i < 7; i++)
                                     {
-                                        <!-- İlk gün (bugün) varsayılan olarak seçili (active) gelir. -->
-                                        <div class="date-card @(i == 0 ? "active" : "")">
-                                            <!-- Gün Adı (Pzt, Sal vb.) -->
+                                        var gecerliTarih = DateTime.Now.AddDays(i).ToString("yyyy-MM-dd");
+                                        <div class="date-card @(i == 0 ? "active" : "")" data-tarih="@gecerliTarih" onclick="selectDate(this)">
                                             <span class="day">@DateTime.Now.AddDays(i).ToString("ddd")</span>
-                                            <!-- Gün Numarası -->
                                             <span class="number">@DateTime.Now.AddDays(i).Day</span>
-                                            <!-- Ay Adı -->
                                             <span class="month">@DateTime.Now.AddDays(i).ToString("MMM")</span>
                                         </div>
                                     }
                                 </div>
                             </div>
 
-                            <!-- Saat Seçimi (Grid Yapısı) -->
                             <div class="col-12 mt-4">
                                 <label class="section-label">Müsait Saatler</label>
                                 <div class="time-grid-modern">
-                                    <!-- Örnek saat dilimleri butonları -->
-                                    <button class="time-chip">09:00</button>
-                                    <button class="time-chip active">09:30</button> <!-- Örnek olarak seçili -->
-                                    <button class="time-chip">10:00</button>
-                                    <button class="time-chip">11:00</button>
-                                    <button class="time-chip">14:00</button>
-                                    <button class="time-chip">15:00</button>
+                                    <button class="time-chip" onclick="selectTime(this, '09:00')">09:00</button>
+                                    <button class="time-chip active" onclick="selectTime(this, '09:30')">09:30</button>
+                                    <button class="time-chip" onclick="selectTime(this, '10:00')">10:00</button>
+                                    <button class="time-chip" onclick="selectTime(this, '11:00')">11:00</button>
+                                    <button class="time-chip" onclick="selectTime(this, '14:00')">14:00</button>
+                                    <button class="time-chip" onclick="selectTime(this, '15:00')">15:00</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Onay Butonu -->
-                        <!-- Tıklandığında "confirmAppointment()" fonksiyonunu çalıştırır. -->
                         <button class="btn-confirm-modern mt-5 shadow-lg" onclick="confirmAppointment()">
                             <span>RANDEVUYU ONAYLA</span>
                             <i class="fas fa-check-circle ms-2"></i>
@@ -140,39 +110,31 @@
                     </div>
                 </div>
 
-                <!-- SAĞ KOLON: Özet Paneli (Daha dar alan) -->
                 <div class="col-xl-4 col-lg-5">
-                    <!-- Sağdan gelme animasyonlu özet kartı -->
                     <div class="summary-panel-modern shadow-sm animate__animated animate__fadeInRight">
                         <h5 class="fw-800 text-navy mb-4">Seçim Özeti</h5>
-                        
+
                         <div class="summary-list">
-                            <!-- Poliklinik Özeti -->
                             <div class="summary-item mb-3">
                                 <div class="s-icon blue"><i class="fas fa-stethoscope"></i></div>
                                 <div><small>Poliklinik</small><p id="sumBirim" class="m-0 fw-bold">-</p></div>
                             </div>
-                            
-                            <!-- Hekim Özeti -->
+
                             <div class="summary-item mb-3">
                                 <div class="s-icon purple"><i class="fas fa-user-md"></i></div>
                                 <div><small>Hekim</small><p id="sumHekim" class="m-0 fw-bold">-</p></div>
                             </div>
-                            
-                            <!-- Tarih Özeti -->
+
                             <div class="summary-item mb-4">
                                 <div class="s-icon orange"><i class="fas fa-calendar-day"></i></div>
-                                <div><small>Tarih & Saat</small><p class="m-0 fw-bold text-primary">05 Mart - 09:30</p></div>
+                                <div><small>Tarih & Saat</small><p id="sumTarihSaat" class="m-0 fw-bold text-primary">@DateTime.Now.ToString("dd MMM") - 09:30</p></div>
                             </div>
-                            
-                            <!-- Konum Bilgisi (Başlangıçta Gizli) -->
-                            <!-- JS ile birim seçilince görünür olur. -->
+
                             <div id="sumLocation" class="location-summary-box animate__animated animate__zoomIn" style="display:none;">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-building text-muted me-2"></i>
                                     <span class="extra-small fw-bold text-muted">HASTANE KONUM BİLGİSİ</span>
                                 </div>
-                                <!-- Dinamik olarak JS ile doldurulacak alanlar -->
                                 <p id="txtSumKonum" class="m-0 mt-1 fw-800 text-success">A Blok - Kat: 3</p>
                                 <small class="text-muted" style="font-size: 11px;">Oda Numarası: <span id="txtSumOda">302</span></small>
                             </div>
@@ -185,7 +147,6 @@
 </div>
 
 @section Styles {
-    <!-- Sayfaya Özel CSS Stilleri -->
     <style>
         /* CSS Değişkenleri: Renkleri ve boyutları merkezi yönetmek için */
         :root {
@@ -326,7 +287,7 @@
                 font-weight: 700;
                 color: #94a3b8;
             }
-            
+
             /* Seçili Tarih Kartı */
             .date-card.active {
                 background: var(--primary);
@@ -495,18 +456,46 @@
 }
 
 @section Scripts {
-    <!-- Sayfa İçi Javascript Mantığı -->
     <script>
+        // Sayfa yüklendiğinde varsayılan tarih ve saat değerleri
+        let seciliTarih = '@DateTime.Now.ToString("yyyy-MM-dd")';
+        let seciliSaat = '09:30';
+
+        // Görsel Tarih Kutularına Tıklama İşlemi
+        function selectDate(element) {
+            document.querySelectorAll('.date-card').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+
+            seciliTarih = element.getAttribute('data-tarih');
+            updateSummaryTarihSaat();
+        }
+
+        // Görsel Saat Kutularına Tıklama İşlemi
+        function selectTime(element, saat) {
+            document.querySelectorAll('.time-chip').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+
+            seciliSaat = saat;
+            updateSummaryTarihSaat();
+        }
+
+        // Seçimler değiştikçe sağ taraftaki özeti güncelleyen fonksiyon
+        function updateSummaryTarihSaat() {
+            var gunAy = document.querySelector('.date-card.active .number').innerText + " " + document.querySelector('.date-card.active .month').innerText;
+            document.getElementById('sumTarihSaat').innerText = gunAy + " - " + seciliSaat;
+        }
+
         // Seçimler değiştiğinde çalışacak fonksiyon
         function updateSelection() {
             var birim = document.getElementById("birimSelect");
-            var hekim = document.getElementById("drSelect");
+            var hekimSelect = document.getElementById("drSelect");
 
             // Eğer bir birim seçildiyse;
             if(birim.selectedIndex > 0) {
                 // Seçilen opsiyonu al
                 var selectedBirim = birim.options[birim.selectedIndex];
-                
+                var bolumId = selectedBirim.value;
+
                 // Sağ taraftaki özete birim adını yaz
                 document.getElementById("sumBirim").innerText = selectedBirim.text;
 
@@ -523,20 +512,77 @@
                 document.getElementById("sumLocation").style.display = "block";
                 document.getElementById("txtSumKonum").innerText = blok + " - " + kat;
                 document.getElementById("txtSumOda").innerText = oda;
-            }
 
-            // Eğer bir hekim seçildiyse;
+                // Bölüme ait doktorları Fetch API ile veritabanından getir
+                hekimSelect.innerHTML = '<option value="" selected disabled>Yükleniyor...</option>';
+
+                fetch('/Randevu/GetDoktorlar?bolumId=' + bolumId)
+                    .then(response => response.json())
+                    .then(data => {
+                        hekimSelect.innerHTML = '<option value="" selected disabled>Hekim Seçiniz</option>';
+                        document.getElementById("sumHekim").innerText = "-"; // Özeti sıfırla
+
+                        // Gelen doktorları Select içine ekle
+                        data.forEach(dr => {
+                            var option = document.createElement("option");
+                            option.value = dr.id;
+                            option.text = dr.adSoyad;
+                            hekimSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error("Doktorlar yüklenirken hata oluştu:", error);
+                        hekimSelect.innerHTML = '<option value="" selected disabled>Hata Oluştu</option>';
+                    });
+            }
+        }
+
+        // Hekim seçimi değiştiğinde sağ paneli güncelleyecek ayrı bir fonksiyon
+        function updateDoctorSelection() {
+            var hekim = document.getElementById("drSelect");
             if(hekim.selectedIndex > 0) {
                 // Sağ taraftaki özete hekim adını yaz
                 document.getElementById("sumHekim").innerText = hekim.options[hekim.selectedIndex].text;
             }
         }
 
-        // Onay butonuna basıldığında çalışacak fonksiyon
+        // Onay butonuna basıldığında çalışacak POST işlemi
         function confirmAppointment() {
-            // Şimdilik sadece basit bir uyarı mesajı gösteriyoruz.
-            // Gerçek senaryoda burada sunucuya form post işlemi yapılır.
-            alert("Randevunuz başarıyla oluşturulmuştur.");
+            var bolumId = document.getElementById("birimSelect").value;
+            var doktorId = document.getElementById("drSelect").value;
+            var hastaId = document.getElementById("aktifHastaId").value; // Gerçek kullanıcı ID'si alındı
+
+            if(!bolumId || !doktorId) {
+                alert("Lütfen önce bölüm ve hekim seçimi yapınız.");
+                return;
+            }
+
+            // Gönderilecek verileri hazırlıyoruz
+            var formData = new FormData();
+            formData.append("BolumId", bolumId);
+            formData.append("DoktorId", doktorId);
+            formData.append("Tarih", seciliTarih);
+            formData.append("Saat", seciliSaat);
+            formData.append("HastaId", hastaId); // Controller'a kimlik gidiyor
+
+            // Fetch API ile veriyi Controller'a gönderiyoruz
+            fetch('/Randevu/RandevuKaydet', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    alert(data.message); // Başarılı mesajı
+                    window.location.href = '/Randevu/Giris'; // İşlem bitince Giriş sayfasına yönlendir
+                } else {
+                    alert("Hata: " + data.message); // Hata mesajı
+                }
+            })
+            .catch(error => {
+                console.error('Randevu kaydedilemedi:', error);
+                alert("Sistemsel bir sorun oluştu, lütfen daha sonra tekrar deneyin.");
+            });
         }
     </script>
 }

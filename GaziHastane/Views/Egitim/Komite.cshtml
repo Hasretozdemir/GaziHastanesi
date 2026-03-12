@@ -1,514 +1,292 @@
-@* RAZOR KOD BLOÐU: Sunucu tarafýnda çalýþan ve sayfanýn temel ayarlarýný tutan bölüm *@
+@model IEnumerable<GaziHastane.Models.EgitimKomitesiUye>
+
 @{
-    @* Tarayýcýnýn üst sekmesinde görünecek sayfanýn baþlýðýný (Title) belirliyoruz. 
-       Arama motorlarý ve kullanýcý deneyimi için önemlidir. *@
-    ViewData["Title"] = "Gazi Saðlýk | Eðitim Komitesi Portalý";
+    Layout = null;
 }
 
-<!-- SAYFA ÝÇERÝÐÝ BAÞLANGICI -->
-<!-- 'portal-viewport': Tüm sayfa içeriðini kapsayan ana dýþ katman. -->
-<div class="portal-viewport">
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Komite Üyeleri</title>
 
-    <!-- ARKA PLAN EFEKTLERÝ -->
-    <!-- 'abstract-sphere': Sað üst köþedeki bulanýk mavi yuvarlak görsel efekt. -->
-    <div class="abstract-sphere"></div>
-    <!-- 'abstract-sphere-secondary': Sol alt köþedeki bulanýk lacivert yuvarlak görsel efekt. -->
-    <div class="abstract-sphere-secondary"></div>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 
-    <!-- MERKEZÝ KONTEYNER -->
-    <!-- 'container': Ýçeriði ortalar.
-         'd-flex align-items-center justify-content-center': Ýçeriði hem yatay hem dikey olarak tam ortalar.
-         'min-vh-100': Sayfanýn yüksekliðinin en az ekran boyu kadar olmasýný saðlar.
-         'py-5': Yukarýdan ve aþaðýdan boþluk býrakýr. -->
-    <div class="container d-flex align-items-center justify-content-center min-vh-100 py-5">
-
-        <!-- ANA KART (BEYAZ CAM PANEL) -->
-        <!-- 'portal-master-card': Tüm içeriði tutan cam görünümlü beyaz kart.
-             'animate__animated animate__fadeIn': Kartýn sayfa açýlýþýnda belirerek gelme animasyonu. -->
-        <div class="portal-master-card animate__animated animate__fadeIn">
-
-            <!-- KART BAÞLIK ALANI -->
-            <!-- 'portal-header-premium': Baþlýk ve ikonun bulunduðu üst kýsým. -->
-            <div class="portal-header-premium mb-4">
-
-                <!-- Baþlýk içeriðini iki yana yaslayan Flex yapýsý (Sola baþlýk, saða durum rozeti) -->
-                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-
-                    <!-- SOL TARA: ÝKON VE METÝN -->
-                    <div class="d-flex align-items-center">
-
-                        <!-- Ýkon Kutusu -->
-                        <!-- 'header-icon-premium': Ýkonun içindeki lacivert kutu. -->
-                        <div class="header-icon-premium me-3">
-                            <!-- Üniversite ikonu (FontAwesome) -->
-                            <i class="fas fa-university"></i>
-                            <!-- Ýkonun etrafýndaki hareketli halka (pulse) efekti -->
-                            <div class="pulse-ring"></div>
-                        </div>
-
-                        <!-- Baþlýk Metinleri -->
-                        <div>
-                            <!-- Ana baþlýk: Kalýn ve lacivert renkli -->
-                            <h2 class="fw-900 color-navy mb-0">Eðitim Komitesi Portalý</h2>
-                            <!-- Alt baþlýk: Daha küçük ve gri tonlu, SEGM vurgulu -->
-                            <p class="text-muted small mb-0">Sürekli Eðitim Merkezi <span class="text-primary fw-bold">| SEGM</span></p>
-                        </div>
-                    </div>
-
-                    <!-- SAÐ TARA: DURUM GÖSTERGESÝ -->
-                    <div class="header-actions">
-                        <!-- 'Sistem Çevrimiçi' yazan yeþil hap þeklindeki rozet -->
-                        <span class="status-indicator-badge">
-                            <!-- Yeþil nokta indikatörü -->
-                            <span class="status-dot"></span> Sistem Çevrimiçi
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- KARTLARIN LÝSTELENDÝÐÝ IZGARA (GRID) YAPISI -->
-            <!-- 'row': Satýr yapýsý.
-                 'row-cols-1': Mobilde (küçük ekran) yan yana 1 kart.
-                 'row-cols-md-2': Tablette (orta ekran) yan yana 2 kart.
-                 'row-cols-xl-3': Masaüstünde (geniþ ekran) yan yana 3 kart gösterir. -->
-            <div class="row g-3 row-cols-1 row-cols-md-2 row-cols-xl-3">
-
-                <!-- 1. KART: Komite Üyeleri -->
-                <div class="col">
-                    <!-- Týklanabilir kart bileþeni. Link (#) þimdilik boþ. -->
-                    <a href="#" class="committee-action-card">
-                        <!-- Ýkon Yuvasý: Mavi arka planlý (bg-soft-blue) -->
-                        <div class="card-icon-wrapper bg-soft-blue">
-                            <i class="fas fa-users-crown"></i>
-                        </div>
-                        <!-- Kart Bilgi Alaný -->
-                        <div class="card-info">
-                            <h5>Komite Üyeleri</h5>
-                            <p>Yürütme kurulu ve akademik temsilciler.</p>
-                        </div>
-                        <!-- Saðdaki küçük ok ikonu -->
-                        <div class="card-arrow"><i class="fas fa-chevron-right"></i></div>
-                    </a>
-                </div>
-
-                <!-- 2. KART: Misyon & Vizyon -->
-                <div class="col">
-                    <a href="#" class="committee-action-card">
-                        <!-- Ýkon Yuvasý: Mor arka planlý (bg-soft-purple) -->
-                        <div class="card-icon-wrapper bg-soft-purple">
-                            <i class="fas fa-lightbulb-on"></i>
-                        </div>
-                        <div class="card-info">
-                            <h5>Misyon & Vizyon</h5>
-                            <p>Eðitim politikalarý ve kalite standartlarý.</p>
-                        </div>
-                        <div class="card-arrow"><i class="fas fa-chevron-right"></i></div>
-                    </a>
-                </div>
-
-                <!-- 3. KART: Personel Þemasý -->
-                <div class="col">
-                    <a href="#" class="committee-action-card">
-                        <!-- Ýkon Yuvasý: Turkuaz arka planlý (bg-soft-teal) -->
-                        <div class="card-icon-wrapper bg-soft-teal">
-                            <i class="fas fa-sitemap"></i>
-                        </div>
-                        <div class="card-info">
-                            <h5>Personel Þemasý</h5>
-                            <p>Ýdari personel eðitim akýþ süreçleri.</p>
-                        </div>
-                        <div class="card-arrow"><i class="fas fa-chevron-right"></i></div>
-                    </a>
-                </div>
-
-                <!-- 4. KART: Hemþirelik Eðitimi -->
-                <div class="col">
-                    <a href="#" class="committee-action-card">
-                        <!-- Ýkon Yuvasý: Kýrmýzý arka planlý (bg-soft-red) -->
-                        <div class="card-icon-wrapper bg-soft-red">
-                            <i class="fas fa-user-nurse"></i>
-                        </div>
-                        <div class="card-info">
-                            <h5>Hemþirelik Eðitimi</h5>
-                            <p>Mesleki geliþim ve klinik eðitim haritasý.</p>
-                        </div>
-                        <div class="card-arrow"><i class="fas fa-chevron-right"></i></div>
-                    </a>
-                </div>
-
-                <!-- 5. KART: Dijital Arþiv -->
-                <div class="col">
-                    <a href="#" class="committee-action-card">
-                        <!-- Ýkon Yuvasý: Turuncu arka planlý (bg-soft-orange) -->
-                        <div class="card-icon-wrapper bg-soft-orange">
-                            <i class="fas fa-folder-open"></i>
-                        </div>
-                        <div class="card-info">
-                            <h5>Dijital Arþiv</h5>
-                            <p>Güncel talimatlar ve eðitim materyalleri.</p>
-                        </div>
-                        <div class="card-arrow"><i class="fas fa-chevron-right"></i></div>
-                    </a>
-                </div>
-
-                <!-- 6. KART: Eðitim Takvimi -->
-                <div class="col">
-                    <a href="#" class="committee-action-card">
-                        <!-- Ýkon Yuvasý: Lacivert/Gri arka planlý (bg-soft-navy) -->
-                        <div class="card-icon-wrapper bg-soft-navy">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <div class="card-info">
-                            <h5>Eðitim Takvimi</h5>
-                            <p>Sertifika programlarý ve sýnav duyurularý.</p>
-                        </div>
-                        <div class="card-arrow"><i class="fas fa-chevron-right"></i></div>
-                    </a>
-                </div>
-
-            </div>
-
-            <!-- ALT BÝLGÝ VE DUYURU ALANI -->
-            <div class="row g-3 mt-2">
-
-                <!-- SOL TARA: SON DUYURULAR -->
-                <!-- 'col-md-8': Geniþliðin 3'te 2'sini kaplar (büyük alan). -->
-                <div class="col-md-8">
-                    <!-- 'announcement-glass': Duyuru kutusu için cam efekti -->
-                    <div class="announcement-glass">
-                        <!-- Duyuru Baþlýk Kýsmý -->
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="fas fa-bullhorn text-primary me-2"></i>
-                            <h6 class="mb-0 fw-bold color-navy">Son Duyurular</h6>
-                        </div>
-                        <!-- Duyurular Listesi -->
-                        <div class="a-list">
-                            <!-- Tekil Duyuru Satýrý -->
-                            <div class="a-row">
-                                <!-- 'Yeni' etiketi -->
-                                <span class="a-label">Yeni</span>
-                                <!-- Duyuru metni -->
-                                <p>2026 Yýlý Hizmet Ýçi Eðitim Planý yayýna alýndý.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SAÐ TARA: DESTEK BUTONU -->
-                <!-- 'col-md-4': Geniþliðin 3'te 1'ini kaplar (küçük alan). -->
-                <div class="col-md-4">
-                    <!-- 'support-glass': Destek kutusu için cam efekti -->
-                    <div class="support-glass d-flex align-items-center justify-content-center">
-                        <div class="text-center">
-                            <!-- Yardýmcý metin -->
-                            <p class="small text-muted mb-2">Sorunuz mu var?</p>
-                            <!-- Destek butonu -->
-                            <button class="btn btn-navy-premium btn-sm w-100">BÝLGÝ ÝÞLEM DESTEK</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- FOOTER (ALTYAZI) -->
-            <!-- Sayfanýn en altýndaki telif hakký yazýsý -->
-            <div class="text-center mt-4">
-                <p class="extra-small text-muted opacity-75">© 2026 Gazi Üniversitesi Hastanesi | Bilgi Ýþlem Daire Baþkanlýðý</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-@* ================= CSS BÖLÜMÜ (_Layout içindeki head kýsmýna eklenecek stiller) ================= *@
-@section Styles {
-    <!-- Animate.css: Animasyonlar için dýþ kütüphane -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
-        /* CSS DEÐÝÞKENLERÝ: Renk kodlarýný tek bir yerden yönetmek için tanýmlanmýþ deðiþkenler. */
-        :root {
-            --navy-dark: #0f172a; /* Koyu lacivert (Metin ve butonlar) */
-            --navy-light: #1e293b; /* Açýk lacivert */
-            --primary-blue: #2563eb; /* Marka mavisi (Vurgular) */
-            --gazi-bg: #f1f5f9; /* Sayfanýn genel arka plan gri/mavi rengi */
-        }
-
-        /* Sayfa Geneli Stilleri */
         body {
-            background-color: var(--gazi-bg); /* Arka plan rengini deðiþkenden alýr */
-            font-family: 'Plus Jakarta Sans', sans-serif; /* Modern yazý tipi */
-            overflow-x: hidden; /* Sayfanýn saða sola kaymasýný (yatay scroll) engeller */
+            background-color: #f0f4f8; /* Sitenin ana arka plan rengiyle ayný (slate-50/100) */
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
         }
 
-        /* ARKA PLAN SANATI (BLUR EFEKTLÝ LEKELER) */
-        /* Sað üstteki mavi devasa yuvarlak */
-        .abstract-sphere {
-            position: fixed;
-            top: -10%;
-            right: -5%; /* Sað üst köþeye sabitler */
-            width: 500px;
-            height: 500px; /* Boyutlarý */
-            /* Ortasý çok hafif mavi, kenarlarý þeffaf olan bir renk geçiþi (gradient) yaratýr */
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
-            z-index: -1; /* Her þeyin arkasýnda kalmasýný saðlar */
-            filter: blur(60px); /* Lekenin kenarlarýný 60px bulanýklaþtýrarak bulut/ýþýk efekti verir */
+        /* Sticky Arama Çubuðu Alaný */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            background: rgba(240, 244, 248, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
         }
 
-        /* Sol alttaki lacivert yuvarlak */
-        .abstract-sphere-secondary {
-            position: fixed;
-            bottom: -10%;
-            left: -5%; /* Sol alt köþeye sabitler */
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(15, 23, 42, 0.05) 0%, transparent 70%);
-            z-index: -1;
-            filter: blur(50px);
+        .search-box {
+            position: relative;
         }
 
-        /* ANA BEYAZ KART (Glassmorphism Tasarýmý) */
-        .portal-master-card {
-            width: 100%;
-            max-width: 1200px; /* Geniþliði maksimum 1200px ile sýnýrlandýrýr (Masaüstü görünümü) */
-            background: rgba(255, 255, 255, 0.9); /* %90 oranýnda opak (hafif saydam) beyaz arka plan */
-            backdrop-filter: blur(10px); /* Arka plandaki renk lekelerini (sphere) bu kartýn altýndan geçerken buzlu cam gibi bulanýklaþtýrýr */
-            border: 1px solid white; /* Kenarlýk rengi beyaz */
-            border-radius: 40px; /* Köþeleri büyük ölçüde yuvarlatýr */
-            padding: 40px; /* Ýçeriðin kenarlara deðmemesi için 40px iç boþluk */
-            box-shadow: 0 40px 100px rgba(15, 23, 42, 0.08); /* Karta derinlik katan, aþaðý doðru inen devasa ama çok hafif bir gölge */
-        }
-
-        /* HEADER ÝKONU VE ANÝMASYONU */
-        /* Ýkonun durduðu lacivert kutu */
-        .header-icon-premium {
-            width: 60px;
-            height: 60px;
-            background: var(--navy-dark);
-            color: white;
-            border-radius: 18px; /* Oval köþeler */
-            display: flex;
-            align-items: center;
-            justify-content: center; /* Ýkonu ortalar */
-            font-size: 1.5rem; /* Ýkon boyutu */
-            position: relative; /* Ýçindeki pulse halkasýnýn konumlanmasý için referans noktasý */
-        }
-
-        /* Ýkonun etrafýndaki dýþa doðru büyüyen halka */
-        .pulse-ring {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 2px solid var(--navy-dark); /* Halkanýn çizgi rengi */
-            border-radius: 18px; /* Ýkon kutusuyla ayný ovallik */
-            animation: pulse-border 2s infinite; /* "pulse-border" isimli animasyonu 2 saniyede bir sonsuza kadar (infinite) tekrarla */
-        }
-
-        /* Pulse (Kalp Atýþý/Yanký) Animasyonunun Kurallarý */
-        @@keyframes pulse-border {
-            0%
-
-        {
-            transform: scale(1);
-            opacity: 0.5;
-        }
-        /* Baþlangýç: Boyut ayný, %50 görünür */
-        100% {
-            transform: scale(1.4);
-            opacity: 0;
-        }
-        /* Bitiþ: %40 daha büyük ve tamamen þeffaf (kaybolmuþ) */
-        }
-
-        /* SÝSTEM ÇEVRÝMÝÇÝ ROZETÝ */
-        .status-indicator-badge {
-            background: #dcfce7;
-            color: #15803d; /* Açýk yeþil zemin, koyu yeþil yazý */
-            padding: 6px 15px;
-            border-radius: 50px; /* Hap (hap) þeklinde tasarým */
-            font-size: 11px;
-            font-weight: 800; /* Küçük ve kalýn font */
-            display: flex;
-            align-items: center;
-            gap: 8px; /* Yanýndaki nokta ile yazýyý yatay hizalar ve aralarýna 8px boþluk koyar */
-        }
-
-        /* Rozetin içindeki yeþil nokta */
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: #22c55e; /* Tam yeþil renk */
-            border-radius: 50%; /* Tam yuvarlak (nokta) yapar */
-        }
-
-        /* AKSÝYON KARTLARI (Menü Butonlarý) */
-        .committee-action-card {
-            background: white;
-            border: 1px solid #f1f5f9; /* Çok hafif grimsi bir kenar çizgisi */
-            border-radius: 25px; /* Yuvarlak köþeler */
-            padding: 25px;
-            display: flex;
-            align-items: center;
-            gap: 20px; /* Ýkon, yazý ve oku yan yana dizip aralarýný açar */
-            text-decoration: none !important; /* Linklerdeki alt çizgiyi kaldýrýr */
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Hover (üzerine gelme) animasyonu süresi ve yumuþaklýðý */
-            height: 100%; /* Kartlarýn ayný hizada ve boyda olmasýný saðlar */
-        }
-
-            /* Fare Kartýn Üzerine Geldiðinde (Hover) */
-            .committee-action-card:hover {
-                transform: translateY(-8px); /* Kartý 8 piksel yukarý kaldýrýr (Havalanma efekti) */
-                box-shadow: 0 20px 40px rgba(0,0,0,0.05); /* Altýna geniþ bir gölge ekler */
-                border-color: var(--primary-blue); /* Kenar çizgisini maviye çevirir */
+            .search-box input {
+                border-radius: 12px;
+                padding-left: 40px;
+                border: 1px solid #cbd5e1;
+                background-color: #ffffff;
+                font-size: 0.9rem;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+                transition: all 0.3s ease;
             }
 
-        /* Kart Ýçindeki Ýkon Yuvalarý */
-        .card-icon-wrapper {
-            width: 60px;
-            height: 60px;
-            border-radius: 18px;
+                .search-box input:focus {
+                    border-color: #2563eb;
+                    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+                    outline: none;
+                }
+
+            .search-box i {
+                position: absolute;
+                left: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #94a3b8;
+            }
+
+        /* Kart Tasarýmý */
+        .member-card {
+            background: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+            .member-card::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 4px;
+                background: linear-gradient(to bottom, #2563eb, #3b82f6);
+                opacity: 0.7;
+                transition: width 0.3s ease, opacity 0.3s ease;
+            }
+
+            .member-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+                border-color: #cbd5e1;
+                cursor: pointer;
+            }
+
+                .member-card:hover::before {
+                    width: 6px;
+                    opacity: 1;
+                }
+
+        /* Avatar Box */
+        .avatar-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            color: #2563eb;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
-            flex-shrink: 0; /* Yazýlar uzun olsa bile bu kutunun sýkýþýp küçülmesini engeller */
+            font-size: 1.25rem;
+            flex-shrink: 0;
+            border: 1px solid rgba(191, 219, 254, 0.5);
         }
 
-        /* RENKLÝ ÝKON KUTULARI (Her kart için farklý bir soft renk) */
-        .bg-soft-blue {
-            background: #eff6ff;
-            color: #3b82f6;
-        }
-        /* Mavi */
-        .bg-soft-purple {
-            background: #f5f3ff;
-            color: #8b5cf6;
-        }
-        /* Mor */
-        .bg-soft-teal {
-            background: #f0fdfa;
-            color: #14b8a6;
-        }
-        /* Turkuaz */
-        .bg-soft-red {
-            background: #fef2f2;
-            color: #ef4444;
-        }
-        /* Kýrmýzý */
-        .bg-soft-orange {
-            background: #fff7ed;
-            color: #f97316;
-        }
-        /* Turuncu */
-        .bg-soft-navy {
-            background: #f1f5f9;
-            color: var(--navy-dark);
-        }
-        /* Lacivert */
-
-        /* Kart Ýçindeki Baþlýk (h5) */
-        .card-info h5 {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: var(--navy-dark);
-            margin-bottom: 5px;
+        .member-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 4px;
+            line-height: 1.2;
         }
 
-        /* Kart Ýçindeki Açýklama Yazýsý (p) */
-        .card-info p {
-            font-size: 0.85rem;
+        .member-title {
+            font-size: 0.8rem;
             color: #64748b;
-            margin: 0;
-            line-height: 1.4;
+            font-weight: 500;
         }
 
-        /* Kartýn Saðýndaki Ok Ýkonu */
-        .card-arrow {
-            margin-left: auto; /* Kendini en saða yaslar */
-            color: #cbd5e1; /* Pasifken açýk gri renk */
-            transition: 0.3s;
-        }
-
-        /* Fare Kartýn Üzerine Geldiðinde Oku Etkileyen Kýsým */
-        .committee-action-card:hover .card-arrow {
-            transform: translateX(5px); /* Oku saða doðru 5 piksel kaydýrýr */
-            color: var(--primary-blue); /* Rengini mavi yapar */
-        }
-
-        /* DUYURU VE DESTEK ALANLARI (Alt Bölümler) */
-        .announcement-glass, .support-glass {
-            background: #f8fafc; /* Beyaza çok yakýn bir gri */
-            border-radius: 25px;
-            padding: 25px;
-            height: 100%;
-            border: 1px solid rgba(255,255,255,0.5); /* Sýnýrlarýna hafif bir beyazlýk katar */
-        }
-
-        /* Duyuru Satýrý Yapýsý */
-        .a-row {
-            display: flex;
+        /* Rozetler */
+        .role-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 8px;
+            display: inline-flex;
             align-items: center;
-            gap: 15px;
+            gap: 4px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
         }
 
-        /* Duyurudaki "Yeni" Etiketi */
-        .a-label {
-            background: var(--primary-blue);
-            color: white;
-            font-size: 9px;
-            font-weight: 900;
-            padding: 3px 8px;
-            border-radius: 6px;
-        }
-
-        /* Duyuru Metni */
-        .a-row p {
-            font-size: 13px;
-            font-weight: 600;
+        .badge-standard {
+            background-color: #f1f5f9;
             color: #475569;
-            margin: 0;
+            border: 1px solid #e2e8f0;
         }
 
-        /* DESTEK BUTONU (Lacivert Premium Tasarým) */
-        .btn-navy-premium {
-            background: var(--navy-dark);
-            color: white;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 11px;
-            padding: 12px;
-            border: none;
-            transition: 0.3s;
+        .badge-premium {
+            background-color: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
         }
 
-            /* Butonun Üzerine Gelince (Hover) */
-            .btn-navy-premium:hover {
-                background: var(--primary-blue); /* Maviye döner */
-                transform: scale(1.02); /* Çok az (%2) büyür */
+            .badge-premium i {
+                color: #22c55e;
             }
 
-        /* Yardýmcý Renk ve Yazý Sýnýflarý */
-        .color-navy {
-            color: var(--navy-dark);
+        /* Animasyon */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
-
-        .fw-900 {
-            font-weight: 900;
-        }
-
-        .extra-small {
-            font-size: 10px;
-            letter-spacing: 0.5px;
-        }
-        /* Footer telif hakký yazýsý için */
-
-        /* MOBÝL UYUM (Responsive Design) */
-        /* Ekran geniþliði 1200px'den küçükse (Tablet ve Telefonlar) devreye girer */
-        @@media (max-width: 1200px) {
-            .portal-master-card
+        @@keyframes fadeInUp {
+            to
 
         {
-            padding: 30px; /* Ýç boþluðu küçültür ki ekrana daha rahat sýðsýn */
-            margin: 15px; /* Dýþ boþluk býrakarak ekran kenarlarýna yapýþmasýný engeller */
+            opacity: 1;
+            transform: translateY(0);
         }
 
         }
     </style>
-}
+</head>
+<body>
+
+    <div class="sticky-header">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" class="form-control" placeholder="Üye adý veya unvan ara..." onkeyup="filterMembers()">
+        </div>
+    </div>
+
+    <div class="container-fluid py-3 px-3" id="memberList">
+        @if (Model != null && Model.Any())
+        {
+            var delay = 0.0;
+            <div class="row px-1">
+                @foreach (var uye in Model)
+                {
+                    bool isYonetici = uye.Gorev.IndexOf("Baþkan", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    uye.Gorev.IndexOf("Baþhekim", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    uye.Gorev.IndexOf("Müdür", StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    <div class="col-12 fade-in-up user-item" style="animation-delay: @(delay)s;">
+                        <div class="member-card">
+                            <div class="avatar-box me-3">
+                                @if (isYonetici)
+                                {
+                                    <i class="fas fa-user-tie"></i>
+                                }
+                                else
+                                {
+
+                                    <i class="fas fa-user"></i>
+                                }
+                            </div>
+
+                            <div class="flex-grow-1 min-w-0">
+                                <h6 class="member-name text-truncate searchable-text" title="@uye.UyeAdSoyad">@uye.UyeAdSoyad</h6>
+
+                                <div class="d-flex align-items-center flex-wrap gap-2 mt-1">
+                                    <span class="role-badge searchable-text @(isYonetici ? "badge-premium" : "badge-standard")">
+                                        @if (isYonetici)
+                                        {
+                                            <i class="fas fa-star" style="font-size:0.6rem;"></i>
+                                        }
+                                        @uye.Gorev
+                                    </span>
+
+                                    @if (!string.IsNullOrEmpty(uye.Unvan))
+                                    {
+                                        <span class="member-title text-truncate searchable-text" style="max-width: 150px;" title="@uye.Unvan">
+                                            <i class="fas fa-circle mx-1" style="font-size:4px; vertical-align:middle; color:#cbd5e1;"></i>
+                                            @uye.Unvan
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="ms-2 opacity-25">
+                                <i class="fas fa-chevron-right" style="font-size: 0.8rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    delay += 0.08;
+                }
+            </div>
+
+            <div id="noResultFound" class="text-center py-5 d-none">
+                <i class="fas fa-search text-muted opacity-25" style="font-size: 2.5rem; margin-bottom: 15px;"></i>
+                <h6 class="fw-bold color-navy">Sonuç Bulunamadý</h6>
+                <p class="text-muted small">Aradýðýnýz kritere uygun üye sistemde mevcut deðil.</p>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5 mt-4 fade-in-up">
+                <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle shadow-sm mb-4" style="width: 100px; height: 100px;">
+                    <i class="fas fa-users-slash text-primary opacity-50" style="font-size: 2.5rem;"></i>
+                </div>
+                <h5 class="fw-bold color-navy mb-2">Henüz Üye Bulunmuyor</h5>
+                <p class="text-muted small px-4">Eðitim komitesi üyeleri sisteme eklendiðinde burada liste halinde görüntülenecektir.</p>
+            </div>
+        }
+    </div>
+
+    <script>
+        function filterMembers() {
+            var input = document.getElementById("searchInput").value.toLowerCase();
+            var items = document.getElementsByClassName("user-item");
+            var visibleCount = 0;
+
+            for (var i = 0; i < items.length; i++) {
+                // Kartýn içindeki "searchable-text" sýnýfýna sahip tüm metinleri al
+                var textContent = items[i].innerText.toLowerCase();
+
+                // Eðer yazýlan kelime kartýn içindeki metinlerde geçiyorsa göster, geçmiyorsa gizle
+                if (textContent.includes(input)) {
+                    items[i].classList.remove("d-none");
+                    visibleCount++;
+                } else {
+                    items[i].classList.add("d-none");
+                }
+            }
+
+            // Hiç sonuç bulunamazsa "Bulunamadý" uyarýsýný göster
+            var noResultDiv = document.getElementById("noResultFound");
+            if(noResultDiv) {
+                if(visibleCount === 0 && input !== "") {
+                    noResultDiv.classList.remove("d-none");
+                } else {
+                    noResultDiv.classList.add("d-none");
+                }
+            }
+        }
+    </script>
+</body>
+</html>

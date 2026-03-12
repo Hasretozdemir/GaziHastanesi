@@ -3,52 +3,36 @@
     ViewData["Title"] = "Gazi Saðlýk | Randevu Giriþi";
 }
 
-<!-- Tüm sayfanýn arka planýný ve yapýsýný kapsayan ana div -->
 <div class="randevu-page-wrapper">
-    <!-- Ýçeriði dikey ve yatay olarak ortalamak için kullanýlan kapsayýcý -->
     <div class="randevu-center-container">
 
-        <!-- Ana kart yapýsý. Animasyonlu giriþ (zoomIn) efekti ile gelir. -->
         <div class="randevu-main-card animate__animated animate__zoomIn">
 
-            <!-- Sol panel: Kurumsal kimlik ve bilgi alaný (Koyu renkli kýsým) -->
             <div class="randevu-left-panel">
-                <!-- Logo ve isim alaný -->
                 <div class="d-flex align-items-center mb-5">
-                    <!-- Logo kutusu -->
                     <div class="logo-box">
-                        <!-- Gazi logosu resmi -->
                         <img src="/assets/gazilogo.jpg" alt="Gazi Logo">
                     </div>
-                    <!-- Marka metni alaný -->
                     <div class="ms-3">
-                        <!-- Üniversite ismi -->
                         <h5 class="fw-800 m-0 text-white">GAZÝ ÜNÝVERSÝTESÝ</h5>
-                        <!-- Alt baþlýk -->
                         <p class="m-0 text-gold-accent" style="font-size:10px; font-weight:800; letter-spacing:1px;">ONLINE SAÐLIK SÝSTEMÝ</p>
                     </div>
                 </div>
 
-                <!-- Büyük baþlýk ve slogan -->
                 <h2 class="fw-900 text-white mb-3">Dijital <br><span class="text-gold">Saðlýk Rehberiniz</span></h2>
-                <!-- Açýklama metni -->
                 <p class="text-white mb-5" style="font-size: 0.9rem; line-height: 1.6;">
                     Randevularýnýzý yönetin, sonuçlarýnýza anýnda eriþin ve saðlýðýnýzý Gazi güvencesiyle kolayca takip edin.
                 </p>
 
-                <!-- Ýstatistik kutularýnýn olduðu ýzgara yapýsý -->
                 <div class="custom-stat-grid">
-                    <!-- Ýstatistik kutusu 1: 7/24 Eriþim -->
                     <div class="stat-box">
                         <span class="val">7/24</span>
                         <span class="lbl">Eriþim</span>
                     </div>
-                    <!-- Ýstatistik kutusu 2: 50+ Bölüm (Aktif görünümlü) -->
                     <div class="stat-box active">
                         <span class="val">50+</span>
                         <span class="lbl">Bölüm</span>
                     </div>
-                    <!-- Ýstatistik kutusu 3: %100 Güvenli -->
                     <div class="stat-box">
                         <span class="val">%100</span>
                         <span class="lbl">Güvenli</span>
@@ -56,78 +40,84 @@
                 </div>
             </div>
 
-            <!-- Sað panel: Kullanýcý giriþ formu (Beyaz renkli kýsým) -->
             <div class="randevu-right-panel">
-                <!-- Form baþlýk alaný -->
                 <div class="text-center mb-4">
-                    <!-- Kullanýcý ikonu avatarý -->
                     <div class="user-avatar-icon mb-2">
                         <i class="fas fa-user-circle"></i>
                     </div>
-                    <!-- Giriþ baþlýðý -->
                     <h4 class="fw-900 text-navy">Hoþ Geldiniz</h4>
-                    <!-- Alt açýklama -->
                     <p class="text-muted small">Lütfen kimlik tipini seçerek giriþ yapýn</p>
                 </div>
 
-                <!-- Kimlik tipi seçim anahtarý (Toggle Switch) -->
                 <div class="custom-toggle-box mb-4">
-                    <!-- TC Kimlik seçeneði radio butonu -->
-                    <input type="radio" name="loginType" id="tcType" checked onchange="changeLoginType('TC')">
-                    <!-- TC Kimlik etiketi -->
+                    <input type="radio" name="loginType" value="TC" id="tcType" checked onchange="changeLoginType('TC')">
                     <label for="tcType" class="toggle-btn"><i class="fas fa-id-card me-1"></i> T.C. Kimlik</label>
 
-                    <!-- Pasaport seçeneði radio butonu -->
-                    <input type="radio" name="loginType" id="passType" onchange="changeLoginType('PASS')">
-                    <!-- Pasaport etiketi -->
+                    <input type="radio" name="loginType" value="PASS" id="passType" onchange="changeLoginType('PASS')">
                     <label for="passType" class="toggle-btn"><i class="fas fa-passport me-1"></i> Pasaport</label>
 
-                    <!-- Hareket eden arka plan slider'ý -->
                     <div class="toggle-slider"></div>
                 </div>
 
-                <!-- Giriþ formu -->
                 <form action="/Randevu/Login" method="post">
-                    <!-- Kimlik numarasý alaný -->
                     <div class="mb-3">
                         <label id="lblIdentity" class="form-lbl">KÝMLÝK NUMARASI</label>
-                        <!-- Ýkonlu input kapsayýcýsý -->
                         <div class="input-with-icon">
-                            <!-- Ýkon -->
                             <i id="icoIdentity" class="far fa-id-card"></i>
-                            <!-- Input alaný (max 11 karakter) -->
-                            <input type="text" id="inpIdentity" placeholder="11 Haneli T.C. No" maxlength="11" required>
+                            <input type="text" id="inpIdentity" name="IdentityNumber" placeholder="11 Haneli T.C. No" maxlength="11" required>
                         </div>
                     </div>
 
-                    <!-- Doðum tarihi seçim alaný -->
                     <div class="mb-4">
                         <label class="form-lbl">DOÐUM TARÝHÝNÝZ</label>
-                        <!-- Gün/Ay/Yýl ýzgarasý -->
                         <div class="custom-date-grid">
-                            <!-- Gün seçimi -->
-                            <select><option disabled selected>Gün</option>@for(int i=1;i<=31;i++){
-                            <option>@i</option>
-                                                        }
-</select>
-                            <!-- Ay seçimi -->
-                            <select><option disabled selected>Ay</option><option>Ocak</option><option>Þubat</option><option>Mart</option><option>Nisan</option><option>Mayýs</option><option>Haziran</option><option>Temmuz</option><option>Aðustos</option><option>Eylül</option><option>Ekim</option><option>Kasým</option><option>Aralýk</option></select>
-                            <!-- Yýl seçimi (Döngü ile oluþturulmuþ) -->
-                            <select><option disabled selected>Yýl</option>@for(int i=2026;i>=1930;i--){
-                            <option>@i</option>
-                                                        }
-</select>
+                            <select name="Day" required>
+                                <option value="" disabled selected>Gün</option>
+                                @for (int i = 1; i <= 31; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+
+                            <select name="Month" required>
+                                <option value="" disabled selected>Ay</option>
+                                <option value="Ocak">Ocak</option>
+                                <option value="Þubat">Þubat</option>
+                                <option value="Mart">Mart</option>
+                                <option value="Nisan">Nisan</option>
+                                <option value="Mayýs">Mayýs</option>
+                                <option value="Haziran">Haziran</option>
+                                <option value="Temmuz">Temmuz</option>
+                                <option value="Aðustos">Aðustos</option>
+                                <option value="Eylül">Eylül</option>
+                                <option value="Ekim">Ekim</option>
+                                <option value="Kasým">Kasým</option>
+                                <option value="Aralýk">Aralýk</option>
+                            </select>
+
+                            <select name="Year" required>
+                                <option value="" disabled selected>Yýl</option>
+                                @for (int i = 2026; i >= 1930; i--)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
                         </div>
                     </div>
 
-                    <!-- Giriþ butonu -->
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger mb-3 p-2 text-center" style="border-radius: 12px; font-size: 13px; font-weight: 700; background-color: #fef2f2; color: #ef4444; border: 1px solid #f87171;">
+                            <i class="fas fa-exclamation-circle me-1"></i> @TempData["Error"]
+                        </div>
+                    }
+
                     <button type="submit" class="btn-login-action">
                         <span>SÝSTEME GÝRÝÞ YAP</span>
                         <i class="fas fa-arrow-right"></i>
                     </button>
                 </form>
 
-                <!-- Güvenlik uyarýsý -->
                 <p class="text-center text-muted mt-4 mb-0" style="font-size: 11px;">
                     <i class="fas fa-lock me-1"></i> Tüm verileriniz güvenle korunmaktadýr.
                 </p>
@@ -138,7 +128,6 @@
 </div>
 
 @section Scripts {
-    <!-- Sayfa içi Javascript kodlarý -->
     <script>
         // Giriþ tipini deðiþtiren fonksiyon (TC <-> Pasaport)
         function changeLoginType(type) {
@@ -165,7 +154,6 @@
 }
 
 @section Styles {
-    <!-- Animate.css kütüphanesi -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
         /* CSS Deðiþkenleri (Renk paleti) */
@@ -173,7 +161,7 @@
             --r-navy: #0f172a; /* Koyu lacivert */
             --r-blue: #2563eb; /* Mavi */
             --r-gold: #c5a059; /* Altýn */
-            --r-bg: #f8fafc;   /* Açýk gri arka plan */
+            --r-bg: #f8fafc; /* Açýk gri arka plan */
         }
 
         /* Sayfa sýfýrlamasý */

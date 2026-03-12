@@ -1,0 +1,346 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eğitim Komitesi Portalı | Gazi Sağlık</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <style>
+        body {
+            background-color: #f0f4f8;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .color-navy {
+            color: #0f172a;
+        }
+
+        .portal-master-card {
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .committee-action-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none !important;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .committee-action-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 25px rgba(0,0,0,0.05);
+                border-color: #cbd5e1;
+            }
+
+        .card-icon-wrapper {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .card-info h5 {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .card-info p {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* Renk Paletleri */
+        .bg-soft-blue {
+            background: #eff6ff;
+            color: #3b82f6;
+        }
+
+        .bg-soft-purple {
+            background: #f5f3ff;
+            color: #8b5cf6;
+        }
+
+        .bg-soft-red {
+            background: #fef2f2;
+            color: #ef4444;
+        }
+
+        .bg-soft-orange {
+            background: #fff7ed;
+            color: #f97316;
+        }
+
+        .bg-soft-navy {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .bg-soft-teal {
+            background: #f0fdfa;
+            color: #14b8a6;
+        }
+
+        .bg-soft-sky {
+            background: #e0f2fe;
+            color: #0284c7;
+        }
+
+        .bg-soft-indigo {
+            background: #ede9fe;
+            color: #4f46e5;
+        }
+
+        .bg-soft-green {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+    </style>
+</head>
+
+<body class="pt-20 pb-10 min-vh-100 d-flex flex-column align-items-center justify-content-center">
+
+    <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200 z-[100]">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="/Home/Index" class="flex items-center gap-3 text-decoration-none">
+                <img src="~/assets/gazilogo.jpg" alt="Gazi Logo" class="h-9 w-auto rounded-lg border border-slate-100 shadow-sm" />
+                <div class="leading-none">
+                    <p class="text-sm font-extrabold tracking-tight uppercase text-slate-900 mb-0">Gazi Üniversitesi</p>
+                    <p class="text-[10px] font-bold text-blue-600 tracking-widest uppercase mb-0 mt-0.5">Hastanesi</p>
+                </div>
+            </a>
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="tel:4440911" class="flex items-center gap-2 border border-red-200 text-red-600 text-[10px] font-black px-3 py-2 rounded-xl hover:bg-red-50 transition text-decoration-none">
+                    <i class="fa-solid fa-phone animate-pulse"></i> <span class="hidden sm:inline">ARA: 444 0 911</span>
+                </a>
+                <a href="/Randevu/Giris" class="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-xl text-[10px] font-black tracking-widest hover:bg-blue-700 transition shadow-md shadow-blue-200 text-decoration-none">RANDEVU AL</a>
+                <a href="/Home/Index" title="Ana Sayfaya Dön" class="w-9 h-9 flex items-center justify-center bg-slate-100 text-slate-600 rounded-xl hover:bg-slate-200 transition text-decoration-none">
+                    <i class="fa-solid fa-house text-sm"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container px-3">
+        <div class="portal-master-card animate__animated animate__fadeInUp">
+
+            <div class="text-center mb-5 pb-4 border-bottom">
+                <div class="d-inline-flex align-items-center justify-content-center bg-soft-blue rounded-circle mb-3" style="width:64px; height:64px; font-size:1.75rem;">
+                    <i class="fas fa-university"></i>
+                </div>
+                <h2 class="fw-900 color-navy mb-1" style="font-size: 1.8rem;">Sürekli Eğitim Merkezi</h2>
+                <p class="text-muted mb-0">Kurumsal Gelişim ve Eğitim Portalı <span class="text-primary fw-bold">| SEGM</span></p>
+            </div>
+
+            <div class="row g-3 justify-content-center">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <a href="/Egitim/Index" class="committee-action-card h-100 w-100 text-start">
+                        <div class="card-icon-wrapper bg-soft-navy"><i class="fas fa-users-crown"></i></div>
+                        <div class="card-info">
+                            <h5 class="text-primary">Eğitim Komitesi</h5>
+                            <p>Yürütme kurulu ve üyelerimiz.</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <button data-bs-toggle="offcanvas" data-bs-target="#hakkimizdaPanel" class="committee-action-card h-100 w-100 text-start">
+                        <div class="card-icon-wrapper bg-soft-purple"><i class="fas fa-lightbulb-on"></i></div>
+                        <div class="card-info">
+                            <h5>Misyon & Vizyon</h5>
+                            <p>Eğitim politikaları ve kalite standartları.</p>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <a href="/Egitim/Duyurular" class="committee-action-card h-100 w-100 text-start">
+                        <div class="card-icon-wrapper bg-soft-red"><i class="fas fa-bullhorn"></i></div>
+                        <div class="card-info">
+                            <h5>Duyurular & Etkinlikler</h5>
+                            <p>Güncel haberler ve eğitim takvimi.</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <button data-bs-toggle="offcanvas" data-bs-target="#galeriPanel" class="committee-action-card h-100 w-100 text-start">
+                        <div class="card-icon-wrapper bg-soft-orange"><i class="fas fa-images"></i></div>
+                        <div class="card-info">
+                            <h5>Fotoğraf Galerisi</h5>
+                            <p>Eğitimlerimizden ve hastaneden kareler.</p>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <button data-bs-toggle="offcanvas" data-bs-target="#tipEgitimiPanel" class="committee-action-card h-100 w-100 text-start">
+                        <div class="card-icon-wrapper bg-soft-blue"><i class="fas fa-user-md"></i></div>
+                        <div class="card-info">
+                            <h5>Sürekli Tıp Eğitimi K.</h5>
+                            <p>Tıbbi personel eğitim planlamaları.</p>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <button data-bs-toggle="offcanvas" data-bs-target="#hemsirelikPanel" class="committee-action-card h-100 w-100 text-start">
+                        <div class="card-icon-wrapper bg-soft-teal"><i class="fas fa-user-nurse"></i></div>
+                        <div class="card-info">
+                            <h5>Hemşirelik Eğitimi K.</h5>
+                            <p>Klinik gelişim ve bakım standartları.</p>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <button data-bs-toggle="offcanvas" data-bs-target="#adayMemurPanel" class="committee-action-card h-100 w-100 text-start">
+                        <div class="card-icon-wrapper bg-soft-sky"><i class="fas fa-user-graduate"></i></div>
+                        <div class="card-info">
+                            <h5>Aday Memur Eğitimi</h5>
+                            <p>Yeni atanan personel uyum süreci.</p>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <button data-bs-toggle="offcanvas" data-bs-target="#idariPersonelPanel" class="committee-action-card h-100 w-100 text-start">
+                        <div class="card-icon-wrapper bg-soft-orange" style="color: #ea580c;"><i class="fas fa-users-cog"></i></div>
+                        <div class="card-info">
+                            <h5>İdari Personel Eğitimi</h5>
+                            <p>Yönetim ve büro personeli eğitimleri.</p>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <button data-bs-toggle="offcanvas" data-bs-target="#kalitePanel" class="committee-action-card h-100 w-100 text-start">
+                        <div class="card-icon-wrapper" style="background: #fef9c3; color: #ca8a04;"><i class="fas fa-award"></i></div>
+                        <div class="card-info">
+                            <h5>Kalite Yönetim Birimi</h5>
+                            <p>SKS akreditasyon ve kalite belgeleri.</p>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <button data-bs-toggle="offcanvas" data-bs-target="#stajPanel" class="committee-action-card h-100 w-100 text-start">
+                        <div class="card-icon-wrapper bg-soft-indigo"><i class="fas fa-id-badge"></i></div>
+                        <div class="card-info">
+                            <h5>Staj Koordinatörlüğü</h5>
+                            <p>Öğrenci staj işlemleri ve takvimi.</p>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <a href="/Home/Iletisim" class="committee-action-card h-100 text-decoration-none">
+                        <div class="card-icon-wrapper bg-soft-green"><i class="fas fa-headset"></i></div>
+                        <div class="card-info">
+                            <h5>SEGM İletişim</h5>
+                            <p>Merkezimize ait irtibat bilgileri.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="komiteUyeleriPanel" style="width: 450px;">
+        <div class="offcanvas-header bg-light border-bottom py-3">
+            <h5 class="offcanvas-title fw-bold color-navy"><i class="fas fa-users-crown text-primary me-2"></i> Komite Üyeleri</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body p-0 bg-light">
+            <iframe src="/Egitim/Komite" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="hakkimizdaPanel" style="width: 850px;">
+        <div class="offcanvas-header bg-light border-bottom py-3">
+            <h5 class="offcanvas-title fw-bold color-navy"><i class="fas fa-lightbulb-on me-2" style="color:#8b5cf6;"></i>Hakkımızda</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body p-0 bg-white">
+            <iframe src="/Egitim/Hakkimizda" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="duyurularPanel" style="width: 850px;">
+        <div class="offcanvas-header bg-light border-bottom py-3">
+            <h5 class="offcanvas-title fw-bold color-navy"><i class="fas fa-bullhorn text-danger me-2"></i> Duyurular</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body p-0 bg-white">
+            <iframe src="/Egitim/Duyurular" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="galeriPanel" style="width: 850px;">
+        <div class="offcanvas-header bg-light border-bottom py-3">
+            <h5 class="offcanvas-title fw-bold color-navy"><i class="fas fa-images text-warning me-2"></i> Galeri</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body p-0 bg-white">
+            <iframe src="/Egitim/Galeri" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="tipEgitimiPanel" style="width: 850px;">
+        <div class="offcanvas-header bg-light border-bottom py-3">
+            <h5 class="offcanvas-title fw-bold color-navy"><i class="fas fa-user-md text-primary me-2"></i> Eğitimler</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body d-flex align-items-center justify-content-center bg-light text-center">
+            <div><i class="fas fa-tools fs-1 mb-3 opacity-25"></i><h6>İçerik Hazırlanıyor</h6></div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="hemsirelikPanel" style="width: 850px;">
+        <div class="offcanvas-header bg-light border-bottom py-3">
+            <h5 class="offcanvas-title fw-bold color-navy"><i class="fas fa-user-nurse text-danger me-2"></i> Dökümanlar</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body d-flex align-items-center justify-content-center bg-light text-center">
+            <div><i class="fas fa-tools fs-1 mb-3 opacity-25"></i><h6>İçerik Hazırlanıyor</h6></div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="adayMemurPanel" style="width: 850px;"><div class="offcanvas-header bg-light border-bottom py-3"><h5 class="offcanvas-title fw-bold color-navy">İletişim</h5><button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button></div><div class="offcanvas-body d-flex align-items-center justify-content-center"><h6>İçerik Hazırlanıyor</h6></div></div>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="idariPersonelPanel" style="width: 850px;"><div class="offcanvas-header bg-light border-bottom py-3"><h5 class="offcanvas-title fw-bold color-navy">Akış Şeması</h5><button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button></div><div class="offcanvas-body d-flex align-items-center justify-content-center"><h6>İçerik Hazırlanıyor</h6></div></div>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="kalitePanel" style="width: 850px;"><div class="offcanvas-header bg-light border-bottom py-3"><h5 class="offcanvas-title fw-bold color-navy">Kalite Birimi</h5><button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button></div><div class="offcanvas-body d-flex align-items-center justify-content-center"><h6>İçerik Hazırlanıyor</h6></div></div>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="stajPanel" style="width: 850px;"><div class="offcanvas-header bg-light border-bottom py-3"><h5 class="offcanvas-title fw-bold color-navy">Staj İşlemleri</h5><button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button></div><div class="offcanvas-body d-flex align-items-center justify-content-center"><h6>İçerik Hazırlanıyor</h6></div></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
