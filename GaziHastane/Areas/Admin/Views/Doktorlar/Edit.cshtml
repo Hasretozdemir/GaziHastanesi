@@ -1,6 +1,6 @@
 ﻿@model GaziHastane.Models.Doktor
 @{
-    ViewData["Title"] = "Yeni Doktor Ekle";
+    ViewData["Title"] = "Doktor Düzenle";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,8 +9,8 @@
         <a href="/Admin/Doktorlar/Index" class="text-cyan-400 hover:text-cyan-300 text-sm font-bold flex items-center gap-2 mb-2 transition">
             <i class="fa-solid fa-arrow-left"></i> Listeye Dön
         </a>
-        <h2 class="text-3xl md:text-4xl font-black mb-2 tracking-tight">Yeni <span class="text-gradient">Doktor Ekle</span> 👨‍⚕️</h2>
-        <p class="text-slate-400 font-medium">Sisteme yeni bir hekim kaydı oluşturun.</p>
+        <h2 class="text-3xl md:text-4xl font-black mb-2 tracking-tight">Doktor <span class="text-gradient">Düzenle</span> 📝</h2>
+        <p class="text-slate-400 font-medium">@Model.Ad @Model.Soyad adlı hekimin bilgilerini güncelliyorsunuz.</p>
     </div>
 </div>
 
@@ -18,7 +18,9 @@
     <div class="absolute -right-20 -top-20 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
     <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-    <form asp-action="Create" method="post" class="relative z-10">
+    <form asp-action="Edit" method="post" class="relative z-10">
+        <input type="hidden" asp-for="Id" />
+
         <div asp-validation-summary="ModelOnly" class="text-rose-400 mb-4 text-sm font-bold bg-rose-500/10 p-3 rounded-lg border border-rose-500/20 hidden"></div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -26,25 +28,23 @@
                 <label asp-for="Ad" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Doktor Adı *</label>
                 <div class="relative">
                     <i class="fa-solid fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <input asp-for="Ad" required class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition" placeholder="Örn: Sude">
+                    <input asp-for="Ad" required class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition">
                 </div>
-                <span asp-validation-for="Ad" class="text-rose-400 text-xs mt-1 font-bold block"></span>
             </div>
 
             <div>
                 <label asp-for="Soyad" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Doktor Soyadı *</label>
                 <div class="relative">
                     <i class="fa-regular fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <input asp-for="Soyad" required class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition" placeholder="Örn: Kılıç">
+                    <input asp-for="Soyad" required class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition">
                 </div>
-                <span asp-validation-for="Soyad" class="text-rose-400 text-xs mt-1 font-bold block"></span>
             </div>
 
             <div>
                 <label asp-for="Unvan" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Ünvan</label>
                 <div class="relative">
                     <i class="fa-solid fa-graduation-cap absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <input asp-for="Unvan" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition" placeholder="Örn: Prof. Dr.">
+                    <input asp-for="Unvan" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition">
                 </div>
             </div>
 
@@ -52,7 +52,7 @@
                 <label asp-for="BolumId" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Birim (Poliklinik)</label>
                 <div class="relative">
                     <i class="fa-solid fa-network-wired absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 z-10"></i>
-                    <select asp-for="BolumId" asp-items="ViewBag.BolumId" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-slate-300 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition appearance-none cursor-pointer">
+                    <select asp-for="BolumId" asp-items="ViewBag.BolumId" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-slate-300 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition appearance-none cursor-pointer">
                         <option value="">-- Poliklinik Seçiniz --</option>
                     </select>
                     <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"></i>
@@ -63,7 +63,7 @@
                 <label asp-for="UzmanlikAlani" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Uzmanlık Alanı</label>
                 <div class="relative">
                     <i class="fa-solid fa-stethoscope absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <input asp-for="UzmanlikAlani" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition" placeholder="Örn: Kalp ve Damar Cerrahisi Uzmanı">
+                    <input asp-for="UzmanlikAlani" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition">
                 </div>
             </div>
 
@@ -71,13 +71,13 @@
                 <label asp-for="FotografUrl" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Fotoğraf URL (Opsiyonel)</label>
                 <div class="relative">
                     <i class="fa-solid fa-link absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <input asp-for="FotografUrl" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition" placeholder="Örn: https://site.com/foto.jpg">
+                    <input asp-for="FotografUrl" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition">
                 </div>
             </div>
 
             <div class="md:col-span-2">
                 <label asp-for="Ozgecmis" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Özgeçmiş / Hakkında</label>
-                <textarea asp-for="Ozgecmis" rows="4" class="w-full bg-black/20 border border-white/10 rounded-xl p-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition custom-scroll" placeholder="Doktorun eğitim geçmişi veya kısa özgeçmişi..."></textarea>
+                <textarea asp-for="Ozgecmis" rows="4" class="w-full bg-black/20 border border-white/10 rounded-xl p-4 text-sm font-medium text-white focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition custom-scroll"></textarea>
             </div>
 
             <div class="md:col-span-2 flex items-center gap-4 bg-black/20 p-5 rounded-xl border border-white/5">
@@ -97,14 +97,8 @@
                 İptal Et
             </a>
             <button type="submit" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-2.5 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:scale-105 transition flex items-center gap-2">
-                <i class="fa-solid fa-check"></i> Doktoru Kaydet
+                <i class="fa-solid fa-arrows-rotate"></i> Değişiklikleri Güncelle
             </button>
         </div>
     </form>
 </div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}

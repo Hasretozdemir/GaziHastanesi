@@ -1,0 +1,74 @@
+﻿@model GaziHastane.Models.HastaRehberi
+@{
+    ViewData["Title"] = "Rehber Düzenle";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="mb-8 pl-2 flex justify-between items-end">
+    <div>
+        <a href="/Admin/HastaRehberi/Index" class="text-emerald-400 hover:text-emerald-300 text-sm font-bold flex items-center gap-2 mb-2 transition">
+            <i class="fa-solid fa-arrow-left"></i> Listeye Dön
+        </a>
+        <h2 class="text-3xl md:text-4xl font-black mb-2 tracking-tight">Rehber <span class="text-gradient">Düzenle</span> 📝</h2>
+        <p class="text-slate-400 font-medium">@Model.Baslik içeriğini güncelliyorsunuz.</p>
+    </div>
+</div>
+
+<div class="glass-card p-8 rounded-[2rem] relative overflow-hidden mb-10">
+    <div class="absolute -right-20 -top-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <form asp-action="Edit" method="post" class="relative z-10">
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" class="text-rose-400 mb-4 text-sm font-bold bg-rose-500/10 p-3 rounded-lg border border-rose-500/20 hidden"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="md:col-span-2">
+                <label asp-for="Baslik" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Rehber Başlığı *</label>
+                <div class="relative">
+                    <i class="fa-solid fa-heading absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                    <input asp-for="Baslik" required class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition">
+                </div>
+            </div>
+
+            <div>
+                <label asp-for="Ikon" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">FontAwesome İkon Kodu (Opsiyonel)</label>
+                <div class="relative">
+                    <i class="fa-solid fa-icons absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                    <input asp-for="Ikon" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition">
+                </div>
+            </div>
+
+            <div>
+                <label asp-for="SiraNo" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Gösterim Sırası</label>
+                <div class="relative">
+                    <i class="fa-solid fa-sort-numeric-down absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                    <input asp-for="SiraNo" type="number" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition">
+                </div>
+            </div>
+
+            <div class="md:col-span-2">
+                <label asp-for="Icerik" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Rehber İçeriği *</label>
+                <textarea asp-for="Icerik" required rows="8" class="w-full bg-black/20 border border-white/10 rounded-xl p-4 text-sm font-medium text-white focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition custom-scroll"></textarea>
+            </div>
+
+            <div class="md:col-span-2 flex items-center gap-4 bg-black/20 p-5 rounded-xl border border-white/5">
+                <div class="relative flex items-center cursor-pointer">
+                    <input asp-for="IsActive" type="checkbox" class="sr-only peer">
+                    <div class="w-11 h-6 bg-slate-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.2)]"></div>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-white mb-0.5">Sitede Yayınlansın Mı?</p>
+                    <p class="text-[10px] text-slate-400">Pasif yaparsanız hastalar bu içeriği ana sitede göremez.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-white/10">
+            <a href="/Admin/HastaRehberi/Index" class="px-6 py-2.5 rounded-xl font-bold text-sm text-slate-300 hover:text-white hover:bg-white/5 transition flex items-center">İptal Et</a>
+            <button type="submit" class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-8 py-2.5 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:scale-105 transition flex items-center gap-2">
+                <i class="fa-solid fa-arrows-rotate"></i> Değişiklikleri Güncelle
+            </button>
+        </div>
+    </form>
+</div>

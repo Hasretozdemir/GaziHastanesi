@@ -2,6 +2,7 @@
 using GaziHastane.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging; // ILogger için gereken kütüphane eklendi
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace GaziHastane.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly GaziHastaneContext _context;
 
+        // Hem Logger hem de Context aynı anda projeye dahil ediliyor
         public HomeController(ILogger<HomeController> logger, GaziHastaneContext context)
         {
             _logger = logger;
@@ -22,7 +24,11 @@ namespace GaziHastane.Controllers
         // ==========================================
         // ZİYARETÇİ (ÖNYÜZ) SAYFALARI
         // ==========================================
-        public IActionResult Index() { return View(); }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
 
         public async Task<IActionResult> Bolumler()
         {
@@ -34,19 +40,36 @@ namespace GaziHastane.Controllers
             // Çekilen veriyi View'a gönderiyoruz
             return View(aktifBolumler);
         }
+
         public async Task<IActionResult> Doktorlar()
         {
             // Include ile doktorların bölümlerini de çekiyoruz
             var aktifDoktorlar = await _context.Doktorlar
-                                              .Include(d => d.Bolum)
-                                              .Where(b => b.IsActive)
-                                              .ToListAsync();
+                                               .Include(d => d.Bolum)
+                                               .Where(d => d.IsActive)
+                                               .ToListAsync();
 
             return View(aktifDoktorlar);
         }
-        public IActionResult Rehber() { return View(); }
-        public IActionResult Iletisim() { return View(); }
-        public IActionResult Privacy() { return View(); }
+
+        public IActionResult Rehber()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Iletisim()
+        {
+            // Veritabanından aktif iletişim verileri ViewBag ile sayfaya gönderiliyor
+            ViewBag.Lokasyonlar = await _context.IletisimBilgileri.Where(x => x.IsActive).ToListAsync();
+            ViewBag.UlasimAraclari = await _context.UlasimRehberleri.Where(x => x.IsActive).ToListAsync();
+
+            return View();
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
 
         // ==========================================
         // SİSTEM METODLARI (HATA YAKALAMA)

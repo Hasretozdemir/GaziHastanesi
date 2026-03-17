@@ -19,7 +19,10 @@ namespace GaziHastane.Data
         public DbSet<Duyuru> Duyurular { get; set; }
         public DbSet<KaliteBelgesi> KaliteBelgeleri { get; set; }
         public DbSet<EgitimKomitesiUye> EgitimKomitesi { get; set; }
+        public DbSet<HastaRehberi> HastaRehberleri { get; set; }
 
+        public DbSet<Iletisim> IletisimBilgileri { get; set; }
+        public DbSet<UlasimRehberi> UlasimRehberleri { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

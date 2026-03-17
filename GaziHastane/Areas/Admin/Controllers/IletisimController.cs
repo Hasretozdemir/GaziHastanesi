@@ -2,16 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using GaziHastane.Data;
 using GaziHastane.Models;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GaziHastane.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class BolumlerController : Controller
+    public class IletisimController : Controller
     {
         private readonly GaziHastaneContext _context;
 
-        public BolumlerController(GaziHastaneContext context)
+        public IletisimController(GaziHastaneContext context)
         {
             _context = context;
         }
@@ -19,11 +20,11 @@ namespace GaziHastane.Areas.Admin.Controllers
         // 1. LİSTELEME
         public async Task<IActionResult> Index()
         {
-            var bolumler = await _context.Set<Bolum>().ToListAsync();
-            return View(bolumler);
+            var iletisimBilgileri = await _context.Set<Iletisim>().ToListAsync();
+            return View(iletisimBilgileri);
         }
 
-        // 2. EKLEME (GET & POST)
+        // 2. EKLEME
         public IActionResult Create()
         {
             return View();
@@ -31,66 +32,66 @@ namespace GaziHastane.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Bolum bolum)
+        public async Task<IActionResult> Create(Iletisim iletisim)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(bolum);
+                _context.Add(iletisim);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(bolum);
+            return View(iletisim);
         }
 
-        // 3. DÜZENLEME (GET & POST)
+        // 3. DÜZENLEME
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
-            var bolum = await _context.Set<Bolum>().FindAsync(id);
-            if (bolum == null) return NotFound();
-            return View(bolum);
+            var iletisim = await _context.Set<Iletisim>().FindAsync(id);
+            if (iletisim == null) return NotFound();
+            return View(iletisim);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Bolum bolum)
+        public async Task<IActionResult> Edit(int id, Iletisim iletisim)
         {
-            if (id != bolum.Id) return NotFound();
+            if (id != iletisim.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(bolum);
+                    _context.Update(iletisim);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.Set<Bolum>().Any(e => e.Id == bolum.Id)) return NotFound();
+                    if (!_context.Set<Iletisim>().Any(e => e.Id == iletisim.Id)) return NotFound();
                     else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(bolum);
+            return View(iletisim);
         }
 
-        // 4. SİLME (GET & POST)
+        // 4. SİLME
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
-            var bolum = await _context.Set<Bolum>().FirstOrDefaultAsync(m => m.Id == id);
-            if (bolum == null) return NotFound();
-            return View(bolum);
+            var iletisim = await _context.Set<Iletisim>().FirstOrDefaultAsync(m => m.Id == id);
+            if (iletisim == null) return NotFound();
+            return View(iletisim);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var bolum = await _context.Set<Bolum>().FindAsync(id);
-            if (bolum != null)
+            var iletisim = await _context.Set<Iletisim>().FindAsync(id);
+            if (iletisim != null)
             {
-                _context.Set<Bolum>().Remove(bolum);
+                _context.Set<Iletisim>().Remove(iletisim);
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));

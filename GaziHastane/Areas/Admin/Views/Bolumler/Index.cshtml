@@ -1,100 +1,98 @@
-﻿@{
-    ViewData["Title"] = "Poliklinikler";
+﻿@model IEnumerable<GaziHastane.Models.Bolum>
+@{
+    ViewData["Title"] = "Poliklinik Yönetimi";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<div class="animate-[fadeIn_0.5s_ease-out] pr-2 pb-2">
-
-    <div class="mb-8 pl-2 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 relative z-10">
-        <div>
-            <h2 class="text-4xl md:text-5xl font-black mb-2 tracking-tight">Aktif <span class="text-gradient">Poliklinikler</span> 🏥</h2>
-            <p class="text-slate-400 font-medium">Hastaneye ait tıbbi birimleri, lokasyonları ve hekim kapasitelerini yönetin.</p>
-        </div>
-        <button class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:scale-105 transition flex items-center gap-2">
-            <i class="fa-solid fa-plus-circle"></i> Yeni Birim Ekle
-        </button>
+<div class="mb-8 pl-2 flex justify-between items-end">
+    <div>
+        <h2 class="text-3xl md:text-4xl font-black mb-2 tracking-tight">Poliklinik <span class="text-gradient">Listesi</span> 🏥</h2>
+        <p class="text-slate-400 font-medium">Sistemdeki tüm tıbbi bölümleri ve poliklinikleri buradan yönetin.</p>
     </div>
+    <a href="/Admin/Bolumler/Create" class="bg-gradient-to-r from-pink-500 to-rose-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(244,63,94,0.3)] hover:scale-105 transition">
+        <i class="fa-solid fa-plus mr-2"></i>Yeni Bölüm Ekle
+    </a>
+</div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+<div class="glass-card rounded-[2rem] overflow-hidden mb-8">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left whitespace-nowrap">
+            <thead class="bg-black/20">
+                <tr>
+                    <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-white/5">Poliklinik Adı</th>
+                    <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-white/5">Kategori</th>
+                    <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-white/5">Durum</th>
+                    <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-white/5 text-right">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        var adHarf = !string.IsNullOrEmpty(item.Ad) ? item.Ad.Substring(0, 2).ToUpper() : "PL";
 
-        <div class="glass-card p-6 rounded-[2.5rem] relative group overflow-hidden">
-            <div class="absolute -right-10 -top-10 w-40 h-40 bg-rose-500/10 rounded-full blur-3xl group-hover:bg-rose-500/20 transition duration-500"></div>
-
-            <div class="flex justify-between items-start mb-6 relative z-10">
-                <div class="w-16 h-16 bg-rose-500/10 border border-rose-500/30 text-rose-400 rounded-2xl flex items-center justify-center text-3xl shadow-[0_0_15px_rgba(244,63,94,0.2)]">
-                    <i class="fa-solid fa-heart-pulse neon-icon"></i>
-                </div>
-                <div class="flex gap-2">
-                    <button class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/20 border border-white/10 text-slate-300 transition flex items-center justify-center"><i class="fa-solid fa-pen text-xs"></i></button>
-                </div>
-            </div>
-
-            <h3 class="text-2xl font-black text-white mb-2 relative z-10">Kardiyoloji</h3>
-            <p class="text-sm font-semibold text-slate-400 mb-6 flex items-center gap-2 relative z-10">
-                <i class="fa-solid fa-location-dot text-rose-400"></i> A Blok - 2. Kat
-            </p>
-
-            <div class="pt-5 border-t border-white/10 flex justify-between items-center relative z-10">
-                <div class="flex -space-x-3">
-                    <img src="https://ui-avatars.com/api/?name=Hasret+Özdemir&background=0D8ABC&color=fff" class="w-10 h-10 rounded-full border-2 border-[#0f172a] shadow-sm" alt="Doktor">
-                    <div class="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-300">AÜ</div>
-                    <div class="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-rose-500/20 text-rose-400 flex items-center justify-center text-xs font-bold">+4</div>
-                </div>
-                <span class="text-xs font-black text-rose-400 bg-rose-500/10 px-3 py-1.5 rounded-lg border border-rose-500/20 shadow-[0_0_10px_rgba(244,63,94,0.1)]">6 Hekim Aktif</span>
-            </div>
-        </div>
-
-        <div class="glass-card p-6 rounded-[2.5rem] relative group overflow-hidden">
-            <div class="absolute -right-10 -top-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl group-hover:bg-cyan-500/20 transition duration-500"></div>
-
-            <div class="flex justify-between items-start mb-6 relative z-10">
-                <div class="w-16 h-16 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 rounded-2xl flex items-center justify-center text-3xl shadow-[0_0_15px_rgba(6,182,212,0.2)]">
-                    <i class="fa-solid fa-eye neon-icon"></i>
-                </div>
-                <div class="flex gap-2">
-                    <button class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/20 border border-white/10 text-slate-300 transition flex items-center justify-center"><i class="fa-solid fa-pen text-xs"></i></button>
-                </div>
-            </div>
-
-            <h3 class="text-2xl font-black text-white mb-2 relative z-10">Göz Hastalıkları</h3>
-            <p class="text-sm font-semibold text-slate-400 mb-6 flex items-center gap-2 relative z-10">
-                <i class="fa-solid fa-location-dot text-cyan-400"></i> C Blok - Zemin Kat
-            </p>
-
-            <div class="pt-5 border-t border-white/10 flex justify-between items-center relative z-10">
-                <div class="flex -space-x-3">
-                    <div class="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white">SK</div>
-                    <div class="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-300">YK</div>
-                    <div class="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs font-bold">+1</div>
-                </div>
-                <span class="text-xs font-black text-cyan-400 bg-cyan-500/10 px-3 py-1.5 rounded-lg border border-cyan-500/20 shadow-[0_0_10px_rgba(6,182,212,0.1)]">3 Hekim Aktif</span>
-            </div>
-        </div>
-
-        <div class="glass-card p-6 rounded-[2.5rem] relative group overflow-hidden">
-            <div class="absolute -right-10 -top-10 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition duration-500"></div>
-
-            <div class="flex justify-between items-start mb-6 relative z-10">
-                <div class="w-16 h-16 bg-purple-500/10 border border-purple-500/30 text-purple-400 rounded-2xl flex items-center justify-center text-3xl shadow-[0_0_15px_rgba(168,85,247,0.2)]">
-                    <i class="fa-solid fa-brain neon-icon"></i>
-                </div>
-                <div class="flex gap-2">
-                    <button class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/20 border border-white/10 text-slate-300 transition flex items-center justify-center"><i class="fa-solid fa-pen text-xs"></i></button>
-                </div>
-            </div>
-
-            <h3 class="text-2xl font-black text-white mb-2 relative z-10">Nöroloji</h3>
-            <p class="text-sm font-semibold text-slate-400 mb-6 flex items-center gap-2 relative z-10">
-                <i class="fa-solid fa-location-dot text-purple-400"></i> B Blok - 4. Kat
-            </p>
-
-            <div class="pt-5 border-t border-white/10 flex justify-between items-center relative z-10">
-                <div class="flex -space-x-3">
-                    <div class="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-300">ME</div>
-                    <div class="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs font-bold">+2</div>
-                </div>
-                <span class="text-xs font-black text-purple-400 bg-purple-500/10 px-3 py-1.5 rounded-lg border border-purple-500/20 shadow-[0_0_10px_rgba(168,85,247,0.1)]">4 Hekim Aktif</span>
-            </div>
-        </div>
-
+                        <tr class="hover:bg-white/5 transition duration-200">
+                            <td class="px-8 py-5">
+                                <div class="flex items-center gap-4">
+                                    @if (!string.IsNullOrEmpty(item.FotografUrl))
+                                    {
+                                        <img src="@item.FotografUrl" class="w-10 h-10 rounded-xl object-cover shadow-[0_0_15px_rgba(236,72,153,0.4)]" alt="@item.Ad">
+                                    }
+                                    else
+                                    {
+                                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center font-black text-white shadow-[0_0_15px_rgba(236,72,153,0.4)]">
+                                            <i class="fa-solid fa-stethoscope text-sm"></i>
+                                        </div>
+                                    }
+                                    <div>
+                                        <p class="font-bold text-white text-sm">@item.Ad</p>
+                                        <p class="text-xs text-slate-400 w-48 truncate" title="@item.Aciklama">@(string.IsNullOrEmpty(item.Aciklama) ? "Açıklama girilmemiş" : item.Aciklama)</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-8 py-5">
+                                <span class="text-sm font-bold text-pink-300 bg-pink-500/10 border border-pink-500/20 px-3 py-1.5 rounded-lg">
+                                    @(string.IsNullOrEmpty(item.Kategori) ? "Genel" : item.Kategori)
+                                </span>
+                            </td>
+                            <td class="px-8 py-5">
+                                @if (item.IsActive)
+                                {
+                                    <span class="flex items-center gap-2 text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-lg w-max">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_5px_#34d399]"></span> Hizmet Veriyor
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="flex items-center gap-2 text-xs font-bold text-rose-400 bg-rose-500/10 border border-rose-500/20 px-3 py-1.5 rounded-lg w-max">
+                                        <span class="w-2 h-2 rounded-full bg-rose-400 shadow-[0_0_5px_#f43f5e]"></span> Kapalı
+                                    </span>
+                                }
+                            </td>
+                            <td class="px-8 py-5 text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <a href="/Admin/Bolumler/Edit/@item.Id" class="w-8 h-8 rounded-lg bg-blue-500/10 hover:bg-blue-500/30 text-blue-400 transition flex items-center justify-center border border-blue-500/20">
+                                        <i class="fa-solid fa-pen text-xs"></i>
+                                    </a>
+                                    <a href="/Admin/Bolumler/Delete/@item.Id" class="w-8 h-8 rounded-lg bg-rose-500/10 hover:bg-rose-500/30 text-rose-400 transition flex items-center justify-center border border-rose-500/20">
+                                        <i class="fa-solid fa-trash text-xs"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="px-8 py-12 text-center text-slate-400">
+                            <i class="fa-solid fa-house-medical text-4xl mb-4 opacity-50 block"></i>
+                            <p>Sistemde henüz kayıtlı poliklinik/bölüm bulunmamaktadır.</p>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>

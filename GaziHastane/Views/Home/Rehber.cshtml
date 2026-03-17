@@ -1,10 +1,10 @@
-﻿@{
+﻿@model IEnumerable<GaziHastane.Models.HastaRehberi>
+@{
     ViewData["Title"] = "Hasta Rehberi";
 }
 
 @section Scripts {
     <style>
-        /* ── Guide Card ── */
         .guide-card {
             background: white;
             border-radius: 1.5rem;
@@ -35,7 +35,7 @@
                     opacity: 1;
                 }
 
-        /* Card color themes */
+        /* Temalar (Sabit Kaldı) */
         .gc-blue:hover {
             box-shadow: 0 16px 44px rgba(37,99,235,0.12);
             border-color: #bfdbfe;
@@ -117,7 +117,6 @@
             background: linear-gradient(90deg, #f43f5e, #fb7185);
         }
 
-        /* ── Icon wrapper ── */
         .icon-w {
             width: 50px;
             height: 50px;
@@ -174,7 +173,6 @@
             color: #f43f5e;
         }
 
-        /* ── Go btn ── */
         .btn-go {
             display: flex;
             align-items: center;
@@ -187,66 +185,10 @@
             font-size: 0.7rem;
             letter-spacing: 0.04em;
             text-transform: uppercase;
-            text-decoration: none;
             border: 1px solid #f1f5f9;
             transition: all 0.2s;
         }
 
-        .gc-blue:hover .btn-go {
-            background: #eff6ff;
-            color: #2563eb;
-            border-color: #bfdbfe;
-        }
-
-        .gc-purple:hover .btn-go {
-            background: #f5f3ff;
-            color: #8b5cf6;
-            border-color: #ddd6fe;
-        }
-
-        .gc-red:hover .btn-go {
-            background: #fef2f2;
-            color: #ef4444;
-            border-color: #fecaca;
-        }
-
-        .gc-teal:hover .btn-go {
-            background: #f0fdfa;
-            color: #0d9488;
-            border-color: #99f6e4;
-        }
-
-        .gc-orange:hover .btn-go {
-            background: #fff7ed;
-            color: #ea580c;
-            border-color: #fed7aa;
-        }
-
-        .gc-violet:hover .btn-go {
-            background: #faf5ff;
-            color: #7c3aed;
-            border-color: #e9d5ff;
-        }
-
-        .gc-emerald:hover .btn-go {
-            background: #ecfdf5;
-            color: #10b981;
-            border-color: #a7f3d0;
-        }
-
-        .gc-amber:hover .btn-go {
-            background: #fffbeb;
-            color: #f59e0b;
-            border-color: #fde68a;
-        }
-
-        .gc-rose:hover .btn-go {
-            background: #fff1f2;
-            color: #f43f5e;
-            border-color: #fecdd3;
-        }
-
-        /* ── Section divider ── */
         .section-bar {
             display: flex;
             align-items: center;
@@ -260,20 +202,6 @@
             background: linear-gradient(to right, #e2e8f0, transparent);
         }
 
-        /* ── Step item ── */
-        .step-num {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 900;
-            flex-shrink: 0;
-        }
-
-        /* ── Badge ── */
         .badge {
             display: inline-flex;
             align-items: center;
@@ -281,7 +209,6 @@
             font-size: 0.6rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
             padding: 3px 8px;
             border-radius: 99px;
         }
@@ -291,17 +218,10 @@
             color: #1d4ed8;
         }
 
-        .badge-red {
-            background: #fee2e2;
-            color: #b91c1c;
+        .pulse-badge {
+            animation: pulse-ring 2s ease infinite;
         }
 
-        .badge-green {
-            background: #dcfce7;
-            color: #15803d;
-        }
-
-        /* ── Hotline card ── */
         @@keyframes pulse-ring {
             0% {
                 box-shadow: 0 0 0 0 rgba(239,68,68,0.35);
@@ -315,323 +235,47 @@
                 box-shadow: 0 0 0 0 rgba(239,68,68,0);
             }
         }
-
-        .pulse-badge {
-            animation: pulse-ring 2s ease infinite;
-        }
     </style>
 }
 
 <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8 mt-24">
-
     <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-[1.75rem] p-6 sm:p-10 relative overflow-hidden" style="box-shadow: 0 12px 40px rgba(37,99,235,0.25);">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full translate-x-20 -translate-y-20"></div>
-        <div class="absolute bottom-0 right-24 w-32 h-32 bg-white/5 rounded-full translate-y-12"></div>
-        <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+        <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5 text-white">
             <div>
                 <p class="text-blue-300 text-[10px] font-black tracking-[0.2em] uppercase mb-1">Gazi Üniversitesi Hastanesi</p>
-                <h2 class="text-white text-2xl sm:text-4xl font-black leading-tight tracking-tight">Hasta Rehberi</h2>
-                <p class="text-blue-200/80 text-sm font-medium mt-2 max-w-lg">Süreçler, kurallar ve size özel hizmetler hakkında merak ettiğiniz her şey tek sayfada.</p>
+                <h2 class="text-2xl sm:text-4xl font-black tracking-tight">Hasta Rehberi</h2>
+                <p class="text-blue-200/80 text-sm font-medium mt-2 max-w-lg">Süreçler, kurallar ve size özel hizmetler tek sayfada.</p>
             </div>
             <div class="flex gap-5 flex-shrink-0">
-                <div class="text-center">
-                    <p class="text-white text-2xl font-black">9</p>
-                    <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Konu</p>
-                </div>
+                <div class="text-center"><p class="text-2xl font-black">@Model.Count()</p><p class="text-blue-300 text-[9px] font-black uppercase">Konu</p></div>
                 <div class="w-px bg-white/20"></div>
-                <div class="text-center">
-                    <p class="text-white text-2xl font-black">7/24</p>
-                    <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Destek</p>
-                </div>
+                <div class="text-center"><p class="text-2xl font-black">7/24</p><p class="text-blue-300 text-[9px] font-black uppercase">Destek</p></div>
             </div>
         </div>
     </div>
 
-    <div class="bg-white rounded-[1.5rem] p-4 sm:p-6 border border-slate-100 flex flex-wrap gap-3" style="box-shadow: 0 4px 24px rgba(0,0,0,0.04);">
-        <a href="#ziyaret" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 text-blue-700 text-xs font-black hover:bg-blue-100 transition"><i class="fa-solid fa-users text-[10px]"></i> Ziyaret</a>
-        <a href="#basvuru" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-50 text-teal-700 text-xs font-black hover:bg-teal-100 transition"><i class="fa-solid fa-file-signature text-[10px]"></i> Başvuru</a>
-        <a href="#randevu" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-orange-50 text-orange-700 text-xs font-black hover:bg-orange-100 transition"><i class="fa-solid fa-calendar-check text-[10px]"></i> Randevu</a>
-        <a href="#haklar" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-violet-50 text-violet-700 text-xs font-black hover:bg-violet-100 transition"><i class="fa-solid fa-shield-halved text-[10px]"></i> Hasta Hakları</a>
-        <a href="#iletisim" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-black hover:bg-emerald-100 transition"><i class="fa-solid fa-phone text-[10px]"></i> İletişim</a>
+    <div class="section-bar">
+        <span class="badge badge-blue"><i class="fa-solid fa-circle-dot"></i> Bilgilendirme</span>
+        <h2 class="text-lg font-black text-slate-800">Rehber İçerikleri</h2>
+        <div class="section-bar-line"></div>
     </div>
 
-    <div id="ziyaret">
-        <div class="section-bar">
-            <span class="badge badge-blue"><i class="fa-solid fa-circle-dot"></i> Ziyaret</span>
-            <h2 class="text-lg font-black text-slate-800">Ziyaret & Konaklama</h2>
-            <div class="section-bar-line"></div>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-            <div class="guide-card gc-blue">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        @foreach (var item in Model)
+        {
+            <div class="guide-card gc-@item.Tema">
                 <div class="p-5 flex flex-col gap-4 flex-1">
                     <div class="flex items-start justify-between">
-                        <div class="icon-w iw-blue"><i class="fa-solid fa-users"></i></div>
+                        <div class="icon-w iw-@item.Tema"><i class="@item.Ikon"></i></div>
                         <div class="btn-go text-[9px] px-2 py-1 ml-auto"><i class="fa-solid fa-arrow-right text-[8px]"></i></div>
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-sm font-black text-slate-800 leading-snug mb-1.5">Ziyaretçi Kuralları</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Sevdiklerinizin ve diğer hastaların sağlığı için belirlenen ziyaret saatleri ve uyulması gereken kurallar.</p>
-                    </div>
-                    <div class="space-y-1.5 text-xs">
-                        <div class="flex items-center gap-2 text-slate-500"><i class="fa-solid fa-clock text-blue-400 w-3"></i> Sabah: 10:00 – 12:00</div>
-                        <div class="flex items-center gap-2 text-slate-500"><i class="fa-solid fa-clock text-blue-400 w-3"></i> Akşam: 16:00 – 19:00</div>
+                        <h3 class="text-sm font-black text-slate-800 leading-snug mb-1.5">@item.Baslik</h3>
+                        <p class="text-slate-500 text-xs leading-relaxed">@item.Icerik</p>
                     </div>
                     <a href="#" class="btn-go">Detay <i class="fa-solid fa-chevron-right text-[8px]"></i></a>
                 </div>
             </div>
-
-            <div class="guide-card gc-purple">
-                <div class="p-5 flex flex-col gap-4 flex-1">
-                    <div class="flex items-start justify-between">
-                        <div class="icon-w iw-purple"><i class="fa-solid fa-person-walking-with-cane"></i></div>
-                        <div class="btn-go text-[9px] px-2 py-1 ml-auto"><i class="fa-solid fa-arrow-right text-[8px]"></i></div>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-black text-slate-800 leading-snug mb-1.5">Refakatçi Politikası</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Hastalarımıza eşlik eden refakatçilerin uyması gereken esaslar ve yararlanabileceği imkânlar.</p>
-                    </div>
-                    <div class="space-y-1.5 text-xs">
-                        <div class="flex items-center gap-2 text-slate-500"><i class="fa-solid fa-check text-purple-400 w-3"></i> Ücretsiz yatak imkânı</div>
-                        <div class="flex items-center gap-2 text-slate-500"><i class="fa-solid fa-check text-purple-400 w-3"></i> Yemek desteği mevcut</div>
-                    </div>
-                    <a href="#" class="btn-go">Detay <i class="fa-solid fa-chevron-right text-[8px]"></i></a>
-                </div>
-            </div>
-
-            <div class="guide-card gc-red">
-                <div class="p-5 flex flex-col gap-4 flex-1">
-                    <div class="flex items-start justify-between">
-                        <div class="icon-w iw-red"><i class="fa-solid fa-mask-ventilator"></i></div>
-                        <span class="text-[9px] font-black bg-red-50 text-red-600 border border-red-100 px-2 py-1 rounded-lg">Kritik</span>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-black text-slate-800 leading-snug mb-1.5">Yoğun Bakım Ziyareti</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">YBÜ'lere özel sterilizasyon kuralları ve ziyaret protokolleri hakkında zorunlu bilgiler.</p>
-                    </div>
-                    <div class="space-y-1.5 text-xs">
-                        <div class="flex items-center gap-2 text-slate-500"><i class="fa-solid fa-triangle-exclamation text-red-400 w-3"></i> Önceden izin alınmalıdır</div>
-                        <div class="flex items-center gap-2 text-slate-500"><i class="fa-solid fa-triangle-exclamation text-red-400 w-3"></i> Koruyucu kıyafet zorunlu</div>
-                    </div>
-                    <a href="#" class="btn-go">Kritik Bilgiler <i class="fa-solid fa-chevron-right text-[8px]"></i></a>
-                </div>
-            </div>
-
-        </div>
+        }
     </div>
-
-    <div id="basvuru">
-        <div class="section-bar">
-            <span class="badge badge-green"><i class="fa-solid fa-circle-dot"></i> İşlemler</span>
-            <h2 class="text-lg font-black text-slate-800">Başvuru & Randevu</h2>
-            <div class="section-bar-line"></div>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-
-            <div class="guide-card gc-teal" id="randevu">
-                <div class="p-6 flex flex-col gap-4 flex-1">
-                    <div class="flex items-center gap-3">
-                        <div class="icon-w iw-teal"><i class="fa-solid fa-file-signature"></i></div>
-                        <div>
-                            <h3 class="text-sm font-black text-slate-800">Başvuru İşlemleri</h3>
-                            <p class="text-[10px] text-slate-400 font-bold">İlk kayıt & yatış süreci</p>
-                        </div>
-                    </div>
-                    <div class="space-y-3">
-                        <div class="flex items-start gap-3">
-                            <div class="step-num bg-teal-50 text-teal-700">1</div>
-                            <div><p class="text-xs font-black text-slate-700">Gerekli belgeler</p><p class="text-[11px] text-slate-500 mt-0.5">TC kimlik, sevk belgesi veya sigorta kartınızı hazır bulundurunuz.</p></div>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <div class="step-num bg-teal-50 text-teal-700">2</div>
-                            <div><p class="text-xs font-black text-slate-700">Kayıt masası</p><p class="text-[11px] text-slate-500 mt-0.5">Zemin kattaki Hasta Kayıt birimi veya online portal üzerinden kayıt yapabilirsiniz.</p></div>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <div class="step-num bg-teal-50 text-teal-700">3</div>
-                            <div><p class="text-xs font-black text-slate-700">Yatış onayı</p><p class="text-[11px] text-slate-500 mt-0.5">Doktor onayı sonrası ilgili birime yönlendirilirsiniz.</p></div>
-                        </div>
-                    </div>
-                    <a href="#" class="btn-go mt-auto">Nasıl Başvurulur? <i class="fa-solid fa-chevron-right text-[8px]"></i></a>
-                </div>
-            </div>
-
-            <div class="guide-card gc-orange">
-                <div class="p-6 flex flex-col gap-4 flex-1">
-                    <div class="flex items-center gap-3">
-                        <div class="icon-w iw-orange"><i class="fa-solid fa-calendar-check"></i></div>
-                        <div>
-                            <h3 class="text-sm font-black text-slate-800">Randevu İşlemleri</h3>
-                            <p class="text-[10px] text-slate-400 font-bold">Online & telefon ile randevu</p>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="p-3 bg-orange-50 rounded-xl border border-orange-100">
-                            <i class="fa-solid fa-globe text-orange-500 text-base mb-1.5"></i>
-                            <p class="text-xs font-black text-slate-700">Online</p>
-                            <p class="text-[11px] text-slate-500 mt-0.5">mhrs.gov.tr veya e-Devlet üzerinden</p>
-                        </div>
-                        <div class="p-3 bg-orange-50 rounded-xl border border-orange-100">
-                            <i class="fa-solid fa-phone text-orange-500 text-base mb-1.5"></i>
-                            <p class="text-xs font-black text-slate-700">Telefon</p>
-                            <p class="text-[11px] text-slate-500 mt-0.5">182 ALO Doktor hattını arayın</p>
-                        </div>
-                        <div class="p-3 bg-orange-50 rounded-xl border border-orange-100">
-                            <i class="fa-solid fa-building text-orange-500 text-base mb-1.5"></i>
-                            <p class="text-xs font-black text-slate-700">Yüz yüze</p>
-                            <p class="text-[11px] text-slate-500 mt-0.5">Poliklinik kayıt bankosu 08:00–16:00</p>
-                        </div>
-                        <div class="p-3 bg-orange-50 rounded-xl border border-orange-100">
-                            <i class="fa-solid fa-xmark text-orange-500 text-base mb-1.5"></i>
-                            <p class="text-xs font-black text-slate-700">İptal</p>
-                            <p class="text-[11px] text-slate-500 mt-0.5">En az 24 saat öncesinden iptal edin</p>
-                        </div>
-                    </div>
-                    <a href="#" class="btn-go mt-auto">Hemen Randevu Al <i class="fa-solid fa-chevron-right text-[8px]"></i></a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div id="haklar">
-        <div class="section-bar">
-            <span class="badge" style="background:#f5f3ff;color:#7c3aed;"><i class="fa-solid fa-circle-dot"></i> Haklar & Hizmetler</span>
-            <h2 class="text-lg font-black text-slate-800">Hasta Hakları & Diğer Hizmetler</h2>
-            <div class="section-bar-line"></div>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-            <div class="guide-card gc-violet">
-                <div class="p-5 flex flex-col gap-4 flex-1">
-                    <div class="icon-w iw-violet"><i class="fa-solid fa-shield-halved"></i></div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-black text-slate-800 leading-snug mb-1.5">Hasta Hakları</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Tedavi sürecinizde sahip olduğunuz yasal haklar, gizlilik ilkesi ve şikâyet yolları.</p>
-                    </div>
-                    <a href="#" class="btn-go">Haklarımı Öğren <i class="fa-solid fa-chevron-right text-[8px]"></i></a>
-                </div>
-            </div>
-
-            <div class="guide-card gc-blue">
-                <div class="p-5 flex flex-col gap-4 flex-1">
-                    <div class="icon-w iw-blue"><i class="fa-solid fa-wifi"></i></div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-black text-slate-800 leading-snug mb-1.5">Kablosuz Ağ (Wi-Fi)</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Yatan hasta ve refakatçiler için sunulan ücretsiz yüksek hızlı internet erişimi.</p>
-                    </div>
-                    <div class="flex items-center gap-2 text-xs text-slate-500 py-2 px-3 bg-blue-50 rounded-xl border border-blue-100">
-                        <i class="fa-solid fa-key text-blue-500 text-[10px]"></i>
-                        <span>Ağ: <strong class="text-blue-700">GaziHospital_Guest</strong></span>
-                    </div>
-                    <a href="#" class="btn-go">Bağlantı Rehberi <i class="fa-solid fa-chevron-right text-[8px]"></i></a>
-                </div>
-            </div>
-
-            <div class="guide-card gc-emerald">
-                <div class="p-5 flex flex-col gap-4 flex-1">
-                    <div class="icon-w iw-emerald"><i class="fa-solid fa-utensils"></i></div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-black text-slate-800 leading-snug mb-1.5">Yemek Hizmetleri</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Diyetisyen onaylı hasta menüleri, diyet seçenekleri ve öğün saatleri hakkında bilgi.</p>
-                    </div>
-                    <a href="#" class="btn-go">Menüyü Gör <i class="fa-solid fa-chevron-right text-[8px]"></i></a>
-                </div>
-            </div>
-
-            <div class="guide-card gc-amber">
-                <div class="p-5 flex flex-col gap-4 flex-1">
-                    <div class="icon-w iw-amber"><i class="fa-solid fa-credit-card"></i></div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-black text-slate-800 leading-snug mb-1.5">Ödeme İşlemleri</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Muhasebe, fatura düzenleme, SGK ve özel sigorta kapsamı bilgileri.</p>
-                    </div>
-                    <a href="#" class="btn-go">Ödeme Bilgisi <i class="fa-solid fa-chevron-right text-[8px]"></i></a>
-                </div>
-            </div>
-
-            <div class="guide-card gc-rose">
-                <div class="p-5 flex flex-col gap-4 flex-1">
-                    <div class="icon-w iw-rose"><i class="fa-solid fa-baby"></i></div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-black text-slate-800 leading-snug mb-1.5">Emzirme Odaları</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Her katta yer alan emzirme odaları, anne-bebek bakım alanları ve ilgili destekler.</p>
-                    </div>
-                    <a href="#" class="btn-go">Konumu Gör <i class="fa-solid fa-chevron-right text-[8px]"></i></a>
-                </div>
-            </div>
-
-            <div class="guide-card gc-purple">
-                <div class="p-5 flex flex-col gap-4 flex-1">
-                    <div class="icon-w iw-purple"><i class="fa-solid fa-mobile-screen-button"></i></div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-black text-slate-800 leading-snug mb-1.5">Mobil Uygulama</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">Randevu, tahlil sonuçları ve hasta bildirimlerini tek uygulamadan takip edin.</p>
-                    </div>
-                    <a href="#" class="btn-go">İndirme Linki <i class="fa-solid fa-chevron-right text-[8px]"></i></a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div id="iletisim">
-        <div class="section-bar">
-            <span class="badge badge-red"><i class="fa-solid fa-circle-dot"></i> İletişim</span>
-            <h2 class="text-lg font-black text-slate-800">İletişim & Acil</h2>
-            <div class="section-bar-line"></div>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-            <div class="bg-gradient-to-br from-red-500 to-red-700 rounded-[1.5rem] p-6 relative overflow-hidden" style="box-shadow: 0 12px 40px rgba(239,68,68,0.3);">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full translate-x-8 -translate-y-8"></div>
-                <div class="relative z-10">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center pulse-badge">
-                            <i class="fa-solid fa-phone text-white text-sm"></i>
-                        </div>
-                        <p class="text-red-100 text-[10px] font-black uppercase tracking-widest">Acil Çağrı</p>
-                    </div>
-                    <p class="text-white text-4xl font-black">444 0 911</p>
-                    <p class="text-red-200 text-xs font-semibold mt-1">7/24 kesintisiz hizmet</p>
-                    <a href="tel:4440911" class="mt-4 flex items-center justify-center gap-2 bg-white/20 hover:bg-white/30 border border-white/30 text-white text-xs font-black tracking-wider rounded-xl py-2.5 transition">
-                        <i class="fa-solid fa-phone-volume text-xs"></i> HEMEN ARA
-                    </a>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-[1.5rem] p-6 border border-slate-100" style="box-shadow: 0 4px 24px rgba(0,0,0,0.04);">
-                <div class="flex items-center gap-3 mb-5">
-                    <div class="icon-w iw-blue"><i class="fa-solid fa-comment-medical"></i></div>
-                    <div>
-                        <h3 class="text-sm font-black text-slate-800">Hasta İletişim Birimi</h3>
-                        <p class="text-[10px] text-slate-400 font-bold">Şikâyet & Öneri</p>
-                    </div>
-                </div>
-                <div class="space-y-2.5 text-xs">
-                    <div class="flex items-center gap-2.5 text-slate-600"><i class="fa-solid fa-phone text-blue-500 w-3"></i> (0312) 202 50 00</div>
-                    <div class="flex items-center gap-2.5 text-slate-600"><i class="fa-solid fa-envelope text-blue-500 w-3"></i> iletisim@gazi.edu.tr</div>
-                    <div class="flex items-center gap-2.5 text-slate-600"><i class="fa-solid fa-location-dot text-blue-500 w-3"></i> Zemin Kat, Blok A</div>
-                    <div class="flex items-center gap-2.5 text-slate-600"><i class="fa-solid fa-clock text-blue-500 w-3"></i> Pzt–Cuma, 08:30–17:00</div>
-                </div>
-                <a href="/Home/Iletisim" class="btn-go mt-4 gc-blue">İletişime Geç <i class="fa-solid fa-chevron-right text-[8px]"></i></a>
-            </div>
-
-            <div class="bg-white rounded-[1.5rem] p-6 border border-slate-100" style="box-shadow: 0 4px 24px rgba(0,0,0,0.04);">
-                <div class="flex items-center gap-3 mb-5">
-                    <div class="icon-w iw-violet"><i class="fa-solid fa-paper-plane"></i></div>
-                    <div>
-                        <h3 class="text-sm font-black text-slate-800">Bize Yazın</h3>
-                        <p class="text-[10px] text-slate-400 font-bold">Online mesaj gönder</p>
-                    </div>
-                </div>
-                <p class="text-slate-500 text-xs leading-relaxed mb-4">Görüş, öneri veya şikâyetlerinizi online form aracılığıyla bize iletebilirsiniz. En kısa sürede yanıt vereceğiz.</p>
-                <a href="#" class="flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-violet-700 text-white rounded-xl py-2.5 text-xs font-black tracking-wider hover:from-violet-700 hover:to-violet-800 transition shadow-md shadow-violet-200/60">
-                    <i class="fa-solid fa-paper-plane text-xs"></i>
-                    FORM'U DOLDUR
-                </a>
-            </div>
-
-        </div>
-    </div>
-
 </main>

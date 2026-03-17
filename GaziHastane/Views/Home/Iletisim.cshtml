@@ -5,7 +5,6 @@
 }
 
 @section Scripts {
-    <!-- SAYFAYA ÖZEL STİLLER (CSS) -->
     <style>
         /* ── KONUM KARTI STİLİ ── */
         .loc-card {
@@ -22,10 +21,8 @@
             }
 
         /* ── HARİTA YER TUTUCU (Placeholder) ── */
-        /* Harita yüklenmeden önce veya harita yerine gösterilecek tasarım */
         .map-ph {
             height: 200px;
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -135,19 +132,23 @@
         }
 
         /* ── NABIZ EFEKTİ (PULSE ANIMATION) ── */
-        /* Acil durum ikonunun etrafında yayılan halka efekti */
         @@keyframes pulse-ring {
-            0% {
-                box-shadow: 0 0 0 0 rgba(239,68,68,0.35);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(239,68,68,0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(239,68,68,0);
-            }
+            0%
+
+        {
+            box-shadow: 0 0 0 0 rgba(239,68,68,0.35);
         }
-        
+
+        70% {
+            box-shadow: 0 0 0 10px rgba(239,68,68,0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(239,68,68,0);
+        }
+
+        }
+
         /* Nabız animasyonunu elemente uygula */
         .pulse-badge {
             animation: pulse-ring 2s ease infinite;
@@ -155,27 +156,19 @@
     </style>
 }
 
-<!-- ANA İÇERİK ALANI -->
 <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8 mt-24">
-    
-    <!-- ÜST BAŞLIK KARTI (Mavi Gradient) -->
+
     <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-[1.75rem] p-6 sm:p-10 relative overflow-hidden" style="box-shadow: 0 12px 40px rgba(37,99,235,0.25);">
-        <!-- Dekoratif Arka Plan Daireleri -->
         <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full translate-x-20 -translate-y-20"></div>
         <div class="absolute bottom-0 right-24 w-32 h-32 bg-white/5 rounded-full translate-y-12"></div>
-        
-        <!-- İçerik -->
+
         <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
             <div>
-                <!-- Küçük Üst Başlık -->
                 <p class="text-blue-300 text-[10px] font-black tracking-[0.2em] uppercase mb-1">Gazi Üniversitesi Hastanesi</p>
-                <!-- Ana Başlık -->
                 <h2 class="text-white text-2xl sm:text-4xl font-black leading-tight tracking-tight">İletişim & Ulaşım</h2>
-                <!-- Alt Açıklama -->
                 <p class="text-blue-200/80 text-sm font-medium mt-2 max-w-lg">Bize ulaşın, size en yakın birimimizden destek alın.</p>
             </div>
-            
-            <!-- Sağ Taraf İstatistikleri -->
+
             <div class="flex gap-5 flex-shrink-0">
                 <div class="text-center">
                     <p class="text-white text-2xl font-black">2</p>
@@ -195,9 +188,7 @@
         </div>
     </div>
 
-    <!-- ACİL ÇAĞRI KARTI (Kırmızı Gradient) -->
     <div class="bg-gradient-to-r from-red-500 to-red-600 rounded-[1.25rem] px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3" style="box-shadow: 0 8px 30px rgba(239,68,68,0.25);">
-        <!-- Sol Taraf: Yanıp Sönen İkon ve Metin -->
         <div class="flex items-center gap-3">
             <div class="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center pulse-badge flex-shrink-0">
                 <i class="fa-solid fa-phone-volume text-white text-xs"></i>
@@ -207,7 +198,6 @@
                 <p class="text-red-200 text-[10px] font-semibold">7/24 kesintisiz hizmet</p>
             </div>
         </div>
-        <!-- Sağ Taraf: Telefon Butonları (Tıklanabilir) -->
         <div class="flex flex-wrap gap-3">
             <a href="tel:4440911" class="flex items-center gap-2 bg-white/20 hover:bg-white/30 border border-white/30 text-white text-[10px] font-black tracking-wider rounded-xl px-4 py-2 transition">
                 <i class="fa-solid fa-phone text-[9px]"></i> 444 0 911
@@ -218,144 +208,112 @@
         </div>
     </div>
 
-    <!-- HASTANE LOKASYONLARI BÖLÜMÜ -->
     <div>
-        <!-- Bölüm Başlığı -->
         <div class="section-bar">
             <span class="badge badge-blue"><i class="fa-solid fa-circle-dot"></i> Konumlar</span>
             <h2 class="text-lg font-black text-slate-800">Hastane Lokasyonları</h2>
             <div class="section-bar-line"></div>
         </div>
 
-        <!-- İki Sütunlu Grid Yapısı -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
-            <!-- 1. KONUM KARTI: MERKEZ KAMPÜS -->
-            <div class="loc-card">
-                <!-- Harita Görseli Alanı (Mavi Tema) -->
-                <div class="map-ph">
-                    <div class="relative z-10 flex flex-col items-center gap-2">
-                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
-                            <i class="fa-solid fa-location-dot text-blue-600 text-lg"></i>
+            @if (ViewBag.Lokasyonlar != null)
+            {
+                foreach (var lokasyon in ViewBag.Lokasyonlar)
+                {
+                    <div class="loc-card">
+                        <div class="map-ph" style="@(lokasyon.TemaRengi == "emerald" ? "background: linear-gradient(135deg,#f0fdf4 0%,#dcfce7 50%,#bbf7d0 100%);" : "background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%);")">
+                            <div class="relative z-10 flex flex-col items-center gap-2">
+                                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
+                                    <i class="fa-solid fa-location-dot text-@(lokasyon.TemaRengi)-600 text-lg"></i>
+                                </div>
+                                <p class="text-@(lokasyon.TemaRengi)-700 text-xs font-black">@lokasyon.KisaAdres</p>
+                                <p class="text-@(lokasyon.TemaRengi)-500 text-[10px] font-semibold">@lokasyon.Koordinat</p>
+                            </div>
+                            <a href="@lokasyon.HaritaUrl" target="_blank"
+                               class="absolute bottom-3 right-3 z-10 flex items-center gap-1.5 bg-@(lokasyon.TemaRengi)-600 hover:bg-@(lokasyon.TemaRengi)-700 text-white text-[10px] font-black px-3 py-1.5 rounded-xl transition shadow-md">
+                                <i class="fa-solid fa-diamond-turn-right text-[9px]"></i> Yol Tarifi
+                            </a>
                         </div>
-                        <p class="text-blue-700 text-xs font-black">Beşevler / Yenimahalle</p>
-                        <p class="text-blue-500 text-[10px] font-semibold">39.9328° K, 32.8252° D</p>
-                    </div>
-                    <!-- Yol Tarifi Butonu -->
-                    <a href="https://maps.app.goo.gl/" target="_blank"
-                       class="absolute bottom-3 right-3 z-10 flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-black px-3 py-1.5 rounded-xl transition shadow-md">
-                        <i class="fa-solid fa-diamond-turn-right text-[9px]"></i> Yol Tarifi
-                    </a>
-                </div>
 
-                <!-- Adres ve İletişim Bilgileri -->
-                <div class="p-5 space-y-3">
-                    <div class="flex items-start justify-between gap-3">
-                        <div>
-                            <h3 class="text-base font-black text-slate-800">Gazi Üniversitesi Hastanesi</h3>
-                            <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest">Merkez Kampüs</span>
-                        </div>
-                        <div class="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <i class="fa-solid fa-hospital text-blue-600 text-sm"></i>
-                        </div>
-                    </div>
-                    <!-- Adres -->
-                    <div class="info-row">
-                        <i class="fa-solid fa-location-dot text-blue-500 text-xs mt-0.5 flex-shrink-0"></i>
-                        <p class="text-slate-600 text-xs leading-relaxed">Emniyet Mah., Mevlana Bulvarı No:29, 06560 Yenimahalle / ANKARA</p>
-                    </div>
-                    <!-- Telefonlar -->
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class="info-row">
-                            <i class="fa-solid fa-phone text-blue-500 text-xs flex-shrink-0"></i>
-                            <div>
-                                <p class="text-[9px] font-black text-slate-500 uppercase">Çağrı Merkezi</p>
-                                <p class="text-xs font-black text-slate-700">0312 911 48 48</p>
+                        <div class="p-5 space-y-3">
+                            <div class="flex items-start justify-between gap-3">
+                                <div>
+                                    <h3 class="text-base font-black text-slate-800">@lokasyon.Baslik</h3>
+                                    <span class="text-[10px] font-black text-@(lokasyon.TemaRengi)-600 uppercase tracking-widest">@lokasyon.AltBaslik</span>
+                                </div>
+                                <div class="w-9 h-9 bg-@(lokasyon.TemaRengi)-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid @(lokasyon.TemaRengi == "emerald" ? "fa-clinic-medical" : "fa-hospital") text-@(lokasyon.TemaRengi)-600 text-sm"></i>
+                                </div>
                             </div>
-                        </div>
-                        <div class="info-row">
-                            <i class="fa-solid fa-phone text-blue-500 text-xs flex-shrink-0"></i>
-                            <div>
-                                <p class="text-[9px] font-black text-slate-500 uppercase">Santral</p>
-                                <p class="text-xs font-black text-slate-700">(312) 202 40 00</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="info-row">
-                        <i class="fa-solid fa-envelope text-blue-500 text-xs flex-shrink-0 mt-0.5"></i>
-                        <p class="text-slate-700 text-xs font-semibold">hastane@gazi.edu.tr</p>
-                    </div>
-                    <div class="info-row">
-                        <i class="fa-solid fa-clock text-blue-500 text-xs flex-shrink-0 mt-0.5"></i>
-                        <p class="text-slate-600 text-xs">Poliklinikler: <strong class="text-slate-800">Pzt–Cuma 08:00–17:00</strong> · Acil: <strong class="text-red-600">7/24</strong></p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- 2. KONUM KARTI: ÇAYYOLU -->
-            <div class="loc-card">
-                <!-- Harita Alanı (Yeşil Tema) -->
-                <div class="map-ph" style="background: linear-gradient(135deg,#f0fdf4 0%,#dcfce7 50%,#bbf7d0 100%);">
-                    <div class="relative z-10 flex flex-col items-center gap-2">
-                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
-                            <i class="fa-solid fa-location-dot text-emerald-600 text-lg"></i>
-                        </div>
-                        <p class="text-emerald-700 text-xs font-black">Yaşamkent / Çankaya</p>
-                        <p class="text-emerald-500 text-[10px] font-semibold">39.8700° K, 32.6500° D</p>
-                    </div>
-                    <a href="https://maps.app.goo.gl/" target="_blank"
-                       class="absolute bottom-3 right-3 z-10 flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-black px-3 py-1.5 rounded-xl transition shadow-md">
-                        <i class="fa-solid fa-diamond-turn-right text-[9px]"></i> Yol Tarifi
-                    </a>
-                </div>
+                            <div class="info-row">
+                                <i class="fa-solid fa-location-dot text-@(lokasyon.TemaRengi)-500 text-xs mt-0.5 flex-shrink-0"></i>
+                                <p class="text-slate-600 text-xs leading-relaxed">@lokasyon.Adres</p>
+                            </div>
 
-                <!-- Bilgi Alanı -->
-                <div class="p-5 space-y-3">
-                    <div class="flex items-start justify-between gap-3">
-                        <div>
-                            <h3 class="text-base font-black text-slate-800">Çayyolu Semt Polikliniği</h3>
-                            <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Yaşamkent Birimi</span>
-                        </div>
-                        <div class="w-9 h-9 bg-emerald-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <i class="fa-solid fa-clinic-medical text-emerald-600 text-sm"></i>
-                        </div>
-                    </div>
-                    <div class="info-row">
-                        <i class="fa-solid fa-location-dot text-emerald-500 text-xs mt-0.5 flex-shrink-0"></i>
-                        <p class="text-slate-600 text-xs leading-relaxed">Yaşamkent Mah. 3061. Cadde 3045 Sokak No:4, 06810 Çayyolu / ANKARA</p>
-                    </div>
-                    <div class="grid grid-cols-1 gap-2">
-                        <!-- Ofis Telefonları -->
-                        <div class="grid grid-cols-3 gap-2">
-                            <div class="info-row flex-col !items-start gap-0.5">
-                                <p class="text-[9px] font-black text-slate-500 uppercase">Santral</p>
-                                <p class="text-xs font-black text-slate-700">(312) 233 40 00</p>
+                            <div class="grid grid-cols-1 gap-2">
+                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                    @if (!string.IsNullOrEmpty(lokasyon.CagriMerkezi))
+                                    {
+                                        <div class="info-row flex-col !items-start gap-0.5">
+                                            <p class="text-[9px] font-black text-slate-500 uppercase">Çağrı Merkezi</p>
+                                            <p class="text-xs font-black text-slate-700">@lokasyon.CagriMerkezi</p>
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(lokasyon.Santral))
+                                    {
+                                        <div class="info-row flex-col !items-start gap-0.5">
+                                            <p class="text-[9px] font-black text-slate-500 uppercase">Santral</p>
+                                            <p class="text-xs font-black text-slate-700">@lokasyon.Santral</p>
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(lokasyon.DigerTelefonlar))
+                                    {
+                                        // "Randevu|(312) 233 40 40^Danışma|(312) 233 40 30" yapısını çözer
+                                        foreach (var telBilgisi in lokasyon.DigerTelefonlar.Split('^'))
+                                        {
+                                            var bolumler = telBilgisi.Split('|');
+                                            if (bolumler.Length == 2)
+                                            {
+                                                <div class="info-row flex-col !items-start gap-0.5">
+                                                    <p class="text-[9px] font-black text-slate-500 uppercase">@bolumler[0]</p>
+                                                    <p class="text-xs font-black text-slate-700">@bolumler[1]</p>
+                                                </div>
+                                            }
+                                        }
+                                    }
+                                </div>
                             </div>
-                            <div class="info-row flex-col !items-start gap-0.5">
-                                <p class="text-[9px] font-black text-slate-500 uppercase">Randevu</p>
-                                <p class="text-xs font-black text-slate-700">(312) 233 40 40</p>
+
+                            @if (!string.IsNullOrEmpty(lokasyon.Email))
+                            {
+                                <div class="info-row">
+                                    <i class="fa-solid fa-envelope text-@(lokasyon.TemaRengi)-500 text-xs flex-shrink-0 mt-0.5"></i>
+                                    <p class="text-slate-700 text-xs font-semibold">@lokasyon.Email</p>
+                                </div>
+                            }
+
+                            <div class="info-row">
+                                <i class="fa-solid fa-clock text-@(lokasyon.TemaRengi)-500 text-xs flex-shrink-0 mt-0.5"></i>
+                                <p class="text-slate-600 text-xs">@Html.Raw(lokasyon.CalismaSaatleri)</p>
                             </div>
-                            <div class="info-row flex-col !items-start gap-0.5">
-                                <p class="text-[9px] font-black text-slate-500 uppercase">Danışma</p>
-                                <p class="text-xs font-black text-slate-700">(312) 233 40 30</p>
-                            </div>
+
+                            @if (!string.IsNullOrEmpty(lokasyon.EkBilgi))
+                            {
+                                <div class="info-row">
+                                    <i class="fa-solid fa-circle-info text-@(lokasyon.TemaRengi)-500 text-xs flex-shrink-0 mt-0.5"></i>
+                                    <p class="text-slate-600 text-xs">@lokasyon.EkBilgi</p>
+                                </div>
+                            }
                         </div>
                     </div>
-                    <div class="info-row">
-                        <i class="fa-solid fa-clock text-emerald-500 text-xs flex-shrink-0 mt-0.5"></i>
-                        <p class="text-slate-600 text-xs">Çalışma Saatleri: <strong class="text-slate-800">Pzt–Cuma 08:00–17:00</strong></p>
-                    </div>
-                    <div class="info-row">
-                        <i class="fa-solid fa-circle-info text-emerald-500 text-xs flex-shrink-0 mt-0.5"></i>
-                        <p class="text-slate-600 text-xs">Poliklinik hizmetleri, randevu ve tahlil işlemleri mevcuttur.</p>
-                    </div>
-                </div>
-            </div>
+                }
+            }
 
         </div>
     </div>
 
-    <!-- ULAŞIM REHBERİ BÖLÜMÜ -->
     <div>
         <div class="section-bar">
             <span class="badge badge-orange"><i class="fa-solid fa-circle-dot"></i> Ulaşım</span>
@@ -363,100 +321,36 @@
             <div class="section-bar-line"></div>
         </div>
 
-        <!-- Ulaşım Kartları Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-            <!-- Ulaşım Kartı 1: Metro -->
-            <div class="tr-card">
-                <div class="tr-icon bg-blue-50 text-blue-600">
-                    <i class="fa-solid fa-train-subway"></i>
-                </div>
-                <div>
-                    <p class="text-xs font-black text-slate-800 mb-1">Ankara İçinden (Metro / Ankaray)</p>
-                    <p class="text-[11px] text-slate-500 leading-relaxed">
-                        Ankaray hattı ile <strong class="text-slate-700">Bahçelievler</strong> istasyonunda inin, ardından kısa yürüyüşle ulaşabilirsiniz. EGO otobüsleri ve Ulus–Beşevler dolmuşları da tercih edilebilir.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Ulaşım Kartı 2: AŞTİ -->
-            <div class="tr-card">
-                <div class="tr-icon bg-orange-50 text-orange-600">
-                    <i class="fa-solid fa-bus"></i>
-                </div>
-                <div>
-                    <p class="text-xs font-black text-slate-800 mb-1">Otobüs Terminalinden (AŞTİ)</p>
-                    <p class="text-[11px] text-slate-500 leading-relaxed">
-                        AŞTİ'den Ankaray'a binerek <strong class="text-slate-700">Bahçelievler</strong> istasyonuna ulaşın. AŞTİ önünden geçen Emek–Bahçelievler dolmuşlarını da kullanabilirsiniz.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Ulaşım Kartı 3: Tren -->
-            <div class="tr-card">
-                <div class="tr-icon bg-purple-50 text-purple-600">
-                    <i class="fa-solid fa-train"></i>
-                </div>
-                <div>
-                    <p class="text-xs font-black text-slate-800 mb-1">Ankara Tren Garından</p>
-                    <p class="text-[11px] text-slate-500 leading-relaxed">
-                        Gar alt geçidinden Ankaray / Anadolu istasyonuna geçip <strong class="text-slate-700">Bahçelievler</strong> durağına inerek hastanemize ulaşabilirsiniz.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Ulaşım Kartı 4: Havalimanı -->
-            <div class="tr-card">
-                <div class="tr-icon bg-sky-50 text-sky-600">
-                    <i class="fa-solid fa-plane-arrival"></i>
-                </div>
-                <div>
-                    <p class="text-xs font-black text-slate-800 mb-1">Esenboğa Havalimanından</p>
-                    <p class="text-[11px] text-slate-500 leading-relaxed">
-                        BelkoAir otobüsleri veya EGO hatlarıyla şehir merkezine, ardından Ankaray bağlantısıyla <strong class="text-slate-700">Bahçelievler</strong> durağına ulaşabilirsiniz.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Ulaşım Kartı 5: Özel Araç -->
-            <div class="tr-card">
-                <div class="tr-icon bg-amber-50 text-amber-600">
-                    <i class="fa-solid fa-car"></i>
-                </div>
-                <div>
-                    <p class="text-xs font-black text-slate-800 mb-1">Özel Araçla</p>
-                    <p class="text-[11px] text-slate-500 leading-relaxed">
-                        Mevlana Bulvarı üzerinden hastanemize kolayca ulaşabilirsiniz. Ana bina çevresinde <strong class="text-slate-700">ücretsiz otopark</strong> alanları mevcuttur.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Ulaşım Kartı 6: Taksi -->
-            <div class="tr-card">
-                <div class="tr-icon bg-rose-50 text-rose-600">
-                    <i class="fa-solid fa-taxi"></i>
-                </div>
-                <div>
-                    <p class="text-xs font-black text-slate-800 mb-1">Taksi / Servis</p>
-                    <p class="text-[11px] text-slate-500 leading-relaxed">
-                        Acil durumlarda şehrin her noktasından taksi ile ulaşabilirsiniz. Hastane önünde taksi durağı bulunmaktadır. Engelli servis hattı: <strong class="text-slate-700">(312) 202 40 20</strong>
-                    </p>
-                </div>
-            </div>
+            @if (ViewBag.UlasimAraclari != null)
+            {
+                foreach (var ulasim in ViewBag.UlasimAraclari)
+                {
+                    <div class="tr-card">
+                        <div class="tr-icon bg-@(ulasim.TemaRengi)-50 text-@(ulasim.TemaRengi)-600">
+                            <i class="@ulasim.Ikon"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-black text-slate-800 mb-1">@ulasim.UlasimTipi</p>
+                            <p class="text-[11px] text-slate-500 leading-relaxed">
+                                @Html.Raw(ulasim.Icerik)
+                            </p>
+                        </div>
+                    </div>
+                }
+            }
 
         </div>
     </div>
 
-    <!-- ALT İLETİŞİM FORMU (Çağrıya Yönlendirme) -->
     <div class="bg-gradient-to-r from-slate-800 to-slate-900 rounded-[1.5rem] p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 relative overflow-hidden" style="box-shadow: 0 12px 40px rgba(15,23,42,0.2);">
-        <!-- Arka Plan Süsü -->
         <div class="absolute right-0 top-0 w-48 h-48 bg-white/5 rounded-full translate-x-16 -translate-y-16"></div>
         <div class="relative z-10">
             <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Online Destek</p>
             <h3 class="text-white text-xl font-black">Mesaj Gönderin</h3>
             <p class="text-slate-400 text-sm mt-1">Görüş, öneri ve şikâyetlerinizi online form ile iletebilirsiniz.</p>
         </div>
-        <!-- Butonlar -->
         <div class="flex flex-wrap gap-3 relative z-10">
             <a href="#" class="flex items-center gap-2 bg-white text-slate-800 hover:bg-blue-50 text-xs font-black px-5 py-2.5 rounded-xl transition shadow-md">
                 <i class="fa-solid fa-paper-plane text-blue-600 text-xs"></i> Form Doldur

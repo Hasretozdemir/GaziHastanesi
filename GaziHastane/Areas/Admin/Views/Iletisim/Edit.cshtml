@@ -1,0 +1,48 @@
+﻿@model GaziHastane.Models.Iletisim
+@{
+    ViewData["Title"] = "Adres Düzenle"; Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="mb-8 pl-2">
+    <a href="/Admin/Iletisim/Index" class="text-orange-400 text-sm font-bold flex items-center gap-2 mb-2"><i class="fa-solid fa-arrow-left"></i> Listeye Dön</a>
+    <h2 class="text-3xl font-black text-white">Adres Düzenle 📝</h2>
+</div>
+<div class="glass-card p-8 rounded-[2rem] mb-10">
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+                <label asp-for="Baslik" class="block text-[11px] font-black text-slate-400 uppercase mb-2">Ana Başlık *</label>
+                <input asp-for="Baslik" required class="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-white">
+            </div>
+            <div>
+                <label asp-for="AltBaslik" class="block text-[11px] font-black text-slate-400 uppercase mb-2">Alt Başlık</label>
+                <input asp-for="AltBaslik" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-white">
+            </div>
+            <div>
+                <label asp-for="KisaAdres" class="block text-[11px] font-black text-slate-400 uppercase mb-2">Kısa Adres</label>
+                <input asp-for="KisaAdres" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-white">
+            </div>
+            <div>
+                <label asp-for="TemaRengi" class="block text-[11px] font-black text-slate-400 uppercase mb-2">Tema Rengi (blue, emerald, orange)</label>
+                <input asp-for="TemaRengi" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-white">
+            </div>
+            <div class="md:col-span-2">
+                <label asp-for="Adres" class="block text-[11px] font-black text-slate-400 uppercase mb-2">Açık Adres *</label>
+                <textarea asp-for="Adres" required rows="2" class="w-full bg-black/20 border border-white/10 rounded-xl p-4 text-sm text-white"></textarea>
+            </div>
+            <div>
+                <label asp-for="Santral" class="block text-[11px] font-black text-slate-400 uppercase mb-2">Santral Telefonu</label>
+                <input asp-for="Santral" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-white">
+            </div>
+            <div>
+                <label asp-for="CagriMerkezi" class="block text-[11px] font-black text-slate-400 uppercase mb-2">Çağrı Merkezi Telefonu</label>
+                <input asp-for="CagriMerkezi" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-white">
+            </div>
+            <div class="md:col-span-2">
+                <label asp-for="HaritaUrl" class="block text-[11px] font-black text-slate-400 uppercase mb-2">Google Maps Linki</label>
+                <input asp-for="HaritaUrl" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-white">
+            </div>
+        </div>
+        <button type="submit" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-8 py-2.5 rounded-xl font-bold hover:scale-105 transition">Güncelle</button>
+    </form>
+</div>

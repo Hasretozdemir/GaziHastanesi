@@ -4,7 +4,7 @@
 @{
     ViewData["Title"] = "Gazi Hastanesi | Yemek Listesi";
 
-    // Modelden gelen verileri al (Null gelme ihtimaline kar�� kontrol et)
+    // Modelden gelen verileri al (Null gelme ihtimaline karşı kontrol et)
     var kahvalti = Model?.FirstOrDefault(x => x.Ogun == 1);
     var ogle = Model?.FirstOrDefault(x => x.Ogun == 2);
     var aksam = Model?.FirstOrDefault(x => x.Ogun == 3);
@@ -12,69 +12,50 @@
     // Toplam kaloriyi hesapla
     var toplamKalori = (kahvalti?.ToplamKalori ?? 0) + (ogle?.ToplamKalori ?? 0) + (aksam?.ToplamKalori ?? 0);
 
-    // Tarih bilgisi i�in bug�n� kullan veya modelden varsa al
+    // Tarih bilgisi için bugünü kullan veya modelden varsa al
     var tarih = DateTime.Today;
     if (Model != null && Model.Any())
     {
         tarih = Model.First().Tarih;
     }
 }
-<!-- Sayfann ana kapsaycs. Tm ierik bu div'in iinde yer alr. -->
 <div class="menu-viewport">
-    <!-- Arka plan g�rsel efektleri (bulan�k daireler/blob'lar). -->
     <div class="bg-visuals">
-        <!-- Birinci bulan�k daire (Mavi tonlar�nda) -->
         <div class="blob blob-1"></div>
-        <!-- �kinci bulan�k daire (Koyu lacivert tonlar�nda) -->
         <div class="blob blob-2"></div>
-        <!-- ���nc� bulan�k daire (Daha k���k, hareketli) -->
         <div class="blob blob-3"></div>
     </div>
 
-    <!-- Ortadaki i�eri�i saran kapsay�c�. Animasyonlu giri� (a�a��dan yukar� belirme) efekti var. -->
     <div class="center-content-wrapper animate__animated animate__fadeInUp">
 
-        <!-- Ba�l�k ve selamlama b�l�m� -->
         <div class="welcome-section text-center mb-5">
-            <!-- B�y�k "Afiyet Olsun" ba�l��� -->
             <h1 class="fw-900 text-navy display-5 mb-2">Afiyet Olsun</h1>
-            <!-- Alt a��klama metni -->
-            <p class="text-muted fw-bold shadow-text">Gazi �niversitesi Hastanesi G�nl�k Men�</p>
+            <p class="text-muted fw-bold shadow-text">Gazi Üniversitesi Hastanesi Günlük Menü</p>
         </div>
 
         @if (Model == null || !Model.Any())
         {
             <div class="alert alert-warning text-center">
-                <h4>Bug�ne ait yemek men�s� bulunamad�.</h4>
-                <p>L�tfen daha sonra tekrar deneyiniz.</p>
+                <h4>Bugüne ait yemek menüsü bulunamadı.</h4>
+                <p>Lütfen daha sonra tekrar deneyiniz.</p>
             </div>
         }
         else
         {
-            <!-- G�nl�k men� kart�n�n kendisi -->
             <div class="menu-card-main shadow-2xl">
-                <!-- Kart�n �st k�sm�: Tarih ve G�n bilgisi (Mavi gradyan arka planl�) -->
                 <div class="card-date-header today p-4 text-center">
-                    <!-- �st k�s�mda hafif desenli bir katman (overlay) -->
                     <div class="header-overlay"></div>
-                    <!-- Tarih Ba�l��� -->
                     <h3 class="m-0 fw-900 text-white position-relative">
                         @tarih.ToString("dd MMMM yyyy") | @tarih.ToString("dddd")
                     </h3>
-                    <!-- Ramazan ay� bilgisi (Opsiyonel: E�er veritaban�nda varsa eklenebilir, �imdilik statik kald�r�labilir veya dinamik hesaplanabilir) -->
-                    <!-- <div class="ramazan-pill mt-2 position-relative">Ramazan 15</div> -->
                 </div>
 
-                <!-- Kart�n g�vdesi: Yemek Listesi -->
                 <div class="card-body p-4 p-md-5">
 
                     @if (kahvalti != null)
                     {
-                        <!-- Kahvalt� Sat�r� -->
                         <div class="meal-item-row mb-4">
-                            <!-- ���n etiketi (Turuncu) -->
                             <span class="meal-tag breakfast"><i class="fas fa-coffee me-2"></i>KAHVALTI</span>
-                            <!-- Yemek i�eri�i -->
                             <p class="meal-desc">
                                 @string.Join(", ", new[] { kahvalti.Corba, kahvalti.AnaYemek, kahvalti.YardimciYemek, kahvalti.TatliMeyve }.Where(s => !string.IsNullOrEmpty(s)))
                             </p>
@@ -83,11 +64,8 @@
 
                     @if (ogle != null)
                     {
-                        <!-- ��le Yeme�i Sat�r� -->
                         <div class="meal-item-row mb-4">
-                            <!-- ���n etiketi (Ye�il) -->
-                            <span class="meal-tag lunch"><i class="fas fa-sun me-2"></i>��LE YEME��</span>
-                            <!-- Yemek i�eri�i -->
+                            <span class="meal-tag lunch"><i class="fas fa-sun me-2"></i>ÖĞLE YEMEĞİ</span>
                             <p class="meal-desc">
                                 @string.Join(", ", new[] { ogle.Corba, ogle.AnaYemek, ogle.YardimciYemek, ogle.TatliMeyve }.Where(s => !string.IsNullOrEmpty(s)))
                             </p>
@@ -96,11 +74,8 @@
 
                     @if (aksam != null)
                     {
-                        <!-- Ak�am Yeme�i Sat�r� -->
                         <div class="meal-item-row">
-                            <!-- ���n etiketi (Mavi) -->
-                            <span class="meal-tag dinner"><i class="fas fa-moon me-2"></i>AK�AM YEME��</span>
-                            <!-- Yemek i�eri�i -->
+                            <span class="meal-tag dinner"><i class="fas fa-moon me-2"></i>AKŞAM YEMEĞİ</span>
                             <p class="meal-desc">
                                 @string.Join(", ", new[] { aksam.Corba, aksam.AnaYemek, aksam.YardimciYemek, aksam.TatliMeyve }.Where(s => !string.IsNullOrEmpty(s)))
                             </p>
@@ -108,20 +83,16 @@
                     }
                 </div>
 
-                <!-- Kart�n alt k�sm�: Kalori Bilgisi -->
                 <div class="card-footer-info text-center py-3">
                     <span class="kcal-badge"><i class="fas fa-fire-alt me-2"></i>@toplamKalori kcal</span>
                 </div>
             </div>
         }
 
-        <!-- Ayl�k Listeye Git Butonu -->
         <div class="text-center mt-5">
             <a href="/Yemek/AylikListe" class="btn-modern-toggle text-decoration-none">
-                <!-- Buton ikonu -->
                 <div class="btn-icon"><i class="far fa-calendar-alt"></i></div>
-                <!-- Buton metni -->
-                <span class="ms-3 me-2">TAM AY L�STES�N� G�R�NT�LE</span>
+                <span class="ms-3 me-2">TAM AY LİSTESİNİ GÖRÜNTÜLE</span>
             </a>
         </div>
 
@@ -129,29 +100,28 @@
 </div>
 
 @section Styles {
-    <!-- Animasyon k�t�phanesi -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
-        /* CSS De�i�kenleri: Renkleri tek bir yerden y�netmek i�in */
+        /* CSS Değişkenleri: Renkleri tek bir yerden yönetmek için */
         :root {
             --navy: #0f172a; /* Temel lacivert renk */
             --primary: #2563eb; /* Ana mavi vurgu rengi */
-            --bg-page: #f8fafc; /* Sayfa arka plan rengi (a��k gri/mavi) */
+            --bg-page: #f8fafc; /* Sayfa arka plan rengi (açık gri/mavi) */
         }
 
-        /* Sayfa Geneli Ayarlar� */
+        /* Sayfa Geneli Ayarları */
         body, html {
             margin: 0;
             padding: 0;
             background: var(--bg-page);
-            font-family: 'Plus Jakarta Sans', sans-serif; /* Yaz� tipi */
-            overflow-x: hidden; /* Yatay ta�may� engelle */
+            font-family: 'Plus Jakarta Sans', sans-serif; /* Yazı tipi */
+            overflow-x: hidden; /* Yatay taşmayı engelle */
         }
 
-        /* Ana G�r�n�m Alan� (Viewport) */
+        /* Ana Görünüm Alanı (Viewport) */
         .menu-viewport {
             width: 100%;
-            min-height: 100vh; /* Ekran�n tamam�n� kapla */
+            min-height: 100vh; /* Ekranın tamamını kapla */
             display: flex;
             align-items: center; /* Dikey ortala */
             justify-content: center; /* Yatay ortala */
@@ -159,9 +129,9 @@
             padding: 60px 20px;
         }
 
-        /* Arka Plan G�rsel Efektleri (Blob'lar) */
+        /* Arka Plan Görsel Efektleri (Blob'lar) */
         .bg-visuals {
-            position: fixed; /* �stte sabit kals�n */
+            position: fixed; /* Üstte sabit kalsın */
             top: 0;
             left: 0;
             width: 100%;
@@ -170,13 +140,13 @@
             overflow: hidden;
         }
 
-        /* Blob (Bulan�k Daire) Temel Stil */
+        /* Blob (Bulanık Daire) Temel Stil */
         .blob {
             position: absolute;
             width: 600px;
             height: 600px;
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(30, 64, 175, 0.05) 100%);
-            filter: blur(100px); /* Bulan�kl�k efekti */
+            filter: blur(100px); /* Bulanıklık efekti */
             border-radius: 50%; /* Tam daire */
             animation: move 20s infinite alternate; /* Hareket animasyonu */
         }
@@ -187,7 +157,7 @@
             right: -100px;
         }
 
-        /* �kinci Blob Konumu ve Rengi */
+        /* İkinci Blob Konumu ve Rengi */
         .blob-2 {
             bottom: -200px;
             left: -100px;
@@ -196,14 +166,14 @@
             background: rgba(15, 23, 42, 0.08);
         }
 
-        /* ���nc� Blob Konumu ve Rengi */
+        /* Üçüncü Blob Konumu ve Rengi */
         .blob-3 {
             top: 40%;
             left: 30%;
             width: 300px;
             height: 300px;
             background: rgba(37, 99, 235, 0.1);
-            animation-delay: -5s; /* Animasyonu farkl� zamanda ba�lat */
+            animation-delay: -5s; /* Animasyonu farklı zamanda başlat */
         }
 
         /* Blob Hareket Animasyonu (Keyframes) */
@@ -217,43 +187,43 @@
             }
         }
 
-        /* Merkezdeki ��eri�i Saran Yap� */
+        /* Merkezdeki İçeriği Saran Yapı */
         .center-content-wrapper {
             width: 100%;
-            max-width: 700px; /* Maksimum geni�lik */
-            z-index: 2; /* Arka plan�n �st�nde */
+            max-width: 700px; /* Maksimum genişlik */
+            z-index: 2; /* Arka planın üstünde */
             position: relative;
         }
 
         /* KART TASARIMI - Glassmorphism (Buzlu Cam Efekti) */
         .menu-card-main {
-            background: rgba(255, 255, 255, 0.9); /* Yar� saydam beyaz */
-            backdrop-filter: blur(20px); /* Arkadaki nesneleri bulan�kla�t�r */
-            border-radius: 40px; /* Yuvarlak k��eler */
-            overflow: hidden; /* Ta�may� gizle */
-            border: 1px solid rgba(255, 255, 255, 0.6); /* �nce beyaz kenarl�k */
-            transition: transform 0.3s ease; /* Hover efekti i�in ge�i� */
+            background: rgba(255, 255, 255, 0.9); /* Yarı saydam beyaz */
+            backdrop-filter: blur(20px); /* Arkadaki nesneleri bulanıklaştır */
+            border-radius: 40px; /* Yuvarlak köşeler */
+            overflow: hidden; /* Taşmayı gizle */
+            border: 1px solid rgba(255, 255, 255, 0.6); /* İnce beyaz kenarlık */
+            transition: transform 0.3s ease; /* Hover efekti için geçiş */
         }
 
-        /* Tarih Ba�l��� (Kart�n �st�) */
+        /* Tarih Başlığı (Kartın Üstü) */
         .card-date-header.today {
             background: linear-gradient(135deg, var(--navy) 0%, #1e40af 100%); /* Mavi gradyan */
             position: relative;
             overflow: hidden;
         }
 
-        /* Ba�l�k �zerindeki Desen (Overlay) */
+        /* Başlık üzerindeki Desen (Overlay) */
         .header-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('https://www.transparenttextures.com/patterns/cubes.png'); /* Desen g�rseli */
-            opacity: 0.1; /* �ok hafif g�r�n�rl�k */
+            background: url('https://www.transparenttextures.com/patterns/cubes.png'); /* Desen görseli */
+            opacity: 0.1; /* Çok hafif görünürlük */
         }
 
-        /* YEMEK ��ER�KLER� VE MET�NLER� */
+        /* YEMEK İÇERİKLERİ VE METİNLERİ */
         .meal-desc {
             font-size: 1.35rem;
             font-weight: 800;
@@ -262,7 +232,7 @@
             line-height: 1.2;
         }
 
-        /* ���n Etiketleri (Kahvalt�, ��le, Ak�am) */
+        /* Öğün Etiketleri (Kahvaltı, Öğle, Akşam) */
         .meal-tag {
             font-size: 11px;
             font-weight: 800;
@@ -274,45 +244,45 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-            /* Kahvalt� Etiketi Rengi */
+            /* Kahvaltı Etiketi Rengi */
             .meal-tag.breakfast {
                 background: #fff7ed;
                 color: #ea580c;
             }
 
-            /* ��le Yeme�i Etiketi Rengi */
+            /* Öğle Yemeği Etiketi Rengi */
             .meal-tag.lunch {
                 background: #f0fdf4;
                 color: #16a34a;
             }
 
-            /* Ak�am Yeme�i Etiketi Rengi */
+            /* Akşam Yemeği Etiketi Rengi */
             .meal-tag.dinner {
                 background: #eff6ff;
                 color: #2563eb;
             }
 
-        /* Ayl�k Liste Butonu */
+        /* Aylık Liste Butonu */
         .btn-modern-toggle {
             background: var(--navy);
             color: white;
             border: none;
             padding: 10px 30px 10px 10px;
-            border-radius: 100px; /* Hap �eklinde buton */
+            border-radius: 100px; /* Hap şeklinde buton */
             display: inline-flex;
             align-items: center;
             font-weight: 800;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Yaylanma efektli ge�i� */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Yaylanma efektli geçiş */
         }
 
             /* Buton Hover Efekti */
             .btn-modern-toggle:hover {
-                transform: scale(1.05); /* B�y�me */
-                background: #000; /* Renk de�i�imi */
-                box-shadow: 0 15px 30px rgba(15,23,42,0.3); /* G�lge art��� */
+                transform: scale(1.05); /* Büyüme */
+                background: #000; /* Renk değişimi */
+                box-shadow: 0 15px 30px rgba(15,23,42,0.3); /* Gölge artışı */
             }
 
-        /* Butonun Solundaki Yuvarlak �kon */
+        /* Butonun Solundaki Yuvarlak İkon */
         .btn-icon {
             width: 48px;
             height: 48px;
@@ -324,7 +294,7 @@
             font-size: 1.1rem;
         }
 
-        /* G�lge Efektleri */
+        /* Gölge Efektleri */
         .shadow-2xl {
             box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.15);
         }
@@ -333,18 +303,18 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        /* MOB�L UYUMLULUK (Responsive) */
+        /* MOBİL UYUMLULUK (Responsive) */
         @@media (max-width: 768px) {
             .welcome-section h1 {
-                font-size: 2rem; /* Ba�l�k boyutunu k���lt */
+                font-size: 2rem; /* Başlık boyutunu küçült */
             }
 
             .meal-desc {
-                font-size: 1.15rem; /* Yemek a��klamalar�n� k���lt */
+                font-size: 1.15rem; /* Yemek açıklamalarını küçült */
             }
 
             .blob {
-                width: 300px; /* Arka plan dairelerini k���lt */
+                width: 300px; /* Arka plan dairelerini küçült */
                 height: 300px;
             }
         }

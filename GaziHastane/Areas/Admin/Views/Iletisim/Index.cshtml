@@ -1,0 +1,70 @@
+﻿@model IEnumerable<GaziHastane.Models.Iletisim>
+@{
+    ViewData["Title"] = "İletişim Bilgileri"; Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="mb-8 pl-2 flex justify-between items-end">
+    <div>
+        <h2 class="text-3xl md:text-4xl font-black mb-2 tracking-tight">İletişim <span class="text-gradient" style="background: linear-gradient(to right, #f97316, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Bilgileri</span> 📞</h2>
+        <p class="text-slate-400 font-medium">Hastanenin lokasyon ve iletişim bilgilerini yönetin.</p>
+    </div>
+    <a href="/Admin/Iletisim/Create" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:scale-105 transition">
+        <i class="fa-solid fa-plus mr-2"></i>Yeni Adres Ekle
+    </a>
+</div>
+
+<div class="glass-card rounded-[2rem] overflow-hidden mb-8">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left whitespace-nowrap">
+            <thead class="bg-black/20">
+                <tr>
+                    <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-white/5">Şube / Adres</th>
+                    <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-white/5">Santral</th>
+                    <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-white/5">Durum</th>
+                    <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-white/5 text-right">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr class="hover:bg-white/5 transition duration-200">
+                            <td class="px-8 py-5">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center font-black text-white shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+                                        <i class="fa-solid fa-building"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-white text-sm">@item.Baslik</p>
+                                        <p class="text-xs text-slate-400 w-48 truncate">@item.KisaAdres</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-8 py-5 text-slate-300 text-sm">
+                                <i class="fa-solid fa-phone text-orange-400 mr-2"></i> @(string.IsNullOrEmpty(item.Santral) ? "-" : item.Santral)
+                            </td>
+                            <td class="px-8 py-5">
+                                @if (item.IsActive)
+                                {
+                                    <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-lg">Aktif</span>
+                                }
+                                else
+                                {
+
+                                    <span class="text-xs font-bold text-rose-400 bg-rose-500/10 px-3 py-1.5 rounded-lg">Pasif</span>
+                                }
+                            </td>
+                            <td class="px-8 py-5 text-right">
+                                <div class="flex justify-end gap-2">
+                                    <a href="/Admin/Iletisim/Edit/@item.Id" class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20"><i class="fa-solid fa-pen text-xs"></i></a>
+                                    <a href="/Admin/Iletisim/Delete/@item.Id" class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center border border-rose-500/20"><i class="fa-solid fa-trash text-xs"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

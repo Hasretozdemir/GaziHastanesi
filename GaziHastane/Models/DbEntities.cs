@@ -42,14 +42,10 @@ namespace GaziHastane.Models
         [StringLength(10)]
         public string? Cinsiyet { get; set; }
 
-        /// <summary>
-        /// 1: Hasta, 2: Doktor, 3: Admin
-        /// </summary>
         public short KullaniciTipi { get; set; }
 
         public DateTime KayitTarihi { get; set; } = DateTime.UtcNow;
 
-        // Navigation properties
         public virtual ICollection<Randevu> Randevular { get; set; } = new List<Randevu>();
         public virtual ICollection<TahlilSonuc> TahlilSonuclari { get; set; } = new List<TahlilSonuc>();
         public virtual ICollection<BorcOdeme> BorclarOdemeler { get; set; } = new List<BorcOdeme>();
@@ -59,87 +55,83 @@ namespace GaziHastane.Models
     [Table("bolumler")]
     public class Bolum
     {
-       
-            [Key]
-            [Column("id")]
-            public int Id { get; set; }
+        [Key]
+        [Column("id")]
+        public int Id { get; set; }
 
-            [Required]
-            [StringLength(150)]
-            [Column("ad")]
-            public string Ad { get; set; } = null!;
+        [Required]
+        [StringLength(150)]
+        [Column("ad")]
+        public string Ad { get; set; } = null!;
 
-            [Column("aciklama")]
-            public string? Aciklama { get; set; }
+        [Column("aciklama")]
+        public string? Aciklama { get; set; }
 
-            [Column("fotografurl")]
-            public string? FotografUrl { get; set; }
+        [Column("fotografurl")]
+        public string? FotografUrl { get; set; }
 
-            [Column("kategori")]
-            public string? Kategori { get; set; }
+        [Column("kategori")]
+        public string? Kategori { get; set; }
 
-            [Column("isactive")]
-            public bool IsActive { get; set; } = true;
-        
+        [Column("isactive")]
+        public bool IsActive { get; set; } = true;
 
-        // Navigation properties
         public virtual ICollection<Doktor> Doktorlar { get; set; } = new List<Doktor>();
         public virtual ICollection<Randevu> Randevular { get; set; } = new List<Randevu>();
     }
 
- 
-        // 3. Doktorlar Table
-        [Table("doktorlar")]
-        public class Doktor
-        {
-            [Key]
-            [Column("id")]
-            public int Id { get; set; }
+    // 3. Doktorlar Table
+    [Table("doktorlar")]
+    public class Doktor
+    {
+        [Key]
+        [Column("id")]
+        public int Id { get; set; }
 
-            [Column("kullaniciid")]
-            public int? KullaniciId { get; set; }
-            [ForeignKey("KullaniciId")]
-            public virtual User? Kullanici { get; set; }
+        [Column("kullaniciid")]
+        public int? KullaniciId { get; set; }
+        [ForeignKey("KullaniciId")]
+        public virtual User? Kullanici { get; set; }
 
-            [Column("bolumid")]
-            public int? BolumId { get; set; }
-            [ForeignKey("BolumId")]
-            public virtual Bolum? Bolum { get; set; }
+        [Column("bolumid")]
+        public int? BolumId { get; set; }
+        [ForeignKey("BolumId")]
+        public virtual Bolum? Bolum { get; set; }
 
-            [StringLength(50)]
-            [Column("unvan")]
-            public string? Unvan { get; set; }
+        [StringLength(50)]
+        [Column("unvan")]
+        public string? Unvan { get; set; }
 
-            [Required]
-            [StringLength(100)]
-            [Column("ad")]
-            public string Ad { get; set; } = null!;
+        [Required]
+        [StringLength(100)]
+        [Column("ad")]
+        public string Ad { get; set; } = null!;
 
-            [Required]
-            [StringLength(100)]
-            [Column("soyad")]
-            public string Soyad { get; set; } = null!;
+        [Required]
+        [StringLength(100)]
+        [Column("soyad")]
+        public string Soyad { get; set; } = null!;
 
-            [StringLength(150)]
-            [Column("uzmanlikalani")]
-            public string? UzmanlikAlani { get; set; }
+        [StringLength(150)]
+        [Column("uzmanlikalani")]
+        public string? UzmanlikAlani { get; set; }
 
-            [Column("ozgecmis")]
-            public string? Ozgecmis { get; set; }
+        [Column("ozgecmis")]
+        public string? Ozgecmis { get; set; }
 
-            [StringLength(255)]
-            [Column("fotografurl")]
-            public string? FotografUrl { get; set; }
+        [StringLength(255)]
+        [Column("fotografurl")]
+        public string? FotografUrl { get; set; }
 
-            [Column("isactive")]
-            public bool IsActive { get; set; } = true;
+        [Column("isactive")]
+        public bool IsActive { get; set; } = true;
 
-            // Navigation properties
-            public virtual ICollection<Randevu> Randevular { get; set; } = new List<Randevu>();
-            public virtual ICollection<TahlilSonuc> TahlilSonuclari { get; set; } = new List<TahlilSonuc>();
-        }
-        // 4. Randevular Table
-        [Table("Randevular")]
+        public virtual ICollection<Randevu> Randevular { get; set; } = new List<Randevu>();
+        public virtual ICollection<TahlilSonuc> TahlilSonuclari { get; set; } = new List<TahlilSonuc>();
+    }
+
+    // 4. Randevular Table
+    [Table("Randevular")]
     public class Randevu
     {
         [Key]
@@ -160,9 +152,6 @@ namespace GaziHastane.Models
 
         public DateTime RandevuTarihi { get; set; }
 
-        /// <summary>
-        /// 1: Bekliyor, 2: Onaylandi, 3: Iptal Edildi, 4: Tamamlandi
-        /// </summary>
         public short Durum { get; set; }
 
         public string? Sikayet { get; set; }
@@ -247,10 +236,7 @@ namespace GaziHastane.Models
         [DataType(DataType.Date)]
         public DateTime Tarih { get; set; }
 
-        /// <summary>
-        /// 1: Sabah, 2: Öðle, 3: Akþam
-        /// </summary>
-        public short Ogun { get; set; } 
+        public short Ogun { get; set; }
 
         [StringLength(150)]
         public string? Corba { get; set; }
@@ -328,7 +314,6 @@ namespace GaziHastane.Models
         [StringLength(150)]
         public string Gorev { get; set; } = null!;
 
-        // Ekran görüntüsündeki "Unvaný" sütunu için bu alaný ekliyoruz
         [StringLength(150)]
         public string? Unvan { get; set; }
 
@@ -336,5 +321,98 @@ namespace GaziHastane.Models
         public string? FotografUrl { get; set; }
     }
 
+    [Table("HastaRehberi")]
+    public class HastaRehberi
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
+        [Required]
+        [StringLength(200)]
+        public string Baslik { get; set; } = null!;
+
+        [Required]
+        public string Icerik { get; set; } = null!;
+
+        [StringLength(50)]
+        public string? Ikon { get; set; }
+
+        public int SiraNo { get; set; } = 1;
+
+        public bool IsActive { get; set; } = true;
+
+        [StringLength(20)]
+        public string? Tema { get; set; } // Tasarýmdaki: blue, purple, red, teal, orange, violet, emerald, amber, rose
+    }
+
+    // 12. Iletisim Table
+    [Table("Iletisim")]
+    public class Iletisim
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [StringLength(150)]
+        public string Baslik { get; set; } = null!;
+
+        [StringLength(150)]
+        public string? AltBaslik { get; set; }
+
+        [StringLength(100)]
+        public string? KisaAdres { get; set; }
+
+        [StringLength(50)]
+        public string? Koordinat { get; set; }
+
+        public string Adres { get; set; } = null!;
+
+        [StringLength(50)]
+        public string? CagriMerkezi { get; set; }
+
+        [StringLength(50)]
+        public string? Santral { get; set; }
+
+        [StringLength(255)]
+        public string? DigerTelefonlar { get; set; }
+
+        [StringLength(150)]
+        public string? Email { get; set; }
+
+        [StringLength(150)]
+        public string? CalismaSaatleri { get; set; }
+
+        [StringLength(255)]
+        public string? EkBilgi { get; set; }
+
+        public string? HaritaUrl { get; set; }
+
+        [StringLength(50)]
+        public string? TemaRengi { get; set; }
+
+        public bool IsActive { get; set; } = true;
+    }
+
+    // 13. UlasimRehberi Table
+    [Table("UlasimRehberi")]
+    public class UlasimRehberi
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [StringLength(100)]
+        public string UlasimTipi { get; set; } = null!;
+
+        [StringLength(50)]
+        public string Ikon { get; set; } = null!;
+
+        public string Icerik { get; set; } = null!;
+
+        [StringLength(50)]
+        public string TemaRengi { get; set; } = null!;
+
+        public bool IsActive { get; set; } = true;
+    }
 }
