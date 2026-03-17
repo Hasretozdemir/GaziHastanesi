@@ -52,11 +52,18 @@ namespace GaziHastane.Controllers
             return View(aktifDoktorlar);
         }
 
-        public IActionResult Rehber()
+        // 1. Metodu "async Task<IActionResult>" olarak güncelleyin
+        public async Task<IActionResult> Rehber()
         {
-            return View();
-        }
+            // 2. Veritabanındaki 'HastaRehberleri' tablosundan aktif kayıtları liste olarak çekin
+            var rehberVerileri = await _context.HastaRehberleri
+                                               .Where(x => x.IsActive)
+                                               .OrderBy(x => x.SiraNo)
+                                               .ToListAsync();
 
+            // 3. Çekilen bu listeyi View'a (sayfaya) gönderin
+            return View(rehberVerileri);
+        }
         public async Task<IActionResult> Iletisim()
         {
             // Veritabanından aktif iletişim verileri ViewBag ile sayfaya gönderiliyor

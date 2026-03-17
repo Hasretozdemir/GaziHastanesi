@@ -1,0 +1,267 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace GaziHastane.Migrations
+{
+    /// <inheritdoc />
+    public partial class SyncModelMappings : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_doktorlar_Users_kullaniciid",
+                table: "doktorlar");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_doktorlar_bolumler_bolumid",
+                table: "doktorlar");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Randevular_bolumler_BolumId",
+                table: "Randevular");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Randevular_doktorlar_DoktorId",
+                table: "Randevular");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_TahlilSonuclari_doktorlar_DoktorId",
+                table: "TahlilSonuclari");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_doktorlar",
+                table: "doktorlar");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_bolumler",
+                table: "bolumler");
+
+            migrationBuilder.RenameTable(
+                name: "doktorlar",
+                newName: "Doktorlar");
+
+            migrationBuilder.RenameTable(
+                name: "bolumler",
+                newName: "Bolumler");
+
+            migrationBuilder.RenameColumn(
+                name: "sirano",
+                table: "HastaRehberi",
+                newName: "SiraNo");
+
+            migrationBuilder.RenameColumn(
+                name: "isactive",
+                table: "HastaRehberi",
+                newName: "IsActive");
+
+            migrationBuilder.RenameColumn(
+                name: "ikon",
+                table: "HastaRehberi",
+                newName: "Ikon");
+
+            migrationBuilder.RenameColumn(
+                name: "icerik",
+                table: "HastaRehberi",
+                newName: "Icerik");
+
+            migrationBuilder.RenameColumn(
+                name: "baslik",
+                table: "HastaRehberi",
+                newName: "Baslik");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_doktorlar_kullaniciid",
+                table: "Doktorlar",
+                newName: "IX_Doktorlar_kullaniciid");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_doktorlar_bolumid",
+                table: "Doktorlar",
+                newName: "IX_Doktorlar_bolumid");
+
+            migrationBuilder.AddColumn<string>(
+                name: "Tema",
+                table: "HastaRehberi",
+                type: "character varying(20)",
+                maxLength: 20,
+                nullable: true);
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_Doktorlar",
+                table: "Doktorlar",
+                column: "id");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_Bolumler",
+                table: "Bolumler",
+                column: "id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Doktorlar_Bolumler_bolumid",
+                table: "Doktorlar",
+                column: "bolumid",
+                principalTable: "Bolumler",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Doktorlar_Users_kullaniciid",
+                table: "Doktorlar",
+                column: "kullaniciid",
+                principalTable: "Users",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Randevular_Bolumler_BolumId",
+                table: "Randevular",
+                column: "BolumId",
+                principalTable: "Bolumler",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Randevular_Doktorlar_DoktorId",
+                table: "Randevular",
+                column: "DoktorId",
+                principalTable: "Doktorlar",
+                principalColumn: "id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_TahlilSonuclari_Doktorlar_DoktorId",
+                table: "TahlilSonuclari",
+                column: "DoktorId",
+                principalTable: "Doktorlar",
+                principalColumn: "id",
+                onDelete: ReferentialAction.SetNull);
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Doktorlar_Bolumler_bolumid",
+                table: "Doktorlar");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Doktorlar_Users_kullaniciid",
+                table: "Doktorlar");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Randevular_Bolumler_BolumId",
+                table: "Randevular");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Randevular_Doktorlar_DoktorId",
+                table: "Randevular");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_TahlilSonuclari_Doktorlar_DoktorId",
+                table: "TahlilSonuclari");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Doktorlar",
+                table: "Doktorlar");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Bolumler",
+                table: "Bolumler");
+
+            migrationBuilder.DropColumn(
+                name: "Tema",
+                table: "HastaRehberi");
+
+            migrationBuilder.RenameTable(
+                name: "Doktorlar",
+                newName: "doktorlar");
+
+            migrationBuilder.RenameTable(
+                name: "Bolumler",
+                newName: "bolumler");
+
+            migrationBuilder.RenameColumn(
+                name: "SiraNo",
+                table: "HastaRehberi",
+                newName: "sirano");
+
+            migrationBuilder.RenameColumn(
+                name: "IsActive",
+                table: "HastaRehberi",
+                newName: "isactive");
+
+            migrationBuilder.RenameColumn(
+                name: "Ikon",
+                table: "HastaRehberi",
+                newName: "ikon");
+
+            migrationBuilder.RenameColumn(
+                name: "Icerik",
+                table: "HastaRehberi",
+                newName: "icerik");
+
+            migrationBuilder.RenameColumn(
+                name: "Baslik",
+                table: "HastaRehberi",
+                newName: "baslik");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_Doktorlar_kullaniciid",
+                table: "doktorlar",
+                newName: "IX_doktorlar_kullaniciid");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_Doktorlar_bolumid",
+                table: "doktorlar",
+                newName: "IX_doktorlar_bolumid");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_doktorlar",
+                table: "doktorlar",
+                column: "id");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_bolumler",
+                table: "bolumler",
+                column: "id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_doktorlar_Users_kullaniciid",
+                table: "doktorlar",
+                column: "kullaniciid",
+                principalTable: "Users",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_doktorlar_bolumler_bolumid",
+                table: "doktorlar",
+                column: "bolumid",
+                principalTable: "bolumler",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Randevular_bolumler_BolumId",
+                table: "Randevular",
+                column: "BolumId",
+                principalTable: "bolumler",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Randevular_doktorlar_DoktorId",
+                table: "Randevular",
+                column: "DoktorId",
+                principalTable: "doktorlar",
+                principalColumn: "id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_TahlilSonuclari_doktorlar_DoktorId",
+                table: "TahlilSonuclari",
+                column: "DoktorId",
+                principalTable: "doktorlar",
+                principalColumn: "id",
+                onDelete: ReferentialAction.SetNull);
+        }
+    }
+}

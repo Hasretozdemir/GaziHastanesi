@@ -17,11 +17,11 @@ namespace GaziHastane.Areas.Admin.Controllers
             _context = context;
         }
 
-        // 1. LİSTELEME
+        // Index metodunu şu şekilde güncelleyebilirsiniz:
         public async Task<IActionResult> Index()
         {
-            // Rehber başlıklarını Sıra Numarasına (SiraNo) göre dizerek getiriyoruz
-            var rehberler = await _context.Set<HastaRehberi>().OrderBy(x => x.SiraNo).ToListAsync();
+            // Set<HastaRehberi>() yerine doğrudan tablo ismini kullanın
+            var rehberler = await _context.HastaRehberleri.OrderBy(x => x.SiraNo).ToListAsync();
             return View(rehberler);
         }
 

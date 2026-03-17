@@ -52,7 +52,7 @@ namespace GaziHastane.Models
     }
 
     // 2. Bolumler Table
-    [Table("bolumler")]
+    [Table("Bolumler")]
     public class Bolum
     {
         [Key]
@@ -81,7 +81,7 @@ namespace GaziHastane.Models
     }
 
     // 3. Doktorlar Table
-    [Table("doktorlar")]
+    [Table("Doktorlar")]
     public class Doktor
     {
         [Key]
