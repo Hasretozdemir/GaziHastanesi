@@ -12,21 +12,29 @@ namespace GaziHastane.Migrations
         {
             // Use conditional SQL to avoid failures when lowercase tables/constraints are not present
             migrationBuilder.Sql(@"
-                ALTER TABLE IF EXISTS doktorlar DROP CONSTRAINT IF EXISTS \"FK_doktorlar_Users_kullaniciid\";
-                ALTER TABLE IF EXISTS doktorlar DROP CONSTRAINT IF EXISTS \"FK_doktorlar_bolumler_bolumid\";
-                ALTER TABLE IF EXISTS \"Randevular\" DROP CONSTRAINT IF EXISTS \"FK_Randevular_bolumler_BolumId\";
-                ALTER TABLE IF EXISTS \"Randevular\" DROP CONSTRAINT IF EXISTS \"FK_Randevular_doktorlar_DoktorId\";
-                ALTER TABLE IF EXISTS \"TahlilSonuclari\" DROP CONSTRAINT IF EXISTS \"FK_TahlilSonuclari_doktorlar_DoktorId\";
+ALTER TABLE IF EXISTS doktorlar DROP CONSTRAINT IF EXISTS ""FK_doktorlar_Users_kullaniciid"";
+ALTER TABLE IF EXISTS doktorlar DROP CONSTRAINT IF EXISTS ""FK_doktorlar_bolumler_bolumid"";
+ALTER TABLE IF EXISTS ""Randevular"" DROP CONSTRAINT IF EXISTS ""FK_Randevular_bolumler_BolumId"";
+ALTER TABLE IF EXISTS ""Randevular"" DROP CONSTRAINT IF EXISTS ""FK_Randevular_doktorlar_DoktorId"";
+ALTER TABLE IF EXISTS ""TahlilSonuclari"" DROP CONSTRAINT IF EXISTS ""FK_TahlilSonuclari_doktorlar_DoktorId"";
 
-                ALTER TABLE IF EXISTS doktorlar DROP CONSTRAINT IF EXISTS \"PK_doktorlar\;
-                ALTER TABLE IF EXISTS bolumler DROP CONSTRAINT IF EXISTS \"PK_bolumler\";
+ALTER TABLE IF EXISTS doktorlar DROP CONSTRAINT IF EXISTS ""PK_doktorlar"";
+ALTER TABLE IF EXISTS bolumler DROP CONSTRAINT IF EXISTS ""PK_bolumler"";
 
-                ALTER TABLE IF EXISTS doktorlar RENAME TO \"Doktorlar\";
-                ALTER TABLE IF EXISTS bolumler RENAME TO \"Bolumler\";
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE c.relname='doktorlar') THEN
+        EXECUTE 'ALTER TABLE doktorlar RENAME TO ""Doktorlar""';
+    END IF;
+    IF EXISTS (SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE c.relname='bolumler') THEN
+        EXECUTE 'ALTER TABLE bolumler RENAME TO ""Bolumler""';
+    END IF;
+END
+$$;
 
-                ALTER INDEX IF EXISTS IX_doktorlar_kullaniciid RENAME TO \"IX_Doktorlar_kullaniciid\";
-                ALTER INDEX IF EXISTS IX_doktorlar_bolumid RENAME TO \"IX_Doktorlar_bolumid\";
-            ");
+ALTER INDEX IF EXISTS IX_doktorlar_kullaniciid RENAME TO ""IX_Doktorlar_kullaniciid"";
+ALTER INDEX IF EXISTS IX_doktorlar_bolumid RENAME TO ""IX_Doktorlar_bolumid"";
+");
 
             migrationBuilder.RenameColumn(
                 name: "sirano",
