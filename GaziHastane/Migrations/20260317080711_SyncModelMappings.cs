@@ -10,41 +10,23 @@ namespace GaziHastane.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_doktorlar_Users_kullaniciid",
-                table: "doktorlar");
+            // Use conditional SQL to avoid failures when lowercase tables/constraints are not present
+            migrationBuilder.Sql(@"
+                ALTER TABLE IF EXISTS doktorlar DROP CONSTRAINT IF EXISTS \"FK_doktorlar_Users_kullaniciid\";
+                ALTER TABLE IF EXISTS doktorlar DROP CONSTRAINT IF EXISTS \"FK_doktorlar_bolumler_bolumid\";
+                ALTER TABLE IF EXISTS \"Randevular\" DROP CONSTRAINT IF EXISTS \"FK_Randevular_bolumler_BolumId\";
+                ALTER TABLE IF EXISTS \"Randevular\" DROP CONSTRAINT IF EXISTS \"FK_Randevular_doktorlar_DoktorId\";
+                ALTER TABLE IF EXISTS \"TahlilSonuclari\" DROP CONSTRAINT IF EXISTS \"FK_TahlilSonuclari_doktorlar_DoktorId\";
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_doktorlar_bolumler_bolumid",
-                table: "doktorlar");
+                ALTER TABLE IF EXISTS doktorlar DROP CONSTRAINT IF EXISTS \"PK_doktorlar\;
+                ALTER TABLE IF EXISTS bolumler DROP CONSTRAINT IF EXISTS \"PK_bolumler\";
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_Randevular_bolumler_BolumId",
-                table: "Randevular");
+                ALTER TABLE IF EXISTS doktorlar RENAME TO \"Doktorlar\";
+                ALTER TABLE IF EXISTS bolumler RENAME TO \"Bolumler\";
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_Randevular_doktorlar_DoktorId",
-                table: "Randevular");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_TahlilSonuclari_doktorlar_DoktorId",
-                table: "TahlilSonuclari");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_doktorlar",
-                table: "doktorlar");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_bolumler",
-                table: "bolumler");
-
-            migrationBuilder.RenameTable(
-                name: "doktorlar",
-                newName: "Doktorlar");
-
-            migrationBuilder.RenameTable(
-                name: "bolumler",
-                newName: "Bolumler");
+                ALTER INDEX IF EXISTS IX_doktorlar_kullaniciid RENAME TO \"IX_Doktorlar_kullaniciid\";
+                ALTER INDEX IF EXISTS IX_doktorlar_bolumid RENAME TO \"IX_Doktorlar_bolumid\";
+            ");
 
             migrationBuilder.RenameColumn(
                 name: "sirano",
@@ -70,16 +52,6 @@ namespace GaziHastane.Migrations
                 name: "baslik",
                 table: "HastaRehberi",
                 newName: "Baslik");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_doktorlar_kullaniciid",
-                table: "Doktorlar",
-                newName: "IX_Doktorlar_kullaniciid");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_doktorlar_bolumid",
-                table: "Doktorlar",
-                newName: "IX_Doktorlar_bolumid");
 
             migrationBuilder.AddColumn<string>(
                 name: "Tema",
