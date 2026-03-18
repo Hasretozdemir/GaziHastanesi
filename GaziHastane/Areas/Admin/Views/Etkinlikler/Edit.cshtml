@@ -1,0 +1,47 @@
+﻿@model GaziHastane.Models.Etkinlik
+@{
+    ViewData["Title"] = "Etkinlik Ekle/Düzenle";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Etkinlik Bilgileri</h6>
+    </div>
+    <div class="card-body">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" />
+            <div class="row">
+                <div class="col-md-8 mb-3">
+                    <label asp-for="Baslik" class="form-label">Etkinlik Başlığı</label>
+                    <input asp-for="Baslik" class="form-control" required />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="EtkinlikTipi" class="form-label">Tip (Sempozyum, Kongre vb.)</label>
+                    <input asp-for="EtkinlikTipi" class="form-control" required />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Tarih" class="form-label">Etkinlik Tarihi (Takvim Günü)</label>
+                    <input asp-for="Tarih" type="date" class="form-control" required />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="SaatAraligi" class="form-label">Saat Aralığı</label>
+                    <input asp-for="SaatAraligi" class="form-control" placeholder="Örn: 09:00 - 17:00" required />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Konum" class="form-label">Konum / Salon</label>
+                    <input asp-for="Konum" class="form-control" required />
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label asp-for="Aciklama" class="form-label">Kısa Açıklama</label>
+                    <textarea asp-for="Aciklama" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="col-md-12 mb-3 form-check ms-3">
+                    <input asp-for="IsActive" class="form-check-input" />
+                    <label asp-for="IsActive" class="form-check-label">Sitede Göster</label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Kaydet</button>
+            <a asp-action="Index" class="btn btn-secondary">Vazgeç</a>
+        </form>
+    </div>
+</div>

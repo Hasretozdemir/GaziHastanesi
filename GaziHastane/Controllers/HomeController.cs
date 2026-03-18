@@ -27,7 +27,24 @@ namespace GaziHastane.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var viewModel = new HomeViewModel
+            {
+                // IsActive olan son 2 haberi tarihe göre azalan şekilde getir
+                Haberler = _context.Haberler
+                                   .Where(h => h.IsActive)
+                                   .OrderByDescending(h => h.YayinTarihi)
+                                   .Take(2)
+                                   .ToList(),
+
+                // IsActive olan yaklaşan son 2 etkinliği getir
+                Etkinlikler = _context.Etkinlikler
+                                      .Where(e => e.IsActive && e.Tarih >= System.DateTime.Today)
+                                      .OrderBy(e => e.Tarih)
+                                      .Take(2)
+                                      .ToList()
+            };
+
+            return View(viewModel);
         }
 
         public async Task<IActionResult> Bolumler()

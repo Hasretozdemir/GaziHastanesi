@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Panel Ayarları";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="glass-card rounded-[2rem] p-6 md:p-10 max-w-4xl mx-auto mt-4">
+
+    <div class="flex items-center gap-4 mb-10 border-b border-white/10 pb-6">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-500/20 to-purple-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
+            <i class="fa-solid fa-sliders text-2xl"></i>
+        </div>
+        <div>
+            <h2 class="text-2xl font-black text-white tracking-wide">Sistem Ayarları</h2>
+            <p class="text-xs text-slate-400 font-medium mt-1">Yönetim paneli tercihlerinizi yapılandırın</p>
+        </div>
+    </div>
+
+    <div class="space-y-6">
+
+        <!-- Ayar Öğesi 1 -->
+        <div class="bg-black/20 border border-white/5 rounded-2xl p-5 flex items-center justify-between hover:bg-black/30 transition">
+            <div>
+                <h4 class="text-white font-bold text-sm mb-1"><i class="fa-solid fa-bell text-amber-400 mr-2"></i> E-Posta Bildirimleri</h4>
+                <p class="text-xs text-slate-400">Yeni randevu veya iletişim talebi geldiğinde e-posta alırsınız.</p>
+            </div>
+            <!-- Toggle Button -->
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" value="" class="sr-only peer" checked>
+                <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.3)]"></div>
+            </label>
+        </div>
+
+        <!-- Ayar Öğesi 2 -->
+        <div class="bg-black/20 border border-white/5 rounded-2xl p-5 flex items-center justify-between hover:bg-black/30 transition">
+            <div>
+                <h4 class="text-white font-bold text-sm mb-1"><i class="fa-solid fa-shield-halved text-emerald-400 mr-2"></i> İki Aşamalı Doğrulama (2FA)</h4>
+                <p class="text-xs text-slate-400">Sisteme girişte ekstra güvenlik katmanı sağlar.</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" value="" class="sr-only peer">
+                <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
+            </label>
+        </div>
+
+        <!-- Ayar Öğesi 3 -->
+        <div class="bg-black/20 border border-white/5 rounded-2xl p-5 flex items-center justify-between hover:bg-black/30 transition">
+            <div>
+                <h4 class="text-white font-bold text-sm mb-1"><i class="fa-solid fa-database text-rose-400 mr-2"></i> Gelişmiş Log Kaydı</h4>
+                <p class="text-xs text-slate-400">Sistemdeki tüm hareketleri (ekleme, silme) detaylı kaydeder.</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" value="" class="sr-only peer" checked>
+                <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.3)]"></div>
+            </label>
+        </div>
+
+    </div>
+
+    <div class="mt-10 pt-6 border-t border-white/10 flex justify-end gap-3">
+        <button class="bg-slate-700 hover:bg-slate-600 text-white font-bold text-sm px-6 py-3 rounded-xl transition duration-300">
+            Sıfırla
+        </button>
+        <button class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-black text-sm px-8 py-3.5 rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.3)] transition duration-300 flex items-center gap-2">
+            <i class="fa-solid fa-check-double"></i> Tercihleri Kaydet
+        </button>
+    </div>
+
+</div>

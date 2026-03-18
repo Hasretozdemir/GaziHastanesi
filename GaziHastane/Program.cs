@@ -1,5 +1,6 @@
 using GaziHastane.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies; // YENÝ EKLENDÝ: Çerez doðrulama kütüphanesi
 
 namespace GaziHastane
 {
@@ -19,6 +20,20 @@ namespace GaziHastane
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddControllersWithViews();
+
+            // ------------------------------------------------------------------
+            // YENÝ EKLENEN KISIM: KÝMLÝK DOÐRULAMA VE ÇEREZ (COOKIE) AYARLARI
+            // ------------------------------------------------------------------
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Admin/Auth/Login"; // Giriþ yapýlmamýþsa yönlendirilecek sayfa
+                    options.LogoutPath = "/Admin/Auth/Logout"; // Çýkýþ yapýldýðýnda gidilecek sayfa
+                    options.AccessDeniedPath = "/Admin/Auth/Login"; // Yetkisiz eriþimde yönlendirilecek sayfa
+                    options.Cookie.Name = "GaziMedAdminAuth"; // Tarayýcýda tutulacak çerez (cookie) adý
+                    options.ExpireTimeSpan = TimeSpan.FromHours(8); // Oturum 8 saat açýk kalsýn
+                });
+            // ------------------------------------------------------------------
 
             var app = builder.Build();
 
@@ -50,7 +65,12 @@ namespace GaziHastane
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            // ------------------------------------------------------------------
+            // DÝKKAT: UseAuthentication HER ZAMAN UseAuthorization'dan ÖNCE GELMELÝ!
+            // ------------------------------------------------------------------
+            app.UseAuthentication(); // YENÝ EKLENDÝ: Sisteme kimin girdiðini tanýr
+            app.UseAuthorization();  // Sisteme giren kiþinin yetkisi var mý diye bakar
+            // ------------------------------------------------------------------
 
             // 1. AREA ROTASI (Admin paneli için - Üstte olmalý)
             app.MapControllerRoute(

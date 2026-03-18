@@ -1,0 +1,79 @@
+﻿@model GaziHastane.Models.Yetkili
+@{
+    ViewData["Title"] = "Kullanıcı Bilgileri";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="glass-card rounded-[2rem] p-6 md:p-10 max-w-4xl mx-auto mt-4">
+
+    <!-- Üst Başlık Alanı -->
+    <div class="flex flex-col md:flex-row items-center gap-6 mb-10 border-b border-white/10 pb-8">
+        <div class="relative group">
+            <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(Model.AdSoyad)&background=0D8ABC&color=fff&rounded=true&size=128"
+                 class="w-24 h-24 rounded-3xl shadow-[0_0_20px_rgba(6,182,212,0.3)] group-hover:scale-105 transition duration-300" alt="Profil">
+            <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-emerald-500 rounded-full border-4 border-[#0f172a] flex items-center justify-center shadow-lg">
+                <i class="fa-solid fa-check text-white text-xs"></i>
+            </div>
+        </div>
+        <div class="text-center md:text-left">
+            <h2 class="text-3xl font-black text-white tracking-wide mb-1">@Model.AdSoyad</h2>
+            <p class="text-sm text-cyan-400 font-bold tracking-widest uppercase"><i class="fa-solid fa-crown mr-1"></i> @Model.Rol</p>
+        </div>
+    </div>
+
+    <!-- Başarı Mesajı -->
+    @if (ViewBag.SuccessMessage != null)
+    {
+        <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm font-bold px-4 py-3 rounded-xl mb-8 flex items-center gap-3">
+            <i class="fa-solid fa-circle-check text-lg"></i>
+            @ViewBag.SuccessMessage
+        </div>
+    }
+
+    <!-- Profil Güncelleme Formu -->
+    <form asp-action="Profil" method="post" class="space-y-6">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Rol" />
+        <input type="hidden" asp-for="KayitTarihi" />
+        <input type="hidden" asp-for="IsActive" />
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Ad Soyad -->
+            <div class="space-y-2">
+                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-2">Ad Soyad</label>
+                <div class="relative">
+                    <i class="fa-solid fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                    <input type="text" asp-for="AdSoyad" required
+                           class="w-full bg-black/20 border border-white/5 focus:border-cyan-500/50 focus:bg-black/40 rounded-2xl py-3.5 pl-12 pr-4 text-white font-medium transition outline-none">
+                </div>
+            </div>
+
+            <!-- E-Posta -->
+            <div class="space-y-2">
+                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-2">E-Posta Adresi</label>
+                <div class="relative">
+                    <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                    <input type="email" asp-for="Email" required
+                           class="w-full bg-black/20 border border-white/5 focus:border-cyan-500/50 focus:bg-black/40 rounded-2xl py-3.5 pl-12 pr-4 text-white font-medium transition outline-none">
+                </div>
+            </div>
+
+            <!-- Yeni Şifre -->
+            <div class="space-y-2 md:col-span-2">
+                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-2">Şifre (Değiştirmek istemiyorsanız boş bırakın)</label>
+                <div class="relative">
+                    <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                    <!-- Value boş bırakılıyor ki eski şifre hash'i ekranda görünmesin -->
+                    <input type="password" name="SifreHash" placeholder="••••••••" value=""
+                           class="w-full bg-black/20 border border-white/5 focus:border-cyan-500/50 focus:bg-black/40 rounded-2xl py-3.5 pl-12 pr-4 text-white font-medium tracking-widest transition outline-none">
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-6 border-t border-white/10 flex justify-end gap-3">
+            <button type="submit" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-sm px-8 py-3.5 rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] transition duration-300 flex items-center gap-2">
+                <i class="fa-solid fa-floppy-disk"></i> Değişiklikleri Kaydet
+            </button>
+        </div>
+    </form>
+</div>

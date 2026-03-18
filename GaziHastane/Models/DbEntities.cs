@@ -415,4 +415,90 @@ namespace GaziHastane.Models
 
         public bool IsActive { get; set; } = true;
     }
+
+    // 14. Haberler Table
+    [Table("Haberler")]
+    public class Haber
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(200)]
+        public string Baslik { get; set; } = null!;
+
+        [StringLength(500)]
+        public string Ozet { get; set; } = null!; // Kartlarda görünen kýsa yazý
+
+        public string? Icerik { get; set; } // Týklanýnca açýlacak detay sayfasý için
+
+        [StringLength(255)]
+        public string GorselUrl { get; set; } = null!;
+
+        [StringLength(50)]
+        public string Kategori { get; set; } = null!; // Örn: "Týp Dünyasý", "Baþarýlarýmýz"
+
+        public DateTime YayinTarihi { get; set; } = DateTime.UtcNow;
+
+        public bool IsActive { get; set; } = true;
+    }
+
+    // 15. Etkinlikler Table
+    [Table("Etkinlikler")]
+    public class Etkinlik
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(200)]
+        public string Baslik { get; set; } = null!;
+
+        [StringLength(50)]
+        public string EtkinlikTipi { get; set; } = null!; // Örn: "Sempozyum", "Eðitim", "Kongre"
+
+        public DateTime Tarih { get; set; } // Gün ve ay bilgisini buradan alacaðýz
+
+        [StringLength(50)]
+        public string SaatAraligi { get; set; } = null!; // Örn: "09:00 - 17:00"
+
+        [StringLength(200)]
+        public string Konum { get; set; } = null!; // Örn: "Gazi Üniversitesi Ana Konferans Salonu"
+
+        public string? Aciklama { get; set; }
+
+        public bool IsActive { get; set; } = true;
+    }
+    // 16. Yetkililer Table
+    [Table("Yetkililer")]
+    public class Yetkili
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string AdSoyad { get; set; } = null!;
+
+        [Required]
+        [StringLength(150)]
+        [EmailAddress]
+        public string Email { get; set; } = null!;
+
+        [Required]
+        [StringLength(255)]
+        public string SifreHash { get; set; } = null!; // Gerçek senaryoda þifrelenmiþ (MD5, SHA256 vb.) tutulur
+
+        [StringLength(50)]
+        public string Rol { get; set; } = "Yönetici"; // Örn: "Süper Admin", "Editör", "Yönetici"
+
+        public DateTime KayitTarihi { get; set; } = DateTime.UtcNow;
+
+        public DateTime? SonGirisTarihi { get; set; } // Kullanýcý login oldukça güncellenecek alan
+
+        public bool IsActive { get; set; } = true;
+    }
 }

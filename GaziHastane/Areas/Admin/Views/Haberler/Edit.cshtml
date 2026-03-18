@@ -1,0 +1,46 @@
+﻿@model GaziHastane.Models.Haber
+@{
+    ViewData["Title"] = "Haber Ekle/Düzenle";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Haber Bilgileri</h6>
+    </div>
+    <div class="card-body">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" /> <div class="row">
+                <div class="col-md-8 mb-3">
+                    <label asp-for="Baslik" class="form-label">Başlık</label>
+                    <input asp-for="Baslik" class="form-control" required />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Kategori" class="form-label">Kategori</label>
+                    <input asp-for="Kategori" class="form-control" placeholder="Örn: Tıp Dünyası" required />
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label asp-for="Ozet" class="form-label">Özet (Ana sayfada görünür)</label>
+                    <textarea asp-for="Ozet" class="form-control" rows="2" required></textarea>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label asp-for="Icerik" class="form-label">Detaylı İçerik</label>
+                    <textarea asp-for="Icerik" class="form-control" rows="5"></textarea>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="GorselUrl" class="form-label">Görsel URL</label>
+                    <input asp-for="GorselUrl" class="form-control" placeholder="/assets/haber1.jpg" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="YayinTarihi" class="form-label">Yayın Tarihi</label>
+                    <input asp-for="YayinTarihi" type="datetime-local" class="form-control" />
+                </div>
+                <div class="col-md-12 mb-3 form-check ms-3">
+                    <input asp-for="IsActive" class="form-check-input" />
+                    <label asp-for="IsActive" class="form-check-label">Sitede Göster (Aktif Mi?)</label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Kaydet</button>
+            <a asp-action="Index" class="btn btn-secondary">Vazgeç</a>
+        </form>
+    </div>
+</div>

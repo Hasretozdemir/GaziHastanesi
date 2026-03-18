@@ -1,0 +1,133 @@
+﻿@{
+    // İŞTE BÜTÜN DÜZ YAZI SORUNUNU ÇÖZEN SATIR BURASI:
+    // Bu sayfanın Admin Layout'u (Sol Menü ve CSS'ler) içinde açılmasını sağlar.
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Eğitim Yönetim Paneli";
+
+    // SENİN ÖN YÜZ TASARIMINDAKİ BİREBİR VERİLER
+    var taslakMaddeler = new[] {
+        new { Title = "Eğitim Komitesi", Desc = "Yürütme kurulu ve üyelerimiz.", Icon = "fa-users-crown", Color = "text-slate-300", Tip = "Link", Hedef = "/Egitim/Index" },
+        new { Title = "Misyon & Vizyon", Desc = "Eğitim politikaları ve kalite standartları.", Icon = "fa-lightbulb-on", Color = "text-purple-400", Tip = "Panel", Hedef = "#hakkimizdaPanel" },
+        new { Title = "Duyurular & Etkinlikler", Desc = "Güncel haberler ve eğitim takvimi.", Icon = "fa-bullhorn", Color = "text-red-400", Tip = "Link", Hedef = "/Egitim/Duyurular" },
+        new { Title = "Fotoğraf Galerisi", Desc = "Eğitimlerimizden ve hastaneden kareler.", Icon = "fa-images", Color = "text-orange-400", Tip = "Panel", Hedef = "#galeriPanel" },
+        new { Title = "Sürekli Tıp Eğitimi K.", Desc = "Tıbbi personel eğitim planlamaları.", Icon = "fa-user-md", Color = "text-blue-400", Tip = "Panel", Hedef = "#tipEgitimiPanel" },
+        new { Title = "Hemşirelik Eğitimi K.", Desc = "Klinik gelişim ve bakım standartları.", Icon = "fa-user-nurse", Color = "text-teal-400", Tip = "Panel", Hedef = "#hemsirelikPanel" },
+        new { Title = "Aday Memur Eğitimi", Desc = "Yeni atanan personel uyum süreci.", Icon = "fa-user-graduate", Color = "text-sky-400", Tip = "Panel", Hedef = "#adayMemurPanel" },
+        new { Title = "İdari Personel Eğitimi", Desc = "Yönetim ve büro personeli eğitimleri.", Icon = "fa-users-cog", Color = "text-orange-500", Tip = "Panel", Hedef = "#idariPersonelPanel" },
+        new { Title = "Kalite Yönetim Birimi", Desc = "SKS akreditasyon ve kalite belgeleri.", Icon = "fa-award", Color = "text-yellow-400", Tip = "Panel", Hedef = "#kalitePanel" },
+        new { Title = "Staj Koordinatörlüğü", Desc = "Öğrenci staj işlemleri ve takvimi.", Icon = "fa-id-badge", Color = "text-indigo-400", Tip = "Panel", Hedef = "#stajPanel" },
+        new { Title = "SEGM İletişim", Desc = "Merkezimize ait irtibat bilgileri.", Icon = "fa-headset", Color = "text-green-400", Tip = "Link", Hedef = "/Home/Iletisim" }
+    };
+}
+
+<div class="h-full flex items-start justify-center p-2 md:p-4">
+
+    <div class="glass-card w-full max-w-5xl rounded-[2rem] p-6 md:p-8 relative overflow-hidden animate__animated animate__fadeIn">
+
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+
+        <div class="flex flex-col md:flex-row md:items-center gap-5 mb-8 border-b border-white/5 pb-6">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_0_25px_rgba(59,130,246,0.4)] shrink-0">
+                <i class="fa-solid fa-university text-2xl text-white"></i>
+            </div>
+            <div>
+                <h2 class="text-2xl font-black text-white tracking-wide">SEGM Tasarım Yönetimi</h2>
+                <p class="text-[14px] text-slate-400 mt-1">
+                    Sürekli Eğitim Merkezi portalındaki kartları buradan tasarlayın. <span class="text-blue-400">Panel yönlendirmeleri ve açıklamalar</span> otomatik uygulanır.
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-black/20 border border-white/5 rounded-2xl p-6 mb-8">
+            <h3 class="text-xs font-black text-blue-400 uppercase tracking-widest mb-5 flex items-center gap-2">
+                <i class="fa-solid fa-circle-plus"></i> Yeni Eğitim Kartı Tanımla
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+                <div class="lg:col-span-1">
+                    <label class="block text-[10px] font-bold text-slate-400 mb-2 tracking-widest">KART BAŞLIĞI</label>
+                    <input type="text" placeholder="Örn: Eğitim Komitesi" class="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm font-medium text-white focus:outline-none focus:border-blue-500/50 transition">
+                </div>
+
+                <div class="lg:col-span-2">
+                    <label class="block text-[10px] font-bold text-slate-400 mb-2 tracking-widest">KART AÇIKLAMASI</label>
+                    <input type="text" placeholder="Örn: Yürütme kurulu ve üyelerimiz." class="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm font-medium text-white focus:outline-none focus:border-blue-500/50 transition">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 mb-2 tracking-widest">FA-IKON KODU</label>
+                    <input type="text" placeholder="fa-users-crown" class="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm font-medium text-white focus:outline-none focus:border-blue-500/50 transition">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 mb-2 tracking-widest">RENK TEMASI (CSS)</label>
+                    <select class="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm font-medium text-white focus:outline-none focus:border-blue-500/50 transition cursor-pointer">
+                        <option class="bg-slate-900">bg-soft-blue (Mavi)</option>
+                        <option class="bg-slate-900">bg-soft-purple (Mor)</option>
+                        <option class="bg-slate-900">bg-soft-red (Kırmızı)</option>
+                        <option class="bg-slate-900">bg-soft-orange (Turuncu)</option>
+                        <option class="bg-slate-900">bg-soft-teal (Turkuaz)</option>
+                        <option class="bg-slate-900">bg-soft-sky (Açık Mavi)</option>
+                        <option class="bg-slate-900">bg-soft-indigo (Lacivert)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 mb-2 tracking-widest">HEDEF (Link veya #PanelID)</label>
+                    <input type="text" placeholder="/Egitim/Index VEYA #hakkimizdaPanel" class="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm font-medium text-white focus:outline-none focus:border-blue-500/50 transition">
+                </div>
+
+            </div>
+
+            <div class="mt-5 flex justify-end">
+                <button type="button" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-2.5 rounded-xl font-bold text-xs shadow-lg shadow-blue-500/20 hover:scale-105 transition">
+                    LİSTEYE TASLAK OLARAK EKLE
+                </button>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-layer-group"></i> Portal Önizlemesi
+            </h3>
+
+            <div class="max-h-[350px] overflow-y-auto custom-scroll pr-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @foreach (var item in taslakMaddeler)
+                    {
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-between group hover:border-blue-500/40 transition">
+
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 shrink-0 rounded-xl flex items-center justify-center text-xl bg-white/5 border border-white/5 @item.Color">
+                                    <i class="fas @item.Icon"></i>
+                                </div>
+
+                                <div>
+                                    <h4 class="text-sm font-bold text-white group-hover:text-blue-300 transition">@item.Title</h4>
+                                    <p class="text-[10px] text-slate-400 mt-0.5 mb-1.5 leading-tight">@item.Desc</p>
+
+                                    @if (item.Tip == "Panel")
+                                    {
+                                        <span class="text-[9px] px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20"><i class="fa-solid fa-window-restore mr-1"></i> PANEL: @item.Hedef</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-[9px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"><i class="fa-solid fa-link mr-1"></i> LİNK: @item.Hedef</span>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button class="w-7 h-7 rounded-lg bg-white/5 text-slate-400 hover:text-white transition"><i class="fa-solid fa-pen-to-square text-[10px]"></i></button>
+                                <button class="w-7 h-7 rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                            </div>
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

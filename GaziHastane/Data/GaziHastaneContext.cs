@@ -23,6 +23,11 @@ namespace GaziHastane.Data
 
         public DbSet<Iletisim> IletisimBilgileri { get; set; }
         public DbSet<UlasimRehberi> UlasimRehberleri { get; set; }
+
+        public DbSet<Yetkili> Yetkililer { get; set; }
+        public DbSet<Haber> Haberler { get; set; }
+        public DbSet<Etkinlik> Etkinlikler { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

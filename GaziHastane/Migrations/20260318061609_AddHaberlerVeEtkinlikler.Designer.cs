@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GaziHastane.Migrations
 {
     [DbContext(typeof(GaziHastaneContext))]
-    [Migration("20260317062400_IletisimVeUlasimEklendi")]
-    partial class IletisimVeUlasimEklendi
+    [Migration("20260318061609_AddHaberlerVeEtkinlikler")]
+    partial class AddHaberlerVeEtkinlikler
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,7 +58,7 @@ namespace GaziHastane.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("bolumler");
+                    b.ToTable("Bolumler");
                 });
 
             modelBuilder.Entity("GaziHastane.Models.BorcOdeme", b =>
@@ -158,7 +158,7 @@ namespace GaziHastane.Migrations
 
                     b.HasIndex("KullaniciId");
 
-                    b.ToTable("doktorlar");
+                    b.ToTable("Doktorlar");
                 });
 
             modelBuilder.Entity("GaziHastane.Models.Duyuru", b =>
@@ -224,6 +224,90 @@ namespace GaziHastane.Migrations
                     b.ToTable("EgitimKomitesi");
                 });
 
+            modelBuilder.Entity("GaziHastane.Models.Etkinlik", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Aciklama")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Baslik")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("EtkinlikTipi")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Konum")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("SaatAraligi")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime>("Tarih")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Etkinlikler");
+                });
+
+            modelBuilder.Entity("GaziHastane.Models.Haber", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Baslik")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("GorselUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Icerik")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Kategori")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Ozet")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime>("YayinTarihi")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Haberler");
+                });
+
             modelBuilder.Entity("GaziHastane.Models.HastaRehberi", b =>
                 {
                     b.Property<int>("Id")
@@ -235,26 +319,25 @@ namespace GaziHastane.Migrations
                     b.Property<string>("Baslik")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("baslik");
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Icerik")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("icerik");
+                        .HasColumnType("text");
 
                     b.Property<string>("Ikon")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("ikon");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isactive");
+                        .HasColumnType("boolean");
 
                     b.Property<int>("SiraNo")
-                        .HasColumnType("integer")
-                        .HasColumnName("sirano");
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Tema")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
 

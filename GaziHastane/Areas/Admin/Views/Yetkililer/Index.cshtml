@@ -1,0 +1,99 @@
+﻿@model IEnumerable<GaziHastane.Models.Yetkili>
+@{
+    ViewData["Title"] = "Yetkili Yönetimi";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="glass-card rounded-[2rem] p-6 md:p-8">
+
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-red-600/20 border border-rose-500/30 flex items-center justify-center text-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.2)]">
+                <i class="fa-solid fa-user-shield text-xl"></i>
+            </div>
+            <div>
+                <h2 class="text-xl font-black text-white tracking-wide">Yetkili Listesi</h2>
+                <p class="text-xs text-slate-400 font-medium mt-1">Sistem yöneticileri ve editörleri yönetin</p>
+            </div>
+        </div>
+
+        <a asp-action="Create" class="bg-gradient-to-r from-rose-500 to-red-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(244,63,94,0.3)] hover:scale-105 transition flex items-center gap-2">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>Yeni Yetkili Ekle</span>
+        </a>
+    </div>
+
+    <div class="overflow-x-auto custom-scroll -mx-6 px-6 md:mx-0 md:px-0">
+        <table class="w-full min-w-[800px] text-left border-collapse">
+            <thead>
+                <tr>
+                    <th class="px-4 py-4 text-[11px] font-black tracking-widest text-slate-500 uppercase border-b border-white/10 bg-white/5 first:rounded-tl-2xl">Profil</th>
+                    <th class="px-4 py-4 text-[11px] font-black tracking-widest text-slate-500 uppercase border-b border-white/10 bg-white/5">E-Posta</th>
+                    <th class="px-4 py-4 text-[11px] font-black tracking-widest text-slate-500 uppercase border-b border-white/10 bg-white/5">Rol</th>
+                    <th class="px-4 py-4 text-[11px] font-black tracking-widest text-slate-500 uppercase border-b border-white/10 bg-white/5">Durum</th>
+                    <th class="px-4 py-4 text-[11px] font-black tracking-widest text-slate-500 uppercase border-b border-white/10 bg-white/5 text-right last:rounded-tr-2xl">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+                @foreach (var item in Model)
+                {
+                    <tr class="hover:bg-white/5 transition duration-200">
+
+                        <td class="px-4 py-3 align-middle">
+                            <div class="flex items-center gap-3">
+                                <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(item.AdSoyad)&background=random&color=fff&rounded=true" class="w-10 h-10 rounded-xl shadow-lg" alt="@item.AdSoyad">
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-white">@item.AdSoyad</span>
+                                    <span class="text-[10px] text-slate-400 font-medium">@item.KayitTarihi.ToString("dd.MM.yyyy") tarihinde katıldı</span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="px-4 py-3 align-middle">
+                            <span class="text-sm font-medium text-slate-300">@item.Email</span>
+                        </td>
+
+                        <td class="px-4 py-3 align-middle">
+                            @if (item.Rol == "Süper Admin")
+                            {
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-500/10 text-amber-300 border border-amber-500/20"><i class="fa-solid fa-crown mr-1"></i> @item.Rol</span>
+                            }
+                            else
+                            {
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-bold bg-blue-500/10 text-blue-300 border border-blue-500/20">@item.Rol</span>
+                            }
+                        </td>
+
+                        <td class="px-4 py-3 align-middle">
+                            @if (item.IsActive)
+                            {
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    Aktif
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-500/10 text-slate-400 border border-slate-500/20">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                                    Pasif
+                                </span>
+                            }
+                        </td>
+
+                        <td class="px-4 py-3 align-middle text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center hover:bg-amber-500 hover:text-white transition duration-300" title="Düzenle">
+                                    <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bu yetkiliyi silmek istediğinize emin misiniz?');" class="w-8 h-8 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center hover:bg-rose-500 hover:text-white transition duration-300" title="Sil">
+                                    <i class="fa-solid fa-trash text-xs"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,116 @@
+﻿@model IEnumerable<GaziHastane.Models.Haber>
+@{
+    ViewData["Title"] = "Haber Yönetimi";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="glass-card rounded-[2rem] p-6 md:p-8">
+
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-blue-600/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.2)]">
+                <i class="fa-solid fa-newspaper text-xl"></i>
+            </div>
+            <div>
+                <h2 class="text-xl font-black text-white tracking-wide">Haberler Listesi</h2>
+                <p class="text-xs text-slate-400 font-medium mt-1">Sistemdeki kurumsal haberleri yönetin</p>
+            </div>
+        </div>
+
+        <a asp-action="Create" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:scale-105 transition flex items-center gap-2">
+            <i class="fa-solid fa-plus"></i>
+            <span>Yeni Haber Ekle</span>
+        </a>
+    </div>
+
+    <div class="overflow-x-auto custom-scroll -mx-6 px-6 md:mx-0 md:px-0">
+        <table class="w-full min-w-[800px] text-left border-collapse">
+            <thead>
+                <tr>
+                    <th class="px-4 py-4 text-[11px] font-black tracking-widest text-slate-500 uppercase border-b border-white/10 bg-white/5 first:rounded-tl-2xl">Görsel</th>
+                    <th class="px-4 py-4 text-[11px] font-black tracking-widest text-slate-500 uppercase border-b border-white/10 bg-white/5">Başlık</th>
+                    <th class="px-4 py-4 text-[11px] font-black tracking-widest text-slate-500 uppercase border-b border-white/10 bg-white/5">Kategori</th>
+                    <th class="px-4 py-4 text-[11px] font-black tracking-widest text-slate-500 uppercase border-b border-white/10 bg-white/5">Yayın Tarihi</th>
+                    <th class="px-4 py-4 text-[11px] font-black tracking-widest text-slate-500 uppercase border-b border-white/10 bg-white/5">Durum</th>
+                    <th class="px-4 py-4 text-[11px] font-black tracking-widest text-slate-500 uppercase border-b border-white/10 bg-white/5 text-right last:rounded-tr-2xl">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+                @foreach (var item in Model)
+                {
+                    <tr class="hover:bg-white/5 transition duration-200 group">
+                        <td class="px-4 py-3 align-middle">
+                            <div class="w-16 h-12 rounded-lg overflow-hidden border border-white/10 bg-black/20">
+                                @if (!string.IsNullOrEmpty(item.GorselUrl))
+                                {
+                                    <img src="@item.GorselUrl" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" alt="Görsel" />
+                                }
+                                else
+                                {
+                                    <div class="w-full h-full flex items-center justify-center text-slate-600">
+                                        <i class="fa-regular fa-image"></i>
+                                    </div>
+                                }
+                            </div>
+                        </td>
+
+                        <td class="px-4 py-3 align-middle">
+                            <span class="text-sm font-semibold text-slate-200 line-clamp-2">@item.Baslik</span>
+                        </td>
+
+                        <td class="px-4 py-3 align-middle">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-bold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                                @item.Kategori
+                            </span>
+                        </td>
+
+                        <td class="px-4 py-3 align-middle">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-medium text-slate-300">@item.YayinTarihi.ToString("dd.MM.yyyy")</span>
+                                <span class="text-[10px] text-slate-500 font-bold">@item.YayinTarihi.ToString("HH:mm")</span>
+                            </div>
+                        </td>
+
+                        <td class="px-4 py-3 align-middle">
+                            @if (item.IsActive)
+                            {
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    Aktif
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                    Pasif
+                                </span>
+                            }
+                        </td>
+
+                        <td class="px-4 py-3 align-middle text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center hover:bg-amber-500 hover:text-white hover:shadow-[0_0_15px_rgba(245,158,11,0.4)] transition duration-300" title="Düzenle">
+                                    <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bu haberi silmek istediğinize emin misiniz?');" class="w-8 h-8 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center hover:bg-rose-500 hover:text-white hover:shadow-[0_0_15px_rgba(243,64,84,0.4)] transition duration-300" title="Sil">
+                                    <i class="fa-solid fa-trash text-xs"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-12">
+                <div class="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4 text-slate-500 text-2xl shadow-inner">
+                    <i class="fa-regular fa-folder-open"></i>
+                </div>
+                <p class="text-slate-400 font-medium">Henüz hiç haber eklenmemiş.</p>
+            </div>
+        }
+    </div>
+</div>

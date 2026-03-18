@@ -12,7 +12,6 @@ namespace GaziHastane.Data
             context.Database.EnsureCreated();
 
             // 1. YEMEK LÝSTESÝ KONTROLÜ VE EKLEME
-            // Önceki kodda burada 'return;' vardý, bu yüzden yemek listesi varsa doktorlarý hiç eklemiyordu. Onu düzelttik.
             if (!context.YemekListesi.Any())
             {
                 var bugun = DateTime.Today;
@@ -66,6 +65,23 @@ namespace GaziHastane.Data
                     });
                 }
 
+                context.SaveChanges();
+            }
+
+            // 3. YETKÝLÝLER (ADMIN) - Eðer yoksa bir yönetici ekle
+            if (!context.Yetkililer.Any())
+            {
+                // DÝKKAT: SifreHash þu an düz metin olarak kullanýlýyor. Üretimde hash uygulayýn.
+                var admin = new Yetkili
+                {
+                    AdSoyad = "Admin Kullanýcý",
+                    Email = "admin@gazihastanesi.com",
+                    SifreHash = "admin123",
+                    Rol = "Yönetici",
+                    IsActive = true,
+                    KayitTarihi = DateTime.UtcNow
+                };
+                context.Yetkililer.Add(admin);
                 context.SaveChanges();
             }
         }

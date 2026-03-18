@@ -1,0 +1,93 @@
+﻿@{
+    ViewData["Title"] = "Kalite Yönetimi Paneli";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    // ŞİMDİLİK VERİTABANI YERİNE STATİK LİSTE (Tasarımı Görmek İçin)
+    var taslakMaddeler = new[] {
+        new { Id = 1, Icon = "fa-sitemap", Title = "Organizasyon Şeması", ColorClass = "bg-soft-blue" },
+        new { Id = 2, Icon = "fa-route", Title = "Kalite Yolculuğu", ColorClass = "bg-soft-purple" },
+        new { Id = 3, Icon = "fa-users-cog", Title = "Kalite Ekibi", ColorClass = "bg-soft-orange" },
+        new { Id = 4, Icon = "fa-file-medical-alt", Title = "Raporlar", ColorClass = "bg-soft-green" }
+    };
+}
+
+<div class="h-full flex items-start justify-center p-2 md:p-6 overflow-y-auto custom-scroll">
+
+    <div class="glass-card w-full max-w-5xl rounded-[2rem] p-8 md:p-10 relative overflow-hidden animate__animated animate__fadeIn">
+
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+
+        <div class="flex flex-col md:flex-row md:items-center gap-5 mb-10 border-b border-white/5 pb-8">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-[0_0_25px_rgba(99,102,241,0.4)] shrink-0">
+                <i class="fa-solid fa-award text-2xl text-white"></i>
+            </div>
+            <div>
+                <h2 class="text-2xl font-black text-white tracking-wide">Kalite Yönetimi Tasarım Paneli</h2>
+                <p class="text-[14px] text-slate-400 mt-1">
+                    Portal üzerindeki kartları düzenleyin. <span class="text-indigo-400">İkon, başlık ve renk</span> uyumunu buradan simüle edebilirsiniz.
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-black/20 border border-white/5 rounded-2xl p-6 md:p-8 mb-10">
+            <h3 class="text-xs font-black text-indigo-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+                <i class="fa-solid fa-circle-plus"></i> Yeni Kalite Kartı Tanımla
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 mb-2 tracking-widest">KART BAŞLIĞI</label>
+                    <input type="text" placeholder="Örn: Kalite Komiteleri" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm font-medium text-white focus:outline-none focus:border-indigo-500/50 transition">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 mb-2 tracking-widest">FA-IKON KODU</label>
+                    <input type="text" placeholder="fa-users" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm font-medium text-white focus:outline-none focus:border-indigo-500/50 transition">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 mb-2 tracking-widest">RENK TEMASI</label>
+                    <select class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm font-medium text-white focus:outline-none focus:border-indigo-500/50 transition cursor-pointer">
+                        <option class="bg-slate-900">Mavi (Soft Blue)</option>
+                        <option class="bg-slate-900">Mor (Soft Purple)</option>
+                        <option class="bg-slate-900">Turuncu (Soft Orange)</option>
+                        <option class="bg-slate-900">Yeşil (Soft Green)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <button type="button" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-8 py-3 rounded-xl font-bold text-xs shadow-lg shadow-indigo-500/20 hover:scale-105 transition">
+                    LİSTEYE TASLAK OLARAK EKLE
+                </button>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-6 flex items-center gap-2">
+                <i class="fa-solid fa-layer-group"></i> Aktif Kartlar Önizlemesi
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @foreach (var item in taslakMaddeler)
+                {
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-5 flex items-center justify-between group hover:border-indigo-500/40 transition">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl bg-white/5 border border-white/5 @item.ColorClass.Replace("bg-soft", "text")">
+                                <i class="fas @item.Icon"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-white group-hover:text-indigo-300 transition">@item.Title</h4>
+                                <p class="text-[10px] text-slate-500 uppercase tracking-tighter">Sınıf: @item.ColorClass</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button class="w-8 h-8 rounded-lg bg-white/5 text-slate-400 hover:text-white transition"><i class="fa-solid fa-pen-to-square text-xs"></i></button>
+                            <button class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition"><i class="fa-solid fa-trash text-xs"></i></button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Threading.Tasks;
 using GaziHastane.Data;
 using GaziHastane.Models;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GaziHastane.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class BolumlerController : Controller
     {
         private readonly GaziHastaneContext _context;

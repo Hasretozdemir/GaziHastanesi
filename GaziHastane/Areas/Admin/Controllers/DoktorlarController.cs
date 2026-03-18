@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using GaziHastane.Data; // Kendi Data namespace'in neyse o kalmalı
+﻿using System.Threading.Tasks;
+using GaziHastane.Data; 
 using GaziHastane.Models;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GaziHastane.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class DoktorlarController : Controller
     {
         private readonly GaziHastaneContext _context;
@@ -96,9 +98,6 @@ namespace GaziHastane.Areas.Admin.Controllers
         }
 
 
-        // --- SİLME (DELETE) İŞLEMLERİ ---
-
-        // Silme Onay Ekranını Açma (GET)
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -127,3 +126,4 @@ namespace GaziHastane.Areas.Admin.Controllers
         }
     }
 }
+

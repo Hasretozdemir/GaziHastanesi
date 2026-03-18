@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GaziHastane.Migrations
 {
     [DbContext(typeof(GaziHastaneContext))]
-    [Migration("20260317060451_AddIletisimTable")]
-    partial class AddIletisimTable
+    [Migration("20260318054041_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,7 +58,7 @@ namespace GaziHastane.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("bolumler");
+                    b.ToTable("Bolumler");
                 });
 
             modelBuilder.Entity("GaziHastane.Models.BorcOdeme", b =>
@@ -158,7 +158,7 @@ namespace GaziHastane.Migrations
 
                     b.HasIndex("KullaniciId");
 
-                    b.ToTable("doktorlar");
+                    b.ToTable("Doktorlar");
                 });
 
             modelBuilder.Entity("GaziHastane.Models.Duyuru", b =>
@@ -235,26 +235,25 @@ namespace GaziHastane.Migrations
                     b.Property<string>("Baslik")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("baslik");
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Icerik")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("icerik");
+                        .HasColumnType("text");
 
                     b.Property<string>("Ikon")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("ikon");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isactive");
+                        .HasColumnType("boolean");
 
                     b.Property<int>("SiraNo")
-                        .HasColumnType("integer")
-                        .HasColumnName("sirano");
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Tema")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
 
@@ -271,37 +270,58 @@ namespace GaziHastane.Migrations
 
                     b.Property<string>("Adres")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("adres");
+                        .HasColumnType("text");
+
+                    b.Property<string>("AltBaslik")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<string>("Baslik")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("character varying(150)")
-                        .HasColumnName("baslik");
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("CagriMerkezi")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("CalismaSaatleri")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("calismasaatleri");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("DigerTelefonlar")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("EkBilgi")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(150)
-                        .HasColumnType("character varying(150)")
-                        .HasColumnName("email");
+                        .HasColumnType("character varying(150)");
 
                     b.Property<string>("HaritaUrl")
-                        .HasColumnType("text")
-                        .HasColumnName("haritaurl");
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isactive");
+                        .HasColumnType("boolean");
 
-                    b.Property<string>("Telefon")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("telefon");
+                    b.Property<string>("KisaAdres")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Koordinat")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Santral")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("TemaRengi")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
@@ -423,6 +443,41 @@ namespace GaziHastane.Migrations
                     b.HasIndex("HastaId");
 
                     b.ToTable("TahlilSonuclari");
+                });
+
+            modelBuilder.Entity("GaziHastane.Models.UlasimRehberi", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Icerik")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Ikon")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("TemaRengi")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("UlasimTipi")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UlasimRehberi");
                 });
 
             modelBuilder.Entity("GaziHastane.Models.User", b =>
