@@ -4,6 +4,8 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <div class="glass-card rounded-[2rem] p-6 md:p-8">
 
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
@@ -17,7 +19,7 @@
             </div>
         </div>
 
-        <a asp-action="Create" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:scale-105 transition flex items-center gap-2">
+        <a asp-action="Create" asp-controller="Haberler" asp-area="Admin" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:scale-105 transition flex items-center gap-2">
             <i class="fa-solid fa-plus"></i>
             <span>Yeni Haber Ekle</span>
         </a>
@@ -90,10 +92,11 @@
 
                         <td class="px-4 py-3 align-middle text-right">
                             <div class="flex items-center justify-end gap-2">
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center hover:bg-amber-500 hover:text-white hover:shadow-[0_0_15px_rgba(245,158,11,0.4)] transition duration-300" title="Düzenle">
+                                <a asp-action="Edit" asp-controller="Haberler" asp-area="Admin" asp-route-id="@item.Id" class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center hover:bg-amber-500 hover:text-white hover:shadow-[0_0_15px_rgba(245,158,11,0.4)] transition duration-300" title="Düzenle">
                                     <i class="fa-solid fa-pen-to-square text-xs"></i>
                                 </a>
-                                <a asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bu haberi silmek istediğinize emin misiniz?');" class="w-8 h-8 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center hover:bg-rose-500 hover:text-white hover:shadow-[0_0_15px_rgba(243,64,84,0.4)] transition duration-300" title="Sil">
+
+                                <a asp-action="Delete" asp-controller="Haberler" asp-area="Admin" asp-route-id="@item.Id" onclick="showDeleteWarning(event, this.href);" class="w-8 h-8 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center hover:bg-rose-500 hover:text-white hover:shadow-[0_0_15px_rgba(243,64,84,0.4)] transition duration-300" title="Sil">
                                     <i class="fa-solid fa-trash text-xs"></i>
                                 </a>
                             </div>
@@ -114,3 +117,31 @@
         }
     </div>
 </div>
+
+<script>
+    function showDeleteWarning(event, url) {
+        // Linkin anında sayfayı değiştirmesini durduruyoruz
+        event.preventDefault();
+
+        Swal.fire({
+            title: 'Emin misiniz?',
+            text: "Bu haberi kalıcı olarak sileceksiniz. Bu işlem geri alınamaz!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#f43f5e', // Tailwind rose-500 rengi (Sil butonu)
+            cancelButtonColor: '#64748b', // Tailwind slate-500 rengi (İptal butonu)
+            confirmButtonText: '<i class="fa-solid fa-trash mr-2"></i> Evet, Sil!',
+            cancelButtonText: 'Vazgeç',
+            background: '#1e293b', // Panelinizin koyu arka plan rengine uyumlu
+            color: '#f8fafc', // Beyaz metin
+            customClass: {
+                popup: 'rounded-2xl border border-slate-700 shadow-2xl',
+            }
+        }).then((result) => {
+            // Eğer "Evet, Sil" butonuna basılırsa işlemi yapması için linke yönlendiriyoruz
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        })
+    }
+</script>

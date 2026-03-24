@@ -122,30 +122,21 @@
         }
 
         @@media (min-width: 640px) {
-            .digital-ops-grid
-
-        {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
+            .digital-ops-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         @@media (min-width: 1024px) {
-            .digital-ops-grid
-
-        {
-            grid-template-columns: repeat(5, 1fr);
-        }
-
+            .digital-ops-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
         }
 
         @@media (min-width: 1280px) {
-            .digital-ops-grid
-
-        {
-            grid-template-columns: repeat(9, 1fr);
-        }
-
+            .digital-ops-grid {
+                grid-template-columns: repeat(9, 1fr);
+            }
         }
 
         .d-card {
@@ -299,17 +290,34 @@
         }
 
         @@keyframes bounce-x {
-            0%, 100%
+            0%, 100% {
+                transform: translateX(0);
+            }
 
-        {
-            transform: translateX(0);
+            50% {
+                transform: translateX(5px);
+            }
         }
 
-        50% {
-            transform: translateX(5px);
+        /* --- DUYURU SCROLL TASARIMI --- */
+        .announcement-scroll-area {
+            max-height: 480px;
+            overflow-y: auto;
+            padding-right: 5px;
         }
 
-        }
+            .announcement-scroll-area::-webkit-scrollbar {
+                width: 4px;
+            }
+
+            .announcement-scroll-area::-webkit-scrollbar-track {
+                background: #f1f5f9;
+            }
+
+            .announcement-scroll-area::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 10px;
+            }
     </style>
 
     <script>
@@ -410,7 +418,6 @@
             </div>
 
             <div class="flex-1 w-full max-w-lg lg:max-w-none relative">
-                <!-- ANA SLIDER -->
                 <div class="slider-main-container">
                     <div class="slider-wrapper">
                         @for (int i = 1; i <= 5; i++)
@@ -427,7 +434,6 @@
                     </div>
                 </div>
 
-                <!-- ALT ÖNİZLEME GÖRSELLERİ -->
                 <div class="slider-bottom-grid">
                     <div class="thumb-box">
                         <img id="thumb-1" src="~/assets/slider2.jpeg" alt="Sıradaki 1">
@@ -522,7 +528,7 @@
                     <p class="sec-label mb-1">GAZİ'DEN HABERLER</p>
                     <h2 class="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">Kurumsal Haberler</h2>
                 </div>
-                <a href="#" class="text-sm font-bold text-blue-600 hover:text-blue-800 transition flex items-center gap-2">
+                <a href="/Haberler" class="text-sm font-bold text-blue-600 hover:text-blue-800 transition flex items-center gap-2">
                     Tüm Haberler <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
@@ -557,22 +563,31 @@
                     <p class="sec-label mb-1">BİLGİLENDİRME</p>
                     <h2 class="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">Duyurular</h2>
                 </div>
+                <a href="/Duyurular" class="text-sm font-bold text-blue-600 hover:text-blue-800 transition flex items-center gap-2">Tümü</a>
             </div>
-            <div class="flex flex-col gap-4">
-                <a href="#" class="event-card group text-decoration-none">
-                    <div class="date-badge"><i class="fa-solid fa-bullhorn text-blue-600 text-xl"></i></div>
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-800 group-hover:text-blue-600 mb-1">İSG Yenileme Eğitimi Hakkında</h3>
-                        <p class="text-xs text-slate-500">Personel katılımı zorunludur.</p>
+
+            <div class="announcement-scroll-area flex flex-col gap-4">
+                @if (Model.Duyurular != null && Model.Duyurular.Any())
+                {
+                    @foreach (var duyuru in Model.Duyurular)
+                    {
+                        <a href="#" class="event-card group text-decoration-none">
+                            <div class="date-badge">
+                                <i class="fa-solid fa-bullhorn text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-800 group-hover:text-blue-600 mb-1">@duyuru.Baslik</h3>
+                                <p class="text-xs text-slate-500 line-clamp-1">@duyuru.YayinTarihi.ToString("dd.MM.yyyy")</p>
+                            </div>
+                        </a>
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-10 bg-white rounded-2xl border border-slate-100">
+                        <p class="text-xs text-slate-400 font-medium italic">Şu an aktif bir duyuru bulunmuyor.</p>
                     </div>
-                </a>
-                <a href="#" class="event-card group text-decoration-none">
-                    <div class="date-badge"><i class="fa-solid fa-syringe text-blue-600 text-xl"></i></div>
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-800 group-hover:text-blue-600 mb-1">Grip Aşısı Stokları Güncellendi</h3>
-                        <p class="text-xs text-slate-500">Hekiminize danışabilirsiniz.</p>
-                    </div>
-                </a>
+                }
             </div>
         </div>
     </div>

@@ -7,5 +7,6 @@ namespace GaziHastane.Models
         // View'a gönderilecek listeler
         public IEnumerable<Haber> Haberler { get; set; }
         public IEnumerable<Etkinlik> Etkinlikler { get; set; }
+        public IEnumerable<Duyuru> Duyurular { get; set; }
     }
 }

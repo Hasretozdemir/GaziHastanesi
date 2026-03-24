@@ -4,103 +4,111 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<div class="mb-8 pl-2 flex justify-between items-end">
-    <div>
-        <a href="/Admin/Doktorlar/Index" class="text-cyan-400 hover:text-cyan-300 text-sm font-bold flex items-center gap-2 mb-2 transition">
-            <i class="fa-solid fa-arrow-left"></i> Listeye Dön
-        </a>
-        <h2 class="text-3xl md:text-4xl font-black mb-2 tracking-tight">Yeni <span class="text-gradient">Doktor Ekle</span> 👨‍⚕️</h2>
-        <p class="text-slate-400 font-medium">Sisteme yeni bir hekim kaydı oluşturun.</p>
-    </div>
-</div>
+<div class="max-w-4xl mx-auto">
 
-<div class="glass-card p-8 rounded-[2rem] relative overflow-hidden mb-10">
-    <div class="absolute -right-20 -top-20 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-    <form asp-action="Create" method="post" class="relative z-10">
-        <div asp-validation-summary="ModelOnly" class="text-rose-400 mb-4 text-sm font-bold bg-rose-500/10 p-3 rounded-lg border border-rose-500/20 hidden"></div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div>
-                <label asp-for="Ad" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Doktor Adı *</label>
-                <div class="relative">
-                    <i class="fa-solid fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <input asp-for="Ad" required class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition" placeholder="Örn: Sude">
-                </div>
-                <span asp-validation-for="Ad" class="text-rose-400 text-xs mt-1 font-bold block"></span>
-            </div>
-
-            <div>
-                <label asp-for="Soyad" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Doktor Soyadı *</label>
-                <div class="relative">
-                    <i class="fa-regular fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <input asp-for="Soyad" required class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition" placeholder="Örn: Kılıç">
-                </div>
-                <span asp-validation-for="Soyad" class="text-rose-400 text-xs mt-1 font-bold block"></span>
-            </div>
-
-            <div>
-                <label asp-for="Unvan" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Ünvan</label>
-                <div class="relative">
-                    <i class="fa-solid fa-graduation-cap absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <input asp-for="Unvan" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition" placeholder="Örn: Prof. Dr.">
-                </div>
-            </div>
-
-            <div>
-                <label asp-for="BolumId" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Birim (Poliklinik)</label>
-                <div class="relative">
-                    <i class="fa-solid fa-network-wired absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 z-10"></i>
-                    <select asp-for="BolumId" asp-items="ViewBag.BolumId" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-slate-300 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition appearance-none cursor-pointer">
-                        <option value="">-- Poliklinik Seçiniz --</option>
-                    </select>
-                    <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"></i>
-                </div>
-            </div>
-
-            <div class="md:col-span-2">
-                <label asp-for="UzmanlikAlani" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Uzmanlık Alanı</label>
-                <div class="relative">
-                    <i class="fa-solid fa-stethoscope absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <input asp-for="UzmanlikAlani" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition" placeholder="Örn: Kalp ve Damar Cerrahisi Uzmanı">
-                </div>
-            </div>
-
-            <div class="md:col-span-2">
-                <label asp-for="FotografUrl" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Fotoğraf URL (Opsiyonel)</label>
-                <div class="relative">
-                    <i class="fa-solid fa-link absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <input asp-for="FotografUrl" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition" placeholder="Örn: https://site.com/foto.jpg">
-                </div>
-            </div>
-
-            <div class="md:col-span-2">
-                <label asp-for="Ozgecmis" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Özgeçmiş / Hakkında</label>
-                <textarea asp-for="Ozgecmis" rows="4" class="w-full bg-black/20 border border-white/10 rounded-xl p-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition custom-scroll" placeholder="Doktorun eğitim geçmişi veya kısa özgeçmişi..."></textarea>
-            </div>
-
-            <div class="md:col-span-2 flex items-center gap-4 bg-black/20 p-5 rounded-xl border border-white/5">
-                <div class="relative flex items-center cursor-pointer">
-                    <input asp-for="IsActive" type="checkbox" class="sr-only peer">
-                    <div class="w-11 h-6 bg-slate-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.2)]"></div>
-                </div>
-                <div>
-                    <p class="text-sm font-bold text-white mb-0.5">Sistemde Aktif Mi?</p>
-                    <p class="text-[10px] text-slate-400">Pasif yaparsanız, doktor ana sitede ve randevu sisteminde görünmez.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-white/10">
-            <a href="/Admin/Doktorlar/Index" class="px-6 py-2.5 rounded-xl font-bold text-sm text-slate-300 hover:text-white hover:bg-white/5 transition flex items-center">
-                İptal Et
+    <div class="mb-8 flex justify-between items-end">
+        <div>
+            <a href="/Admin/Doktorlar/Index" class="text-cyan-400 hover:text-cyan-300 text-sm font-bold flex items-center gap-2 mb-2 transition">
+                <i class="fa-solid fa-arrow-left"></i> Listeye Dön
             </a>
-            <button type="submit" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-2.5 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:scale-105 transition flex items-center gap-2">
-                <i class="fa-solid fa-check"></i> Doktoru Kaydet
-            </button>
+            <h2 class="text-3xl md:text-4xl font-black mb-2 tracking-tight">Yeni <span class="text-gradient">Doktor Ekle</span> 👨‍⚕️</h2>
+            <p class="text-slate-400 font-medium">Sisteme yeni bir hekim kaydı oluşturun.</p>
         </div>
-    </form>
+    </div>
+
+    <div class="glass-card p-8 sm:p-10 rounded-[2rem] relative overflow-hidden mb-10 shadow-2xl">
+        <div class="absolute -right-20 -top-20 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <form asp-action="Create" method="post" class="relative z-10">
+
+            <div asp-validation-summary="All" class="text-rose-400 mb-6 text-sm font-bold bg-rose-500/10 p-4 rounded-xl border border-rose-500/20"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label asp-for="Ad" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Doktor Adı *</label>
+                    <div class="relative group">
+                        <i class="fa-solid fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400 transition-colors"></i>
+                        <input asp-for="Ad" required class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition" placeholder="Örn: Sude">
+                    </div>
+                    <span asp-validation-for="Ad" class="text-rose-400 text-xs mt-1.5 font-bold block"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Soyad" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Doktor Soyadı *</label>
+                    <div class="relative group">
+                        <i class="fa-regular fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400 transition-colors"></i>
+                        <input asp-for="Soyad" required class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition" placeholder="Örn: Kılıç">
+                    </div>
+                    <span asp-validation-for="Soyad" class="text-rose-400 text-xs mt-1.5 font-bold block"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Unvan" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Ünvan</label>
+                    <div class="relative group">
+                        <i class="fa-solid fa-graduation-cap absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400 transition-colors"></i>
+                        <input asp-for="Unvan" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition" placeholder="Örn: Prof. Dr.">
+                    </div>
+                </div>
+
+                <div>
+                    <label asp-for="BolumId" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Birim (Poliklinik) (Opsiyonel)</label>
+                    <div class="relative group">
+                        <i class="fa-solid fa-network-wired absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 z-10 group-focus-within:text-cyan-400 transition-colors"></i>
+
+                        <select asp-for="BolumId" asp-items="ViewBag.Bolumler" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-slate-300 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition appearance-none cursor-pointer">
+                            <option value="">-- Poliklinik Seçiniz --</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"></i>
+                    </div>
+                    <span asp-validation-for="BolumId" class="text-rose-400 text-xs mt-1.5 font-bold block"></span>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label asp-for="UzmanlikAlani" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Uzmanlık Alanı</label>
+                    <div class="relative group">
+                        <i class="fa-solid fa-stethoscope absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400 transition-colors"></i>
+                        <input asp-for="UzmanlikAlani" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition" placeholder="Örn: Kalp ve Damar Cerrahisi Uzmanı">
+                    </div>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label asp-for="FotografUrl" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Fotoğraf URL (Opsiyonel)</label>
+                    <div class="relative group">
+                        <i class="fa-solid fa-link absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400 transition-colors"></i>
+                        <input asp-for="FotografUrl" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition" placeholder="Örn: https://site.com/foto.jpg">
+                    </div>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label asp-for="Ozgecmis" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Özgeçmiş / Hakkında</label>
+                    <textarea asp-for="Ozgecmis" rows="4" class="w-full bg-black/20 border border-white/10 rounded-xl p-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition custom-scroll" placeholder="Doktorun eğitim geçmişi veya kısa özgeçmişi..."></textarea>
+                </div>
+
+                <div class="md:col-span-2 flex items-center gap-4 bg-black/20 p-5 rounded-xl border border-white/5 hover:bg-black/30 transition">
+
+                    <label class="relative flex items-center cursor-pointer">
+                        <input asp-for="IsActive" type="checkbox" class="sr-only peer" checked>
+                        <div class="w-11 h-6 bg-slate-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.2)]"></div>
+                    </label>
+
+                    <div>
+                        <p class="text-sm font-bold text-white mb-0.5">Sistemde Aktif Mi?</p>
+                        <p class="text-[10px] text-slate-400">Pasif yaparsanız, doktor ana sitede ve randevu sisteminde görünmez.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-white/10">
+                <a href="/Admin/Doktorlar/Index" class="px-6 py-2.5 rounded-xl font-bold text-sm text-slate-300 hover:text-white hover:bg-white/5 transition flex items-center">
+                    İptal Et
+                </a>
+                <button type="submit" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-2.5 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:scale-105 transition flex items-center gap-2">
+                    <i class="fa-solid fa-check"></i> Doktoru Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
 @section Scripts {

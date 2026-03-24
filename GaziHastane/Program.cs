@@ -1,6 +1,6 @@
 using GaziHastane.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.Cookies; // YENÝ EKLENDÝ: Çerez doðrulama kütüphanesi
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace GaziHastane
 {
@@ -9,12 +9,10 @@ namespace GaziHastane
         public static void Main(string[] args)
         {
             // PostgreSQL 6.0+ sürümlerinde DateTime.Local hatasýný önlemek için 
-            // eski zaman davranýþýný (Legacy Behavior) etkinleþtiriyoruz.
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             // PostgreSQL veritabaný servisi ekleniyor
             builder.Services.AddDbContext<GaziHastaneContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -22,7 +20,7 @@ namespace GaziHastane
             builder.Services.AddControllersWithViews();
 
             // ------------------------------------------------------------------
-            // YENÝ EKLENEN KISIM: KÝMLÝK DOÐRULAMA VE ÇEREZ (COOKIE) AYARLARI
+            // KÝMLÝK DOÐRULAMA VE ÇEREZ (COOKIE) AYARLARI
             // ------------------------------------------------------------------
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
@@ -33,7 +31,6 @@ namespace GaziHastane
                     options.Cookie.Name = "GaziMedAdminAuth"; // Tarayýcýda tutulacak çerez (cookie) adý
                     options.ExpireTimeSpan = TimeSpan.FromHours(8); // Oturum 8 saat açýk kalsýn
                 });
-            // ------------------------------------------------------------------
 
             var app = builder.Build();
 
@@ -53,7 +50,6 @@ namespace GaziHastane
                 }
             }
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -65,19 +61,16 @@ namespace GaziHastane
 
             app.UseRouting();
 
-            // ------------------------------------------------------------------
             // DÝKKAT: UseAuthentication HER ZAMAN UseAuthorization'dan ÖNCE GELMELÝ!
-            // ------------------------------------------------------------------
-            app.UseAuthentication(); // YENÝ EKLENDÝ: Sisteme kimin girdiðini tanýr
-            app.UseAuthorization();  // Sisteme giren kiþinin yetkisi var mý diye bakar
-            // ------------------------------------------------------------------
+            app.UseAuthentication();
+            app.UseAuthorization();
 
-            // 1. AREA ROTASI (Admin paneli için - Üstte olmalý)
+            // 1. AREA ROTASI (Admin paneli için)
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-            // 2. DEFAULT ROTA (Ziyaretçi önyüzü için - Altta olmalý)
+            // 2. DEFAULT ROTA (Ziyaretçi önyüzü için)
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

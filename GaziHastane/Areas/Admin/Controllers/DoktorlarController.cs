@@ -4,6 +4,7 @@ using GaziHastane.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace GaziHastane.Areas.Admin.Controllers
 {
@@ -32,9 +33,9 @@ namespace GaziHastane.Areas.Admin.Controllers
         // Ekleme Ekranını Açma (GET)
         public IActionResult Create()
         {
-            // Bölümleri veritabanından çekip dropdown'da göstermek için ViewBag'e atıyoruz
-            // Burada "Bolumler" senin DB setinin adıdır, eğer hata verirse altını çizen yere göre düzeltiriz.
-            ViewBag.BolumId = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Set<Bolum>().Where(b => b.IsActive), "Id", "Ad");
+            // ViewBag adını 'Bolumler' yaptık.
+            // Show all poliklinikler in admin dropdown (do not filter by IsActive)
+            ViewBag.Bolumler = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Bolumler.OrderBy(b => b.Ad).ToList(), "Id", "Ad");
             return View();
         }
 
@@ -50,14 +51,14 @@ namespace GaziHastane.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index)); // Kayıt başarılıysa listeye dön
             }
 
-            // Eğer formda bir hata varsa (isim boş geçildiyse vb.) dropdown boş gelmesin diye tekrar dolduruyoruz
-            ViewBag.BolumId = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Set<Bolum>().Where(b => b.IsActive), "Id", "Ad", doktor.BolumId);
+            // Eğer formda hata varsa dropdown boş gelmesin diye burayı da 'Bolumler' yapıyoruz
+            ViewBag.Bolumler = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Bolumler.OrderBy(b => b.Ad).ToList(), "Id", "Ad", doktor.BolumId);
             return View(doktor);
         }
 
         // --- DÜZENLEME (EDIT) İŞLEMLERİ ---
 
-        // Düzenle Ekranını Açma (GET)
+        // Düzenle Ekranını Açma (GET) - Verilerin dolu gelmesini sağlayan kısım
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -65,12 +66,12 @@ namespace GaziHastane.Areas.Admin.Controllers
             var doktor = await _context.Doktorlar.FindAsync(id);
             if (doktor == null) return NotFound();
 
-            // Bölümleri dropdown için çekiyoruz, mevcut bölümü seçili yapıyoruz
-            ViewBag.BolumId = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Set<Bolum>().Where(b => b.IsActive), "Id", "Ad", doktor.BolumId);
+            // DİKKAT: ViewBag.BolumId yerine ViewBag.Bolumler yapıldı
+            ViewBag.Bolumler = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Bolumler.Where(b => b.IsActive), "Id", "Ad", doktor.BolumId);
             return View(doktor);
         }
 
-        // Formdan Gelen Güncel Veriyi Kaydetme (POST)
+        // Formdan Gelen Güncel Veriyi Kaydetme (POST) - Değiştir dediğinizde çalışan kısım
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Doktor doktor)
@@ -84,20 +85,18 @@ namespace GaziHastane.Areas.Admin.Controllers
                     _context.Update(doktor);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException)
                 {
                     if (!_context.Doktorlar.Any(e => e.Id == doktor.Id)) return NotFound();
                     else throw;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index)); // Başarılıysa listeye dön
             }
 
             // Hata varsa dropdown boş gelmesin
-            ViewBag.BolumId = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Set<Bolum>().Where(b => b.IsActive), "Id", "Ad", doktor.BolumId);
+            ViewBag.Bolumler = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Bolumler.Where(b => b.IsActive), "Id", "Ad", doktor.BolumId);
             return View(doktor);
         }
-
-
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();

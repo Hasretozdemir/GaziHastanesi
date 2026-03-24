@@ -140,13 +140,7 @@
                 <span class="font-semibold tracking-wide">İletişim</span>
             </a>
 
-            <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 px-4 mt-6">Güvenlik & Erişim</p>
-
-            <a href="/Admin/Yetkililer/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Yetkililer" ? activeClass : passiveClass)">
-                <i class="fa-solid fa-user-shield text-lg @(ctrl == "Yetkililer" ? "neon-icon" : "group-hover:text-rose-400")"></i>
-                <span class="font-semibold tracking-wide">Yetkili Listesi</span>
-            </a>
-
+           
             <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 px-4 mt-6">Sistem Ayarları</p>
 
             
@@ -178,6 +172,14 @@
                 <i class="fa-solid fa-bullhorn text-lg @(ctrl == "Duyurular" ? "neon-icon" : "group-hover:text-yellow-400")"></i>
                 <span class="font-semibold tracking-wide">Duyurular</span>
             </a>
+
+            <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 px-4 mt-6">Güvenlik & Erişim</p>
+
+            <a href="/Admin/Yetkililer/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Yetkililer" ? activeClass : passiveClass)">
+                <i class="fa-solid fa-user-shield text-lg @(ctrl == "Yetkililer" ? "neon-icon" : "group-hover:text-rose-400")"></i>
+                <span class="font-semibold tracking-wide">Yetkili Listesi</span>
+            </a>
+
         </nav>
     </aside>
 

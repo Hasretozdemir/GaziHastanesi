@@ -1,47 +1,99 @@
 ﻿@model GaziHastane.Models.Etkinlik
 @{
-    ViewData["Title"] = "Etkinlik Ekle/Düzenle";
+    ViewData["Title"] = "Yeni Etkinlik Ekle";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Etkinlik Bilgileri</h6>
+<div class="glass-card rounded-[2rem] p-6 md:p-8">
+
+    <div class="flex items-center gap-4 mb-8 border-b border-slate-700/50 pb-6">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-fuchsia-500/20 to-purple-600/20 border border-fuchsia-500/30 flex items-center justify-center text-fuchsia-400 shadow-[0_0_15px_rgba(217,70,239,0.2)]">
+            <i class="fa-solid fa-plus text-xl"></i>
+        </div>
+        <div>
+            <h2 class="text-xl font-black text-white tracking-wide">Yeni Etkinlik Ekle</h2>
+            <p class="text-xs text-slate-400 font-medium mt-1">Sisteme yeni bir sempozyum, kongre veya eğitim girişi yapın</p>
+        </div>
     </div>
-    <div class="card-body">
-        <form asp-action="Create">
-            <input type="hidden" asp-for="Id" />
-            <div class="row">
-                <div class="col-md-8 mb-3">
-                    <label asp-for="Baslik" class="form-label">Etkinlik Başlığı</label>
-                    <input asp-for="Baslik" class="form-control" required />
+
+    <form asp-action="Create" asp-controller="Etkinlikler" asp-area="Admin" method="post">
+
+        <div asp-validation-summary="All" class="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-4 rounded-xl mb-6 text-sm font-medium"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div class="md:col-span-2">
+                <label asp-for="Baslik" class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Etkinlik Başlığı <span class="text-rose-500">*</span></label>
+                <input asp-for="Baslik" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition duration-200" placeholder="Etkinliğin tam adını girin..." required />
+                <span asp-validation-for="Baslik" class="text-rose-400 text-[11px] font-medium mt-1 block"></span>
+            </div>
+
+            <div>
+                <label asp-for="EtkinlikTipi" class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Etkinlik Tipi <span class="text-rose-500">*</span></label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                        <i class="fa-solid fa-list-ul text-slate-500"></i>
+                    </div>
+                    <input asp-for="EtkinlikTipi" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-white focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition duration-200" placeholder="Sempozyum, Kongre vb." required />
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label asp-for="EtkinlikTipi" class="form-label">Tip (Sempozyum, Kongre vb.)</label>
-                    <input asp-for="EtkinlikTipi" class="form-control" required />
+                <span asp-validation-for="EtkinlikTipi" class="text-rose-400 text-[11px] font-medium mt-1 block"></span>
+            </div>
+
+            <div>
+                <label asp-for="Tarih" class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Etkinlik Tarihi <span class="text-rose-500">*</span></label>
+                <input asp-for="Tarih" type="date" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition duration-200" required />
+                <span asp-validation-for="Tarih" class="text-rose-400 text-[11px] font-medium mt-1 block"></span>
+            </div>
+
+            <div>
+                <label asp-for="SaatAraligi" class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Saat Aralığı <span class="text-rose-500">*</span></label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                        <i class="fa-regular fa-clock text-slate-500"></i>
+                    </div>
+                    <input asp-for="SaatAraligi" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-white focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition duration-200" placeholder="Örn: 09:00 - 17:00" required />
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label asp-for="Tarih" class="form-label">Etkinlik Tarihi (Takvim Günü)</label>
-                    <input asp-for="Tarih" type="date" class="form-control" required />
+                <span asp-validation-for="SaatAraligi" class="text-rose-400 text-[11px] font-medium mt-1 block"></span>
+            </div>
+
+            <div>
+                <label asp-for="Konum" class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Konum / Salon <span class="text-rose-500">*</span></label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                        <i class="fa-solid fa-location-dot text-slate-500"></i>
+                    </div>
+                    <input asp-for="Konum" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-white focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition duration-200" placeholder="Örn: A Blok Konferans Salonu" required />
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label asp-for="SaatAraligi" class="form-label">Saat Aralığı</label>
-                    <input asp-for="SaatAraligi" class="form-control" placeholder="Örn: 09:00 - 17:00" required />
+                <span asp-validation-for="Konum" class="text-rose-400 text-[11px] font-medium mt-1 block"></span>
+            </div>
+
+            <div class="md:col-span-2">
+                <label asp-for="Aciklama" class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Kısa Açıklama</label>
+                <textarea asp-for="Aciklama" rows="4" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition duration-200 resize-none" placeholder="Etkinliğin içeriği hakkında kısa bir bilgi girin..."></textarea>
+                <span asp-validation-for="Aciklama" class="text-rose-400 text-[11px] font-medium mt-1 block"></span>
+            </div>
+
+            <div class="md:col-span-2 flex items-center p-4 rounded-xl border border-slate-700/50 bg-slate-800/30 transition hover:bg-slate-800/50">
+                <div class="flex items-center h-5">
+                    <input asp-for="IsActive" type="checkbox" checked class="w-5 h-5 rounded bg-slate-900 border-slate-600 text-fuchsia-500 focus:ring-fuchsia-500 focus:ring-offset-slate-800 cursor-pointer" />
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label asp-for="Konum" class="form-label">Konum / Salon</label>
-                    <input asp-for="Konum" class="form-control" required />
-                </div>
-                <div class="col-md-12 mb-3">
-                    <label asp-for="Aciklama" class="form-label">Kısa Açıklama</label>
-                    <textarea asp-for="Aciklama" class="form-control" rows="3"></textarea>
-                </div>
-                <div class="col-md-12 mb-3 form-check ms-3">
-                    <input asp-for="IsActive" class="form-check-input" />
-                    <label asp-for="IsActive" class="form-check-label">Sitede Göster</label>
+                <div class="ml-3 text-sm cursor-pointer">
+                    <label asp-for="IsActive" class="font-bold text-white cursor-pointer">Sitede Göster (Aktif)</label>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Bu seçenek işaretli ise etkinlik eklendiği an sitede görünür olacaktır.</p>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Kaydet</button>
-            <a asp-action="Index" class="btn btn-secondary">Vazgeç</a>
-        </form>
-    </div>
+
+        </div>
+
+        <div class="mt-8 flex items-center justify-end gap-4 border-t border-slate-700/50 pt-6">
+            <a asp-action="Index" class="px-6 py-2.5 rounded-xl font-bold text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition duration-300">
+                İptal Et
+            </a>
+            <button type="submit" class="bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white px-8 py-2.5 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(217,70,239,0.3)] hover:scale-105 transition duration-300 flex items-center gap-2">
+                <i class="fa-solid fa-save"></i>
+                <span>Etkinliği Kaydet</span>
+            </button>
+        </div>
+
+    </form>
 </div>

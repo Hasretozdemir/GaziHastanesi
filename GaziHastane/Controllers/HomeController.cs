@@ -2,7 +2,7 @@
 using GaziHastane.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging; // ILogger için gereken kütüphane eklendi
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +14,6 @@ namespace GaziHastane.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly GaziHastaneContext _context;
 
-        // Hem Logger hem de Context aynı anda projeye dahil ediliyor
         public HomeController(ILogger<HomeController> logger, GaziHastaneContext context)
         {
             _logger = logger;
@@ -29,19 +28,26 @@ namespace GaziHastane.Controllers
         {
             var viewModel = new HomeViewModel
             {
-                // IsActive olan son 2 haberi tarihe göre azalan şekilde getir
+                // IsActive olan son 2 haberi getir
                 Haberler = _context.Haberler
-                                   .Where(h => h.IsActive)
-                                   .OrderByDescending(h => h.YayinTarihi)
-                                   .Take(2)
-                                   .ToList(),
+                                    .Where(h => h.IsActive)
+                                    .OrderByDescending(h => h.YayinTarihi)
+                                    .Take(2)
+                                    .ToList(),
 
                 // IsActive olan yaklaşan son 2 etkinliği getir
                 Etkinlikler = _context.Etkinlikler
                                       .Where(e => e.IsActive && e.Tarih >= System.DateTime.Today)
                                       .OrderBy(e => e.Tarih)
                                       .Take(2)
-                                      .ToList()
+                                      .ToList(),
+
+                // DUYURULARI VERİTABANINDAN ÇEKİYORUZ (Eksik olan kısım eklendi)
+                // Not: Eğer hata alırsanız veritabanında IsActive sütunu olup olmadığını kontrol edin.
+                Duyurular = _context.Duyurular
+                                    .Where(d => d.IsActive)
+                                    .OrderByDescending(d => d.YayinTarihi)
+                                    .ToList()
             };
 
             return View(viewModel);
@@ -49,44 +55,34 @@ namespace GaziHastane.Controllers
 
         public async Task<IActionResult> Bolumler()
         {
-            // Veritabanındaki Bolumler tablosundan aktif olanları listeye çevirip çekiyoruz
             var aktifBolumler = await _context.Bolumler
                                               .Where(b => b.IsActive)
                                               .ToListAsync();
-
-            // Çekilen veriyi View'a gönderiyoruz
             return View(aktifBolumler);
         }
 
         public async Task<IActionResult> Doktorlar()
         {
-            // Include ile doktorların bölümlerini de çekiyoruz
             var aktifDoktorlar = await _context.Doktorlar
                                                .Include(d => d.Bolum)
                                                .Where(d => d.IsActive)
                                                .ToListAsync();
-
             return View(aktifDoktorlar);
         }
 
-        // 1. Metodu "async Task<IActionResult>" olarak güncelleyin
         public async Task<IActionResult> Rehber()
         {
-            // 2. Veritabanındaki 'HastaRehberleri' tablosundan aktif kayıtları liste olarak çekin
             var rehberVerileri = await _context.HastaRehberleri
                                                .Where(x => x.IsActive)
                                                .OrderBy(x => x.SiraNo)
                                                .ToListAsync();
-
-            // 3. Çekilen bu listeyi View'a (sayfaya) gönderin
             return View(rehberVerileri);
         }
+
         public async Task<IActionResult> Iletisim()
         {
-            // Veritabanından aktif iletişim verileri ViewBag ile sayfaya gönderiliyor
             ViewBag.Lokasyonlar = await _context.IletisimBilgileri.Where(x => x.IsActive).ToListAsync();
             ViewBag.UlasimAraclari = await _context.UlasimRehberleri.Where(x => x.IsActive).ToListAsync();
-
             return View();
         }
 

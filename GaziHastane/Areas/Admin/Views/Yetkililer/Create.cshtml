@@ -1,0 +1,51 @@
+﻿@model GaziHastane.Models.Yetkili
+@{
+    ViewData["Title"] = "Yeni Yetkili";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="glass-card rounded-[2rem] p-6 md:p-8 max-w-2xl mx-auto">
+    <div class="flex items-center gap-4 mb-8 border-b border-white/5 pb-6">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-red-600/20 border border-rose-500/30 flex items-center justify-center text-rose-400">
+            <i class="fa-solid fa-user-plus text-xl"></i>
+        </div>
+        <div>
+            <h2 class="text-xl font-black text-white">Yeni Yetkili Ekle</h2>
+            <p class="text-xs text-slate-400 mt-1">Sisteme yeni bir yönetici tanımlayın</p>
+        </div>
+    </div>
+
+    <form asp-action="Create" method="post" class="space-y-5">
+        @Html.AntiForgeryToken()
+
+        <div>
+            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Ad Soyad *</label>
+            <input asp-for="AdSoyad" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white outline-none focus:border-rose-500/50 transition font-semibold" placeholder="İsim Soyisim">
+        </div>
+
+        <div>
+            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">E-Posta Adresi *</label>
+            <input asp-for="Email" type="email" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white outline-none focus:border-rose-500/50 transition font-semibold" placeholder="ornek@gazi.edu.tr">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Rolü</label>
+                <select asp-for="Rol" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white outline-none focus:border-rose-500/50 transition font-semibold appearance-none">
+                    <option value="Yönetici" class="bg-slate-900">Yönetici</option>
+                    <option value="Editör" class="bg-slate-900">Editör</option>
+                    <option value="Süper Admin" class="bg-slate-900">Süper Admin</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Şifre *</label>
+                <input asp-for="SifreHash" type="password" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white outline-none focus:border-rose-500/50 transition font-semibold" placeholder="••••••••">
+            </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-white/5 flex gap-3">
+            <a asp-action="Index" class="flex-1 bg-white/5 text-slate-400 py-4 rounded-2xl font-bold text-center hover:bg-white/10 transition">Vazgeç</a>
+            <button type="submit" class="flex-[2] bg-gradient-to-r from-rose-500 to-red-600 text-white py-4 rounded-2xl font-black shadow-xl hover:scale-[1.02] transition">YETKİLİYİ KAYDET</button>
+        </div>
+    </form>
+</div>

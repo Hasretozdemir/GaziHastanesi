@@ -1,48 +1,87 @@
 ﻿@model GaziHastane.Models.Duyuru
 @{
-    ViewData["Title"] = "Duyuru Ekle/Düzenle";
+    ViewData["Title"] = "Yeni Duyuru Ekle";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Duyuru Bilgileri</h6>
+<div class="glass-card rounded-[2rem] p-6 md:p-8">
+
+    <div class="flex items-center gap-4 mb-8 border-b border-slate-700/50 pb-6">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-orange-600/20 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+            <i class="fa-solid fa-plus text-xl"></i>
+        </div>
+        <div>
+            <h2 class="text-xl font-black text-white tracking-wide">Yeni Duyuru Ekle</h2>
+            <p class="text-xs text-slate-400 font-medium mt-1">Sisteme personel veya hastalar için yeni bir duyuru girişi yapın</p>
+        </div>
     </div>
-    <div class="card-body">
-        <form asp-action="Create">
-            <input type="hidden" asp-for="Id" />
 
-            <div class="row">
-                <div class="col-md-12 mb-3">
-                    <label asp-for="Baslik" class="form-label">Duyuru Başlığı</label>
-                    <input asp-for="Baslik" class="form-control" placeholder="Örn: Personel İçin İSG Yenileme Eğitimi Hakkında" required />
-                    <span asp-validation-for="Baslik" class="text-danger"></span>
+    <form asp-action="Create" asp-controller="Duyurular" asp-area="Admin" method="post">
+
+        <div asp-validation-summary="All" class="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-4 rounded-xl mb-6 text-sm font-medium"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div class="md:col-span-2">
+                <label asp-for="Baslik" class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Duyuru Başlığı <span class="text-rose-500">*</span></label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                        <i class="fa-solid fa-bullhorn text-slate-500"></i>
+                    </div>
+                    <input asp-for="Baslik" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition duration-200" placeholder="Örn: Personel İçin İSG Yenileme Eğitimi Hakkında" required />
                 </div>
+                <span asp-validation-for="Baslik" class="text-rose-400 text-[11px] font-medium mt-1 block"></span>
+            </div>
 
-                <div class="col-md-12 mb-3">
-                    <label asp-for="Icerik" class="form-label">Duyuru İçeriği (Detay)</label>
-                    <textarea asp-for="Icerik" class="form-control" rows="4" required></textarea>
-                    <span asp-validation-for="Icerik" class="text-danger"></span>
+            <div class="md:col-span-2">
+                <label asp-for="Icerik" class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Duyuru İçeriği <span class="text-rose-500">*</span></label>
+                <textarea asp-for="Icerik" rows="5" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition duration-200 resize-none" placeholder="Duyurunun detaylarını buraya yazın..." required></textarea>
+                <span asp-validation-for="Icerik" class="text-rose-400 text-[11px] font-medium mt-1 block"></span>
+            </div>
+
+            <div>
+                <label asp-for="GorselUrl" class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Görsel URL <span class="text-slate-500 lowercase normal-case">(İsteğe Bağlı)</span></label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                        <i class="fa-solid fa-image text-slate-500"></i>
+                    </div>
+                    <input asp-for="GorselUrl" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition duration-200" placeholder="Örn: /assets/duyuru-resmi.jpg" />
                 </div>
+                <span asp-validation-for="GorselUrl" class="text-rose-400 text-[11px] font-medium mt-1 block"></span>
+            </div>
 
-                <div class="col-md-6 mb-3">
-                    <label asp-for="GorselUrl" class="form-label">Görsel URL (İsteğe Bağlı)</label>
-                    <input asp-for="GorselUrl" class="form-control" placeholder="/assets/duyuru-resmi.jpg" />
+            <div>
+                <label asp-for="YayinTarihi" class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Yayın Tarihi <span class="text-rose-500">*</span></label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                        <i class="fa-regular fa-calendar-days text-slate-500"></i>
+                    </div>
+                    <input asp-for="YayinTarihi" type="datetime-local" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition duration-200" required />
                 </div>
+                <span asp-validation-for="YayinTarihi" class="text-rose-400 text-[11px] font-medium mt-1 block"></span>
+            </div>
 
-                <div class="col-md-6 mb-3">
-                    <label asp-for="YayinTarihi" class="form-label">Yayın Tarihi</label>
-                    <input asp-for="YayinTarihi" type="datetime-local" class="form-control" required />
+            <div class="md:col-span-2 flex items-center p-4 rounded-xl border border-slate-700/50 bg-slate-800/30 transition hover:bg-slate-800/50 mt-2">
+                <div class="flex items-center h-5">
+                    <input asp-for="IsActive" type="checkbox" checked class="w-5 h-5 rounded bg-slate-900 border-slate-600 text-amber-500 focus:ring-amber-500 focus:ring-offset-slate-800 cursor-pointer" />
                 </div>
-
-                <div class="col-md-12 mb-3 form-check ms-3">
-                    <input asp-for="IsActive" class="form-check-input" />
-                    <label asp-for="IsActive" class="form-check-label">Sitede Göster (Aktif Mi?)</label>
+                <div class="ml-3 text-sm cursor-pointer">
+                    <label asp-for="IsActive" class="font-bold text-white cursor-pointer">Sitede Göster (Aktif)</label>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Bu seçenek işaretli ise duyuru kaydedildiği an sitede görünür olacaktır.</p>
                 </div>
             </div>
 
-            <hr />
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Kaydet</button>
-            <a asp-action="Index" class="btn btn-secondary">Vazgeç</a>
-        </form>
-    </div>
+        </div>
+
+        <div class="mt-8 flex items-center justify-end gap-4 border-t border-slate-700/50 pt-6">
+            <a asp-action="Index" class="px-6 py-2.5 rounded-xl font-bold text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition duration-300">
+                Vazgeç
+            </a>
+            <button type="submit" class="bg-gradient-to-r from-amber-500 to-orange-600 text-white px-8 py-2.5 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:scale-105 transition duration-300 flex items-center gap-2">
+                <i class="fa-solid fa-save"></i>
+                <span>Duyuruyu Kaydet</span>
+            </button>
+        </div>
+
+    </form>
 </div>

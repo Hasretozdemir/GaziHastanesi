@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GaziHastane.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]// Bu çok önemli, admin klasöründe olduğunu belirtir
+   // [Authorize]// Bu çok önemli, admin klasöründe olduğunu belirtir
     public class HaberlerController : Controller
     {
         private readonly GaziHastaneContext _context;
