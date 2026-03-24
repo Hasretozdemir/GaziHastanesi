@@ -235,7 +235,6 @@ namespace GaziHastane.Models
         [Required]
         [DataType(DataType.Date)]
         public DateTime Tarih { get; set; }
-
         public short Ogun { get; set; }
 
         [StringLength(150)]
