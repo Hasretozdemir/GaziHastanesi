@@ -101,7 +101,7 @@
                 transform: scale(1.1);
             }
 
-        /* --- DİJİTAL İŞLEMLER VE DİĞERLERİ --- */
+        /* --- DİJİTAL İŞLEMLER (TEK SIRA DÜZENİ) --- */
         .digital-ops-wrapper {
             position: relative;
             width: 100%;
@@ -115,28 +115,13 @@
             margin-top: -3.5rem;
         }
 
+        /* Grid yerine Flex kullanarak hepsini yan yana zorladık */
         .digital-ops-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
             gap: 1rem;
-        }
-
-        @@media (min-width: 640px) {
-            .digital-ops-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @@media (min-width: 1024px) {
-            .digital-ops-grid {
-                grid-template-columns: repeat(5, 1fr);
-            }
-        }
-
-        @@media (min-width: 1280px) {
-            .digital-ops-grid {
-                grid-template-columns: repeat(9, 1fr);
-            }
+            padding-bottom: 1rem;
         }
 
         .d-card {
@@ -150,6 +135,8 @@
             text-align: center;
             text-decoration: none;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            flex-shrink: 0; /* Kartların daralmasını engeller */
+            width: 120px; /* Kart genişliği sabitlendi */
         }
 
             .d-card:hover {
@@ -290,13 +277,16 @@
         }
 
         @@keyframes bounce-x {
-            0%, 100% {
-                transform: translateX(0);
-            }
+            0%, 100%
 
-            50% {
-                transform: translateX(5px);
-            }
+        {
+            transform: translateX(0);
+        }
+
+        50% {
+            transform: translateX(5px);
+        }
+
         }
 
         /* --- DUYURU SCROLL TASARIMI --- */
@@ -461,64 +451,88 @@
             </h3>
         </div>
 
-        <div class="digital-ops-grid">
+        <div class="digital-ops-grid no-scrollbar" style="scrollbar-width: none; -ms-overflow-style: none;">
+
             <a href="/Randevu/Giris" class="d-card group">
                 <div class="d-icon text-blue-500 bg-blue-50 group-hover:bg-blue-500 group-hover:text-white">
                     <i class="fa-solid fa-calendar-check"></i>
                 </div>
                 <span class="d-label">Online<br>Randevu</span>
             </a>
+
             <a href="/Sonuc/Giris" class="d-card group">
                 <div class="d-icon text-teal-500 bg-teal-50 group-hover:bg-teal-500 group-hover:text-white">
                     <i class="fa-solid fa-file-medical"></i>
                 </div>
                 <span class="d-label">Tahlil<br>Sonuçları</span>
             </a>
+
             <a href="/Odeme/Giris" class="d-card group">
                 <div class="d-icon text-indigo-500 bg-indigo-50 group-hover:bg-indigo-500 group-hover:text-white">
                     <i class="fa-solid fa-credit-card"></i>
                 </div>
                 <span class="d-label">Güvenli<br>Ödeme</span>
             </a>
+
             <a href="http://mobilhbys.com:20108/nucleus-mobile/login" target="_blank" class="d-card group">
                 <div class="d-icon text-violet-500 bg-violet-50 group-hover:bg-violet-500 group-hover:text-white">
                     <i class="fa-solid fa-mobile-screen-button"></i>
                 </div>
                 <span class="d-label">Mobil<br>HBYS</span>
             </a>
+
             <a href="/EBYS/Giris" class="d-card group">
                 <div class="d-icon text-sky-500 bg-sky-50 group-hover:bg-sky-500 group-hover:text-white">
-                    <i class="fa-solid fa-laptop-file"></i>
+                    <i class="fa-solid fa-file-signature"></i>
                 </div>
                 <span class="d-label">EBYS<br>Sistemi</span>
             </a>
+
             <a href="/Mail/Giris" class="d-card group">
                 <div class="d-icon text-rose-500 bg-rose-50 group-hover:bg-rose-500 group-hover:text-white">
-                    <i class="fa-solid fa-envelope"></i>
+                    <i class="fa-solid fa-envelope-open-text"></i>
                 </div>
                 <span class="d-label">Gazi<br>WebMail</span>
             </a>
-            <a href="/Egitim/Komite" class="d-card group">
+
+            <a href="/Kalite/Index" class="d-card group">
+                <div class="d-icon text-slate-500 bg-slate-100 group-hover:bg-slate-500 group-hover:text-white">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+                <span class="d-label">Kalite<br>Yönetimi</span>
+            </a>
+
+            <a href="/Egitim/Index" class="d-card group">
                 <div class="d-icon text-orange-500 bg-orange-50 group-hover:bg-orange-500 group-hover:text-white">
                     <i class="fa-solid fa-graduation-cap"></i>
                 </div>
                 <span class="d-label">Eğitim<br>Komitesi</span>
             </a>
+
             <a href="https://www.gaziuniversityhospital.com/" target="_blank" class="d-card group">
                 <div class="d-icon text-emerald-500 bg-emerald-50 group-hover:bg-emerald-500 group-hover:text-white">
                     <i class="fa-solid fa-globe"></i>
                 </div>
                 <span class="d-label">Uluslararası<br>Hasta</span>
             </a>
+
             <a href="https://gaziemzirmedestekmerkezi.gazi.edu.tr/" target="_blank" class="d-card group">
                 <div class="d-icon text-pink-500 bg-pink-50 group-hover:bg-pink-500 group-hover:text-white">
-                    <i class="fa-solid fa-hands-holding-child"></i>
+                    <i class="fa-solid fa-baby"></i>
                 </div>
                 <span class="d-label">Emzirme<br>Destek</span>
             </a>
+
         </div>
     </div>
 </section>
+
+<style>
+    /* Kaydırma çubuğunu gizlemek için (Chrome, Safari ve Opera) */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+</style>
 
 <section class="max-w-7xl mx-auto px-4 sm:px-6 py-12" style="background: #f8fafc;">
     <div class="grid lg:grid-cols-3 gap-10">

@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using GaziHastane.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using System.Linq;
 
 namespace GaziHastane.Controllers
@@ -16,35 +18,28 @@ namespace GaziHastane.Controllers
 
         // 1. ANA PORTAL SAYFASI (Kartlarýn listelendiði ana menü)
         // Tarayýcýda /Egitim/Index adresine gidildiðinde bu çalýþýr.
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            // Veritabanýndaki Egitim kartlarýný listele
+            // (Not: EgitimIcerikleri tablosunun adýný kendi DbContext modeline göre düzenle)
+            var egitimKartlari = await _context.EgitimIcerikleri
+                                               .OrderBy(x => x.Id)
+                                               .ToListAsync();
+
+            return View(egitimKartlari);
         }
 
-        // 2. KOMÝTE ÜYELERÝ SAYFASI (Dar yan panelde açýlýr)
-        public IActionResult Komite()
+        // 2. KULLANICI TARAFI AJAX VERÝ GETÝRME (Modal Ýçin)
+        // Eðer kartýn Tipi "Panel" ise ön yüzdeki JavaScript bu metoda istek atýp veriyi çeker
+        [HttpGet]
+        public async Task<IActionResult> GetEgitimDetay(int id)
         {
-            // Veritabanýndaki EgitimKomitesi tablosundan üyeleri çekip View'a gönderiyoruz
-            var uyeler = _context.EgitimKomitesi.ToList();
-            return View(uyeler);
-        }
+            var detay = await _context.EgitimIcerikleri.FindAsync(id);
 
-        // 3. HAKKIMIZDA SAYFASI (Geniþ yan panelde açýlýr)
-        public IActionResult Hakkimizda()
-        {
-            return View();
-        }
+            if (detay == null)
+                return NotFound();
 
-        // 4. DUYURULAR VE ETKÝNLÝKLER SAYFASI (Geniþ yan panelde açýlýr)
-        public IActionResult Duyurular()
-        {
-            return View();
-        }
-
-        // 5. FOTOÐRAF GALERÝSÝ SAYFASI (Geniþ yan panelde açýlýr)
-        public IActionResult Galeri()
-        {
-            return View();
+            return Json(detay);
         }
     }
 }

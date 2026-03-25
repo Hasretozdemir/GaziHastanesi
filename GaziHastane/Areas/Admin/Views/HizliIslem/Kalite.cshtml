@@ -1,93 +1,241 @@
-﻿@{
+﻿@model List<GaziHastane.Models.KaliteBelgesi>
+@{
     ViewData["Title"] = "Kalite Yönetimi Paneli";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-
-    // ŞİMDİLİK VERİTABANI YERİNE STATİK LİSTE (Tasarımı Görmek İçin)
-    var taslakMaddeler = new[] {
-        new { Id = 1, Icon = "fa-sitemap", Title = "Organizasyon Şeması", ColorClass = "bg-soft-blue" },
-        new { Id = 2, Icon = "fa-route", Title = "Kalite Yolculuğu", ColorClass = "bg-soft-purple" },
-        new { Id = 3, Icon = "fa-users-cog", Title = "Kalite Ekibi", ColorClass = "bg-soft-orange" },
-        new { Id = 4, Icon = "fa-file-medical-alt", Title = "Raporlar", ColorClass = "bg-soft-green" }
-    };
 }
 
-<div class="h-full flex items-start justify-center p-2 md:p-6 overflow-y-auto custom-scroll">
+<style>
+    /* ARKA PLAN (KOYU/DARK TEMA) */
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #0f172a;
+    }
 
-    <div class="glass-card w-full max-w-5xl rounded-[2rem] p-8 md:p-10 relative overflow-hidden animate__animated animate__fadeIn">
+    /* Arka Plan Kartları (Dark Glass) */
+    .admin-feature-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 24px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
 
-        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+        .admin-feature-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-5px);
+        }
 
-        <div class="flex flex-col md:flex-row md:items-center gap-5 mb-10 border-b border-white/5 pb-8">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-[0_0_25px_rgba(99,102,241,0.4)] shrink-0">
-                <i class="fa-solid fa-award text-2xl text-white"></i>
+    /* CKEditor Özelleştirme (Beyaz Modal İçin) */
+    .cke_inner {
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    .cke_top {
+        background: #f8fafc !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+    }
+
+    /* Scrollbar */
+    .custom-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+</style>
+
+<div class="min-h-screen p-4 md:p-8 relative overflow-hidden custom-scroll">
+    <div class="fixed top-0 right-0 w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[120px] -z-10"></div>
+    <div class="fixed bottom-0 left-0 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[100px] -z-10"></div>
+
+    <div class="max-w-7xl mx-auto z-10 relative">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 animate__animated animate__fadeIn">
+            <div class="flex items-center gap-6">
+                <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-2xl shadow-indigo-500/20">
+                    <i class="fa-solid fa-award text-3xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-black text-white tracking-tight">Kalite Yönetim Paneli</h1>
+                    <p class="text-slate-400 font-medium mt-1">Ana sayfada görünecek kalite belgelerini ve içerikleri yönetin.</p>
+                </div>
             </div>
-            <div>
-                <h2 class="text-2xl font-black text-white tracking-wide">Kalite Yönetimi Tasarım Paneli</h2>
-                <p class="text-[14px] text-slate-400 mt-1">
-                    Portal üzerindeki kartları düzenleyin. <span class="text-indigo-400">İkon, başlık ve renk</span> uyumunu buradan simüle edebilirsiniz.
-                </p>
-            </div>
+            <button onclick="yeniKartAc()" class="group bg-indigo-600 text-white hover:bg-indigo-500 px-8 py-4 rounded-2xl font-black text-sm transition-all duration-300 flex items-center gap-3 shadow-xl shadow-indigo-600/20">
+                <i class="fa-solid fa-plus group-hover:rotate-90 transition-transform"></i> YENİ İÇERİK EKLE
+            </button>
         </div>
 
-        <div class="bg-black/20 border border-white/5 rounded-2xl p-6 md:p-8 mb-10">
-            <h3 class="text-xs font-black text-indigo-400 uppercase tracking-widest mb-6 flex items-center gap-2">
-                <i class="fa-solid fa-circle-plus"></i> Yeni Kalite Kartı Tanımla
-            </h3>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-400 mb-2 tracking-widest">KART BAŞLIĞI</label>
-                    <input type="text" placeholder="Örn: Kalite Komiteleri" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm font-medium text-white focus:outline-none focus:border-indigo-500/50 transition">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-400 mb-2 tracking-widest">FA-IKON KODU</label>
-                    <input type="text" placeholder="fa-users" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm font-medium text-white focus:outline-none focus:border-indigo-500/50 transition">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-400 mb-2 tracking-widest">RENK TEMASI</label>
-                    <select class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm font-medium text-white focus:outline-none focus:border-indigo-500/50 transition cursor-pointer">
-                        <option class="bg-slate-900">Mavi (Soft Blue)</option>
-                        <option class="bg-slate-900">Mor (Soft Purple)</option>
-                        <option class="bg-slate-900">Turuncu (Soft Orange)</option>
-                        <option class="bg-slate-900">Yeşil (Soft Green)</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="mt-6 flex justify-end">
-                <button type="button" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-8 py-3 rounded-xl font-bold text-xs shadow-lg shadow-indigo-500/20 hover:scale-105 transition">
-                    LİSTEYE TASLAK OLARAK EKLE
-                </button>
-            </div>
-        </div>
-
-        <div>
-            <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-6 flex items-center gap-2">
-                <i class="fa-solid fa-layer-group"></i> Aktif Kartlar Önizlemesi
-            </h3>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                @foreach (var item in taslakMaddeler)
-                {
-                    <div class="bg-white/5 border border-white/10 rounded-2xl p-5 flex items-center justify-between group hover:border-indigo-500/40 transition">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl bg-white/5 border border-white/5 @item.ColorClass.Replace("bg-soft", "text")">
-                                <i class="fas @item.Icon"></i>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            @foreach (var item in Model)
+            {
+                <div class="admin-feature-card p-8 flex flex-col justify-between animate__animated animate__fadeInUp">
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-2xl text-indigo-400">
+                                <i class="fas @(string.IsNullOrEmpty(item.Kategori) ? "fa-file-alt" : item.Kategori)"></i>
                             </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-white group-hover:text-indigo-300 transition">@item.Title</h4>
-                                <p class="text-[10px] text-slate-500 uppercase tracking-tighter">Sınıf: @item.ColorClass</p>
-                            </div>
+                            <span class="px-3 py-1 rounded-lg bg-white/5 text-[10px] font-black text-slate-400 border border-white/5 tracking-widest">ID #@item.Id</span>
                         </div>
-
-                        <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button class="w-8 h-8 rounded-lg bg-white/5 text-slate-400 hover:text-white transition"><i class="fa-solid fa-pen-to-square text-xs"></i></button>
-                            <button class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition"><i class="fa-solid fa-trash text-xs"></i></button>
-                        </div>
+                        <h3 class="text-xl font-extrabold text-white mb-3 tracking-tight">@item.BelgeAdi</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed line-clamp-2">
+                            @(string.IsNullOrEmpty(item.Aciklama) ? "Bu karta ait metin girilmemiş." : "Zengin içerik yayında.")
+                        </p>
                     </div>
-                }
-            </div>
-        </div>
 
+                    <div class="flex items-center gap-3 mt-8 pt-6 border-t border-white/5">
+                        <button onclick="duzenle(@item.Id)" class="flex-1 bg-white/5 hover:bg-indigo-600/20 text-indigo-400 py-3 rounded-xl text-xs font-black transition-all">
+                            <i class="fa-solid fa-pen-to-square mr-1"></i> DÜZENLE
+                        </button>
+                        <form asp-action="KaliteSil" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Bu içeriği kalıcı olarak silmek istediğinize emin misiniz?')" class="m-0">
+                            <button type="submit" class="w-12 h-12 flex items-center justify-center bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white rounded-xl transition-all">
+                                <i class="fa-solid fa-trash-can text-sm"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 </div>
+
+<div id="kaliteModal" class="fixed inset-0 z-[150] hidden items-center justify-center p-4 md:p-6 bg-slate-900/60 backdrop-blur-md animate__animated animate__fadeIn">
+    <div class="bg-white w-full max-w-5xl rounded-[24px] p-6 md:p-10 relative max-h-[95vh] overflow-y-auto shadow-2xl custom-scroll border border-slate-200">
+
+        <div class="flex justify-between items-center mb-8">
+            <h3 id="modalTitle" class="text-2xl font-black text-slate-800 tracking-tight">İçerik Düzenle</h3>
+            <button type="button" onclick="modalKapat()" class="w-10 h-10 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 transition-all flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <form asp-action="KaliteKaydet" method="post" enctype="multipart/form-data" class="space-y-6">
+            <input type="hidden" name="Id" id="cardId" value="0" />
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <label class="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-2">KART BAŞLIĞI</label>
+                    <input type="text" name="BelgeAdi" id="cardName" class="w-full bg-white border border-slate-200 rounded-xl py-3 px-4 text-slate-800 text-sm outline-none focus:border-blue-500 transition-all shadow-sm" placeholder="Örn: JCI Akreditasyon Belgesi" required />
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-2 flex justify-between">
+                        <span>İKON KODU (FONTAWESOME)</span>
+                        <span class="text-[9px] text-blue-500 bg-blue-50 px-2 py-0.5 rounded-md">Seç veya Yaz</span>
+                    </label>
+                    <input type="text" name="Kategori" id="cardIcon" class="w-full bg-white border border-slate-200 rounded-xl py-3 px-4 text-slate-800 text-sm outline-none focus:border-blue-500 transition-all shadow-sm mb-3" placeholder="Örn: fa-certificate" required />
+
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" onclick="ikonSec('fa-award')" class="w-9 h-9 rounded-lg bg-slate-50 text-slate-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center border border-slate-200 shadow-sm" title="Ödül"><i class="fa-solid fa-award"></i></button>
+                        <button type="button" onclick="ikonSec('fa-certificate')" class="w-9 h-9 rounded-lg bg-slate-50 text-slate-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center border border-slate-200 shadow-sm" title="Sertifika"><i class="fa-solid fa-certificate"></i></button>
+                        <button type="button" onclick="ikonSec('fa-sitemap')" class="w-9 h-9 rounded-lg bg-slate-50 text-slate-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center border border-slate-200 shadow-sm" title="Organizasyon"><i class="fa-solid fa-sitemap"></i></button>
+                        <button type="button" onclick="ikonSec('fa-users-cog')" class="w-9 h-9 rounded-lg bg-slate-50 text-slate-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center border border-slate-200 shadow-sm" title="Ekip / Komite"><i class="fa-solid fa-users-cog"></i></button>
+                        <button type="button" onclick="ikonSec('fa-file-medical-alt')" class="w-9 h-9 rounded-lg bg-slate-50 text-slate-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center border border-slate-200 shadow-sm" title="Raporlar"><i class="fa-solid fa-file-medical-alt"></i></button>
+                        <button type="button" onclick="ikonSec('fa-route')" class="w-9 h-9 rounded-lg bg-slate-50 text-slate-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center border border-slate-200 shadow-sm" title="Yol Haritası"><i class="fa-solid fa-route"></i></button>
+                        <button type="button" onclick="ikonSec('fa-hands-holding-child')" class="w-9 h-9 rounded-lg bg-slate-50 text-slate-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center border border-slate-200 shadow-sm" title="Destek"><i class="fa-solid fa-hands-holding-child"></i></button>
+                        <button type="button" onclick="ikonSec('fa-project-diagram')" class="w-9 h-9 rounded-lg bg-slate-50 text-slate-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center border border-slate-200 shadow-sm" title="Süreç / Akış"><i class="fa-solid fa-project-diagram"></i></button>
+                        <button type="button" onclick="ikonSec('fa-clipboard-check')" class="w-9 h-9 rounded-lg bg-slate-50 text-slate-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center border border-slate-200 shadow-sm" title="Denetim"><i class="fa-solid fa-clipboard-check"></i></button>
+                        <button type="button" onclick="ikonSec('fa-globe')" class="w-9 h-9 rounded-lg bg-slate-50 text-slate-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center border border-slate-200 shadow-sm" title="Evrensel / Standart"><i class="fa-solid fa-globe"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-2">İÇERİK (METİN RENGİ VE TASARIM ARAÇLARI)</label>
+                <textarea name="Aciklama" id="editor"></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-[1rem] border border-slate-100 mt-2">
+                <div>
+                    <label class="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3">KAPAK GÖRSELİ (.JPG/.PNG)</label>
+                    <input type="file" name="fotoDosya" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 cursor-pointer transition-all" />
+                </div>
+                <div>
+                    <label class="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3">İNDİRİLEBİLİR BELGE (.PDF/.DOC)</label>
+                    <input type="file" name="belgeDosya" class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-100 file:text-emerald-700 hover:file:bg-emerald-200 cursor-pointer transition-all" />
+                </div>
+            </div>
+
+            <div class="flex justify-end items-center gap-4 pt-6 mt-4 border-t border-slate-100">
+                <button type="button" onclick="modalKapat()" class="px-4 py-3 text-slate-500 font-bold text-xs hover:text-slate-800 transition-colors">İPTAL ET</button>
+                <button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold text-sm hover:bg-blue-700 transition-all shadow-sm shadow-blue-200">
+                    İÇERİĞİ KAYDET
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
+    <script>
+        // Hızlı İkon Seçimi İçin JavaScript Fonksiyonu
+        function ikonSec(ikonKodu) {
+            document.getElementById('cardIcon').value = ikonKodu;
+
+            // Görsel geri bildirim için input etrafında küçük bir animasyon
+            const input = document.getElementById('cardIcon');
+            input.classList.add('ring-2', 'ring-blue-500', 'ring-offset-1');
+            setTimeout(() => {
+                input.classList.remove('ring-2', 'ring-blue-500', 'ring-offset-1');
+            }, 300);
+        }
+
+        // Beyaz Modal için CKEditor Yapılandırması
+        CKEDITOR.replace('editor', {
+            height: 300,
+            uiColor: '#ffffff', // Arayüzü tam beyaz yapar
+            toolbar: [
+                { name: 'document', items: [ 'Source' ] },
+                { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
+                { name: 'colors', items: [ 'TextColor', 'BGColor' ] }, // YAZI RENGİ SEÇİMİ
+                { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight' ] },
+                { name: 'styles', items: [ 'Format', 'Font', 'FontSize' ] },
+                { name: 'links', items: [ 'Link', 'Unlink' ] },
+                { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule' ] }
+            ],
+            contentsCss: [
+                'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap',
+                'body { font-family: "Plus Jakarta Sans", sans-serif; font-size: 15px; color: #334155; background-color: #ffffff; }'
+            ]
+        });
+
+        function yeniKartAc() {
+            document.getElementById('cardId').value = "0";
+            document.getElementById('cardName').value = "";
+            document.getElementById('cardIcon').value = "";
+            CKEDITOR.instances.editor.setData('');
+            document.getElementById('modalTitle').innerText = "Yeni Kalite İçeriği Oluştur";
+
+            document.getElementById('kaliteModal').classList.replace('hidden', 'flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function modalKapat() {
+            document.getElementById('kaliteModal').classList.replace('flex', 'hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function duzenle(id) {
+            fetch(`/Admin/HizliIslem/GetKaliteDetay/${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('cardId').value = data.id;
+                    document.getElementById('cardName').value = data.belgeAdi;
+                    document.getElementById('cardIcon').value = data.kategori;
+                    CKEDITOR.instances.editor.setData(data.aciklama || '');
+
+                    document.getElementById('modalTitle').innerText = "Düzenle: " + data.belgeAdi;
+
+                    document.getElementById('kaliteModal').classList.replace('hidden', 'flex');
+                    document.body.style.overflow = 'hidden';
+                });
+        }
+    </script>
+}

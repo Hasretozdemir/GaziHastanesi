@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using GaziHastane.Models;
 
 namespace GaziHastane.Data
@@ -18,7 +18,7 @@ namespace GaziHastane.Data
         public DbSet<YemekListesi> YemekListesi { get; set; }
         public DbSet<Duyuru> Duyurular { get; set; }
         public DbSet<KaliteBelgesi> KaliteBelgeleri { get; set; }
-        public DbSet<EgitimKomitesiUye> EgitimKomitesi { get; set; }
+        public DbSet<EgitimKarti> EgitimIcerikleri { get; set; }
         public DbSet<HastaRehberi> HastaRehberleri { get; set; }
 
         public DbSet<Iletisim> IletisimBilgileri { get; set; }
@@ -46,7 +46,7 @@ namespace GaziHastane.Data
                 .HasForeignKey(d => d.BolumId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-             // Randevu -> Bolum (Cascade)
+            // Randevu -> Bolum (Cascade)
             modelBuilder.Entity<Randevu>()
                 .HasOne(r => r.Bolum)
                 .WithMany(b => b.Randevular)

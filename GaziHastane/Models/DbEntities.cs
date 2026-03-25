@@ -275,7 +275,6 @@ namespace GaziHastane.Models
         public bool IsActive { get; set; } = true;
     }
 
-    // 9. KaliteBelgeleri Table
     [Table("KaliteBelgeleri")]
     public class KaliteBelgesi
     {
@@ -283,43 +282,68 @@ namespace GaziHastane.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Belge veya sayfa baþlýðý zorunludur.")]
         [StringLength(255)]
-        public string BelgeAdi { get; set; } = null!;
+        public string BelgeAdi { get; set; } = null!; // Kartýn Baþlýðý
 
         [StringLength(100)]
-        public string? Kategori { get; set; }
+        public string? Kategori { get; set; } // Organizasyon Þemasý, Kalite Ekibi vb.
 
+        // --- YAZI YAZMA KISMI ---
+        // Uzun metinler veya HTML kodlarý (CKEditor içeriði gibi) burada tutulacak.
+        public string? Aciklama { get; set; }
+
+        // --- FOTOÐRAF EKLEME KISMI ---
+        [StringLength(255)]
+        public string? FotoUrl { get; set; }
+
+        // --- BELGE EKLEME KISMI ---
         [Required]
         [StringLength(255)]
-        public string DosyaUrl { get; set; } = null!;
+        public string DosyaUrl { get; set; } = null!; // PDF, Docx vb. dosya yolu
 
         public DateTime YayinTarihi { get; set; } = DateTime.UtcNow;
     }
-
-    // 10. EgitimKomitesi Table
-    [Table("EgitimKomitesi")]
-    public class EgitimKomitesiUye
+    [Table("EgitimIcerikleri")]
+    public class EgitimKarti
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Kart baþlýðý zorunludur.")]
         [StringLength(150)]
-        public string UyeAdSoyad { get; set; } = null!;
-
-        [Required]
-        [StringLength(150)]
-        public string Gorev { get; set; } = null!;
-
-        [StringLength(150)]
-        public string? Unvan { get; set; }
+        public string Baslik { get; set; } = null!; // Örn: Eðitim Komitesi
 
         [StringLength(255)]
-        public string? FotografUrl { get; set; }
+        public string? KisaAciklama { get; set; } // Örn: Yürütme kurulu ve üyelerimiz.
+
+        [StringLength(50)]
+        public string? Ikon { get; set; } // Örn: fa-users-crown
+
+        [StringLength(50)]
+        public string? Renk { get; set; } // Örn: text-blue-400
+
+        [StringLength(50)]
+        public string? Tip { get; set; } // "Panel" (Modal açar) veya "Link" (Sayfaya gider)
+
+        [StringLength(255)]
+        public string? Hedef { get; set; } // Örn: /Egitim/Index veya #hakkimizdaPanel
+
+        // --- ZENGÝN ÝÇERÝK BÖLÜMÜ (CKEditor) ---
+        public string? Icerik { get; set; } // Modal içinde görünecek HTML metin
+
+        // --- MEDYA VE DOSYA BÖLÜMÜ ---
+        [StringLength(255)]
+        public string? FotoUrl { get; set; } // Modal kapak fotoðrafý
+
+        [StringLength(255)]
+        public string? DosyaUrl { get; set; } = "#"; // Ýndirilebilir PDF/Doc dosyasý
     }
 
+
+
+    // 11. HastaRehberi Table
     [Table("HastaRehberi")]
     public class HastaRehberi
     {
@@ -342,7 +366,7 @@ namespace GaziHastane.Models
         public bool IsActive { get; set; } = true;
 
         [StringLength(20)]
-        public string? Tema { get; set; } // Tasarýmdaki: blue, purple, red, teal, orange, violet, emerald, amber, rose
+        public string? Tema { get; set; }
     }
 
     // 12. Iletisim Table
@@ -428,15 +452,15 @@ namespace GaziHastane.Models
         public string Baslik { get; set; } = null!;
 
         [StringLength(500)]
-        public string Ozet { get; set; } = null!; // Kartlarda görünen kýsa yazý
+        public string Ozet { get; set; } = null!;
 
-        public string? Icerik { get; set; } // Týklanýnca açýlacak detay sayfasý için
+        public string? Icerik { get; set; }
 
         [StringLength(255)]
         public string GorselUrl { get; set; } = null!;
 
         [StringLength(50)]
-        public string Kategori { get; set; } = null!; // Örn: "Týp Dünyasý", "Baþarýlarýmýz"
+        public string Kategori { get; set; } = null!;
 
         public DateTime YayinTarihi { get; set; } = DateTime.UtcNow;
 
@@ -456,20 +480,21 @@ namespace GaziHastane.Models
         public string Baslik { get; set; } = null!;
 
         [StringLength(50)]
-        public string EtkinlikTipi { get; set; } = null!; // Örn: "Sempozyum", "Eðitim", "Kongre"
+        public string EtkinlikTipi { get; set; } = null!;
 
-        public DateTime Tarih { get; set; } // Gün ve ay bilgisini buradan alacaðýz
+        public DateTime Tarih { get; set; }
 
         [StringLength(50)]
-        public string SaatAraligi { get; set; } = null!; // Örn: "09:00 - 17:00"
+        public string SaatAraligi { get; set; } = null!;
 
         [StringLength(200)]
-        public string Konum { get; set; } = null!; // Örn: "Gazi Üniversitesi Ana Konferans Salonu"
+        public string Konum { get; set; } = null!;
 
         public string? Aciklama { get; set; }
 
         public bool IsActive { get; set; } = true;
     }
+
     // 16. Yetkililer Table
     [Table("Yetkililer")]
     public class Yetkili
@@ -489,14 +514,64 @@ namespace GaziHastane.Models
 
         [Required]
         [StringLength(255)]
-        public string SifreHash { get; set; } = null!; // Gerçek senaryoda þifrelenmiþ (MD5, SHA256 vb.) tutulur
+        public string SifreHash { get; set; } = null!;
 
         [StringLength(50)]
-        public string Rol { get; set; } = "Yönetici"; // Örn: "Süper Admin", "Editör", "Yönetici"
+        public string Rol { get; set; } = "Yönetici";
 
         public DateTime KayitTarihi { get; set; } = DateTime.UtcNow;
 
-        public DateTime? SonGirisTarihi { get; set; } // Kullanýcý login oldukça güncellenecek alan
+        public DateTime? SonGirisTarihi { get; set; }
+
+        public bool IsActive { get; set; } = true;
+    }
+
+    // --- YENÝ EKLENEN TABLOLAR ---
+
+    // 17. Belgeler Table (Genel Dosya Yönetimi)
+    [Table("Belgeler")]
+    public class Belge
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string Baslik { get; set; } = null!;
+
+        [Required]
+        [StringLength(500)]
+        public string DosyaYolu { get; set; } = null!; // wwwroot altýndaki konumu
+
+        [StringLength(50)]
+        public string? DosyaTipi { get; set; } // .pdf, .docx vb.
+
+        public DateTime YuklenmeTarihi { get; set; } = DateTime.UtcNow;
+
+        public bool IsActive { get; set; } = true;
+    }
+
+    // 18. Medya Table (Görsel ve Slider Yönetimi)
+    [Table("Medya")]
+    public class Medya
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [StringLength(255)]
+        public string? Baslik { get; set; }
+
+        [Required]
+        [StringLength(500)]
+        public string GorselYolu { get; set; } = null!;
+
+        public bool IsSlider { get; set; } = false; // Slider'da görünüp görünmeyeceði
+
+        public int SiraNo { get; set; } = 0; // Slider'daki görüntülenme sýrasý
+
+        public DateTime YuklenmeTarihi { get; set; } = DateTime.UtcNow;
 
         public bool IsActive { get; set; } = true;
     }

@@ -1,5 +1,7 @@
-﻿@{
+﻿@model List<GaziHastane.Models.EgitimKarti>
+@{
     Layout = null;
+    ViewData["Title"] = "Eğitim Komitesi Portalı | Gazi Sağlık";
 }
 
 <!DOCTYPE html>
@@ -7,9 +9,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Eğitim Komitesi Portalı | Gazi Sağlık</title>
+    <title>@ViewData["Title"]</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -35,6 +37,40 @@
             max-width: 1100px;
             width: 100%;
             margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .bg-visuals {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            filter: blur(100px);
+            opacity: 0.5;
+            border-radius: 50%;
+        }
+
+        .blob-1 {
+            top: -100px;
+            right: -50px;
+            background: rgba(37, 99, 235, 0.08);
+        }
+
+        .blob-2 {
+            bottom: -100px;
+            left: -50px;
+            background: rgba(15, 23, 42, 0.04);
         }
 
         .committee-action-card {
@@ -48,6 +84,8 @@
             text-decoration: none !important;
             transition: all 0.3s ease;
             cursor: pointer;
+            text-align: left;
+            width: 100%;
         }
 
             .committee-action-card:hover {
@@ -55,6 +93,11 @@
                 box-shadow: 0 12px 25px rgba(0,0,0,0.05);
                 border-color: #cbd5e1;
             }
+
+                .committee-action-card:hover .arrow-icon {
+                    transform: translateX(4px);
+                    color: #2563eb !important;
+                }
 
         .card-icon-wrapper {
             width: 50px;
@@ -80,55 +123,73 @@
             margin: 0;
         }
 
-        /* Renk Paletleri */
-        .bg-soft-blue {
+        .arrow-icon {
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        /* Tailwind Özel Renk Seçenekleri */
+        .text-blue-400 {
+            color: #60a5fa;
             background: #eff6ff;
-            color: #3b82f6;
         }
 
-        .bg-soft-purple {
+        .text-purple-400 {
+            color: #c084fc;
             background: #f5f3ff;
-            color: #8b5cf6;
         }
 
-        .bg-soft-red {
+        .text-red-400 {
+            color: #f87171;
             background: #fef2f2;
-            color: #ef4444;
         }
 
-        .bg-soft-orange {
+        .text-orange-400 {
+            color: #fb923c;
             background: #fff7ed;
-            color: #f97316;
         }
 
-        .bg-soft-navy {
-            background: #f1f5f9;
-            color: #0f172a;
-        }
-
-        .bg-soft-teal {
+        .text-teal-400 {
+            color: #2dd4bf;
             background: #f0fdfa;
-            color: #14b8a6;
         }
 
-        .bg-soft-sky {
+        .text-sky-400 {
+            color: #38bdf8;
             background: #e0f2fe;
-            color: #0284c7;
         }
 
-        .bg-soft-indigo {
-            background: #ede9fe;
-            color: #4f46e5;
+        .text-yellow-400 {
+            color: #facc15;
+            background: #fef9c3;
         }
 
-        .bg-soft-green {
+        .text-green-400 {
+            color: #4ade80;
             background: #dcfce7;
-            color: #16a34a;
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
         }
     </style>
 </head>
 
 <body class="pt-20 pb-10 min-vh-100 d-flex flex-column align-items-center justify-content-center">
+
+    <div class="bg-visuals">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
 
     <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200 z-[100]">
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -151,11 +212,11 @@
         </div>
     </header>
 
-    <div class="container px-3">
+    <div class="container px-3 mt-4">
         <div class="portal-master-card animate__animated animate__fadeInUp">
 
             <div class="text-center mb-5 pb-4 border-bottom">
-                <div class="d-inline-flex align-items-center justify-content-center bg-soft-blue rounded-circle mb-3" style="width:64px; height:64px; font-size:1.75rem;">
+                <div class="d-inline-flex align-items-center justify-content-center bg-blue-50 text-blue-600 rounded-circle mb-3" style="width:64px; height:64px; font-size:1.75rem;">
                     <i class="fas fa-university"></i>
                 </div>
                 <h2 class="fw-900 color-navy mb-1" style="font-size: 1.8rem;">Sürekli Eğitim Merkezi</h2>
@@ -163,184 +224,150 @@
             </div>
 
             <div class="row g-3 justify-content-center">
-                <div class="col-12 col-md-6 col-lg-4">
-                    <a href="/Egitim/Index" class="committee-action-card h-100 w-100 text-start">
-                        <div class="card-icon-wrapper bg-soft-navy"><i class="fas fa-users-crown"></i></div>
-                        <div class="card-info">
-                            <h5 class="text-primary">Eğitim Komitesi</h5>
-                            <p>Yürütme kurulu ve üyelerimiz.</p>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var madde in Model)
+                    {
+                        <div class="col-12 col-md-6 col-lg-4">
+                            @if (madde.Tip == "Panel")
+                            {
+                                <button onclick="icerikGoster(@madde.Id)" class="committee-action-card h-100 w-100 border-0">
+                                    <div class="card-icon-wrapper @madde.Renk"><i class="fas @madde.Ikon"></i></div>
+                                    <div class="card-info w-100 d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5>@madde.Baslik</h5>
+                                            <p>@madde.KisaAciklama</p>
+                                        </div>
+                                    </div>
+                                </button>
+                            }
+                            else
+                            {
+                                <a href="@madde.Hedef" class="committee-action-card h-100 w-100">
+                                    <div class="card-icon-wrapper @madde.Renk"><i class="fas @madde.Ikon"></i></div>
+                                    <div class="card-info w-100 d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5>@madde.Baslik</h5>
+                                            <p>@madde.KisaAciklama</p>
+                                        </div>
+                                        <i class="fas fa-external-link-alt text-muted opacity-50 arrow-icon text-[10px]"></i>
+                                    </div>
+                                </a>
+                            }
                         </div>
-                    </a>
-                </div>
-
-                <div class="col-12 col-md-6 col-lg-4">
-                    <button data-bs-toggle="offcanvas" data-bs-target="#hakkimizdaPanel" class="committee-action-card h-100 w-100 text-start">
-                        <div class="card-icon-wrapper bg-soft-purple"><i class="fas fa-lightbulb-on"></i></div>
-                        <div class="card-info">
-                            <h5>Misyon & Vizyon</h5>
-                            <p>Eğitim politikaları ve kalite standartları.</p>
-                        </div>
-                    </button>
-                </div>
-
-                <div class="col-12 col-md-6 col-lg-4">
-                    <a href="/Egitim/Duyurular" class="committee-action-card h-100 w-100 text-start">
-                        <div class="card-icon-wrapper bg-soft-red"><i class="fas fa-bullhorn"></i></div>
-                        <div class="card-info">
-                            <h5>Duyurular & Etkinlikler</h5>
-                            <p>Güncel haberler ve eğitim takvimi.</p>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-12 col-md-6 col-lg-4">
-                    <button data-bs-toggle="offcanvas" data-bs-target="#galeriPanel" class="committee-action-card h-100 w-100 text-start">
-                        <div class="card-icon-wrapper bg-soft-orange"><i class="fas fa-images"></i></div>
-                        <div class="card-info">
-                            <h5>Fotoğraf Galerisi</h5>
-                            <p>Eğitimlerimizden ve hastaneden kareler.</p>
-                        </div>
-                    </button>
-                </div>
-
-                <div class="col-12 col-md-6 col-lg-4">
-                    <button data-bs-toggle="offcanvas" data-bs-target="#tipEgitimiPanel" class="committee-action-card h-100 w-100 text-start">
-                        <div class="card-icon-wrapper bg-soft-blue"><i class="fas fa-user-md"></i></div>
-                        <div class="card-info">
-                            <h5>Sürekli Tıp Eğitimi K.</h5>
-                            <p>Tıbbi personel eğitim planlamaları.</p>
-                        </div>
-                    </button>
-                </div>
-
-                <div class="col-12 col-md-6 col-lg-4">
-                    <button data-bs-toggle="offcanvas" data-bs-target="#hemsirelikPanel" class="committee-action-card h-100 w-100 text-start">
-                        <div class="card-icon-wrapper bg-soft-teal"><i class="fas fa-user-nurse"></i></div>
-                        <div class="card-info">
-                            <h5>Hemşirelik Eğitimi K.</h5>
-                            <p>Klinik gelişim ve bakım standartları.</p>
-                        </div>
-                    </button>
-                </div>
-
-                <div class="col-12 col-md-6 col-lg-4">
-                    <button data-bs-toggle="offcanvas" data-bs-target="#adayMemurPanel" class="committee-action-card h-100 w-100 text-start">
-                        <div class="card-icon-wrapper bg-soft-sky"><i class="fas fa-user-graduate"></i></div>
-                        <div class="card-info">
-                            <h5>Aday Memur Eğitimi</h5>
-                            <p>Yeni atanan personel uyum süreci.</p>
-                        </div>
-                    </button>
-                </div>
-
-                <div class="col-12 col-md-6 col-lg-4">
-                    <button data-bs-toggle="offcanvas" data-bs-target="#idariPersonelPanel" class="committee-action-card h-100 w-100 text-start">
-                        <div class="card-icon-wrapper bg-soft-orange" style="color: #ea580c;"><i class="fas fa-users-cog"></i></div>
-                        <div class="card-info">
-                            <h5>İdari Personel Eğitimi</h5>
-                            <p>Yönetim ve büro personeli eğitimleri.</p>
-                        </div>
-                    </button>
-                </div>
-
-                <div class="col-12 col-md-6 col-lg-4">
-                    <button data-bs-toggle="offcanvas" data-bs-target="#kalitePanel" class="committee-action-card h-100 w-100 text-start">
-                        <div class="card-icon-wrapper" style="background: #fef9c3; color: #ca8a04;"><i class="fas fa-award"></i></div>
-                        <div class="card-info">
-                            <h5>Kalite Yönetim Birimi</h5>
-                            <p>SKS akreditasyon ve kalite belgeleri.</p>
-                        </div>
-                    </button>
-                </div>
-
-                <div class="col-12 col-md-6 col-lg-4">
-                    <button data-bs-toggle="offcanvas" data-bs-target="#stajPanel" class="committee-action-card h-100 w-100 text-start">
-                        <div class="card-icon-wrapper bg-soft-indigo"><i class="fas fa-id-badge"></i></div>
-                        <div class="card-info">
-                            <h5>Staj Koordinatörlüğü</h5>
-                            <p>Öğrenci staj işlemleri ve takvimi.</p>
-                        </div>
-                    </button>
-                </div>
-
-                <div class="col-12 col-md-6 col-lg-4">
-                    <a href="/Home/Iletisim" class="committee-action-card h-100 text-decoration-none">
-                        <div class="card-icon-wrapper bg-soft-green"><i class="fas fa-headset"></i></div>
-                        <div class="card-info">
-                            <h5>SEGM İletişim</h5>
-                            <p>Merkezimize ait irtibat bilgileri.</p>
-                        </div>
-                    </a>
-                </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-center text-slate-400 italic">Sistemde henüz bir eğitim kartı bulunmuyor.</p>
+                }
             </div>
         </div>
     </div>
 
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="komiteUyeleriPanel" style="width: 450px;">
-        <div class="offcanvas-header bg-light border-bottom py-3">
-            <h5 class="offcanvas-title fw-bold color-navy"><i class="fas fa-users-crown text-primary me-2"></i> Komite Üyeleri</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <div class="offcanvas-body p-0 bg-light">
-            <iframe src="/Egitim/Komite" style="width: 100%; height: 100%; border: none;"></iframe>
+    <div id="contentModal" class="fixed inset-0 z-[150] hidden items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-md transition-all duration-300">
+
+        <div class="bg-white w-full max-w-4xl rounded-[2rem] relative max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate__animated animate__zoomIn animate__faster">
+
+            <div id="modalHeaderImg" class="relative h-64 sm:h-80 shrink-0 w-full hidden group">
+                <img id="modalFoto" src="" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
+
+                <button onclick="modalKapat()" class="absolute top-6 right-6 w-11 h-11 bg-white/20 hover:bg-white/40 backdrop-blur-md text-white rounded-full flex items-center justify-center transition-all z-10 shadow-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+
+                <div class="absolute bottom-0 left-0 right-0 p-8 md:p-12 pb-8 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                    <span class="inline-block px-3 py-1 mb-3 text-[10px] font-black tracking-widest text-blue-300 bg-blue-900/50 rounded-full backdrop-blur-sm uppercase border border-blue-400/20">SEGM Eğitim Portalı</span>
+                    <h2 id="modalBaslikImg" class="text-3xl md:text-4xl font-black text-white leading-tight drop-shadow-md"></h2>
+                </div>
+            </div>
+
+            <div id="modalHeaderNoImg" class="px-8 md:px-12 pt-10 pb-6 border-b border-slate-100 flex justify-between items-start bg-slate-50/50 shrink-0 hidden">
+                <div>
+                    <span class="inline-block px-3 py-1 mb-3 text-[10px] font-black tracking-widest text-blue-600 bg-blue-100 rounded-full uppercase">SEGM Eğitim Portalı</span>
+                    <h2 id="modalBaslik" class="text-2xl md:text-3xl font-black text-slate-800 tracking-tight"></h2>
+                </div>
+                <button onclick="modalKapat()" class="w-11 h-11 bg-white border border-slate-200 text-slate-500 rounded-full hover:bg-red-50 hover:text-red-500 hover:border-red-200 hover:rotate-90 transition-all flex items-center justify-center shrink-0 shadow-sm">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-8 md:p-12 overflow-y-auto custom-scroll flex-1 bg-white relative">
+
+                <div id="modalIcerik" class="prose prose-slate max-w-none prose-headings:font-black prose-p:leading-relaxed prose-a:text-blue-600 prose-img:rounded-xl prose-img:shadow-md text-slate-600">
+                </div>
+
+                <div id="belgeKutusu" class="mt-12 p-1 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-[1.5rem] border border-blue-100/50 hidden">
+                    <div class="bg-white/60 backdrop-blur-sm rounded-[1.35rem] p-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+                        <div class="flex items-center gap-5 w-full">
+                            <div class="w-14 h-14 bg-gradient-to-br from-red-50 to-rose-100 rounded-2xl flex items-center justify-center text-red-500 shadow-inner border border-red-200/50 shrink-0">
+                                <i class="fa-solid fa-file-pdf text-2xl drop-shadow-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-[11px] font-black text-blue-600 uppercase tracking-widest mb-1">Eğitim / Sunum Dosyası</p>
+                                <p class="text-sm font-semibold text-slate-600 mb-0">Eğitime ait materyali cihazınıza indirebilirsiniz.</p>
+                            </div>
+                        </div>
+                        <a id="modalBelgeLink" href="#" target="_blank" class="w-full sm:w-auto text-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 rounded-xl font-bold text-sm transition-all text-decoration-none shrink-0 shadow-lg shadow-blue-600/30 hover:-translate-y-0.5">
+                            <i class="fa-solid fa-cloud-arrow-down mr-2"></i> DOSYAYI AÇ
+                        </a>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
-
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="hakkimizdaPanel" style="width: 850px;">
-        <div class="offcanvas-header bg-light border-bottom py-3">
-            <h5 class="offcanvas-title fw-bold color-navy"><i class="fas fa-lightbulb-on me-2" style="color:#8b5cf6;"></i>Hakkımızda</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <div class="offcanvas-body p-0 bg-white">
-            <iframe src="/Egitim/Hakkimizda" style="width: 100%; height: 100%; border: none;"></iframe>
-        </div>
-    </div>
-
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="duyurularPanel" style="width: 850px;">
-        <div class="offcanvas-header bg-light border-bottom py-3">
-            <h5 class="offcanvas-title fw-bold color-navy"><i class="fas fa-bullhorn text-danger me-2"></i> Duyurular</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <div class="offcanvas-body p-0 bg-white">
-            <iframe src="/Egitim/Duyurular" style="width: 100%; height: 100%; border: none;"></iframe>
-        </div>
-    </div>
-
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="galeriPanel" style="width: 850px;">
-        <div class="offcanvas-header bg-light border-bottom py-3">
-            <h5 class="offcanvas-title fw-bold color-navy"><i class="fas fa-images text-warning me-2"></i> Galeri</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <div class="offcanvas-body p-0 bg-white">
-            <iframe src="/Egitim/Galeri" style="width: 100%; height: 100%; border: none;"></iframe>
-        </div>
-    </div>
-
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="tipEgitimiPanel" style="width: 850px;">
-        <div class="offcanvas-header bg-light border-bottom py-3">
-            <h5 class="offcanvas-title fw-bold color-navy"><i class="fas fa-user-md text-primary me-2"></i> Eğitimler</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <div class="offcanvas-body d-flex align-items-center justify-content-center bg-light text-center">
-            <div><i class="fas fa-tools fs-1 mb-3 opacity-25"></i><h6>İçerik Hazırlanıyor</h6></div>
-        </div>
-    </div>
-
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="hemsirelikPanel" style="width: 850px;">
-        <div class="offcanvas-header bg-light border-bottom py-3">
-            <h5 class="offcanvas-title fw-bold color-navy"><i class="fas fa-user-nurse text-danger me-2"></i> Dökümanlar</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <div class="offcanvas-body d-flex align-items-center justify-content-center bg-light text-center">
-            <div><i class="fas fa-tools fs-1 mb-3 opacity-25"></i><h6>İçerik Hazırlanıyor</h6></div>
-        </div>
-    </div>
-
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="adayMemurPanel" style="width: 850px;"><div class="offcanvas-header bg-light border-bottom py-3"><h5 class="offcanvas-title fw-bold color-navy">İletişim</h5><button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button></div><div class="offcanvas-body d-flex align-items-center justify-content-center"><h6>İçerik Hazırlanıyor</h6></div></div>
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="idariPersonelPanel" style="width: 850px;"><div class="offcanvas-header bg-light border-bottom py-3"><h5 class="offcanvas-title fw-bold color-navy">Akış Şeması</h5><button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button></div><div class="offcanvas-body d-flex align-items-center justify-content-center"><h6>İçerik Hazırlanıyor</h6></div></div>
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="kalitePanel" style="width: 850px;"><div class="offcanvas-header bg-light border-bottom py-3"><h5 class="offcanvas-title fw-bold color-navy">Kalite Birimi</h5><button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button></div><div class="offcanvas-body d-flex align-items-center justify-content-center"><h6>İçerik Hazırlanıyor</h6></div></div>
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="stajPanel" style="width: 850px;"><div class="offcanvas-header bg-light border-bottom py-3"><h5 class="offcanvas-title fw-bold color-navy">Staj İşlemleri</h5><button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button></div><div class="offcanvas-body d-flex align-items-center justify-content-center"><h6>İçerik Hazırlanıyor</h6></div></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function icerikGoster(id) {
+            // EgitimController'daki GetEgitimDetay metodunu çağırır
+            fetch(`/Egitim/GetEgitimDetay/${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('modalIcerik').innerHTML = data.icerik || '<p class="text-slate-400 italic text-center py-10">Bu bölüm için henüz detaylı bir içerik girilmemiştir.</p>';
+
+                    const headerImg = document.getElementById('modalHeaderImg');
+                    const headerNoImg = document.getElementById('modalHeaderNoImg');
+                    const foto = document.getElementById('modalFoto');
+
+                    if (data.fotoUrl && data.fotoUrl !== "#") {
+                        foto.src = data.fotoUrl;
+                        document.getElementById('modalBaslikImg').innerText = data.baslik;
+                        headerImg.style.display = 'block';
+                        headerNoImg.style.display = 'none';
+                    } else {
+                        document.getElementById('modalBaslik').innerText = data.baslik;
+                        headerImg.style.display = 'none';
+                        headerNoImg.style.display = 'flex';
+                    }
+
+                    const belgeKutusu = document.getElementById('belgeKutusu');
+                    const belgeLink = document.getElementById('modalBelgeLink');
+                    if (data.dosyaUrl && data.dosyaUrl !== "#") {
+                        belgeLink.href = data.dosyaUrl;
+                        belgeKutusu.style.display = 'block';
+                    } else {
+                        belgeKutusu.style.display = 'none';
+                    }
+
+                    const modal = document.getElementById('contentModal');
+                    modal.classList.replace('hidden', 'flex');
+                    document.body.style.overflow = 'hidden';
+                });
+        }
+
+        function modalKapat() {
+            const modal = document.getElementById('contentModal');
+            modal.classList.replace('flex', 'hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('contentModal');
+            if (event.target == modal) { modalKapat(); }
+        }
+    </script>
 </body>
 </html>

@@ -1,133 +1,358 @@
-﻿@{
-    // İŞTE BÜTÜN DÜZ YAZI SORUNUNU ÇÖZEN SATIR BURASI:
-    // Bu sayfanın Admin Layout'u (Sol Menü ve CSS'ler) içinde açılmasını sağlar.
+﻿@model List<GaziHastane.Models.EgitimKarti>
+@{
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Eğitim Yönetim Paneli";
-
-    // SENİN ÖN YÜZ TASARIMINDAKİ BİREBİR VERİLER
-    var taslakMaddeler = new[] {
-        new { Title = "Eğitim Komitesi", Desc = "Yürütme kurulu ve üyelerimiz.", Icon = "fa-users-crown", Color = "text-slate-300", Tip = "Link", Hedef = "/Egitim/Index" },
-        new { Title = "Misyon & Vizyon", Desc = "Eğitim politikaları ve kalite standartları.", Icon = "fa-lightbulb-on", Color = "text-purple-400", Tip = "Panel", Hedef = "#hakkimizdaPanel" },
-        new { Title = "Duyurular & Etkinlikler", Desc = "Güncel haberler ve eğitim takvimi.", Icon = "fa-bullhorn", Color = "text-red-400", Tip = "Link", Hedef = "/Egitim/Duyurular" },
-        new { Title = "Fotoğraf Galerisi", Desc = "Eğitimlerimizden ve hastaneden kareler.", Icon = "fa-images", Color = "text-orange-400", Tip = "Panel", Hedef = "#galeriPanel" },
-        new { Title = "Sürekli Tıp Eğitimi K.", Desc = "Tıbbi personel eğitim planlamaları.", Icon = "fa-user-md", Color = "text-blue-400", Tip = "Panel", Hedef = "#tipEgitimiPanel" },
-        new { Title = "Hemşirelik Eğitimi K.", Desc = "Klinik gelişim ve bakım standartları.", Icon = "fa-user-nurse", Color = "text-teal-400", Tip = "Panel", Hedef = "#hemsirelikPanel" },
-        new { Title = "Aday Memur Eğitimi", Desc = "Yeni atanan personel uyum süreci.", Icon = "fa-user-graduate", Color = "text-sky-400", Tip = "Panel", Hedef = "#adayMemurPanel" },
-        new { Title = "İdari Personel Eğitimi", Desc = "Yönetim ve büro personeli eğitimleri.", Icon = "fa-users-cog", Color = "text-orange-500", Tip = "Panel", Hedef = "#idariPersonelPanel" },
-        new { Title = "Kalite Yönetim Birimi", Desc = "SKS akreditasyon ve kalite belgeleri.", Icon = "fa-award", Color = "text-yellow-400", Tip = "Panel", Hedef = "#kalitePanel" },
-        new { Title = "Staj Koordinatörlüğü", Desc = "Öğrenci staj işlemleri ve takvimi.", Icon = "fa-id-badge", Color = "text-indigo-400", Tip = "Panel", Hedef = "#stajPanel" },
-        new { Title = "SEGM İletişim", Desc = "Merkezimize ait irtibat bilgileri.", Icon = "fa-headset", Color = "text-green-400", Tip = "Link", Hedef = "/Home/Iletisim" }
-    };
 }
 
-<div class="h-full flex items-start justify-center p-2 md:p-4">
+<style>
+    /* ARKA PLAN VE GENEL YAPI */
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #0f172a; /* Derin Lacivert */
+    }
 
-    <div class="glass-card w-full max-w-5xl rounded-[2rem] p-6 md:p-8 relative overflow-hidden animate__animated animate__fadeIn">
+    /* PREMIUM KART TASARIMI (Dark Glass) */
+    .admin-feature-card {
+        background: rgba(30, 41, 59, 0.4);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 28px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
 
-        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+        .admin-feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        }
 
-        <div class="flex flex-col md:flex-row md:items-center gap-5 mb-8 border-b border-white/5 pb-6">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_0_25px_rgba(59,130,246,0.4)] shrink-0">
-                <i class="fa-solid fa-university text-2xl text-white"></i>
+        .admin-feature-card:hover {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(59, 130, 246, 0.3);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 20px -5px rgba(59, 130, 246, 0.2);
+        }
+
+    /* PREMIUM MODAL INPUTLARI */
+    .premium-input {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 14px 20px;
+        font-size: 14px;
+        color: #1e293b;
+        transition: all 0.3s ease;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+        .premium-input:focus {
+            background-color: #ffffff;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+
+    /* CKEditor Özelleştirme */
+    .cke_inner {
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    .cke_top {
+        background: #f8fafc !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        padding: 10px !important;
+    }
+
+    /* Scrollbar */
+    .custom-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, 0.3);
+        border-radius: 10px;
+    }
+
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.5);
+        }
+</style>
+
+<div class="min-h-screen p-4 md:p-8 relative overflow-hidden custom-scroll">
+    <div class="fixed top-[-10%] right-[-5%] w-[700px] h-[700px] bg-blue-600/15 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+    <div class="fixed bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-indigo-600/15 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto z-10 relative">
+
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 animate__animated animate__fadeInDown">
+            <div class="flex items-center gap-6">
+                <div class="w-20 h-20 rounded-[2rem] bg-gradient-to-br from-blue-500 to-indigo-600 p-[2px] shadow-2xl shadow-blue-500/30 shrink-0">
+                    <div class="w-full h-full bg-slate-900/80 backdrop-blur-sm rounded-[calc(2rem-2px)] flex items-center justify-center">
+                        <i class="fa-solid fa-university text-3xl text-white drop-shadow-lg"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-300 tracking-tight mb-1">EĞİTİM KOMİTESİ</h1>
+                    <p class="text-slate-400 font-medium text-sm md:text-base">Sürekli Eğitim Merkezi portalını ve içeriklerini profesyonelce yönetin.</p>
+                </div>
             </div>
-            <div>
-                <h2 class="text-2xl font-black text-white tracking-wide">SEGM Tasarım Yönetimi</h2>
-                <p class="text-[14px] text-slate-400 mt-1">
-                    Sürekli Eğitim Merkezi portalındaki kartları buradan tasarlayın. <span class="text-blue-400">Panel yönlendirmeleri ve açıklamalar</span> otomatik uygulanır.
-                </p>
-            </div>
+            <button onclick="yeniKartAc()" class="group relative px-8 py-4 bg-white text-slate-900 rounded-2xl font-black text-sm overflow-hidden shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] transition-all duration-300 shrink-0">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-100 to-indigo-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span class="relative flex items-center gap-3">
+                    <i class="fa-solid fa-plus group-hover:rotate-90 transition-transform duration-500 text-blue-600"></i> YENİ EĞİTİM KARTI
+                </span>
+            </button>
         </div>
 
-        <div class="bg-black/20 border border-white/5 rounded-2xl p-6 mb-8">
-            <h3 class="text-xs font-black text-blue-400 uppercase tracking-widest mb-5 flex items-center gap-2">
-                <i class="fa-solid fa-circle-plus"></i> Yeni Eğitim Kartı Tanımla
-            </h3>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-
-                <div class="lg:col-span-1">
-                    <label class="block text-[10px] font-bold text-slate-400 mb-2 tracking-widest">KART BAŞLIĞI</label>
-                    <input type="text" placeholder="Örn: Eğitim Komitesi" class="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm font-medium text-white focus:outline-none focus:border-blue-500/50 transition">
-                </div>
-
-                <div class="lg:col-span-2">
-                    <label class="block text-[10px] font-bold text-slate-400 mb-2 tracking-widest">KART AÇIKLAMASI</label>
-                    <input type="text" placeholder="Örn: Yürütme kurulu ve üyelerimiz." class="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm font-medium text-white focus:outline-none focus:border-blue-500/50 transition">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-400 mb-2 tracking-widest">FA-IKON KODU</label>
-                    <input type="text" placeholder="fa-users-crown" class="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm font-medium text-white focus:outline-none focus:border-blue-500/50 transition">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-400 mb-2 tracking-widest">RENK TEMASI (CSS)</label>
-                    <select class="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm font-medium text-white focus:outline-none focus:border-blue-500/50 transition cursor-pointer">
-                        <option class="bg-slate-900">bg-soft-blue (Mavi)</option>
-                        <option class="bg-slate-900">bg-soft-purple (Mor)</option>
-                        <option class="bg-slate-900">bg-soft-red (Kırmızı)</option>
-                        <option class="bg-slate-900">bg-soft-orange (Turuncu)</option>
-                        <option class="bg-slate-900">bg-soft-teal (Turkuaz)</option>
-                        <option class="bg-slate-900">bg-soft-sky (Açık Mavi)</option>
-                        <option class="bg-slate-900">bg-soft-indigo (Lacivert)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-400 mb-2 tracking-widest">HEDEF (Link veya #PanelID)</label>
-                    <input type="text" placeholder="/Egitim/Index VEYA #hakkimizdaPanel" class="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm font-medium text-white focus:outline-none focus:border-blue-500/50 transition">
-                </div>
-
-            </div>
-
-            <div class="mt-5 flex justify-end">
-                <button type="button" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-2.5 rounded-xl font-bold text-xs shadow-lg shadow-blue-500/20 hover:scale-105 transition">
-                    LİSTEYE TASLAK OLARAK EKLE
-                </button>
-            </div>
-        </div>
-
-        <div>
-            <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-layer-group"></i> Portal Önizlemesi
-            </h3>
-
-            <div class="max-h-[350px] overflow-y-auto custom-scroll pr-2">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    @foreach (var item in taslakMaddeler)
-                    {
-                        <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-between group hover:border-blue-500/40 transition">
-
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 shrink-0 rounded-xl flex items-center justify-center text-xl bg-white/5 border border-white/5 @item.Color">
-                                    <i class="fas @item.Icon"></i>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <div class="admin-feature-card p-8 flex flex-col justify-between animate__animated animate__fadeInUp">
+                        <div>
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="w-14 h-14 rounded-[1.25rem] bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-2xl shadow-inner @item.Renk">
+                                    <i class="fas @item.Ikon"></i>
                                 </div>
-
-                                <div>
-                                    <h4 class="text-sm font-bold text-white group-hover:text-blue-300 transition">@item.Title</h4>
-                                    <p class="text-[10px] text-slate-400 mt-0.5 mb-1.5 leading-tight">@item.Desc</p>
-
-                                    @if (item.Tip == "Panel")
-                                    {
-                                        <span class="text-[9px] px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20"><i class="fa-solid fa-window-restore mr-1"></i> PANEL: @item.Hedef</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="text-[9px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"><i class="fa-solid fa-link mr-1"></i> LİNK: @item.Hedef</span>
-                                    }
-                                </div>
+                                <span class="px-4 py-1.5 rounded-xl bg-slate-800/50 text-[10px] font-black text-slate-400 border border-slate-700/50 tracking-widest shadow-inner">ID #@item.Id</span>
                             </div>
+                            <h3 class="text-xl font-extrabold text-white mb-3 tracking-tight">@item.Baslik</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed mb-5 line-clamp-2 min-h-[40px]">@item.KisaAciklama</p>
 
-                            <div class="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button class="w-7 h-7 rounded-lg bg-white/5 text-slate-400 hover:text-white transition"><i class="fa-solid fa-pen-to-square text-[10px]"></i></button>
-                                <button class="w-7 h-7 rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                            <div class="flex gap-2">
+                                @if (item.Tip == "Panel")
+                                {
+                                    <span class="inline-flex items-center text-[10px] font-bold px-3 py-1.5 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20"><i class="fa-solid fa-window-restore mr-1.5"></i> MODAL PANEL</span>
+                                }
+                                else
+                                {
+                                    <span class="inline-flex items-center text-[10px] font-bold px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"><i class="fa-solid fa-link mr-1.5"></i> DIŞ LİNK</span>
+                                }
                             </div>
-
                         </div>
-                    }
-                </div>
-            </div>
-        </div>
 
+                        <div class="flex items-center gap-3 mt-8 pt-6 border-t border-slate-700/50">
+                            <button onclick="duzenle(@item.Id)" class="flex-1 bg-blue-500/10 hover:bg-blue-600 hover:text-white border border-blue-500/20 text-blue-400 py-3.5 rounded-xl text-xs font-black transition-all shadow-sm flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-pen-to-square"></i> DÜZENLE
+                            </button>
+                            <form asp-action="EgitimSil" asp-controller="Egitim" asp-area="Admin" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Bu içeriği kalıcı olarak silmek istediğinize emin misiniz?')" class="m-0">
+                                <button type="submit" class="w-12 h-12 flex items-center justify-center bg-rose-500/10 hover:bg-rose-600 border border-rose-500/20 text-rose-400 hover:text-white rounded-xl transition-all shadow-sm">
+                                    <i class="fa-solid fa-trash-can text-sm"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
     </div>
 </div>
+
+<div id="egitimModal" class="fixed inset-0 z-[150] hidden items-center justify-center p-4 md:p-6 bg-slate-900/70 backdrop-blur-md animate__animated animate__fadeIn">
+    <div class="bg-white w-full max-w-6xl rounded-[32px] p-8 md:p-12 relative max-h-[95vh] overflow-y-auto shadow-[0_0_50px_rgba(0,0,0,0.3)] custom-scroll">
+
+        <div class="flex justify-between items-center mb-10 pb-6 border-b border-slate-100">
+            <div>
+                <h3 id="modalTitle" class="text-3xl font-black text-slate-800 tracking-tight mb-1">Eğitim Kartı Düzenle</h3>
+                <p class="text-slate-500 text-sm font-medium">İçerikleri, renkleri ve yönlendirmeleri yapılandırın.</p>
+            </div>
+            <button type="button" onclick="modalKapat()" class="w-12 h-12 rounded-full bg-slate-50 text-slate-500 border border-slate-200 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200 transition-all flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <form asp-action="EgitimKaydet" asp-controller="Egitim" asp-area="Admin" method="post" enctype="multipart/form-data" class="space-y-8">
+            <input type="hidden" name="Id" id="cardId" value="0" />
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+                <div class="md:col-span-1">
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">KART BAŞLIĞI <span class="text-red-500">*</span></label>
+                    <input type="text" name="Baslik" id="cardName" class="premium-input w-full" placeholder="Örn: Eğitim Komitesi" required />
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">KISA AÇIKLAMA <span class="text-red-500">*</span></label>
+                    <input type="text" name="KisaAciklama" id="cardDesc" class="premium-input w-full" placeholder="Örn: Yürütme kurulu ve üyelerimiz hakkında detaylar." required />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start bg-slate-50/50 p-6 rounded-[24px] border border-slate-100">
+                <div>
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">KART RENGİ</label>
+                    <select name="Renk" id="cardColor" class="premium-input w-full cursor-pointer appearance-none bg-white">
+                        <option value="text-blue-400">🟦 Mavi</option>
+                        <option value="text-purple-400">🟪 Mor</option>
+                        <option value="text-red-400">🟥 Kırmızı</option>
+                        <option value="text-orange-400">🟧 Turuncu</option>
+                        <option value="text-teal-400">🩱 Turkuaz</option>
+                        <option value="text-sky-400">🌊 Açık Mavi</option>
+                        <option value="text-yellow-400">🟨 Sarı</option>
+                        <option value="text-green-400">🟩 Yeşil</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">TIKLAMA AKSİYONU</label>
+                    <select name="Tip" id="cardType" class="premium-input w-full cursor-pointer appearance-none bg-white">
+                        <option value="Panel">Mükemmel Modal İçinde Aç</option>
+                        <option value="Link">Farklı Bir Sayfaya Git (Link)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">HEDEF URL VEYA ID</label>
+                    <input type="text" name="Hedef" id="cardTarget" class="premium-input w-full bg-white" placeholder="/Egitim/Index veya #panelId" required />
+                </div>
+            </div>
+
+            <div>
+                <label class="flex justify-between items-center text-[11px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-2">
+                    <span>GÖRSEL İKON (FONTAWESOME) <span class="text-red-500">*</span></span>
+                    <span class="text-[9px] text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">Manuel Yaz veya Tıkla</span>
+                </label>
+                <input type="text" name="Ikon" id="cardIcon" class="premium-input w-full mb-4" placeholder="Örn: fa-users-crown" required />
+
+                <div class="flex flex-wrap gap-2.5 p-4 bg-slate-50 border border-slate-100 rounded-2xl max-h-[200px] overflow-y-auto custom-scroll">
+
+                    <button type="button" onclick="ikonSec('fa-users-crown')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Yönetim / Komite"><i class="fa-solid fa-users-crown"></i></button>
+                    <button type="button" onclick="ikonSec('fa-user-md')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Doktor / Uzman"><i class="fa-solid fa-user-md"></i></button>
+                    <button type="button" onclick="ikonSec('fa-user-nurse')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Hemşire / Bakım"><i class="fa-solid fa-user-nurse"></i></button>
+                    <button type="button" onclick="ikonSec('fa-user-graduate')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Mezun / Aday Memur"><i class="fa-solid fa-user-graduate"></i></button>
+                    <button type="button" onclick="ikonSec('fa-chalkboard-user')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Eğitim / Sınıf"><i class="fa-solid fa-chalkboard-user"></i></button>
+                    <button type="button" onclick="ikonSec('fa-laptop-medical')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Uzaktan Eğitim"><i class="fa-solid fa-laptop-medical"></i></button>
+
+                    <button type="button" onclick="ikonSec('fa-bullhorn')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Duyuru"><i class="fa-solid fa-bullhorn"></i></button>
+                    <button type="button" onclick="ikonSec('fa-bell')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Önemli Bildirim"><i class="fa-solid fa-bell"></i></button>
+                    <button type="button" onclick="ikonSec('fa-newspaper')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Haberler / Bülten"><i class="fa-solid fa-newspaper"></i></button>
+                    <button type="button" onclick="ikonSec('fa-calendar-check')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Etkinlik / Takvim"><i class="fa-solid fa-calendar-check"></i></button>
+                    <button type="button" onclick="ikonSec('fa-images')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Fotoğraf Galerisi"><i class="fa-solid fa-images"></i></button>
+
+                    <button type="button" onclick="ikonSec('fa-hospital')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Hastane / Kurum"><i class="fa-solid fa-hospital"></i></button>
+                    <button type="button" onclick="ikonSec('fa-stethoscope')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Klinik Hizmetler"><i class="fa-solid fa-stethoscope"></i></button>
+                    <button type="button" onclick="ikonSec('fa-heart-pulse')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Sağlık Göstergeleri"><i class="fa-solid fa-heart-pulse"></i></button>
+                    <button type="button" onclick="ikonSec('fa-hand-holding-medical')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Hasta Bakımı / Destek"><i class="fa-solid fa-hand-holding-medical"></i></button>
+                    <button type="button" onclick="ikonSec('fa-microscope')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Laboratuvar / Araştırma"><i class="fa-solid fa-microscope"></i></button>
+
+                    <button type="button" onclick="ikonSec('fa-award')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Kalite Standartları"><i class="fa-solid fa-award"></i></button>
+                    <button type="button" onclick="ikonSec('fa-certificate')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Akreditasyon / Belge"><i class="fa-solid fa-certificate"></i></button>
+                    <button type="button" onclick="ikonSec('fa-clipboard-check')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Denetim / Kontrol Formu"><i class="fa-solid fa-clipboard-check"></i></button>
+                    <button type="button" onclick="ikonSec('fa-file-signature')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Resmi Belge / Yönetmelik"><i class="fa-solid fa-file-signature"></i></button>
+                    <button type="button" onclick="ikonSec('fa-book-medical')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Tıbbi Kaynak / Yayın"><i class="fa-solid fa-book-medical"></i></button>
+                    <button type="button" onclick="ikonSec('fa-sitemap')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Organizasyon Şeması"><i class="fa-solid fa-sitemap"></i></button>
+                    <button type="button" onclick="ikonSec('fa-id-badge')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="Personel / Staj İşlemleri"><i class="fa-solid fa-id-badge"></i></button>
+                    <button type="button" onclick="ikonSec('fa-envelope-open-text')" class="w-12 h-12 rounded-xl bg-white text-slate-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-slate-200 hover:border-blue-600 flex items-center justify-center text-lg" title="İletişim / Destek"><i class="fa-solid fa-envelope-open-text"></i></button>
+                </div>
+            </div>
+
+            <div>
+                <label class="flex justify-between items-center text-[11px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-2">
+                    <span>ZENGİN İÇERİK METNİ</span>
+                    <span class="text-[9px] text-purple-600 bg-purple-50 px-3 py-1 rounded-full border border-purple-100">Aksiyon Tipi Panel ise Görünür</span>
+                </label>
+                <textarea name="Icerik" id="editor"></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-slate-50 p-8 rounded-[24px] border border-slate-100 border-dashed">
+                <div>
+                    <label class="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3 ml-1"><i class="fa-solid fa-image text-blue-500 mr-1"></i> KAPAK GÖRSELİ (.JPG/.PNG)</label>
+                    <input type="file" name="fotoDosya" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 cursor-pointer transition-all bg-white border border-slate-200 rounded-xl" />
+                </div>
+                <div>
+                    <label class="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3 ml-1"><i class="fa-solid fa-file-pdf text-emerald-500 mr-1"></i> İNDİRİLEBİLİR BELGE (.PDF/.DOC)</label>
+                    <input type="file" name="belgeDosya" class="w-full text-xs text-slate-500 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-emerald-100 file:text-emerald-700 hover:file:bg-emerald-200 cursor-pointer transition-all bg-white border border-slate-200 rounded-xl" />
+                </div>
+            </div>
+
+            <div class="flex justify-end items-center gap-4 pt-6 mt-4">
+                <button type="button" onclick="modalKapat()" class="px-6 py-4 text-slate-500 font-bold text-sm hover:text-slate-800 transition-colors">Vazgeç</button>
+                <button type="submit" class="bg-blue-600 text-white px-10 py-4 rounded-2xl font-black text-sm hover:bg-blue-700 hover:-translate-y-1 transition-all shadow-lg shadow-blue-600/30 flex items-center gap-2">
+                    <i class="fa-solid fa-check"></i> DEĞİŞİKLİKLERİ KAYDET
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
+    <script>
+        function ikonSec(ikonKodu) {
+            const input = document.getElementById('cardIcon');
+            input.value = ikonKodu;
+            input.classList.add('ring-4', 'ring-blue-500/20', 'border-blue-500');
+            setTimeout(() => {
+                input.classList.remove('ring-4', 'ring-blue-500/20', 'border-blue-500');
+            }, 400);
+        }
+
+        CKEDITOR.replace('editor', {
+            height: 350,
+            uiColor: '#ffffff',
+            toolbar: [
+                { name: 'document', items: [ 'Source' ] },
+                { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
+                { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
+                { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight' ] },
+                { name: 'styles', items: [ 'Format', 'Font', 'FontSize' ] },
+                { name: 'links', items: [ 'Link', 'Unlink' ] },
+                { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule' ] }
+            ],
+            contentsCss: [
+                'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap',
+                'body { font-family: "Plus Jakarta Sans", sans-serif; font-size: 15px; color: #334155; background-color: #ffffff; padding: 20px; }'
+            ]
+        });
+
+        function yeniKartAc() {
+            document.getElementById('cardId').value = "0";
+            document.getElementById('cardName').value = "";
+            document.getElementById('cardDesc').value = "";
+            document.getElementById('cardIcon').value = "";
+            document.getElementById('cardTarget').value = "";
+            CKEDITOR.instances.editor.setData('');
+            document.getElementById('modalTitle').innerText = "Yeni Eğitim İçeriği Oluştur";
+
+            document.getElementById('egitimModal').classList.replace('hidden', 'flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function modalKapat() {
+            document.getElementById('egitimModal').classList.replace('flex', 'hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function duzenle(id) {
+            fetch(`/Admin/Egitim/GetEgitimDetay/${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('cardId').value = data.id;
+                    document.getElementById('cardName').value = data.baslik;
+                    document.getElementById('cardDesc').value = data.kisaAciklama;
+                    document.getElementById('cardIcon').value = data.ikon;
+                    document.getElementById('cardColor').value = data.renk;
+                    document.getElementById('cardType').value = data.tip;
+                    document.getElementById('cardTarget').value = data.hedef;
+                    CKEDITOR.instances.editor.setData(data.icerik || '');
+
+                    document.getElementById('modalTitle').innerText = "Düzenle: " + data.baslik;
+                    document.getElementById('egitimModal').classList.replace('hidden', 'flex');
+                    document.body.style.overflow = 'hidden';
+                })
+                .catch(err => {
+                    console.error("Veri çekilemedi:", err);
+                    alert("Kayıt getirilirken hata oluştu!");
+                });
+        }
+    </script>
+}
