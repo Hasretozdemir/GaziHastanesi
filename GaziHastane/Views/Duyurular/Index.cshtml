@@ -1,0 +1,49 @@
+﻿@model IEnumerable<GaziHastane.Models.Duyuru>
+@{
+    ViewData["Title"] = "Duyurular";
+}
+
+<div class="bg-gradient-to-r from-slate-800 to-slate-900 py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+        <h1 class="text-3xl md:text-5xl font-black text-white mb-4">Bilgilendirme Panosu</h1>
+        <p class="text-slate-300 text-sm md:text-base font-light">
+            Hastalarımız ve personelimiz için yayınlanan önemli duyurular.
+        </p>
+    </div>
+</div>
+
+<section class="py-12 bg-slate-50 min-h-screen">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+        <div class="space-y-4">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var duyuru in Model)
+                {
+                    <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md border border-slate-100 transition-all duration-300 flex flex-col sm:flex-row gap-6 items-start">
+                        <div class="flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-50 text-blue-600">
+                            <i class="fa-solid fa-bullhorn text-2xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                                <h3 class="text-lg font-bold text-slate-800">@duyuru.Baslik</h3>
+                                <span class="text-xs font-bold bg-slate-100 text-slate-500 px-3 py-1 rounded-full flex items-center whitespace-nowrap">
+                                    <i class="fa-regular fa-clock mr-1"></i> @duyuru.YayinTarihi.ToString("dd.MM.yyyy")
+                                </span>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mt-2">
+                                Detaylı bilgi almak için lütfen ilgili birimlerle iletişime geçiniz veya duyuru detayını inceleyiniz.
+                            </p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-center py-20 bg-white rounded-3xl border border-slate-100">
+                    <i class="fa-regular fa-bell text-5xl text-slate-300 mb-4"></i>
+                    <h3 class="text-lg font-bold text-slate-600">Güncel Duyuru Bulunmamaktadır.</h3>
+                </div>
+            }
+        </div>
+    </div>
+</section>

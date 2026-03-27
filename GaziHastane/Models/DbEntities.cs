@@ -51,7 +51,6 @@ namespace GaziHastane.Models
         public virtual ICollection<BorcOdeme> BorclarOdemeler { get; set; } = new List<BorcOdeme>();
     }
 
-    // 2. Bolumler Table
     [Table("Bolumler")]
     public class Bolum
     {
@@ -73,13 +72,21 @@ namespace GaziHastane.Models
         [Column("kategori")]
         public string? Kategori { get; set; }
 
+        // ?? YENÝ EKLENEN ALANLAR ??
+        [Column("blok")]
+        [StringLength(50)]
+        public string? Blok { get; set; } // Örn: "A Blok", "Ana Bina"
+
+        [Column("kat")]
+        [StringLength(50)]
+        public string? Kat { get; set; } // Örn: "Zemin Kat", "1. Kat"
+
         [Column("isactive")]
         public bool IsActive { get; set; } = true;
 
         public virtual ICollection<Doktor> Doktorlar { get; set; } = new List<Doktor>();
         public virtual ICollection<Randevu> Randevular { get; set; } = new List<Randevu>();
     }
-
     // 3. Doktorlar Table
     [Table("Doktorlar")]
     public class Doktor
@@ -574,5 +581,44 @@ namespace GaziHastane.Models
         public DateTime YuklenmeTarihi { get; set; } = DateTime.UtcNow;
 
         public bool IsActive { get; set; } = true;
+    }
+
+    // 19. Kroki Yerleþim Table (Dinamik Harita Ýçin)
+    [Table("KrokiBirimleri")]
+    public class KrokiBirim
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string KatAdi { get; set; } = null!; // Örn: "Zemin Kat", "1. Kat" (Sekmeler için)
+
+        [Required]
+        [StringLength(100)]
+        public string Baslik { get; set; } = null!; // Odada yazacak yazý (Örn: "DANIÞMA", "WC")
+
+        [StringLength(500)]
+        public string? Aciklama { get; set; } // Üstüne týklanýnca açýlacak açýklama
+
+        [StringLength(50)]
+        public string? Ikon { get; set; } // FontAwesome (Örn: "fa-solid fa-circle-info")
+
+        [Required]
+        [StringLength(20)]
+        public string GridColumn { get; set; } = "1 / 2"; // Grid Sütun Konumu (Örn: "1 / 3")
+
+        [Required]
+        [StringLength(20)]
+        public string GridRow { get; set; } = "1 / 2"; // Grid Satýr Konumu (Örn: "1 / 3")
+
+        [StringLength(50)]
+        public string TipSinifi { get; set; } = "room"; // Stil sýnýfý: "room", "room wc", "corridor" vb.
+
+        // Eðer bu alan bir poliklinikse, veritabanýndaki Bolum'e baðla (Zorunlu deðil, WC vb. için boþ kalýr)
+        public int? BolumId { get; set; }
+        [ForeignKey("BolumId")]
+        public virtual Bolum? Bolum { get; set; }
     }
 }

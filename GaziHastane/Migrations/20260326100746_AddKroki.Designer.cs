@@ -3,6 +3,7 @@ using System;
 using GaziHastane.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GaziHastane.Migrations
 {
     [DbContext(typeof(GaziHastaneContext))]
-    partial class GaziHastaneContextModelSnapshot : ModelSnapshot
+    [Migration("20260326100746_AddKroki")]
+    partial class AddKroki
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -381,24 +384,6 @@ namespace GaziHastane.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("BashekimAdSoyad")
-                        .HasColumnType("text");
-
-                    b.Property<string>("BashekimFotoUrl")
-                        .HasColumnType("text");
-
-                    b.Property<string>("BashekimMesaj")
-                        .HasColumnType("text");
-
-                    b.Property<string>("BasmudurAdSoyad")
-                        .HasColumnType("text");
-
-                    b.Property<string>("BasmudurFotoUrl")
-                        .HasColumnType("text");
-
-                    b.Property<string>("BasmudurMesaj")
-                        .HasColumnType("text");
-
                     b.Property<string>("EPosta")
                         .IsRequired()
                         .HasColumnType("text");
@@ -441,9 +426,6 @@ namespace GaziHastane.Migrations
 
                     b.Property<int>("YatakKapasitesi")
                         .HasColumnType("integer");
-
-                    b.Property<string>("YonetimAciklama")
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -604,116 +586,6 @@ namespace GaziHastane.Migrations
                     b.HasIndex("BolumId");
 
                     b.ToTable("KrokiBirimleri");
-                });
-
-            modelBuilder.Entity("GaziHastane.Models.KurumsalMenu", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("AktifMi")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Baslik")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<int>("GrupId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("IconClass")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<int>("Sira")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GrupId");
-
-                    b.ToTable("KurumsalMenuler");
-                });
-
-            modelBuilder.Entity("GaziHastane.Models.KurumsalMenuGrup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("AktifMi")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("GrupAdi")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<int>("Sira")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("KurumsalMenuGruplar");
-                });
-
-            modelBuilder.Entity("GaziHastane.Models.KurumsalSayfa", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("AktifMi")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Baslik")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<string>("FotografUrl")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<DateTime>("GuncellemeZamani")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Icerik")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Telefon")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("Unvan")
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("KurumsalSayfalar");
                 });
 
             modelBuilder.Entity("GaziHastane.Models.Randevu", b =>
@@ -1005,17 +877,6 @@ namespace GaziHastane.Migrations
                     b.Navigation("Bolum");
                 });
 
-            modelBuilder.Entity("GaziHastane.Models.KurumsalMenu", b =>
-                {
-                    b.HasOne("GaziHastane.Models.KurumsalMenuGrup", "Grup")
-                        .WithMany("Menuler")
-                        .HasForeignKey("GrupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Grup");
-                });
-
             modelBuilder.Entity("GaziHastane.Models.Randevu", b =>
                 {
                     b.HasOne("GaziHastane.Models.Bolum", "Bolum")
@@ -1064,11 +925,6 @@ namespace GaziHastane.Migrations
                     b.Navigation("Randevular");
 
                     b.Navigation("TahlilSonuclari");
-                });
-
-            modelBuilder.Entity("GaziHastane.Models.KurumsalMenuGrup", b =>
-                {
-                    b.Navigation("Menuler");
                 });
 
             modelBuilder.Entity("GaziHastane.Models.User", b =>

@@ -1,0 +1,398 @@
+@* RAZOR KOD BLO�U: Sunucu taraf�nda �al��an C# kodlar�n�n yaz�ld��� alan. *@
+@{
+    // Sayfan�n ba�l���n� belirliyoruz. Bu ba�l�k taray�c� sekmesinde g�r�n�r.
+    ViewData["Title"] = "Hakk�m�zda - Kurumsal Bilgi Sistemi";
+}
+
+@section Scripts {
+    <!-- SAYFAYA �ZEL ST�LLER (CSS) -->
+    <style>
+        /* YAN MEN� L�NKLER� */
+        /* Linklerin genel g�r�n�m�, ge�i� efektleri ve hizalamas� */
+        .sidebar-link {
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 0.9rem;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #64748b;
+            text-decoration: none;
+        }
+
+            /* Link �zerine gelince (Hover) arka plan ve renk de�i�imi */
+            .sidebar-link:hover {
+                background: #eff6ff;
+                color: #2563eb;
+                transform: translateX(4px); /* Sa�a do�ru hafif kayma efekti */
+            }
+
+            /* AKT�F SAYFA L�NK� */
+            /* �u an "Hakk�m�zda" sayfas�nda oldu�umuz i�in bu linki �zel olarak vurguluyoruz. */
+            .sidebar-link[href="/Kurumsal/Index"] {
+                background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); /* Mavi gradyan arka plan */
+                color: white; /* Beyaz yaz� rengi */
+                box-shadow: 0 4px 14px rgba(37,99,235,0.25); /* Hafif g�lge */
+            }
+
+        /* B�L�M BA�LIKLARI (Sidebar i�indeki k���k gri ba�l�klar) */
+        .section-title {
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #94a3b8;
+            margin: 1.4rem 0.9rem 0.4rem;
+        }
+
+        /* �ZEL KAYDIRMA �UBU�U (Scrollbar) */
+        /* Webkit taray�c�lar (Chrome, Safari, Edge) i�in scrollbar �zelle�tirmesi */
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        /* ��ER�K SEKMELER� BUTONLARI (Tarih�e, Misyon vb.) */
+        .sub-menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border-radius: 14px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #475569;
+            background: white;
+            border: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+            /* Buton �zerine gelince (Hover) */
+            .sub-menu-btn:hover {
+                background: #f8fafc;
+                transform: translateX(3px);
+            }
+
+            /* Aktif olan buton (Se�ili sekme) */
+            .sub-menu-btn.active {
+                background: #eff6ff;
+                color: #2563eb;
+                border-color: #bfdbfe;
+                box-shadow: 0 4px 12px rgba(37,99,235,0.08);
+            }
+
+        /* TAB ��ER�KLER� (Sekme ��erikleri) */
+        /* Varsay�lan olarak t�m i�erikler gizlidir. */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease; /* G�r�n�r oldu�unda 'fadeIn' animasyonu �al���r */
+        }
+
+            /* Aktif olan i�erik g�r�n�r hale gelir. */
+            .tab-content.active {
+                display: block;
+            }
+
+        /* Animasyon Tan�m�: A�a��dan yukar� do�ru hafif�e belirerek gelme */
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ZAMAN ��ZELGES� NOKTASI */
+        .timeline-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #2563eb;
+            flex-shrink: 0;
+            margin-top: 4px;
+            box-shadow: 0 0 0 4px rgba(37,99,235,0.15); /* Etraf�nda yar� saydam halka */
+        }
+
+        /* �ZELL�K KARTLARI (Misyon/Vizyon) */
+        .feature-card {
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+            /* Kart �zerine gelince yukar� kalkma efekti */
+            .feature-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 16px 30px rgba(0,0,0,0.06);
+            }
+    </style>
+
+    <!-- JAVASCRIPT: Sekme Ge�i� Mant��� -->
+    <script>
+        // "tabId" parametresi ile hangi sekmenin a��laca��n� belirleyen fonksiyon
+        function openTab(tabId) {
+            // 1. Ad�m: T�m butonlardan 'active' s�n�f�n� kald�r (Hepsini pasif yap)
+            document.querySelectorAll('.sub-menu-btn').forEach(btn => btn.classList.remove('active'));
+
+            // 2. Ad�m: T�klanan butonu bul ve 'active' s�n�f� ekle (Se�ili yap)
+            // Not: onclick olay�ndaki 'tabId' de�erine g�re butonu se�iyoruz.
+            document.querySelector(`[onclick="openTab('${tabId}')"]`).classList.add('active');
+
+            // 3. Ad�m: T�m i�erik alanlar�n� gizle (active s�n�f�n� kald�r)
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // 4. Ad�m: Sadece se�ilen 'tabId'ye sahip i�eri�i g�ster
+            document.getElementById(tabId).classList.add('active');
+        }
+    </script>
+}
+
+<!-- ANA ��ER�K ALANI -->
+<!-- Sayfan�n ortalanm��, kenarlardan bo�luklu ana kapsay�c�s� -->
+<main class="max-w-[1400px] mx-auto px-4 sm:px-6 py-8 mt-24">
+    <!-- �K� S�TUNLU D�ZEN (Sidebar + ��erik) -->
+    <!-- Mobilde alt alta (flex-col), geni� ekranda yan yana (lg:flex-row) -->
+    <div class="flex flex-col lg:flex-row gap-7">
+
+        <!-- SOL SIDEBAR (MEN�) -->
+        <!-- '_KurumsalSidebar.cshtml' dosyas�ndaki ortak men� yap�s�n� buraya �a��r�yoruz. -->
+        @await Html.PartialAsync("_KurumsalSidebar")
+
+        <!-- SA� TARAF: ANA ��ER�K BLO�U -->
+        <section class="flex-1 min-w-0">
+
+            <!-- EKMEK KIRINTISI (BREADCRUMB) -->
+            <!-- Sayfan�n neresinde oldu�umuzu g�steren navigasyon yolu -->
+            <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
+                <!-- Ana sayfa ikonu -->
+                <i class="fa-solid fa-house text-[9px]"></i>
+                <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                <span>Kurumsal</span>
+                <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                <!-- Bulundu�umuz sayfa (Hakk�m�zda) -->
+                <span class="text-blue-600">Hakk�m�zda</span>
+            </nav>
+
+            <!-- �� MEN� VE ��ER�K ALANI YAPISI -->
+            <!-- Mobilde alt alta, �ok geni� ekranda (xl) yan yana -->
+            <div class="flex flex-col xl:flex-row gap-6 items-start">
+
+                <!-- �� MEN� (Tarih�e, Misyon vb. Butonlar�) -->
+                <!-- Sol taraftaki beyaz kutu i�indeki buton listesi -->
+                <div class="w-full xl:w-72 flex-shrink-0 space-y-2 bg-white p-4 rounded-[1.75rem] border border-slate-100" style="box-shadow: 0 4px 24px rgba(0,0,0,0.03);">
+                    <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-2">Kurumsal ��erik</p>
+
+                    <!-- SEKME BUTONLARI -->
+                    <!-- T�kland���nda 'openTab' fonksiyonunu �a��r�r ve ilgili i�eri�i a�ar -->
+                    <button onclick="openTab('tarihce')" class="sub-menu-btn active">
+                        <i class="fa-solid fa-clock-rotate-left w-5 text-center"></i> Tarih�emiz
+                    </button>
+                    <button onclick="openTab('misyon')" class="sub-menu-btn">
+                        <i class="fa-solid fa-bullseye w-5 text-center"></i> Misyon & Vizyon
+                    </button>
+                    <button onclick="openTab('stratejik')" class="sub-menu-btn">
+                        <i class="fa-solid fa-chart-line w-5 text-center"></i> Stratejik Plan
+                    </button>
+                    <button onclick="openTab('yonetmelik')" class="sub-menu-btn">
+                        <i class="fa-solid fa-scale-balanced w-5 text-center"></i> Y�netmelik
+                    </button>
+                    <button onclick="openTab('amac')" class="sub-menu-btn">
+                        <i class="fa-solid fa-flag-checkered w-5 text-center"></i> Ama� ve Hedefler
+                    </button>
+                    <button onclick="openTab('rehberler')" class="sub-menu-btn">
+                        <i class="fa-solid fa-book-medical w-5 text-center"></i> Sa�l�k Rehberleri
+                    </button>
+                    <button onclick="openTab('uyum')" class="sub-menu-btn">
+                        <i class="fa-solid fa-handshake-angle w-5 text-center"></i> Uyum Rehberi
+                    </button>
+                    <button onclick="openTab('egitim')" class="sub-menu-btn">
+                        <i class="fa-solid fa-graduation-cap w-5 text-center"></i> E�itim Komitesi
+                    </button>
+                </div>
+
+                <!-- D�NAM�K ��ER�K ALANI (TAB CONTENTS) -->
+                <!-- Sa� taraftaki b�y�k beyaz alan, se�ilen i�eri�i g�sterir -->
+                <div class="flex-1 w-full bg-white rounded-[1.75rem] p-7 sm:p-10 border border-slate-100" style="box-shadow: 0 12px 40px rgba(0,0,0,0.04); min-height: 600px;">
+
+                    <!-- 1. SEKME: TAR�H�E -->
+                    <!-- Varsay�lan olarak a��k (active s�n�f� var) -->
+                    <div id="tarihce" class="tab-content active">
+                        <div class="flex items-center gap-3 mb-8">
+                            <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
+                            <h2 class="text-2xl font-black text-slate-800">Tarih�emiz</h2>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed font-medium mb-8">Gazi �niversitesi Hastanesi, 1926 y�l�nda Cumhuriyetimizin kurucusu Gazi Mustafa Kemal Atat�rk'�n talimatlar�yla at�lan temeller �zerinde y�kselmi�, T�rkiye'nin en k�kl� sa�l�k ve e�itim kurumlar�ndan biridir.</p>
+
+                        <!-- Zaman �izelgesi (Timeline) -->
+                        <div class="space-y-6 pl-2">
+                            <!-- Y�l: 1926 - Kurulu� -->
+                            <div class="flex gap-4">
+                                <!-- �izgi ve Nokta -->
+                                <div class="flex flex-col items-center gap-1">
+                                    <div class="timeline-dot"></div>
+                                    <div class="w-px flex-1 bg-slate-200"></div>
+                                </div>
+                                <!-- ��erik -->
+                                <div class="pb-6">
+                                    <span class="inline-block bg-blue-50 text-blue-700 font-black text-[10px] tracking-widest uppercase px-3 py-1 rounded-full mb-1.5">1926</span>
+                                    <p class="font-bold text-slate-800 text-sm">�lk Ad�mlar</p>
+                                    <p class="text-slate-500 text-xs mt-1 leading-relaxed">Gazi E�itim Enstit�s� b�nyesinde sa�l�k hizmetlerinin temelleri at�ld�.</p>
+                                </div>
+                            </div>
+                            <!-- Y�l: 1982 - �niversitele�me -->
+                            <div class="flex gap-4">
+                                <div class="flex flex-col items-center gap-1">
+                                    <div class="timeline-dot" style="background:#8b5cf6; box-shadow: 0 0 0 4px rgba(139,92,246,0.15);"></div>
+                                    <div class="w-px flex-1 bg-slate-200"></div>
+                                </div>
+                                <div class="pb-6">
+                                    <span class="inline-block bg-purple-50 text-purple-700 font-black text-[10px] tracking-widest uppercase px-3 py-1 rounded-full mb-1.5">1982</span>
+                                    <p class="font-bold text-slate-800 text-sm">�niversite Hastanesi Stat�s�</p>
+                                    <p class="text-slate-500 text-xs mt-1 leading-relaxed">Gazi �niversitesi T�p Fak�ltesi ile entegrasyon sa�lanarak e�itim ve ara�t�rma hastanesi kimli�i kazan�ld�.</p>
+                                </div>
+                            </div>
+                            <!-- Y�l: 2005 - Modernizasyon -->
+                            <div class="flex gap-4">
+                                <div class="flex flex-col items-center gap-1">
+                                    <div class="timeline-dot" style="background:#10b981; box-shadow: 0 0 0 4px rgba(16,185,129,0.15);"></div>
+                                    <div class="w-px flex-1 bg-slate-200"></div>
+                                </div>
+                                <div class="pb-6">
+                                    <span class="inline-block bg-emerald-50 text-emerald-700 font-black text-[10px] tracking-widest uppercase px-3 py-1 rounded-full mb-1.5">2005</span>
+                                    <p class="font-bold text-slate-800 text-sm">Modern Kamp�s</p>
+                                    <p class="text-slate-500 text-xs mt-1 leading-relaxed">Mevcut modern hastane bloklar�n�n in�as� tamamlanarak yatak kapasitesi art�r�ld�.</p>
+                                </div>
+                            </div>
+                            <!-- Y�l: 2024 - G�n�m�ze -->
+                            <div class="flex gap-4">
+                                <div class="flex flex-col items-center gap-1">
+                                    <div class="timeline-dot" style="background:#f59e0b; box-shadow: 0 0 0 4px rgba(245,158,11,0.15);"></div>
+                                </div>
+                                <div>
+                                    <span class="inline-block bg-amber-50 text-amber-700 font-black text-[10px] tracking-widest uppercase px-3 py-1 rounded-full mb-1.5">2024</span>
+                                    <p class="font-bold text-slate-800 text-sm">A++ Kalite Standartlar�</p>
+                                    <p class="text-slate-500 text-xs mt-1 leading-relaxed">Sa�l�k Bakanl��� taraf�ndan en y�ksek kalite segmenti ile �d�llendirildi.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. SEKME: M�SYON & V�ZYON -->
+                    <div id="misyon" class="tab-content">
+                        <div class="flex items-center gap-3 mb-8">
+                            <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
+                            <h2 class="text-2xl font-black text-slate-800">Misyonumuz & Vizyonumuz</h2>
+                        </div>
+                        <div class="grid sm:grid-cols-2 gap-5 mb-8">
+                            <!-- Misyon Kart� (Mavi) -->
+                            <div class="feature-card bg-gradient-to-br from-blue-600 to-blue-800 text-white">
+                                <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                                    <i class="fa-solid fa-bullseye"></i>
+                                </div>
+                                <h4 class="font-black text-lg mb-2">Misyonumuz</h4>
+                                <p class="text-blue-100 text-sm leading-relaxed font-medium">Evrensel de�erler �����nda, ileri teknoloji ve akademik birikimi birle�tirerek hasta odakl�, kaliteli sa�l�k hizmeti sunmak ve �lkenin gelecekteki hekimlerini yeti�tirmek.</p>
+                            </div>
+                            <!-- Vizyon Kart� (Koyu Gri) -->
+                            <div class="feature-card bg-gradient-to-br from-slate-800 to-slate-900 text-white">
+                                <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center mb-4">
+                                    <i class="fa-solid fa-telescope"></i>
+                                </div>
+                                <h4 class="font-black text-lg mb-2">Vizyonumuz</h4>
+                                <p class="text-slate-400 text-sm leading-relaxed font-medium">Sa�l�k hizmeti sunumunda, t�p e�itiminde ve bilimsel ara�t�rmalarda d�nya standartlar�n� yakalam��, referans g�sterilen lider bir sa�l�k kurulu�u olmak.</p>
+                            </div>
+                        </div>
+
+                        <!-- De�erler Listesi -->
+                        <h3 class="text-lg font-black text-slate-800 mb-4">Temel De�erlerimiz</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100"><i class="fa-solid fa-check text-blue-600"></i><span class="text-sm font-semibold text-slate-700">Hasta ve �al��an Odakl�l�k</span></div>
+                            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100"><i class="fa-solid fa-check text-blue-600"></i><span class="text-sm font-semibold text-slate-700">M�kemmeliyet�ilik</span></div>
+                            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100"><i class="fa-solid fa-check text-blue-600"></i><span class="text-sm font-semibold text-slate-700">Etik Kurallara Ba�l�l�k</span></div>
+                            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100"><i class="fa-solid fa-check text-blue-600"></i><span class="text-sm font-semibold text-slate-700">�effafl�k ve Hesap Verebilirlik</span></div>
+                        </div>
+                    </div>
+
+                    <!-- 3. SEKME: STRATEJ�K PLAN -->
+                    <div id="stratejik" class="tab-content">
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Stratejik Plan & Raporlar</h2></div>
+                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Kurumumuzun k�sa, orta ve uzun vadeli hedeflerini i�eren stratejik planlamalar� ile ge�mi� y�llara ait faaliyet raporlar�n� inceleyebilirsiniz.</p>
+                        <!-- �ndirilebilir PDF Dosyalar� -->
+                        <div class="space-y-3">
+                            <a href="#" class="flex items-center justify-between p-4 bg-slate-50 hover:bg-blue-50 border border-slate-100 rounded-xl transition group">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm text-red-500"><i class="fa-solid fa-file-pdf"></i></div>
+                                    <div><p class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition">2024-2028 Stratejik Plan�</p><p class="text-[10px] text-slate-500">PDF Document � 4.2 MB</p></div>
+                                </div>
+                                <i class="fa-solid fa-download text-slate-400 group-hover:text-blue-600"></i>
+                            </a>
+                            <a href="#" class="flex items-center justify-between p-4 bg-slate-50 hover:bg-blue-50 border border-slate-100 rounded-xl transition group">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm text-red-500"><i class="fa-solid fa-file-pdf"></i></div>
+                                    <div><p class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition">2023 Y�l� Faaliyet Raporu</p><p class="text-[10px] text-slate-500">PDF Document � 2.8 MB</p></div>
+                                </div>
+                                <i class="fa-solid fa-download text-slate-400 group-hover:text-blue-600"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 4. SEKME: Y�NETMEL�K -->
+                    <div id="yonetmelik" class="tab-content">
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Y�netmelik</h2></div>
+                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Gazi �niversitesi Hastanesi'nin idari ve t�bbi i�leyi�ini d�zenleyen yasal mevzuat ve kurum i�i y�netmeliklere buradan eri�ebilirsiniz.</p>
+                        <div class="p-5 bg-blue-50 border border-blue-100 rounded-2xl flex items-start gap-4">
+                            <i class="fa-solid fa-scale-balanced text-blue-600 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-black text-slate-800 text-sm mb-1">Hastane ��leyi� Y�netmeli�i</h4>
+                                <p class="text-slate-600 text-xs mb-3 leading-relaxed">Resmi Gazete'de yay�mlanan g�ncel uygulama y�netmeli�i uyar�nca hastanemiz faaliyetlerini s�rd�rmektedir.</p>
+                                <button class="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-blue-700 transition">Mevzuat� Oku</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- D��ER SEKMELER (��erikleri k�sa oldu�u i�in sade tasarland�) -->
+                    <div id="amac" class="tab-content">
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Ama� ve Hedeflerimiz</h2></div>
+                        <p class="text-slate-600 leading-relaxed font-medium">Hastanemizin 2024 y�l� itibariyle kaliteyi art�rmak ve hasta memnuniyetini en �st d�zeye ��karmak i�in belirledi�i hedefler bu alanda yer al�r.</p>
+                    </div>
+
+                    <div id="rehberler" class="tab-content">
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Sa�l�k Rehberleri</h2></div>
+                        <p class="text-slate-600 leading-relaxed font-medium">B�l�mlerimiz taraf�ndan haz�rlanan hasta bilgilendirme bro��rleri ve genel sa�l�k rehberleri ar�ividir.</p>
+                    </div>
+
+                    <div id="uyum" class="tab-content">
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Hastanemiz Uyum Rehberi</h2></div>
+                        <p class="text-slate-600 leading-relaxed font-medium">Yeni g�reve ba�layan personelimiz ve stajyer ��rencilerimiz i�in haz�rlanm�� oryantasyon program� ve uyum rehberi dok�manlar�d�r.</p>
+                    </div>
+
+                    <div id="egitim" class="tab-content">
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">E�itim Komitesi</h2></div>
+                        <p class="text-slate-600 leading-relaxed font-medium mb-4">Hastanemizdeki hizmet i�i e�itimlerin planlanmas�, uygulanmas� ve de�erlendirilmesinden sorumlu komitemizin faaliyetleri.</p>
+                        <a href="egitim.html" class="inline-flex items-center gap-2 text-blue-600 text-sm font-bold hover:underline">Komite Sayfas�na Git <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+    </div>
+</main>

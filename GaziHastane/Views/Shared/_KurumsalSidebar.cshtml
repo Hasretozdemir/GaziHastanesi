@@ -1,5 +1,44 @@
-﻿<aside class="hidden lg:block lg:w-72 flex-shrink-0">
-    <div class="bg-white rounded-[1.75rem] p-2.5 shadow-sm border border-slate-100/80 sticky top-28 max-h-[82vh] overflow-y-auto custom-scroll" style="box-shadow: 0 4px 24px rgba(0,0,0,0.05);">
+﻿<style>
+    @@media (max-width: 1023px) {
+        .kurumsal-sidebar-menu {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            gap: 0.5rem;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 1rem !important;
+        }
+
+            .kurumsal-sidebar-menu::-webkit-scrollbar {
+                display: none;
+            }
+
+            .kurumsal-sidebar-menu .section-title {
+                display: none;
+            }
+
+        .sidebar-link .fa-chevron-right {
+            display: none;
+        }
+
+        .kurumsal-sidebar-menu nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .sidebar-link {
+            margin-top: 0 !important;
+            flex-shrink: 0;
+            width: auto !important;
+            padding: 0.6rem 1rem !important;
+        }
+    }
+</style>
+
+<aside class="w-full lg:w-72 flex-shrink-0 mb-6 lg:mb-0">
+    <div class="bg-white rounded-[1.75rem] p-2.5 lg:p-3 shadow-sm border border-slate-100/80 lg:sticky lg:top-28 lg:max-h-[82vh] lg:overflow-y-auto custom-scroll kurumsal-sidebar-menu"
+         style="box-shadow: 0 4px 24px rgba(0,0,0,0.05);">
 
         <p class="section-title">Yönetim</p>
         <nav class="space-y-0.5">
@@ -7,23 +46,72 @@
             <a href="/Kurumsal/Basmudurluk" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-users w-4"></i> Başmüdürlük</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
         </nav>
 
-        <p class="section-title">Kurumsal</p>
+        <p class="section-title mt-0 lg:mt-4">Kurumsal</p>
         <nav class="space-y-0.5">
             <a href="/Kurumsal/Index" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-circle-info w-4"></i> Hakkımızda</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
-
-            <a href="/Home/Hemsirelik" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-user-nurse w-4"></i> Hemşirelik Hizmetleri</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
-            <a href="/Home/BilgiIslem" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-microchip w-4"></i> Bilgi İşlem Merkezi</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
-            <a href="/Home/IsSagligi" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-shield-halved w-4"></i> İş Sağlığı ve Güvenliği</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
-            <a href="/Home/Enfeksiyon" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-virus-slash w-4"></i> Enfeksiyon Kontrol</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
-            <a href="/Home/Eczacilik" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-pills w-4"></i> Eczacılık Hizmetleri</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
-            <a href="/Home/SatinAlma" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-cart-shopping w-4"></i> Satın Alma</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
-            <a href="/Home/Istatistik" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-chart-line w-4"></i> İstatistik ve Raporlama</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
-            <a href="/Home/Arsiv" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-box-archive w-4"></i> Arşiv Birimi</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
-            <a href="/Home/HastaIletisim" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-comment-medical w-4"></i> Hasta İletişim Birimi</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
-            <a href="/Home/IsAkis" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-diagram-project w-4"></i> İş Akış Şemaları</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
-            <a href="/Home/Organizasyon" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-sitemap w-4"></i> Organizasyon Şemaları</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
-            <a href="/Home/IcKontrol" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-check-double w-4"></i> İç Kontrol</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
-            <a href="/Home/BasinIletisim" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-bullhorn w-4"></i> Basın ve Kurumsal İletişim</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
+            <a href="/Kurumsal/HemsirelikHizmetleri" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-user-nurse w-4"></i> Hemşirelik Hizmetleri</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
+            <a href="/Kurumsal/BilgiIslem" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-microchip w-4"></i> Bilgi İşlem Merkezi</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
+            <a href="/Kurumsal/IsSagligi" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-shield-halved w-4"></i> İş Sağlığı ve Güvenliği</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
+            <a href="/Kurumsal/Enfeksiyon" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-virus-slash w-4"></i> Enfeksiyon Kontrol</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
+            <a href="/Kurumsal/Eczacilik" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-pills w-4"></i> Eczacılık Hizmetleri</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
+            <a href="/Kurumsal/SatinAlma" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-cart-shopping w-4"></i> Satın Alma</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
+            <a href="/Kurumsal/Istatistik" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-chart-line w-4"></i> İstatistik ve Raporlama</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
+            <a href="/Kurumsal/Arsiv" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-box-archive w-4"></i> Arşiv Birimi</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
+            <a href="/Kurumsal/HastaIletisim" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-comment-medical w-4"></i> Hasta İletişim Birimi</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
+            <a href="/Kurumsal/IsAkis" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-diagram-project w-4"></i> İş Akış Şemaları</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
+            <a href="/Kurumsal/Organizasyon" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-sitemap w-4"></i> Organizasyon Şemaları</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
+            <a href="/Kurumsal/IcKontrol" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-check-double w-4"></i> İç Kontrol</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
+            <a href="/Kurumsal/BasinIletisim" class="sidebar-link"><span class="flex items-center gap-3"><i class="fa-solid fa-bullhorn w-4"></i> Basın ve Kurumsal İletişim</span><i class="fa-solid fa-chevron-right text-[10px]"></i></a>
         </nav>
     </div>
 </aside>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // --- Aktif link ---
+        let currentPath = window.location.pathname;
+        let activeLink = null;
+
+        document.querySelectorAll(".sidebar-link").forEach(link => {
+            if (link.getAttribute("href") === currentPath) {
+                link.style.background = "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)";
+                link.style.color = "white";
+                link.style.boxShadow = "0 4px 14px rgba(37,99,235,0.25)";
+                activeLink = link;
+            }
+        });
+
+        // Mobilde aktif linki ortala (sayfa scroll'u tetiklemeden)
+        if (activeLink && window.innerWidth < 1024) {
+            requestAnimationFrame(() => {
+                const menu = document.querySelector(".kurumsal-sidebar-menu");
+                menu.scrollLeft = activeLink.offsetLeft - (menu.offsetWidth / 2) + (activeLink.offsetWidth / 2);
+            });
+        }
+
+        // --- Fade geçiş: sidebar linklerine tıklanınca soldur, sonra git ---
+        document.querySelectorAll(".sidebar-link").forEach(link => {
+            link.addEventListener("click", function (e) {
+                const href = this.getAttribute("href");
+
+                // Zaten aktif sayfadaysa bir şey yapma
+                if (href === window.location.pathname) return;
+
+                e.preventDefault();
+
+                document.body.style.transition = "opacity 0.22s ease";
+                document.body.style.opacity = "0";
+
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 220);
+            });
+        });
+    });
+
+    // Geri/İleri butonu ile gelince tekrar göster
+    window.addEventListener("pageshow", function (e) {
+        document.body.style.transition = "opacity 0.22s ease";
+        document.body.style.opacity = "1";
+    });
+</script>

@@ -1,0 +1,59 @@
+﻿@model IEnumerable<GaziHastane.Models.KrokiBirim>
+@{
+    ViewData["Title"] = "İnteraktif Hastane Krokisi";
+    // Farklı katları grupla
+    var katlar = Model.Select(x => x.KatAdi).Distinct().ToList();
+}
+
+<div class="col-lg-9 col-md-8 p-lg-4">
+    <div class="tab-content" id="v-pills-tabContent">
+
+        @foreach (var kat in katlar)
+        {
+            var isFirst = kat == katlar.First() ? "show active" : "";
+            var katOdalari = Model.Where(x => x.KatAdi == kat).ToList();
+
+            <div class="tab-pane fade @isFirst" id="v-pills-@kat.Replace(" ", "")" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="fw-bold text-primary">@kat Yerleşim Planı</h3>
+                </div>
+
+                <div class="map-area shadow-inner">
+                    <div class="floor-plan">
+
+                        @foreach (var oda in katOdalari)
+                        {
+                            // Eğer bu oda "koridor" ise yapısı farklıdır
+                            if (oda.TipSinifi == "corridor")
+                            {
+                                <div class="corridor" style="grid-column: @oda.GridColumn; grid-row: @oda.GridRow;">
+                                    @oda.Baslik
+                                </div>
+                            }
+                            else
+                            {
+                                // Normal bir oda, wc veya poliklinik
+                                <div class="@oda.TipSinifi"
+                                     style="grid-column: @oda.GridColumn; grid-row: @oda.GridRow;"
+                                     data-bs-toggle="popover"
+                                     title="@oda.Baslik"
+                                     data-bs-content="@oda.Aciklama <br> <b>Konum:</b> @(oda.Bolum != null ? oda.Bolum.Blok + " - " + oda.Bolum.Kat : kat)">
+
+                                    <div>
+                                        @if (!string.IsNullOrEmpty(oda.Ikon))
+                                        {
+                                            <i class="@oda.Ikon"></i>
+                                        }
+                                        @oda.Baslik
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

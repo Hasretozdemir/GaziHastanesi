@@ -1,0 +1,321 @@
+@* RAZOR KOD BLOÐU *@
+@{
+    ViewData["Title"] = "Ýþ Akýþ Þemalarý - Kurumsal Bilgi Sistemi";
+}
+
+@section Scripts {
+    <style>
+        /* ==========================================
+                   1. GENEL ANÝMASYONLAR VE YAPI
+                   ========================================== */
+        .page-fade-in {
+            animation: fadeInPage 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        @@keyframes fadeInPage {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==========================================
+                   2. YAN MENÜ (SIDEBAR) DÜZELTME STÝLLERÝ
+                   ========================================== */
+        .sidebar-link {
+            transition: all 0.2s ease;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 0.65rem 0.9rem !important;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #64748b;
+            text-decoration: none;
+            margin-bottom: 2px;
+        }
+
+            .sidebar-link span.flex {
+                display: flex !important;
+                align-items: center !important;
+                gap: 0.75rem !important;
+            }
+
+            .sidebar-link i.fa-solid {
+                text-align: center;
+                width: 1rem;
+            }
+
+            .sidebar-link:hover {
+                background: #eff6ff;
+                color: #2563eb;
+                transform: translateX(4px);
+            }
+
+        .section-title {
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #94a3b8;
+            margin: 1.4rem 0.9rem 0.4rem;
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        /* ==========================================
+                   3. ÝÇ MENÜ (SEKMELER) VE 35 MADDELÝK UZUN LÝSTE ÝÇÝN AYARLAR
+                   ========================================== */
+        @@media (max-width: 1279px) {
+            .mobile-tab-menu {
+                display: flex !important;
+                flex-direction: row !important;
+                overflow-x: auto;
+                white-space: nowrap;
+                gap: 0.5rem;
+                padding-bottom: 0.5rem;
+                -webkit-overflow-scrolling: touch;
+            }
+
+                .mobile-tab-menu > * {
+                    margin-top: 0 !important;
+                }
+
+                .mobile-tab-menu::-webkit-scrollbar {
+                    display: none;
+                }
+
+            .sub-menu-btn {
+                width: auto !important;
+                flex-shrink: 0;
+                padding: 0.6rem 1.2rem;
+            }
+
+            .kurumsal-icerik-baslik {
+                display: none;
+            }
+        }
+
+        .sub-menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #475569;
+            background: white;
+            border: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            white-space: normal; /* Uzun isimli birimlerin alt satýra geçmesine izin ver */
+            line-height: 1.3;
+        }
+
+            .sub-menu-btn:hover {
+                background: #f8fafc;
+                transform: translateX(3px);
+            }
+
+            .sub-menu-btn.active {
+                background: #eff6ff;
+                color: #2563eb;
+                border-color: #bfdbfe;
+                box-shadow: 0 4px 12px rgba(37,99,235,0.08);
+            }
+
+        /* ==========================================
+                   4. ÝÇERÝK ANÝMASYONLARI VE KARTLAR
+                   ========================================== */
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+            .tab-content.active {
+                display: block;
+                animation: fadeInTab 0.4s ease forwards;
+            }
+
+        @@keyframes fadeInTab {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+    </style>
+
+    <script>
+        function openTab(event, tabId) {
+            if(event) event.preventDefault();
+            document.querySelectorAll('.sub-menu-btn').forEach(btn => btn.classList.remove('active'));
+            if(event) { event.currentTarget.classList.add('active'); }
+            else {
+                let activeBtn = document.querySelector(`[onclick*="${tabId}"]`);
+                if(activeBtn) activeBtn.classList.add('active');
+            }
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            let targetContent = document.getElementById(tabId);
+            if(targetContent) targetContent.classList.add('active');
+            if(history.pushState) { history.pushState(null, null, '#' + tabId); }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            let hash = window.location.hash.substring(1);
+            if(hash && document.getElementById(hash)) { openTab(null, hash); }
+        });
+    </script>
+}
+
+<main class="max-w-[1400px] mx-auto px-4 sm:px-6 py-8 mt-24 page-fade-in">
+
+    <div class="flex flex-col lg:flex-row gap-7">
+
+        <aside class="w-full lg:w-72 flex-shrink-0">
+            @await Html.PartialAsync("_KurumsalSidebar")
+        </aside>
+
+        <section class="flex-1 min-w-0">
+
+            <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
+                <i class="fa-solid fa-house text-[9px]"></i>
+                <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                <span>Kurumsal</span>
+                <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                <span class="text-blue-600">Ýþ Akýþ Þemalarý</span>
+            </nav>
+
+            <div class="flex flex-col xl:flex-row gap-6 items-start">
+
+                <div class="mobile-tab-menu w-full xl:w-80 flex-shrink-0 space-y-1.5 bg-white p-4 rounded-[1.75rem] border border-slate-100 xl:max-h-[75vh] xl:overflow-y-auto custom-scroll" style="box-shadow: 0 4px 24px rgba(0,0,0,0.03);">
+                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-2 sticky top-0 bg-white py-1">Birimler (A-Z)</p>
+
+                    <button onclick="openTab(event, 'genel')" class="sub-menu-btn active"><i class="fa-solid fa-circle-info w-4 text-center"></i> Hakkýmýzda</button>
+                    <button onclick="openTab(event, 'acil')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Acil Servis</button>
+                    <button onclick="openTab(event, 'adli-tip')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Adli Týp</button>
+                    <button onclick="openTab(event, 'algoloji')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Algoloji Birimi</button>
+                    <button onclick="openTab(event, 'ameliyathane')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Ameliyathane</button>
+                    <button onclick="openTab(event, 'atik-yonetimi')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Atýk Yönetimi Birimi</button>
+                    <button onclick="openTab(event, 'berber')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Berber</button>
+                    <button onclick="openTab(event, 'bronkoskopi')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Bronkoskopi Birimi</button>
+                    <button onclick="openTab(event, 'cocuk-acil')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Çocuk Acil Servis</button>
+                    <button onclick="openTab(event, 'endoskopi')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Endoskopi Ünitesi</button>
+                    <button onclick="openTab(event, 'kok-hucre')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Eriþkin Kök Hücre Nakil Birimi</button>
+                    <button onclick="openTab(event, 'hasta-bakicilik')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Hasta Bakýcýlýk Hizmetleri</button>
+                    <button onclick="openTab(event, 'hasta-kolaylik')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Hasta Kolaylýk Birimi</button>
+                    <button onclick="openTab(event, 'hemodinami')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Hemodinami Laboratuvarý</button>
+                    <button onclick="openTab(event, 'hemsirelik-egitim')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Hemþirelik Eðitim Birimi</button>
+                    <button onclick="openTab(event, 'hemsirelik-mudurlugu')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Hemþirelik Hizmetleri Müdürlüðü</button>
+                    <button onclick="openTab(event, 'kadin-dogum')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Kadýn Hastalýklarý ve Doðum Klinik</button>
+                    <button onclick="openTab(event, 'kan-alma')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Kan Alma Birimi</button>
+                    <button onclick="openTab(event, 'klinik-hizmetler')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Klinik Hizmetler</button>
+                    <button onclick="openTab(event, 'malzeme-cihaz')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Malzeme ve Cihaz Yönetimi</button>
+                    <button onclick="openTab(event, 'ekg')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Merkezi EKG Ünitesi</button>
+                    <button onclick="openTab(event, 'molekuler-hematoloji')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Moleküler Hematoloji</button>
+                    <button onclick="openTab(event, 'motilite')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Motilite Laboratuvarý</button>
+                    <button onclick="openTab(event, 'ozel-takip')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Özel Takip Birimi</button>
+                    <button onclick="openTab(event, 'personel-egitim')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Personel Eðitim ve Staj Birimi</button>
+                    <button onclick="openTab(event, 'poliklinik')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Poliklinik Hizmetler</button>
+                    <button onclick="openTab(event, 'isitme-denge')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Prof.Dr.N. Akyýldýz Ýþitme ve Denge Boz.</button>
+                    <button onclick="openTab(event, 'protokol')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Protokol Hizmetleri Birimi</button>
+                    <button onclick="openTab(event, 'solunum-fonksiyon')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Solunum Fonksiyon Testleri Birimi</button>
+                    <button onclick="openTab(event, 'stomaterapi')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Stomaterapi Birimi</button>
+                    <button onclick="openTab(event, 'patoloji')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Týbbi Patoloji Laboratuvarý</button>
+                    <button onclick="openTab(event, 'uyku-bozukluklari')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Uyku Bozukluklarý Birimi</button>
+                    <button onclick="openTab(event, 'uremeye-yardimci')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Üremeye Yardýmcý Tedavi Birimi</button>
+                    <button onclick="openTab(event, 'yara-bakim')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Yara Bakým Birimi</button>
+                    <button onclick="openTab(event, 'yenidogan')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Yenidoðan Polikliniði</button>
+                    <button onclick="openTab(event, 'yogun-bakim')" class="sub-menu-btn"><i class="fa-solid fa-diagram-project w-4 text-center text-slate-400"></i> Yoðun Bakým</button>
+                </div>
+
+                <div class="flex-1 w-full bg-white rounded-[1.75rem] p-7 sm:p-10 border border-slate-100" style="box-shadow: 0 12px 40px rgba(0,0,0,0.04); min-height: 600px;">
+
+                    <div id="genel" class="tab-content active">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
+                            <h2 class="text-2xl font-black text-slate-800">Kurumsal Ýþ Akýþ Þemalarý</h2>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-100 mb-8">
+                            <p class="text-slate-700 leading-relaxed font-medium">Bu sayfada, Gazi Üniversitesi Hastanesi bünyesinde yer alan tüm týbbi, idari ve destek hizmetleri birimlerimizin <strong>kalite yönetim standartlarý</strong> çerçevesinde hazýrlanmýþ iþ akýþ þemalarýna ulaþabilirsiniz. Lütfen incelemek istediðiniz birimi yandaki menüden seçiniz.</p>
+                        </div>
+
+                        <div class="flex justify-center items-center h-48 text-slate-300 flex-col gap-3">
+                            <i class="fa-solid fa-hand-pointer text-4xl"></i>
+                            <p class="text-sm font-semibold">Görüntülemek için sol menüden bir birim seçiniz.</p>
+                        </div>
+                    </div>
+
+                    @{
+                        // Ýçerikleri C# dizisi ile oluþturarak kod tekrarýný önleyelim ve sayfayý temiz tutalým.
+                        string[] birimler = new string[] {
+                                        "acil|Acil Servis", "adli-tip|Adli Týp", "algoloji|Algoloji Birimi", "ameliyathane|Ameliyathane",
+                                        "atik-yonetimi|Atýk Yönetimi Birimi", "berber|Berber", "bronkoskopi|Bronkoskopi Birimi",
+                                        "cocuk-acil|Çocuk Acil Servis", "endoskopi|Endoskopi Ünitesi", "kok-hucre|Eriþkin Kök Hücre Nakil Birimi",
+                                        "hasta-bakicilik|Hasta Bakýcýlýk Hizmetleri", "hasta-kolaylik|Hasta Kolaylýk Birimi",
+                                        "hemodinami|Hemodinami Laboratuvarý", "hemsirelik-egitim|Hemþirelik Eðitim Birimi",
+                                        "hemsirelik-mudurlugu|Hemþirelik Hizmetleri Müdürlüðü", "kadin-dogum|Kadýn Hastalýklarý ve Doðum Klinik",
+                                        "kan-alma|Kan Alma Birimi", "klinik-hizmetler|Klinik Hizmetler", "malzeme-cihaz|Malzeme ve Cihaz Yönetimi",
+                                        "ekg|Merkezi EKG Ünitesi", "molekuler-hematoloji|Moleküler Hematoloji", "motilite|Motilite Laboratuvarý",
+                                        "ozel-takip|Özel Takip Birimi", "personel-egitim|Personel Eðitim ve Staj Birimi", "poliklinik|Poliklinik Hizmetler",
+                                        "isitme-denge|Prof.Dr.Necmettin Akyýldýz Ýþitme, Konuþma, Ses ve Denge Bozukluklarý Birimi",
+                                        "protokol|Protokol Hizmetleri Birimi", "solunum-fonksiyon|Solunum Fonksiyon Testleri Birimi",
+                                        "stomaterapi|Stomaterapi Birimi", "patoloji|Týbbi Patoloji Laboratuvarý", "uyku-bozukluklari|Uyku Bozukluklarý Birimi",
+                                        "uremeye-yardimci|Üremeye Yardýmcý Tedavi ve Eðitim Birimi", "yara-bakim|Yara Bakým Birimi",
+                                        "yenidogan|Yenidoðan Polikliniði", "yogun-bakim|Yoðun Bakým"
+                                        };
+
+                        foreach (var item in birimler)
+                        {
+                            var parts = item.Split('|');
+                            var id = parts[0];
+                            var isim = parts[1];
+
+                            <div id="@id" class="tab-content">
+                                <div class="flex items-center gap-3 mb-8">
+                                    <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
+                                    <h2 class="text-2xl font-black text-slate-800">@isim Akýþ Þemasý</h2>
+                                </div>
+                                <p class="text-slate-600 leading-relaxed font-medium mb-6">@isim birimine ait klinik ve idari süreçlerin adým adým iþleyiþini gösteren akýþ þemasý aþaðýda yer almaktadýr.</p>
+
+                                <div class="bg-slate-50 border border-slate-200 rounded-xl p-6 text-center text-slate-400 min-h-[300px] flex flex-col items-center justify-center">
+                                    <i class="fa-solid fa-diagram-project text-5xl mb-4 text-slate-300"></i>
+                                    <p class="font-bold text-sm text-slate-500">@isim Ýþ Akýþ Þemasý Görseli Buraya Eklenecektir</p>
+                                    <button class="mt-6 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-bold text-xs transition">
+                                        <i class="fa-solid fa-download"></i> PDF Olarak Ýndir
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+
+        </section>
+    </div>
+</main>

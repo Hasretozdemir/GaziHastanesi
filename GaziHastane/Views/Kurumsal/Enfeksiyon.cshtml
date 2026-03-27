@@ -1,0 +1,407 @@
+@* RAZOR KOD BLOÐU *@
+@{
+    ViewData["Title"] = "Enfeksiyon Kontrol Komitesi - Kurumsal Bilgi Sistemi";
+}
+
+@section Scripts {
+    <style>
+        /* ==========================================
+                   1. GENEL ANÝMASYONLAR VE YAPI
+                   ========================================== */
+        .page-fade-in {
+            animation: fadeInPage 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        @@keyframes fadeInPage {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==========================================
+                   2. YAN MENÜ (SIDEBAR) DÜZELTME STÝLLERÝ
+                   ========================================== */
+        .sidebar-link {
+            transition: all 0.2s ease;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 0.65rem 0.9rem !important;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #64748b;
+            text-decoration: none;
+            margin-bottom: 2px;
+        }
+
+            .sidebar-link span.flex {
+                display: flex !important;
+                align-items: center !important;
+                gap: 0.75rem !important;
+            }
+
+            .sidebar-link i.fa-solid {
+                text-align: center;
+                width: 1rem;
+            }
+
+            .sidebar-link:hover {
+                background: #eff6ff;
+                color: #2563eb;
+                transform: translateX(4px);
+            }
+
+        .section-title {
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #94a3b8;
+            margin: 1.4rem 0.9rem 0.4rem;
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        /* ==========================================
+                   3. ÝÇ MENÜ (SEKMELER)
+                   ========================================== */
+        @@media (max-width: 1279px) {
+            .mobile-tab-menu {
+                display: flex !important;
+                flex-direction: row !important;
+                overflow-x: auto;
+                white-space: nowrap;
+                gap: 0.5rem;
+                padding-bottom: 0.5rem;
+                -webkit-overflow-scrolling: touch;
+            }
+
+                .mobile-tab-menu > * {
+                    margin-top: 0 !important;
+                }
+
+                .mobile-tab-menu::-webkit-scrollbar {
+                    display: none;
+                }
+
+            .sub-menu-btn {
+                width: auto !important;
+                flex-shrink: 0;
+                padding: 0.6rem 1.2rem;
+            }
+
+            .kurumsal-icerik-baslik {
+                display: none;
+            }
+        }
+
+        .sub-menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border-radius: 14px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #475569;
+            background: white;
+            border: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+            .sub-menu-btn:hover {
+                background: #f8fafc;
+                transform: translateX(3px);
+            }
+
+            .sub-menu-btn.active {
+                background: #eff6ff;
+                color: #2563eb;
+                border-color: #bfdbfe;
+                box-shadow: 0 4px 12px rgba(37,99,235,0.08);
+            }
+
+        /* ==========================================
+                   4. ÝÇERÝK ANÝMASYONLARI VE KARTLAR
+                   ========================================== */
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+            .tab-content.active {
+                display: block;
+                animation: fadeInTab 0.4s ease forwards;
+            }
+
+        @@keyframes fadeInTab {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tech-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 1.25rem;
+            transition: all 0.2s;
+            height: 100%;
+        }
+
+            .tech-card:hover {
+                border-color: #cbd5e1;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            }
+
+        .numbered-list-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+            .numbered-list-item:last-child {
+                border-bottom: none;
+                margin-bottom: 0;
+                padding-bottom: 0;
+            }
+
+        .list-number {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            background: #eff6ff;
+            color: #2563eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.75rem;
+        }
+    </style>
+
+    <script>
+        function openTab(event, tabId) {
+            if(event) event.preventDefault();
+            document.querySelectorAll('.sub-menu-btn').forEach(btn => btn.classList.remove('active'));
+            if(event) { event.currentTarget.classList.add('active'); }
+            else {
+                let activeBtn = document.querySelector(`[onclick*="${tabId}"]`);
+                if(activeBtn) activeBtn.classList.add('active');
+            }
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            let targetContent = document.getElementById(tabId);
+            if(targetContent) targetContent.classList.add('active');
+            if(history.pushState) { history.pushState(null, null, '#' + tabId); }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            let hash = window.location.hash.substring(1);
+            if(hash && document.getElementById(hash)) { openTab(null, hash); }
+        });
+    </script>
+}
+
+<main class="max-w-[1400px] mx-auto px-4 sm:px-6 py-8 mt-24 page-fade-in">
+
+    <div class="flex flex-col lg:flex-row gap-7">
+
+        <aside class="w-full lg:w-72 flex-shrink-0">
+            @await Html.PartialAsync("_KurumsalSidebar")
+        </aside>
+
+        <section class="flex-1 min-w-0">
+
+            <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
+                <i class="fa-solid fa-house text-[9px]"></i>
+                <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                <span>Kurumsal</span>
+                <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                <span class="text-blue-600">Enfeksiyon Kontrol</span>
+            </nav>
+
+            <div class="flex flex-col xl:flex-row gap-6 items-start">
+
+                <div class="mobile-tab-menu w-full xl:w-72 flex-shrink-0 space-y-2 bg-white p-4 rounded-[1.75rem] border border-slate-100" style="box-shadow: 0 4px 24px rgba(0,0,0,0.03);">
+                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-2">Komite Yönetimi</p>
+
+                    <button onclick="openTab(event, 'hakkimizda')" class="sub-menu-btn active">
+                        <i class="fa-solid fa-circle-info w-5 text-center"></i> Hakkýmýzda & Üyeler
+                    </button>
+                    <button onclick="openTab(event, 'surveyans')" class="sub-menu-btn">
+                        <i class="fa-solid fa-microscope w-5 text-center"></i> Sürveyans Faaliyetleri
+                    </button>
+                    <button onclick="openTab(event, 'alt-gruplar')" class="sub-menu-btn">
+                        <i class="fa-solid fa-users-gear w-5 text-center"></i> Alt Çalýþma Gruplarý
+                    </button>
+                    <button onclick="openTab(event, 'dokumanlar')" class="sub-menu-btn">
+                        <i class="fa-solid fa-file-pdf w-5 text-center"></i> Dokümanlar
+                    </button>
+                    <button onclick="openTab(event, 'akis-semasi')" class="sub-menu-btn">
+                        <i class="fa-solid fa-diagram-project w-5 text-center"></i> Ýþ Akýþ Þemasý
+                    </button>
+                </div>
+
+                <div class="flex-1 w-full bg-white rounded-[1.75rem] p-7 sm:p-10 border border-slate-100" style="box-shadow: 0 12px 40px rgba(0,0,0,0.04); min-height: 600px;">
+
+                    <div id="hakkimizda" class="tab-content active">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
+                            <h2 class="text-2xl font-black text-slate-800">Enfeksiyon Kontrol Komitesi</h2>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-100 mb-8">
+                            <p class="text-slate-700 leading-relaxed font-medium">Enfeksiyon Kontrol Komitesi, saðlýk hizmeti ile iliþkili enfeksiyonlarýn önlenmesi ve kontrolü için, çalýþmalarýný spesifik alanlarda uzmanlaþmýþ <strong>Alt Çalýþma ve Yürütme Gruplarý</strong> ile koordineli bir þekilde yürütmektedir.</p>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-6">
+                            <div class="border border-slate-100 p-6 rounded-2xl bg-white shadow-sm">
+                                <h3 class="font-black text-slate-800 text-lg mb-4 flex items-center gap-2"><i class="fa-solid fa-user-doctor text-blue-600"></i> Komite Üyeleri</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed">Baþhekimlik onayý ile görevlendirilen Enfeksiyon Hastalýklarý uzmanlarý, Mikrobiyoloji uzmanlarý, Baþhemþirelik temsilcileri ve diðer ilgili klinik uzmanlarýndan oluþur.</p>
+                                <a href="#" class="inline-block mt-4 text-xs font-bold text-blue-600 hover:underline">Üye Listesini Görüntüle <i class="fa-solid fa-arrow-right ml-1"></i></a>
+                            </div>
+                            <div class="border border-slate-100 p-6 rounded-2xl bg-white shadow-sm">
+                                <h3 class="font-black text-slate-800 text-lg mb-4 flex items-center gap-2"><i class="fa-solid fa-users-rectangle text-blue-600"></i> Alt Çalýþma Grup Üyeleri</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed">Komiteye baðlý olarak çalýþan; sürveyans, eðitim, sterilizasyon, antibiyotik kontrolü gibi alanlarda aktif görev alan hekim, hemþire ve teknik personeldir.</p>
+                                <a href="#" class="inline-block mt-4 text-xs font-bold text-blue-600 hover:underline">Üye Listesini Görüntüle <i class="fa-solid fa-arrow-right ml-1"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="surveyans" class="tab-content">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
+                            <h2 class="text-2xl font-black text-slate-800">Sürveyans Faaliyetleri</h2>
+                        </div>
+
+                        <div class="mb-8">
+                            <h3 class="font-black text-slate-800 mb-4 text-sm uppercase tracking-wider">Ýzlem Süreçleri</h3>
+                            <div class="bg-slate-50 border border-slate-100 p-6 rounded-2xl h-80 overflow-y-auto custom-scroll">
+                                <div class="numbered-list-item">
+                                    <div class="list-number">1</div>
+                                    <p class="text-xs text-slate-600 pt-1 leading-relaxed">Sürekli, kesintisiz aktif-prospektif sürveyans yöntemi ile izlem yapýlýr. Yoðun bakýmlarda invaziv araç iliþkili sürveyans, Yenidoðan ünitesinde doðum aðýrlýðýna göre sürveyans yürütülmektedir.</p>
+                                </div>
+                                <div class="numbered-list-item">
+                                    <div class="list-number">2</div>
+                                    <p class="text-xs text-slate-600 pt-1 leading-relaxed">Enfeksiyon Kontrol Ekibi tarafýndan haftada iki gün olaðan toplantý yapýlýr. Yazýlý ve sözlü sorunlar, eðitim çalýþmalarý ve epidemik durumlar deðerlendirilir.</p>
+                                </div>
+                                <div class="numbered-list-item">
+                                    <div class="list-number">3</div>
+                                    <p class="text-xs text-slate-600 pt-1 leading-relaxed">EKH, HBYS ve Laboratuvarlardan kültür sonuçlarýný günlük takip eder.</p>
+                                </div>
+                                <div class="numbered-list-item">
+                                    <div class="list-number">4</div>
+                                    <p class="text-xs text-slate-600 pt-1 leading-relaxed">Pozitif sonuçlar ENF.FR.001 Takip Formuna kaydedilir ve ünite ziyaretleri gerçekleþtirilir.</p>
+                                </div>
+                                <div class="numbered-list-item">
+                                    <div class="list-number">5</div>
+                                    <p class="text-xs text-slate-600 pt-1 leading-relaxed">Ýzolasyon gerektiren durumlarda ilgili klinik sorumlularý ile görüþülerek gerekli önlemler alýnýr.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="tech-card">
+                                <div class="flex items-center gap-3 mb-3 text-rose-600">
+                                    <i class="fa-solid fa-lungs text-xl"></i>
+                                    <h4 class="font-bold text-slate-800">Tüberküloz Sürveyansý</h4>
+                                </div>
+                                <p class="text-[11px] text-slate-500">Poliklinik ve kliniklerde aktif sürveyans yapýlýr. Form 014 doldurularak istatistik ve ilgili saðlýk merkezlerine iletilir.</p>
+                            </div>
+                            <div class="tech-card">
+                                <div class="flex items-center gap-3 mb-3 text-amber-600">
+                                    <i class="fa-solid fa-virus-covid text-xl"></i>
+                                    <h4 class="font-bold text-slate-800">Bulaþýcý Hastalýk Bildirimi</h4>
+                                </div>
+                                <p class="text-[11px] text-slate-500">Bildirimi zorunlu tanýlar HBYS üzerinden otomatik olarak KDS ve ÝZCÝ sistemine gönderilir.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="alt-gruplar" class="tab-content">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
+                            <h2 class="text-2xl font-black text-slate-800">Alt Çalýþma Gruplarý</h2>
+                        </div>
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div class="tech-card">
+                                <h4 class="font-bold text-slate-800 mb-2">Eðitim ve Tanýtým</h4>
+                                <p class="text-xs text-slate-600">Personel eðitimleri, oryantasyonlar ve bilgilendirme materyallerinin hazýrlanmasý.</p>
+                            </div>
+                            <div class="tech-card">
+                                <h4 class="font-bold text-slate-800 mb-2">Sterilizasyon Kontrol</h4>
+                                <p class="text-xs text-slate-600">MSÜ sterilizasyon kontrolü, þartnameler ve uygunluk raporlarý.</p>
+                            </div>
+                            <div class="tech-card">
+                                <h4 class="font-bold text-slate-800 mb-2">Atýk Yönetimi</h4>
+                                <p class="text-xs text-slate-600">Dezenfeksiyon politikasý, hastane temizliði ve týbbi atýk yönetimi eðitimleri.</p>
+                            </div>
+                            <div class="tech-card">
+                                <h4 class="font-bold text-slate-800 mb-2">Personel Saðlýðý</h4>
+                                <p class="text-xs text-slate-600">Aþý takvimleri, personel saðlýk taramalarý ve enfekte temas takibi.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="dokumanlar" class="tab-content">
+                        <div class="flex items-center gap-3 mb-8">
+                            <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
+                            <h2 class="text-2xl font-black text-slate-800">Dokümanlar</h2>
+                        </div>
+                        <div class="space-y-3">
+                            <a href="#" class="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl transition hover:bg-blue-50">
+                                <span class="text-sm font-bold text-slate-700">Enfeksiyon Sürveyans Rehberi</span>
+                                <i class="fa-solid fa-file-pdf text-red-500"></i>
+                            </a>
+                            <a href="#" class="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl transition hover:bg-blue-50">
+                                <span class="text-sm font-bold text-slate-700">Antibiyotik Kontrol Rehberi</span>
+                                <i class="fa-solid fa-file-pdf text-red-500"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div id="akis-semasi" class="tab-content">
+                        <div class="flex items-center gap-3 mb-8">
+                            <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
+                            <h2 class="text-2xl font-black text-slate-800">Ýþ Akýþ Þemasý</h2>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-10 text-center text-slate-400">
+                            <i class="fa-solid fa-diagram-project text-5xl mb-4 opacity-30"></i>
+                            <p class="font-semibold text-sm">Ýþ Akýþ Þemasý Görseli Buraya Eklenecektir</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+    </div>
+</main>

@@ -108,6 +108,29 @@ namespace GaziHastane.Areas.Admin.Controllers
             return RedirectToAction("Kalite");
         }
 
-        // Not: Eğer bu Controller içinde YemekListesi, Gorsel vb. gibi diğer metodların varsa onları silme, en alta ekleyebilirsin.
+        // ==========================================
+        // 🔥 YENİ EKLENEN METOTLAR (MENÜ LİNKLERİ İÇİN)
+        // ==========================================
+
+        // --- YEMEK LİSTESİ PANELİ ---
+        public IActionResult YemekListesi()
+        {
+            // Veritabanı bağlaman gerekirse:
+            // var liste = await _context.YemekListeleri.ToListAsync();
+            // return View(liste);
+            return View();
+        }
+
+        // --- GÖRSELLER PANELİ ---
+        public IActionResult Gorsel()
+        {
+            return View();
+        }
+
+        // --- BELGELER PANELİ ---
+        public IActionResult Belge()
+        {
+            return View();
+        }
     }
 }

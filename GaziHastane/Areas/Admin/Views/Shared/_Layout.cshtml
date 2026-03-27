@@ -140,10 +140,8 @@
                 <span class="font-semibold tracking-wide">İletişim</span>
             </a>
 
-           
             <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 px-4 mt-6">Sistem Ayarları</p>
 
-            
             <a href="/Admin/HizliIslem/Kalite" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "HizliIslem" && action == "Kalite" ? activeClass : passiveClass)">
                 <i class="fa-solid fa-shield-heart text-lg @(ctrl == "HizliIslem" && action == "Kalite" ? "neon-icon" : "group-hover:text-blue-400")"></i>
                 <span class="font-semibold tracking-wide">Kalite Yönetimi</span>
@@ -158,27 +156,31 @@
                 <span class="font-semibold tracking-wide">Yemek Listesi</span>
             </a>
 
+            <a href="/Admin/Kroki/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Kroki" ? activeClass : passiveClass)">
+                <i class="fa-solid fa-map-location-dot text-lg @(ctrl == "Kroki" ? "neon-icon" : "group-hover:text-cyan-400")"></i>
+                <span class="font-semibold tracking-wide">Kroki Yönetimi</span>
+            </a>
 
             <a href="/Admin/HizliIslem/Gorsel"
                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group
-   @(ctrl == "HizliIslem" && action == "Görseller" ? activeClass : passiveClass)">
+   @(ctrl == "HizliIslem" && action == "Gorsel" ? activeClass : passiveClass)">
 
                 <i class="fa-solid fa-images text-lg transition-all duration-300
-       @(ctrl == "HizliIslem" && action == "Görseller"
-                          ? "text-pink-500 drop-shadow-[0_0_8px_rgba(236,72,153,0.8)] scale-110"
-                          : "group-hover:text-pink-400 group-hover:scale-110")"></i>
+       @(ctrl == "HizliIslem" && action == "Gorsel"
+                                             ? "text-pink-500 drop-shadow-[0_0_8px_rgba(236,72,153,0.8)] scale-110"
+                                             : "group-hover:text-pink-400 group-hover:scale-110")"></i>
 
                 <span class="font-semibold tracking-wide">Görseller</span>
             </a>
 
             <a href="/Admin/HizliIslem/Belge"
                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group
-   @(ctrl == "HizliIslem" && action == "Belgeler" ? activeClass : passiveClass)">
+   @(ctrl == "HizliIslem" && action == "Belge" ? activeClass : passiveClass)">
 
                 <i class="fa-solid fa-file-lines text-lg transition-all duration-300
-       @(ctrl == "HizliIslem" && action == "Belgeler"
-                          ? "text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)] scale-110"
-                          : "group-hover:text-blue-400 group-hover:scale-110")"></i>
+       @(ctrl == "HizliIslem" && action == "Belge"
+                                             ? "text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)] scale-110"
+                                             : "group-hover:text-blue-400 group-hover:scale-110")"></i>
 
                 <span class="font-semibold tracking-wide">Belgeler</span>
             </a>
@@ -196,6 +198,11 @@
             <a href="/Admin/Duyurular/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Duyurular" ? activeClass : passiveClass)">
                 <i class="fa-solid fa-bullhorn text-lg @(ctrl == "Duyurular" ? "neon-icon" : "group-hover:text-yellow-400")"></i>
                 <span class="font-semibold tracking-wide">Duyurular</span>
+            </a>
+
+            <a href="/Admin/Kurumsal/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Kurumsal" ? activeClass : passiveClass)">
+                <i class="fa-solid fa-building text-lg @(ctrl == "Kurumsal" ? "neon-icon" : "group-hover:text-cyan-400")"></i>
+                <span class="font-semibold tracking-wide">Kurumsal</span>
             </a>
 
             <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 px-4 mt-6">Güvenlik & Erişim</p>

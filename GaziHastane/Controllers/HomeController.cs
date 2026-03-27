@@ -99,5 +99,12 @@ namespace GaziHastane.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public async Task<IActionResult> Kroki()
+        {
+            // Veritabanından tüm kroki odalarını çek
+            var krokiBirimleri = await _context.KrokiBirimleri.Include(x => x.Bolum).ToListAsync();
+            return View(krokiBirimleri);
+        }
     }
 }
