@@ -18,6 +18,9 @@ namespace GaziHastane.Data
         public DbSet<KaliteBelgesi> KaliteBelgeleri { get; set; }
         public DbSet<EgitimKarti> EgitimIcerikleri { get; set; }
         public DbSet<HastaRehberi> HastaRehberleri { get; set; }
+        public DbSet<KrokiBlok> KrokiBloklar { get; set; }
+        public DbSet<KrokiKat> KrokiKatlar { get; set; }
+        public DbSet<KrokiBolum> KrokiBolumler { get; set; }
         public DbSet<KrokiBirim> KrokiBirimleri { get; set; }
         public DbSet<Iletisim> IletisimBilgileri { get; set; }
         public DbSet<UlasimRehberi> UlasimRehberleri { get; set; }

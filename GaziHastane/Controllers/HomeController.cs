@@ -1,4 +1,4 @@
-﻿using GaziHastane.Models;
+using GaziHastane.Models;
 using GaziHastane.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -102,9 +102,11 @@ namespace GaziHastane.Controllers
 
         public async Task<IActionResult> Kroki()
         {
-            // Veritabanından tüm kroki odalarını çek
-            var krokiBirimleri = await _context.KrokiBirimleri.Include(x => x.Bolum).ToListAsync();
-            return View(krokiBirimleri);
+            var bloklar = await _context.KrokiBloklar
+                                        .Include(b => b.Katlar)
+                                            .ThenInclude(k => k.Bolumler)
+                                        .ToListAsync();
+            return View(bloklar);
         }
     }
 }

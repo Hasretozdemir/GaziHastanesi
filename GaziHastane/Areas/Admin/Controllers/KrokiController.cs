@@ -1,14 +1,14 @@
-﻿using GaziHastane.Data;
+using GaziHastane.Data;
 using GaziHastane.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace GaziHastane.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize] // Sadece giriş yapmış adminler görebilsin
+    [Authorize]
     public class KrokiController : Controller
     {
         private readonly GaziHastaneContext _context;
@@ -18,50 +18,70 @@ namespace GaziHastane.Areas.Admin.Controllers
             _context = context;
         }
 
-        // Krokileri listelediğimiz ana admin sayfası
         public async Task<IActionResult> Index()
         {
-            // Veritabanındaki kroki birimlerini, bağlı olduğu Poliklinik (Bolum) bilgisiyle çekiyoruz
-            var birimler = await _context.KrokiBirimleri.Include(k => k.Bolum).ToListAsync();
-
-            // Modal içindeki "Bağlı Poliklinik" Dropdown'ı (Seçim Kutusu) için aktif bölümleri gönderiyoruz
-            ViewBag.Bolumler = new SelectList(await _context.Bolumler.Where(b => b.IsActive).ToListAsync(), "Id", "Ad");
-
-            return View(birimler);
+            var bloklar = await _context.KrokiBloklar
+                .Include(b => b.Katlar)
+                    .ThenInclude(k => k.Bolumler)
+                .ToListAsync();
+            return View(bloklar);
         }
 
-        // Yeni oda ekleme veya var olanı güncelleme metodu (Modal içindeki form buraya post edilir)
         [HttpPost]
-        public async Task<IActionResult> Kaydet(KrokiBirim model)
+        public async Task<IActionResult> BlokKaydet(KrokiBlok model)
         {
-            if (model.Id == 0)
-            {
-                // Yeni Kayıt
-                _context.KrokiBirimleri.Add(model);
-                TempData["Success"] = "Yeni birim krokiye başarıyla eklendi.";
-            }
-            else
-            {
-                // Güncelleme
-                _context.KrokiBirimleri.Update(model);
-                TempData["Success"] = "Kroki birimi güncellendi.";
-            }
-
+            if (model.Id == 0) _context.KrokiBloklar.Add(model);
+            else _context.KrokiBloklar.Update(model);
             await _context.SaveChangesAsync();
+            TempData["Success"] = "Blok kaydedildi.";
             return RedirectToAction("Index");
         }
 
-        // Odaları silme metodu
         [HttpPost]
-        public async Task<IActionResult> Sil(int id)
+        public async Task<IActionResult> BlokSil(int id)
         {
-            var veri = await _context.KrokiBirimleri.FindAsync(id);
-            if (veri != null)
-            {
-                _context.KrokiBirimleri.Remove(veri);
-                await _context.SaveChangesAsync();
-                TempData["Success"] = "Birim haritadan silindi.";
-            }
+            var veri = await _context.KrokiBloklar.FindAsync(id);
+            if (veri != null) { _context.KrokiBloklar.Remove(veri); await _context.SaveChangesAsync(); }
+            TempData["Success"] = "Blok silindi.";
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> KatKaydet(KrokiKat model)
+        {
+            if (model.Id == 0) _context.KrokiKatlar.Add(model);
+            else _context.KrokiKatlar.Update(model);
+            await _context.SaveChangesAsync();
+            TempData["Success"] = "Kat kaydedildi.";
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> KatSil(int id)
+        {
+            var veri = await _context.KrokiKatlar.FindAsync(id);
+            if (veri != null) { _context.KrokiKatlar.Remove(veri); await _context.SaveChangesAsync(); }
+            TempData["Success"] = "Kat silindi.";
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BolumKaydet(KrokiBolum model)
+        {
+            if (string.IsNullOrEmpty(model.Ikon)) model.Ikon = "fa-layer-group";
+            if (model.Id == 0) _context.KrokiBolumler.Add(model);
+            else _context.KrokiBolumler.Update(model);
+            await _context.SaveChangesAsync();
+            TempData["Success"] = "Bölüm kaydedildi.";
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BolumSil(int id)
+        {
+            var veri = await _context.KrokiBolumler.FindAsync(id);
+            if (veri != null) { _context.KrokiBolumler.Remove(veri); await _context.SaveChangesAsync(); }
+            TempData["Success"] = "Bölüm silindi.";
             return RedirectToAction("Index");
         }
     }

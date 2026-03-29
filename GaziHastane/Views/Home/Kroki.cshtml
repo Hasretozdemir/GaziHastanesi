@@ -1,59 +1,151 @@
-﻿@model IEnumerable<GaziHastane.Models.KrokiBirim>
+@model IEnumerable<GaziHastane.Models.KrokiBlok>
 @{
-    ViewData["Title"] = "İnteraktif Hastane Krokisi";
-    // Farklı katları grupla
-    var katlar = Model.Select(x => x.KatAdi).Distinct().ToList();
+    ViewData["Title"] = "Gelişmiş İnteraktif Hastane Krokisi";
 }
 
-<div class="col-lg-9 col-md-8 p-lg-4">
-    <div class="tab-content" id="v-pills-tabContent">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
-        @foreach (var kat in katlar)
+<style>
+    :root {
+        --gazi-blue: #003366;
+        --gazi-gold: #c5a059;
+        --text-dark: #2c3e50;
+        --bg-color: #f8fafc;
+        --active-block-color: #003366;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    .kroki-container {
+        width: 100%;
+        max-width: 1050px;
+        margin: 0 auto;
+        padding: 30px;
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+        border: 1px solid #f1f5f9;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .bina-dynamic {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.15rem;
+        letter-spacing: 0.5px;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        border: 2px solid rgba(255,255,255,0.4);
+        padding: 30px 40px;
+        min-width: 220px;
+        text-shadow: 0px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .bina-dynamic i { margin-bottom: 15px; font-size: 2rem; color: rgba(255,255,255,0.9); }
+    .bina-dynamic:hover, .bina-dynamic.aktif { transform: scale(1.08) translateY(-5px); box-shadow: 0 20px 30px rgba(0,0,0,0.25); border-color: white; }
+
+    .content-container {
+        display: none; padding: 40px; background: white; border-radius: 24px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.04); margin-top: 40px;
+        border: 1px solid #f1f5f9; animation-duration: 0.6s;
+    }
+
+    .floor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; margin-top: 25px; }
+
+    .floor-box {
+        background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px 15px;
+        text-align: center; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        position: relative; overflow: hidden;
+    }
+    .floor-box::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--active-block-color); transform: scaleX(0); transition: transform 0.3s ease; }
+    .floor-box i { font-size: 2.2rem; margin-bottom: 12px; color: var(--active-block-color); transition: all 0.3s ease; }
+    .floor-box span { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); }
+    .floor-box:hover, .floor-box.active-floor { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); border-color: var(--active-block-color); }
+    .floor-box:hover::before, .floor-box.active-floor::before { transform: scaleX(1); }
+    .floor-box:hover span, .floor-box.active-floor span { color: var(--active-block-color); }
+
+    .floor-box.empty-floor { background: #f8fafc; border: 1px dashed #cbd5e1; box-shadow: none; }
+    .floor-box.empty-floor::before { background: #94a3b8; }
+    .floor-box.empty-floor i { color: #94a3b8; }
+    .floor-box.empty-floor span { color: #64748b; }
+
+    .unit-list { list-style: none; padding: 0; margin: 0; }
+    .unit-list li {
+        background: #f8fafc; padding: 16px 20px; border-radius: 16px; margin-bottom: 12px;
+        display: flex; align-items: center; border: 1px solid #e2e8f0; transition: all 0.2s ease;
+    }
+    .unit-list li:hover { transform: translateX(8px); border-color: var(--active-block-color); background: white; box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
+
+    .unit-icon-wrapper {
+        min-width: 45px; height: 45px; border-radius: 50%; background: white; color: var(--active-block-color);
+        display: flex; align-items: center; justify-content: center; margin-right: 18px; font-size: 1.2rem;
+        transition: 0.3s; border: 1px solid #e2e8f0;
+    }
+    .unit-list li:hover .unit-icon-wrapper { background: var(--active-block-color); color: white; border-color: var(--active-block-color); }
+    .unit-text { font-weight: 600; color: var(--text-dark); font-size: 1.05rem; }
+    .unit-text.muted { color: #94a3b8; font-style: italic; }
+</style>
+
+<div class="container py-5">
+    <div class="text-center mb-5 animate__animated animate__fadeInDown">
+        <h1 class="fw-bolder" style="color: var(--gazi-blue); font-size: 2.5rem;">
+            <i class="fas fa-map-marked-alt me-3 text-warning"></i>Gazi Hastanesi Blokları
+        </h1>
+        <p class="lead mt-3" style="color: #64748b;">Aşağıdaki bloklardan birini seçerek kat ve bölüm planlarını dinamik olarak inceleyebilirsiniz.</p>
+    </div>
+
+    <!-- Dinamik Bloklar -->
+    <div class="kroki-container animate__animated animate__fadeInUp">
+        @if(Model != null && Model.Any())
         {
-            var isFirst = kat == katlar.First() ? "show active" : "";
-            var katOdalari = Model.Where(x => x.KatAdi == kat).ToList();
-
-            <div class="tab-pane fade @isFirst" id="v-pills-@kat.Replace(" ", "")" role="tabpanel">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h3 class="fw-bold text-primary">@kat Yerleşim Planı</h3>
+            foreach(var blok in Model)
+            {
+                <div class="bina-dynamic" style="background-color: @(blok.Renk ?? "#003366");" onclick="loadFloors('@Html.Raw(blok.BlokAdi.Replace("'", "\\'"))', this, '@(blok.Renk ?? "#003366")')">
+                    <i class="fas fa-building d-block"></i>
+                    @blok.BlokAdi
                 </div>
-
-                <div class="map-area shadow-inner">
-                    <div class="floor-plan">
-
-                        @foreach (var oda in katOdalari)
-                        {
-                            // Eğer bu oda "koridor" ise yapısı farklıdır
-                            if (oda.TipSinifi == "corridor")
-                            {
-                                <div class="corridor" style="grid-column: @oda.GridColumn; grid-row: @oda.GridRow;">
-                                    @oda.Baslik
-                                </div>
-                            }
-                            else
-                            {
-                                // Normal bir oda, wc veya poliklinik
-                                <div class="@oda.TipSinifi"
-                                     style="grid-column: @oda.GridColumn; grid-row: @oda.GridRow;"
-                                     data-bs-toggle="popover"
-                                     title="@oda.Baslik"
-                                     data-bs-content="@oda.Aciklama <br> <b>Konum:</b> @(oda.Bolum != null ? oda.Bolum.Blok + " - " + oda.Bolum.Kat : kat)">
-
-                                    <div>
-                                        @if (!string.IsNullOrEmpty(oda.Ikon))
-                                        {
-                                            <i class="@oda.Ikon"></i>
-                                        }
-                                        @oda.Baslik
-                                    </div>
-                                </div>
-                            }
-                        }
-
-                    </div>
-                </div>
+            }
+        }
+        else
+        {
+            <div class="alert alert-info w-100 text-center shadow-sm rounded-3 py-4">
+                <i class="fas fa-info-circle me-2 fs-5 mb-2 d-block"></i>
+                Yönetim paneli üzerinden henüz blok tanımlanmamıştır. Lütfen eklentilerinizi admin sayfasından yapınız.
             </div>
         }
+    </div>
 
+    <!-- Katlar Alanı -->
+    <div id="floor-grid-container" class="content-container animate__animated">
+        <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3 mb-3 border-bottom pb-3">
+            <h3 class="m-0 fw-bold text-center text-sm-start" id="selected-block-title" style="color: var(--active-block-color);">Blok Katları</h3>
+            <span class="badge rounded-pill" style="background-color: var(--active-block-color); font-size: 0.9rem; padding: 8px 16px;" id="floor-count-badge">0 Kat</span>
+        </div>
+        <div class="floor-grid" id="floor-grid-area"></div>
+    </div>
+
+    <!-- Departmanlar Alanı -->
+    <div id="departments-container" class="content-container animate__animated">
+        <div class="d-flex align-items-center mb-4 border-bottom pb-3">
+            <h3 class="m-0 fw-bold" id="selected-floor-title" style="color: var(--active-block-color);">Kat Detayı</h3>
+        </div>
+        <ul class="unit-list" id="department-list"></ul>
     </div>
 </div>
+
+}

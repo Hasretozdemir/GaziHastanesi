@@ -1,231 +1,249 @@
-﻿@model IEnumerable<GaziHastane.Models.KrokiBirim>
+@model IEnumerable<GaziHastane.Models.KrokiBlok>
 @{
-    ViewData["Title"] = "Kroki Yönetimi";
-    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Hastane Krokisi Yönetimi";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="glass-card p-6 md:p-8 rounded-[2rem] mb-6 relative z-10">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-        <div>
-            <h2 class="text-2xl font-black text-white flex items-center gap-3">
-                <i class="fa-solid fa-map-location-dot text-cyan-400"></i> İnteraktif Kroki Yönetimi
-            </h2>
-            <p class="text-slate-400 text-sm mt-1">Hastanenin dijital haritasındaki odaları, koridorları ve poliklinikleri yönetin.</p>
-        </div>
-        <button onclick="openKrokiModal()" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-cyan-500/30 transition-all flex items-center gap-2">
-            <i class="fa-solid fa-plus"></i> Yeni Birim Çiz
-        </button>
-    </div>
-
-    <div class="bg-cyan-500/10 border border-cyan-500/20 rounded-2xl p-4 mb-6 flex items-start gap-4">
-        <i class="fa-solid fa-circle-info text-cyan-400 text-xl mt-0.5"></i>
-        <div class="text-sm text-cyan-100">
-            <strong class="text-cyan-300">Nasıl Çizilir?</strong> Harita 10 sütun ve 8 satırlık bir ızgara (grid) sistemidir.
-            Örneğin bir odanın 1. sütundan başlayıp 3. sütuna kadar uzanmasını istiyorsanız <strong>Sütun Konumu</strong> kısmına <code>1 / 3</code> yazmalısınız.
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <h2 class="mb-0 text-primary"><i class="fas fa-sitemap me-2"></i>Kroki Yönetimi</h2>
+            <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#blokModal" onclick="yeniBlok()">
+                <i class="fas fa-plus me-2"></i>Yeni Blok Ekle
+            </button>
         </div>
     </div>
 
-    <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="border-b border-white/10 text-xs uppercase tracking-widest text-slate-400">
-                    <th class="pb-4 pl-4">Kat</th>
-                    <th class="pb-4">Başlık / Birim</th>
-                    <th class="pb-4">Tip</th>
-                    <th class="pb-4">Bağlı Poliklinik</th>
-                    <th class="pb-4">Konum (Sütun x Satır)</th>
-                    <th class="pb-4 text-right pr-4">İşlem</th>
-                </tr>
-            </thead>
-            <tbody class="text-sm">
-                @if (Model != null && Model.Any())
-                {
-                    @foreach (var item in Model.OrderBy(x => x.KatAdi).ThenBy(x => x.Baslik))
-                    {
-                        <tr class="border-b border-white/5 hover:bg-white/5 transition">
-                            <td class="py-4 pl-4 font-bold text-white">@item.KatAdi</td>
-                            <td class="py-4 font-semibold text-cyan-300">
-                                @if (!string.IsNullOrEmpty(item.Ikon))
-                                {
-                                    <i class="@item.Ikon mr-1 text-slate-400"></i>
-                                }
-                                @item.Baslik
-                            </td>
-                            <td class="py-4 text-slate-300">
-                                @if (item.TipSinifi == "corridor")
-                                {
-                                    <span class="bg-slate-700 px-2 py-1 rounded text-xs">Koridor</span>
-                                }
-                                else if (item.TipSinifi.Contains("wc"))
-                                {
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
-                                    <span class="bg-rose-900/50 text-rose-300 px-2 py-1 rounded text-xs">Lavabo</span>
-                                }
-                                else
+    <!-- Content -->
+    <div class="row">
+        @foreach(var blok in Model)
+        {
+            <div class="col-12 mb-4">
+                <div class="card shadow-sm border-0 border-start border-5" style="border-color: @(blok.Renk ?? "#000") !important;">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0 fw-bold">
+                            <span class="badge" style="background-color: @(blok.Renk ?? "#000");">@blok.BlokAdi</span>
+                        </h4>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#katModal" onclick="yeniKat(@blok.Id)">
+                                <i class="fas fa-plus"></i> Kat Ekle
+                            </button>
+                            <button class="btn btn-sm btn-outline-warning mx-1" data-bs-toggle="modal" data-bs-target="#blokModal" onclick="duzenleBlok(@blok.Id, '@blok.BlokAdi', '@blok.Renk')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <form asp-action="BlokSil" asp-route-id="@blok.Id" method="post" class="d-inline" onsubmit="return confirm('Bu bloğu ve içindeki tüm katları/bölümleri silmek istediğinize emin misiniz?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body bg-light">
+                        @if(blok.Katlar != null && blok.Katlar.Any())
+                        {
+                            <div class="accordion" id="accBlok_@blok.Id">
+                                @foreach(var kat in blok.Katlar)
                                 {
+                                    <div class="accordion-item mb-2 border-0 shadow-sm rounded">
+                                        <h2 class="accordion-header" id="heading_@kat.Id">
+                                            <button class="accordion-button collapsed fw-bold text-dark rounded" type="button" data-bs-toggle="collapse" data-bs-target="#col_@kat.Id" aria-expanded="false" aria-controls="col_@kat.Id">
+                                                <i class="fas fa-layer-group text-secondary me-2"></i>@kat.KatAdi
+                                            </button>
+                                        </h2>
+                                        <div id="col_@kat.Id" class="accordion-collapse collapse" aria-labelledby="heading_@kat.Id" data-bs-parent="#accBlok_@blok.Id">
+                                            <div class="accordion-body bg-white rounded-bottom">
+                                                
+                                                <div class="d-flex justify-content-between mb-3 border-bottom pb-2 align-items-center">
+                                                    <span class="text-muted small">Bu kata ait bölümler listesi</span>
+                                                    <div>
+                                                        <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#bolumModal" onclick="yeniBolum(@kat.Id)">
+                                                            <i class="fas fa-plus me-1"></i> Bölüm Ekle
+                                                        </button>
+                                                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#katModal" onclick="duzenleKat(@kat.Id, '@kat.KatAdi', @blok.Id)">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <form asp-action="KatSil" asp-route-id="@kat.Id" method="post" class="d-inline" onsubmit="return confirm('Bu katı silmek istediğinize emin misiniz?');">
+                                                            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
 
-                                    <span class="bg-blue-900/50 text-blue-300 px-2 py-1 rounded text-xs">Oda / Poliklinik</span>
+                                                <ul class="list-group list-group-flush">
+                                                    @if(kat.Bolumler != null && kat.Bolumler.Any())
+                                                    {
+                                                        @foreach(var bolum in kat.Bolumler)
+                                                        {
+                                                            <li class="list-group-item d-flex justify-content-between align-items-center py-3 border-0 rounded bg-light mb-2">
+                                                                <div>
+                                                                    <div class="rounded-circle d-inline-flex justify-content-center align-items-center bg-white shadow-sm me-3" style="width: 40px; height: 40px;">
+                                                                        <i class="fas @(bolum.Ikon ?? "fa-circle") text-primary"></i>
+                                                                    </div>
+                                                                    <span class="fw-semibold @(bolum.IsEmpty ? "text-muted fst-italic" : "text-dark")">@bolum.BirimAdi</span>
+                                                                    @if(bolum.IsEmpty) { <span class="badge bg-secondary ms-2 small">Sadece Görsel</span> }
+                                                                </div>
+                                                                <div>
+                                                                    <button class="btn btn-sm btn-light text-warning shadow-sm" data-bs-toggle="modal" data-bs-target="#bolumModal" onclick="duzenleBolum(@bolum.Id, '@bolum.BirimAdi', '@bolum.Ikon', @(bolum.IsEmpty.ToString().ToLower()), @kat.Id)">
+                                                                        <i class="fas fa-pen"></i>
+                                                                    </button>
+                                                                    <form asp-action="BolumSil" asp-route-id="@bolum.Id" method="post" class="d-inline" onsubmit="return confirm('Emin misiniz?');">
+                                                                        <button type="submit" class="btn btn-sm btn-light text-danger shadow-sm"><i class="fas fa-times"></i></button>
+                                                                    </form>
+                                                                </div>
+                                                            </li>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <li class="list-group-item text-center text-muted border-0 py-4 bg-transparent">Bu katta henüz bir bölüm yok.</li>
+                                                    }
+                                                </ul>
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 }
-                            </td>
-                            <td class="py-4 text-slate-400">
-                                @(item.Bolum != null ? item.Bolum.Ad : "-")
-                            </td>
-                            <td class="py-4 text-slate-400 font-mono text-xs">
-                                C: @item.GridColumn | R: @item.GridRow
-                            </td>
-                            <td class="py-4 text-right pr-4 flex justify-end gap-2">
-                                <button onclick="editKroki(@item.Id, '@item.KatAdi', '@item.Baslik', '@item.Aciklama', '@item.Ikon', '@item.GridColumn', '@item.GridRow', '@item.TipSinifi', '@item.BolumId')" class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 flex items-center justify-center transition">
-                                    <i class="fa-solid fa-pen text-xs"></i>
-                                </button>
-
-                                <form asp-action="Sil" method="post" onsubmit="return confirm('Bu birimi haritadan silmek istediğinize emin misiniz?');">
-                                    <input type="hidden" name="id" value="@item.Id" />
-                                    <button type="submit" class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 flex items-center justify-center transition">
-                                        <i class="fa-solid fa-trash text-xs"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="6" class="py-8 text-center text-slate-500 italic">Henüz krokide hiç birim çizilmemiş.</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-center text-muted my-3 mb-0">Bu bloka henüz kat eklenmemiş.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 </div>
 
-<div id="krokiModal" class="fixed inset-0 z-[100] hidden items-center justify-center">
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeKrokiModal()"></div>
-
-    <div class="glass-card w-full max-w-2xl rounded-[2rem] relative z-10 max-h-[90vh] overflow-y-auto m-4 custom-scroll border border-white/10">
-        <div class="p-6 md:p-8">
-            <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
-                <h3 class="text-xl font-bold text-white" id="modalTitle">Yeni Birim Çiz</h3>
-                <button onclick="closeKrokiModal()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+<!-- Blok Modal -->
+<div class="modal fade" id="blokModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form asp-action="BlokKaydet" method="post" class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Blok Bilgisi</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-
-            <form asp-action="Kaydet" method="post">
-                <input type="hidden" id="Id" name="Id" value="0" />
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Kat Adı</label>
-                        <select id="KatAdi" name="KatAdi" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition" required>
-                            <option value="Zemin Kat">Zemin Kat</option>
-                            <option value="1. Kat">1. Kat</option>
-                            <option value="2. Kat">2. Kat</option>
-                            <option value="3. Kat">3. Kat</option>
-                            <option value="Acil Servis">Acil Servis</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Başlık (Kutu İçindeki Yazı)</label>
-                        <input type="text" id="Baslik" name="Baslik" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition" required />
-                    </div>
+            <div class="modal-body">
+                <input type="hidden" name="Id" id="blok_Id" value="0" />
+                <div class="mb-3">
+                    <label class="form-label">Blok Adı (D Blok, Poliklinikler vb.)</label>
+                    <input type="text" name="BlokAdi" id="blok_Ad" class="form-control" required />
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Birim Tipi / Rengi</label>
-                        <select id="TipSinifi" name="TipSinifi" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition">
-                            <option value="room">Standart Oda / Poliklinik (Beyaz)</option>
-                            <option value="corridor">Koridor (Gri Şerit)</option>
-                            <option value="room wc">Lavabo / WC (Kırmızımsı)</option>
-                            <option value="room exit">Çıkış / Acil (Yeşilimsi)</option>
-                            <option value="room stairs">Merdiven / Asansör (Sarımsı)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Bağlı Poliklinik (İsteğe Bağlı)</label>
-                        <select id="BolumId" name="BolumId" asp-items="@ViewBag.Bolumler" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition">
-                            <option value="">-- Sadece Görsel İse Boş Bırak --</option>
-                        </select>
-                        <p class="text-[10px] text-cyan-400 mt-1">Eğer randevu alınan bir bölümse buradan seçin.</p>
-                    </div>
+                <div class="mb-3">
+                    <label class="form-label">Blok Rengi</label>
+                    <input type="color" name="Renk" id="blok_Renk" class="form-control form-control-color w-100" value="#003366" />
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Kaydet</button>
+            </div>
+        </form>
+    </div>
+</div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 p-4 bg-white/5 rounded-2xl border border-white/5">
-                    <div>
-                        <label class="block text-xs font-bold text-cyan-400 uppercase tracking-wider mb-2">Sütun Konumu (Grid Column)</label>
-                        <input type="text" id="GridColumn" name="GridColumn" placeholder="Örn: 1 / 3" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition font-mono" required />
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-cyan-400 uppercase tracking-wider mb-2">Satır Konumu (Grid Row)</label>
-                        <input type="text" id="GridRow" name="GridRow" placeholder="Örn: 1 / 2" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition font-mono" required />
-                    </div>
+<!-- Kat Modal -->
+<div class="modal fade" id="katModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form asp-action="KatKaydet" method="post" class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Kat Bilgisi</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="Id" id="kat_Id" value="0" />
+                <input type="hidden" name="BlokId" id="kat_BlokId" />
+                <div class="mb-3">
+                    <label class="form-label">Kat Adı (Örn: Zemin Kat, 1. Kat)</label>
+                    <input type="text" name="KatAdi" id="kat_Ad" class="form-control" required />
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Kaydet</button>
+            </div>
+        </form>
+    </div>
+</div>
 
-                <div class="mb-6">
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">İkon (FontAwesome Sınıfı)</label>
-                    <input type="text" id="Ikon" name="Ikon" placeholder="Örn: fa-solid fa-bed" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition" />
+<!-- Bölüm Modal -->
+<div class="modal fade" id="bolumModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form asp-action="BolumKaydet" method="post" class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Bölüm / Birim Bilgisi</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="Id" id="bolum_Id" value="0" />
+                <input type="hidden" name="KatId" id="bolum_KatId" />
+                <div class="mb-3">
+                    <label class="form-label">Birim/Bölüm Adı</label>
+                    <input type="text" name="BirimAdi" id="bolum_Ad" class="form-control" required />
                 </div>
-
-                <div class="mb-8">
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Kısa Açıklama (Tıklayınca Açılır)</label>
-                    <textarea id="Aciklama" name="Aciklama" rows="2" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition"></textarea>
+                <div class="mb-3">
+                    <label class="form-label">FontAwesome İkon Sınıfı (Örn: fa-bed, fa-user-md)</label>
+                    <input type="text" name="Ikon" id="bolum_Ikon" class="form-control" value="fa-layer-group" />
+                    <small class="text-muted"><a href="https://fontawesome.com/icons" target="_blank">İkonları gör</a></small>
                 </div>
-
-                <div class="flex justify-end gap-3">
-                    <button type="button" onclick="closeKrokiModal()" class="px-6 py-3 rounded-xl font-bold text-slate-300 hover:text-white hover:bg-white/10 transition">İptal</button>
-                    <button type="submit" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-cyan-500/30 transition-all">
-                        <i class="fa-solid fa-save mr-2"></i> Kaydet
-                    </button>
+                <div class="form-check form-switch mt-3">
+                    <input class="form-check-input" type="checkbox" role="switch" name="IsEmpty" id="bolum_Empty" value="true">
+                    <label class="form-check-label" for="bolum_Empty">Bu birim sadece boş idari/arşiv ofisi mi? (Açık renk görünür)</label>
                 </div>
-            </form>
-        </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Kaydet</button>
+            </div>
+        </form>
     </div>
 </div>
 
 @section Scripts {
-    <script>
-        const modal = document.getElementById('krokiModal');
+<script>
+    function yeniBlok() {
+        document.getElementById('blok_Id').value = 0;
+        document.getElementById('blok_Ad').value = '';
+        document.getElementById('blok_Renk').value = '#003366';
+    }
+    function duzenleBlok(id, ad, renk) {
+        document.getElementById('blok_Id').value = id;
+        document.getElementById('blok_Ad').value = ad;
+        document.getElementById('blok_Renk').value = renk;
+    }
+    
+    function yeniKat(blokId) {
+        document.getElementById('kat_Id').value = 0;
+        document.getElementById('kat_BlokId').value = blokId;
+        document.getElementById('kat_Ad').value = '';
+    }
+    function duzenleKat(id, ad, blokId) {
+        document.getElementById('kat_Id').value = id;
+        document.getElementById('kat_BlokId').value = blokId;
+        document.getElementById('kat_Ad').value = ad;
+    }
 
-        function openKrokiModal() {
-            // Formu Sıfırla
-            document.getElementById('Id').value = "0";
-            document.getElementById('KatAdi').value = "Zemin Kat";
-            document.getElementById('Baslik').value = "";
-            document.getElementById('TipSinifi').value = "room";
-            document.getElementById('BolumId').value = "";
-            document.getElementById('GridColumn').value = "1 / 2";
-            document.getElementById('GridRow').value = "1 / 2";
-            document.getElementById('Ikon').value = "";
-            document.getElementById('Aciklama').value = "";
-
-            document.getElementById('modalTitle').innerText = "Yeni Birim Çiz";
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-
-        function editKroki(id, katAdi, baslik, aciklama, ikon, gridCol, gridRow, tipSinifi, bolumId) {
-            document.getElementById('Id').value = id;
-            document.getElementById('KatAdi').value = katAdi;
-            document.getElementById('Baslik').value = baslik;
-
-            // Null check (JavaScript stringlerinde 'null' yazmasın diye)
-            document.getElementById('Aciklama').value = aciklama !== 'null' && aciklama ? aciklama : "";
-            document.getElementById('Ikon').value = ikon !== 'null' && ikon ? ikon : "";
-
-            document.getElementById('GridColumn').value = gridCol;
-            document.getElementById('GridRow').value = gridRow;
-            document.getElementById('TipSinifi').value = tipSinifi;
-            document.getElementById('BolumId').value = bolumId !== 'null' && bolumId ? bolumId : "";
-
-            document.getElementById('modalTitle').innerText = "Birimi Düzenle";
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-
-        function closeKrokiModal() {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-    </script>
+    function yeniBolum(katId) {
+        document.getElementById('bolum_Id').value = 0;
+        document.getElementById('bolum_KatId').value = katId;
+        document.getElementById('bolum_Ad').value = '';
+        document.getElementById('bolum_Ikon').value = 'fa-layer-group';
+        document.getElementById('bolum_Empty').checked = false;
+    }
+    function duzenleBolum(id, ad, ikon, emp, katId) {
+        document.getElementById('bolum_Id').value = id;
+        document.getElementById('bolum_KatId').value = katId;
+        document.getElementById('bolum_Ad').value = ad;
+        document.getElementById('bolum_Ikon').value = ikon || 'fa-layer-group';
+        document.getElementById('bolum_Empty').checked = emp;
+    }
+</script>
 }
