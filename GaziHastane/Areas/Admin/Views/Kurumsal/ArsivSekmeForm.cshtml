@@ -1,0 +1,102 @@
+﻿@model GaziHastane.Models.ArsivSekme
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Yeni Sekme Ekle" : "Sekme Düzenle";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">@ViewData["Title"]</h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="@(Model.Id == 0 ? "ArsivSekmeEkle" : "ArsivSekmeDuzenle")" method="post">
+                @if (Model.Id != 0)
+                {
+                    <input type="hidden" asp-for="Id" />
+                }
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Baslik" class="form-label font-weight-bold">Sekme Başlığı (Menü Adı)</label>
+                        <input asp-for="Baslik" class="form-control" placeholder="Örn: Yönetmelikler" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="TabId" class="form-label font-weight-bold">Tab ID (Boşluksuz İngilizce Karakter)</label>
+                        <input asp-for="TabId" class="form-control" placeholder="Örn: yonetmelikler" required />
+                        <small class="text-muted">Bu alan sistemin sayfalar arası geçiş yapması için zorunludur.</small>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Ikon" class="form-label font-weight-bold">İkon Sınıfı (Opsiyonel)</label>
+                        <input asp-for="Ikon" class="form-control" placeholder="Örn: fa-solid fa-file-pdf" />
+                        <small class="text-muted">FontAwesome sınıfını yazabilirsiniz.</small>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="SiraNo" class="form-label font-weight-bold">Görüntülenme Sırası</label>
+                        <input asp-for="SiraNo" class="form-control" type="number" />
+                    </div>
+                </div>
+
+                <div class="row mb-4 mt-2">
+                    <div class="col-md-6">
+                        <div class="form-check form-switch custom-switch">
+                            <input class="form-check-input" type="checkbox" asp-for="SabitTasarimMi" id="SabitTasarimMi" style="width: 2.5rem; height: 1.25rem;">
+                            <label class="form-check-label ms-2 mt-1 font-weight-bold" for="SabitTasarimMi">
+                                Sabit Tasarım Mı? 
+                            </label>
+                            <br/><small class="text-danger ms-4">Sadece 'Hakkımızda' (genel-bilgi) ve 'Akış Şeması' (akis-semasi) için işaretleyiniz.</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check form-switch custom-switch">
+                            <input class="form-check-input" type="checkbox" asp-for="IsActive" style="width: 2.5rem; height: 1.25rem;">
+                            <label class="form-check-label ms-2 mt-1 font-weight-bold" for="IsActive">Yayında Mı (Aktif Mi)?</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4" id="IcerikAlani">
+                    <label asp-for="Icerik" class="form-label font-weight-bold text-primary border-bottom pb-2 d-block">Sayfa İçeriği Düzenleyici</label>
+                    <textarea asp-for="Icerik" class="form-control" id="ckeditor"></textarea>
+                </div>
+
+                <hr />
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Değişiklikleri Kaydet</button>
+                <a asp-action="ArsivBirimi" class="btn btn-secondary"><i class="fas fa-times"></i> İptal Et</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
+    <script>
+        // CKEditor'ü Başlatıyoruz
+        CKEDITOR.replace('ckeditor', {
+            height: 350,
+            language: 'tr'
+        });
+
+        // Sabit Tasarım seçiliyse yazı yazma (CKEditor) alanını gizleyen Javascript kodu
+        const sabitToggle = document.getElementById('SabitTasarimMi');
+        const icerikAlani = document.getElementById('IcerikAlani');
+
+        function toggleIcerik() {
+            if (sabitToggle.checked) {
+                icerikAlani.style.display = 'none'; // Sabit tasarımsa editörü gizle
+            } else {
+                icerikAlani.style.display = 'block'; // Dinamikse editörü göster
+            }
+        }
+
+        sabitToggle.addEventListener('change', toggleIcerik);
+        
+        // Sayfa yüklendiğinde mevcut duruma göre çalıştır
+        window.onload = function() {
+            toggleIcerik();
+        };
+    </script>
+}

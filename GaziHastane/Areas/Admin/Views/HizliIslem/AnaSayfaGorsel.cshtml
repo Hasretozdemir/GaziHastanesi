@@ -1,0 +1,218 @@
+﻿@model IEnumerable<GaziHastane.Models.Medya>
+@{
+    ViewData["Title"] = "Ana Sayfa Slider Yönetimi";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="flex justify-between items-center mb-6">
+    <div>
+        <h2 class="text-2xl font-black text-white tracking-wide">Ana Sayfa <span class="text-yellow-400">Slider</span></h2>
+        <p class="text-sm text-slate-400 mt-1">Ana sayfadaki dönen fotoğrafları ve yönlendirmeleri buradan yönetebilirsiniz.</p>
+    </div>
+    <button onclick="openModal()" class="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-white font-bold py-2.5 px-5 rounded-xl shadow-lg shadow-yellow-500/30 transition-all active:scale-95 flex items-center gap-2">
+        <i class="fa-solid fa-plus"></i> Yeni Görsel Ekle
+    </button>
+</div>
+
+<div class="glass-card rounded-3xl overflow-hidden border border-white/10">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-white/5 border-b border-white/10 text-xs uppercase tracking-wider text-slate-300">
+                    <th class="p-4 font-semibold text-center w-16">Sıra</th>
+                    <th class="p-4 font-semibold">Görsel</th>
+                    <th class="p-4 font-semibold">Başlık & Yönlendirme (URL)</th>
+                    <th class="p-4 font-semibold text-center">Ana Sayfada Göster</th>
+                    <th class="p-4 font-semibold text-center">İşlem</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5 text-sm">
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr class="hover:bg-white/[0.02] transition-colors group">
+                            <td class="p-4 text-center text-slate-400 font-bold text-lg">@item.SiraNo</td>
+                            <td class="p-4">
+                                <div class="relative group-hover:scale-105 transition-transform duration-300">
+                                    <img src="@item.GorselYolu" class="w-40 h-20 object-cover rounded-xl border border-white/10 shadow-md" alt="Slider">
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <p class="font-bold text-white text-base mb-1">@(string.IsNullOrEmpty(item.Baslik) ? "Başlıksız Görsel" : item.Baslik)</p>
+                                @if (!string.IsNullOrEmpty(item.HedefUrl))
+                                {
+                                    <span class="bg-black/30 px-3 py-1 rounded-lg border border-white/5 font-mono text-xs text-cyan-300 flex inline-flex items-center gap-2 w-max">
+                                        <i class="fa-solid fa-link text-[10px]"></i> @item.HedefUrl
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-xs text-slate-500 italic">Yönlendirme Yok</span>
+                                }
+                            </td>
+                            <td class="p-4 text-center">
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" onchange="toggleDurum(@item.Id, this.checked)" class="sr-only peer" @(item.IsSlider ? "checked" : "")>
+                                    <div class="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-300 after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500 shadow-inner"></div>
+                                </label>
+                            </td>
+                            <td class="p-4 text-center space-x-2">
+                                <button onclick="editModal(@item.Id, '@Html.Raw(item.Baslik?.Replace("'", "\\'"))', '@Html.Raw(item.HedefUrl)', @item.SiraNo, @(item.IsSlider.ToString().ToLower()))" class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 hover:bg-blue-500/40 hover:text-white transition flex items-center justify-center border border-blue-500/30 inline-flex">
+                                    <i class="fa-solid fa-pen text-xs"></i>
+                                </button>
+                                <form asp-action="AnaSayfaGorselSil" asp-route-id="@item.Id" method="post" class="inline-block" onsubmit="return confirm('Bu slider görselini silmek istediğinize emin misiniz?');">
+                                    <button type="submit" class="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 hover:bg-rose-500/40 hover:text-white transition flex items-center justify-center border border-rose-500/30">
+                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="p-8 text-center text-slate-500">
+                            <i class="fa-regular fa-image text-3xl mb-3 block opacity-50"></i>
+                            Henüz ana sayfa için görsel eklenmemiş.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="gorselModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center opacity-0 transition-opacity duration-300 p-4">
+    <div class="glass-card w-full max-w-lg rounded-3xl border border-white/10 shadow-2xl transform scale-95 transition-transform duration-300" id="modalContent">
+        <div class="p-6 border-b border-white/10 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-white" id="modalTitle">Yeni Görsel Yükle</h3>
+            <button onclick="closeModal()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+
+        <form id="gorselForm" asp-action="AnaSayfaGorselYukle" method="post" enctype="multipart/form-data" class="p-6 space-y-4">
+            <input type="hidden" id="Id" name="id" value="0" />
+
+            <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Başlık (İsteğe Bağlı)</label>
+                <input type="text" id="title" name="title" placeholder="Görsel için bir açıklama veya başlık..." class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition" />
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Hedef Yönlendirme (URL)</label>
+                <input type="text" id="hedefUrl" name="hedefUrl" placeholder="Örn: /Haberler/Detay/1 (Görsele tıklanınca gidilecek adres)" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition" />
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2" id="fileLabel">Görsel Seç</label>
+                <input type="file" id="imageFile" name="imageFile" accept="image/*" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-yellow-500/20 file:text-yellow-400 hover:file:bg-yellow-500/30 transition cursor-pointer" />
+                <p class="text-[10px] text-slate-500 mt-2" id="fileHelpText">Lütfen yüksek çözünürlüklü ve yatay formatta görseller tercih edin.</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Gösterim Sırası</label>
+                    <input type="number" id="siraNo" name="siraNo" value="1" required class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-500 transition" />
+                </div>
+                <div class="flex items-end pb-3">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="isSlider" name="isSlider" value="true" checked class="w-4 h-4 rounded border-white/20 bg-black/30 text-yellow-500 focus:ring-yellow-500 focus:ring-offset-slate-900" />
+                        <span class="text-sm font-semibold text-slate-300">Ana Sayfada Göster</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="pt-4 flex justify-end gap-3">
+                <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-xl font-bold text-slate-300 hover:text-white hover:bg-white/10 transition">İptal</button>
+                <button type="submit" class="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg shadow-yellow-500/30 transition-transform active:scale-95">
+                    Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const modal = document.getElementById('gorselModal');
+        const modalContent = document.getElementById('modalContent');
+        const formTitle = document.getElementById('modalTitle');
+        const form = document.getElementById('gorselForm');
+        const fileInput = document.getElementById('imageFile');
+        const fileLabel = document.getElementById('fileLabel');
+        const fileHelpText = document.getElementById('fileHelpText');
+
+        function openModal() {
+            document.getElementById('Id').value = 0;
+            document.getElementById('title').value = '';
+            document.getElementById('hedefUrl').value = '';
+            document.getElementById('siraNo').value = 1;
+            document.getElementById('isSlider').checked = true;
+            fileInput.value = '';
+
+            // Yeni ekleme modunda fotoğraf zorunludur
+            fileInput.required = true;
+            fileLabel.innerText = "Görsel Seç (Zorunlu)";
+            fileHelpText.classList.remove("hidden");
+
+            formTitle.innerText = "Yeni Slider Yükle";
+            form.action = "/Admin/HizliIslem/AnaSayfaGorselYukle";
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function editModal(id, baslik, hedefUrl, siraNo, isSlider) {
+            document.getElementById('Id').value = id;
+            document.getElementById('title').value = baslik;
+            document.getElementById('hedefUrl').value = hedefUrl;
+            document.getElementById('siraNo').value = siraNo;
+            document.getElementById('isSlider').checked = isSlider;
+            fileInput.value = '';
+
+            // Düzenleme modunda fotoğraf yüklemek zorunlu değildir, eski fotoğraf korunur.
+            fileInput.required = false;
+            fileLabel.innerText = "Görseli Değiştir (İsteğe Bağlı)";
+            fileHelpText.classList.add("hidden");
+
+            formTitle.innerText = "Görseli Düzenle";
+            form.action = "/Admin/HizliIslem/AnaSayfaGorselDuzenle";
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+            }, 10);
+        }
+
+        // Slider'da göster Checkbox AJAX işlemi
+        function toggleDurum(id, status) {
+            fetch(`/Admin/HizliIslem/AnaSayfaSliderDurumGuncelle?id=${id}&status=${status}`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    alert("Durum güncellenirken bir hata oluştu.");
+                    location.reload();
+                }
+            })
+            .catch(err => {
+                console.error("Hata:", err);
+                alert("Durum güncellenirken bir hata oluştu.");
+                location.reload();
+            });
+        }
+    </script>
+}

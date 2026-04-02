@@ -1,6 +1,73 @@
+@model List<GaziHastane.Models.ArsivSekme>
 @{
-    ViewData["Title"] = "Arþiv Birimi";
+    ViewData["Title"] = "Arþiv Birimi Yönetimi";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml"; // Admin layout yolunu projene göre kontrol et
 }
 
-<h1>Arþiv Birimi</h1>
-<p>Bu sayfa Arþiv Birimi ile ilgili bilgileri içermektedir.</p>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Arþiv Birimi Sekmeleri</h1>
+        <a asp-action="ArsivSekmeEkle" class="btn btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Yeni Sekme Ekle
+        </a>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Mevcut Sekmeler Listesi</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                    <thead class="table-light">
+                        <tr>
+                            <th width="5%">Sýra</th>
+                            <th>Baþlýk</th>
+                            <th>Tab ID</th>
+                            <th>Tasarým Tipi</th>
+                            <th>Durum</th>
+                            <th width="15%" class="text-center">Ýþlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var item in Model)
+                        {
+                            <tr>
+                                <td class="text-center font-weight-bold">@item.SiraNo</td>
+                                <td>
+                                    <i class="@(item.Ikon ?? "fa-solid fa-file-lines") me-2 text-primary"></i> 
+                                    @item.Baslik
+                                </td>
+                                <td><span class="badge bg-secondary">@item.TabId</span></td>
+                                <td>
+                                    @if(item.SabitTasarimMi) {
+                                        <span class="badge bg-info text-dark">Sabit Tasarým</span>
+                                    } else {
+                                        <span class="badge bg-primary">Dinamik Ýçerik</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if(item.IsActive){
+                                        <span class="badge bg-success">Aktif</span>
+                                    }else{
+                                        <span class="badge bg-danger">Pasif</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <a asp-action="ArsivSekmeDuzenle" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form asp-action="ArsivSekmeSil" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Bu sekmeyi silmek istediðinize emin misiniz?');">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

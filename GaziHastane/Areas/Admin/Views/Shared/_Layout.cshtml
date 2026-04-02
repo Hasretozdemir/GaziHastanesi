@@ -54,7 +54,7 @@
                 transform: translateX(-110%);
             }
 
-                #sidebar.open {5
+                #sidebar.open {
                     transform: translateX(0);
                 }
         }
@@ -163,29 +163,46 @@
 
             <a href="/Admin/HizliIslem/Gorsel"
                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group
-   @(ctrl == "HizliIslem" && action == "Gorsel" ? activeClass : passiveClass)">
+               @(ctrl == "HizliIslem" && action == "Gorsel" ? activeClass : passiveClass)">
 
                 <i class="fa-solid fa-images text-lg transition-all duration-300
-       @(ctrl == "HizliIslem" && action == "Gorsel"
-                                             ? "text-pink-500 drop-shadow-[0_0_8px_rgba(236,72,153,0.8)] scale-110"
-                                             : "group-hover:text-pink-400 group-hover:scale-110")"></i>
+                   @(ctrl == "HizliIslem" && action == "Gorsel"
+                                                                            ? "text-pink-500 drop-shadow-[0_0_8px_rgba(236,72,153,0.8)] scale-110"
+                                                                            : "group-hover:text-pink-400 group-hover:scale-110")"></i>
 
                 <span class="font-semibold tracking-wide">Görseller</span>
             </a>
 
+            <a href="/Admin/HizliIslem/AnaSayfaGorsel"
+               class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group
+               @(ctrl == "HizliIslem" && action == "AnaSayfaGorsel" ? activeClass : passiveClass)">
+
+                <i class="fa-solid fa-image text-lg transition-all duration-300
+                   @(ctrl == "HizliIslem" && action == "AnaSayfaGorsel"
+                                                                            ? "text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)] scale-110"
+                                                                            : "group-hover:text-yellow-400 group-hover:scale-110")"></i>
+
+                <span class="font-semibold tracking-wide">Ana Sayfa Slider</span>
+            </a>
+
             <a href="/Admin/HizliIslem/Belge"
                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group
-   @(ctrl == "HizliIslem" && action == "Belge" ? activeClass : passiveClass)">
+               @(ctrl == "HizliIslem" && action == "Belge" ? activeClass : passiveClass)">
 
                 <i class="fa-solid fa-file-lines text-lg transition-all duration-300
-       @(ctrl == "HizliIslem" && action == "Belge"
-                                             ? "text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)] scale-110"
-                                             : "group-hover:text-blue-400 group-hover:scale-110")"></i>
+                   @(ctrl == "HizliIslem" && action == "Belge"
+                                                                            ? "text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)] scale-110"
+                                                                            : "group-hover:text-blue-400 group-hover:scale-110")"></i>
 
                 <span class="font-semibold tracking-wide">Belgeler</span>
             </a>
 
             <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 px-4 mt-6">İçerik Yönetimi</p>
+
+            <a href="/Admin/HizliIslem/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "HizliIslem" && (action == "Index" || action == null) ? activeClass : passiveClass)">
+                <i class="fa-solid fa-layer-group text-lg @(ctrl == "HizliIslem" && (action == "Index" || action == null) ? "neon-icon text-cyan-400" : "group-hover:text-cyan-400")"></i>
+                <span class="font-semibold tracking-wide">Dijital İşlemler</span>
+            </a>
 
             <a href="/Admin/Haberler/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Haberler" ? activeClass : passiveClass)">
                 <i class="fa-solid fa-newspaper text-lg @(ctrl == "Haberler" ? "neon-icon" : "group-hover:text-blue-400")"></i>

@@ -24,7 +24,7 @@
             {
                 foreach (var haber in Model)
                 {
-                    <a href="#" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-slate-200 group flex flex-col h-full">
+                    <button type="button" onclick="openHaberModal(@haber.Id)" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-slate-200 group flex flex-col h-full text-left w-full">
                         <div class="h-56 overflow-hidden relative border-b border-slate-100">
                             <img src="@haber.GorselUrl" alt="@haber.Baslik" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
 
@@ -48,7 +48,7 @@
                                 Haberi Oku <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                             </div>
                         </div>
-                    </a>
+                    </button>
                 }
             }
             else
@@ -64,3 +64,87 @@
         </div>
     </div>
 </section>
+
+<div id="haberModal" class="fixed inset-0 z-[120] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center opacity-0 transition-opacity duration-200 p-4">
+    <div id="haberModalContent" class="bg-white w-full max-w-3xl rounded-3xl overflow-hidden shadow-2xl border border-slate-100 transform scale-95 transition-transform duration-200 max-h-[90vh] flex flex-col">
+        <div class="relative h-64">
+            <img id="haberModalImage" src="" alt="Haber" class="w-full h-full object-cover">
+            <button type="button" onclick="closeHaberModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 text-slate-700 hover:bg-white flex items-center justify-center shadow">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="p-6 overflow-y-auto">
+            <div class="flex items-center gap-3 mb-3">
+                <span id="haberModalKategori" class="text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded uppercase"></span>
+                <span id="haberModalTarih" class="text-xs text-slate-400 font-semibold"></span>
+            </div>
+            <h3 id="haberModalBaslik" class="text-2xl font-black text-slate-900 mb-3"></h3>
+            <p id="haberModalOzet" class="text-slate-500 text-sm mb-5"></p>
+            <div id="haberModalIcerik" class="prose prose-sm max-w-none text-slate-700"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const haberModal = document.getElementById('haberModal');
+            const haberModalContent = document.getElementById('haberModalContent');
+            const haberModalImage = document.getElementById('haberModalImage');
+            const haberModalKategori = document.getElementById('haberModalKategori');
+            const haberModalTarih = document.getElementById('haberModalTarih');
+            const haberModalBaslik = document.getElementById('haberModalBaslik');
+            const haberModalOzet = document.getElementById('haberModalOzet');
+            const haberModalIcerik = document.getElementById('haberModalIcerik');
+
+            const haberData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                (Model ?? Enumerable.Empty<GaziHastane.Models.Haber>()).Select(h => new
+                {
+                    h.Id,
+                    h.Baslik,
+                    h.Ozet,
+                    Icerik = h.Icerik ?? string.Empty,
+                    h.GorselUrl,
+                    h.Kategori,
+                    Tarih = h.YayinTarihi.ToString("dd MMMM yyyy")
+                })
+            ));
+
+            const haberMap = new Map(haberData.map(x => [x.Id ?? x.id, x]));
+
+            window.openHaberModal = function (id) {
+                const haber = haberMap.get(id);
+                if (!haber) return;
+
+                const gorselUrl = haber.GorselUrl ?? haber.gorselUrl;
+                const baslik = haber.Baslik ?? haber.baslik;
+                const kategori = haber.Kategori ?? haber.kategori;
+                const tarih = haber.Tarih ?? haber.tarih;
+                const ozet = haber.Ozet ?? haber.ozet;
+                const icerik = haber.Icerik ?? haber.icerik;
+
+                haberModalImage.src = gorselUrl;
+                haberModalImage.alt = baslik;
+                haberModalKategori.textContent = kategori;
+                haberModalTarih.textContent = tarih;
+                haberModalBaslik.textContent = baslik;
+                haberModalOzet.textContent = ozet || '';
+                haberModalIcerik.innerHTML = icerik || '<p class="text-slate-500 text-sm">Detay içeriği bulunmuyor.</p>';
+
+                haberModal.classList.remove('hidden');
+                setTimeout(() => {
+                    haberModal.classList.remove('opacity-0');
+                    haberModalContent.classList.remove('scale-95');
+                }, 10);
+            }
+
+            window.closeHaberModal = function () {
+                haberModal.classList.add('opacity-0');
+                haberModalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    haberModal.classList.add('hidden');
+                }, 250);
+            }
+        });
+    </script>
+}

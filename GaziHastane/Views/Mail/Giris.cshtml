@@ -1,164 +1,137 @@
-﻿@* RAZOR KOD BLO�U: Sunucu (C#) taraf�nda �al��an ve sayfan�n temel ayarlar�n�n yap�ld��� yer. *@
+﻿@* RAZOR KOD BLOĞU: Sunucu (C#) tarafında çalışan ve sayfanın temel ayarlarının yapıldığı yer. *@
 @{
-    @* Sayfan�n taray�c� sekmesinde g�r�necek olan ba�l���n� belirler. Kullan�c� deneyimi i�in gereklidir. *@
-    ViewData["Title"] = "Gazi �niversitesi | E-Posta Giri�i";
+    @* Sayfanın tarayıcı sekmesinde görünecek olan başlığını belirler. Kullanıcı deneyimi için gereklidir. *@
+    ViewData["Title"] = "Gazi Üniversitesi | E-Posta Girişi";
 }
 
-<!-- SAYFA ��ER��� BA�LANGICI -->
-<!-- 'mail-auth-wrapper': T�m e-posta giri� sayfas�n� kapsayan ana kutu. Arka plan� ve ortalamay� sa�lar. -->
 <div class="mail-auth-wrapper">
 
-    <!-- ARKA PLAN RESM� -->
-    <!-- 'main-wallpaper': Sayfan�n en arkas�nda duran tam ekran foto�raf. CSS ile bulan�kla�t�rma veya karartma uygulan�r. -->
     <div class="main-wallpaper" style="background-image: url('/assets/gazimail.jpg');"></div>
 
-    <!-- G�R�� KARTI (CAM EFEKTL�) -->
-    <!-- 'auth-card-glass': Glassmorphism tasar�m�na sahip, ortadaki �effaf/buzlu cam g�r�n�ml� giri� kutusu. -->
-    <!-- 'animate__fadeIn': Sayfa a��ld���nda kart�n yava��a belirmesini sa�layan animasyon efekti. -->
     <div class="auth-card-glass animate__animated animate__fadeIn">
 
         <div class="auth-card-content">
 
-            <!-- BA�LIK VE LOGO ALANI -->
             <div class="text-center mb-5">
 
-                <!-- LOGO �ER�EVES� -->
-                <!-- 'logo-circle-bg': Logonun arkas�ndaki beyaz yuvarlak zemin. -->
                 <div class="logo-circle-bg mb-3">
                     <img src="/assets/gazilogo.jpg" alt="Gazi Logo" class="brand-img">
                 </div>
 
-                <!-- ANA BA�LIK -->
-                <h4 class="fw-800 text-white mb-1">GAZ� E-POSTA</h4>
+                <h4 class="fw-bold text-dark mb-1">GAZİ E-POSTA</h4>
 
-                <!-- ALT A�IKLAMA METN� -->
-                <p class="text-white-50 small">Elektronik Posta Servis Giri�i</p>
+                <p class="text-muted small">Elektronik Posta Servis Girişi</p>
             </div>
 
-            <!-- G�R�� FORMU BA�LANGICI -->
-            <!-- action="/Mail/Login": Form g�nderildi�inde verilerin i�lenece�i sunucu adresi. -->
             <form action="/Mail/Login" method="post">
 
-                <!-- KULLANICI ADI G�R�� ALANI -->
-                <!-- 'input-container-modern': Etiket ve input'u bir arada tutan kapsay�c�. -->
                 <div class="input-container-modern mb-4">
                     <label class="label-premium">KULLANICI ADI</label>
 
-                    <!-- �konlu Input Yap�s� -->
                     <div class="field-wrapper">
-                        <!-- 'fa-user-circle': Sol taraftaki kullan�c� ikonu. -->
                         <i class="fas fa-user-circle"></i>
-                        <input type="text" placeholder="�rn: 23380101031" required>
+                        <input type="text" placeholder="Örn: 23380101031" required>
                     </div>
                 </div>
 
-                <!-- PAROLA G�R�� ALANI -->
                 <div class="input-container-modern mb-4">
                     <label class="label-premium">PAROLA</label>
                     <div class="field-wrapper">
-                        <!-- 'fa-lock': Sol taraftaki kilit ikonu. -->
                         <i class="fas fa-lock"></i>
-                        <input type="password" placeholder="��������" required>
+                        <input type="password" placeholder="••••••••" required>
                     </div>
                 </div>
 
-                <!-- SE�ENEKLER SATIRI (Beni Hat�rla & S�r�m Se�imi) -->
                 <div class="d-flex justify-content-between align-items-center mb-5">
 
-                    <!-- BEN� HATIRLA ONAY KUTUSU -->
                     <div class="custom-checkbox">
                         <input type="checkbox" id="remember">
-                        <label for="remember" class="text-white small ms-1">Beni hat�rla</label>
+                        <label for="remember" class="text-dark small ms-1 fw-semibold">Beni hatırla</label>
                     </div>
 
-                    <!-- VERS�YON SE��M� (Mobil/Masa�st�) -->
                     <div class="version-info">
                         <select class="minimal-select">
-                            <option>Standart S�r�m</option>
-                            <option>Mobil G�r�n�m</option>
+                            <option>Standart Sürüm</option>
+                            <option>Mobil Görünüm</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- OTURUM A� BUTONU -->
-                <!-- 'btn-gazi-primary': �zel tasarlanm�� ana aksiyon butonu. -->
                 <button type="submit" class="btn-gazi-primary shadow-lg">
-                    <span>OTURUM A�</span>
-                    <!-- Sa� ok ikonu -->
+                    <span>OTURUM AÇ</span>
                     <i class="fas fa-arrow-right"></i>
                 </button>
             </form>
 
-            <!-- ALT L�NKLER (Footer) -->
             <div class="footer-links-modern mt-5">
-                <a href="#">Yard�m Al</a>
-                <!-- Linkler aras�ndaki ay�r�c� nokta -->
-                <span class="dot-sep">�</span> <a href="#">�ifre ��lemleri</a>
+                <a href="#">Yardım Al</a>
+                <span class="dot-sep">•</span> <a href="#">Şifre İşlemleri</a>
             </div>
 
         </div>
     </div>
 </div>
 
-@* ================= CSS B�L�M� (�ZEL TASARIM KODLARI) ================= *@
+@* ================= CSS BÖLÜMÜ (ÖZEL TASARIM KODLARI) ================= *@
 @section Styles {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <style>
-        /* DE���KENLER: Renkleri tek bir yerden kolayca y�netmek i�in. */
+        /* DEĞİŞKENLER: Renkleri tek bir yerden kolayca yönetmek için. */
         :root {
-            --gazi-navy: #0f172a; /* �ok koyu lacivert/siyah tonu */
-            --gazi-gold: #c5a059; /* Hastanenin kurumsal alt�n/sar� rengi */
-            --white-glass: rgba(255, 255, 255, 0.1); /* Form elemanlar� i�in %10 �effaf beyaz */
+            --gazi-navy: #0f172a; /* Çok koyu lacivert/siyah tonu */
+            --gazi-gold: #c5a059; /* Hastanenin kurumsal altın/sarı rengi */
+            --white-glass: rgba(255, 255, 255, 0.90); /* Kart için %90 beyaz zemin */
         }
 
         /* GENEL SAYFA AYARLARI */
         body {
             margin: 0;
-            padding: 0; /* Sayfa kenar� bo�luklar�n� s�f�rlar */
-            font-family: 'Plus Jakarta Sans', sans-serif; /* Modern yaz� fontu */
-            overflow-x: hidden; /* Sa�dan/soldan ta�may� gizler */
+            padding: 0; /* Sayfa kenarı boşluklarını sıfırlar */
+            font-family: 'Plus Jakarta Sans', sans-serif; /* Modern yazı fontu */
+            overflow-x: hidden; /* Sağdan/soldan taşmayı gizler */
         }
 
-        /* ANA TA�IYICI */
+        /* ANA TAŞIYICI */
         .mail-auth-wrapper {
-            min-height: 100vh; /* Tam ekran y�ksekli�i */
+            min-height: 100vh; /* Tam ekran yüksekliği */
             display: flex;
             align-items: center;
-            justify-content: center; /* ��indeki kart� dikey/yatay ortalar */
+            justify-content: center; /* İçindeki kartı dikey/yatay ortalar */
             position: relative;
-            padding: 20px; /* Kenarlara yap��mas�n� engeller */
+            padding: 20px; /* Kenarlara yapışmasını engeller */
         }
 
-        /* ARKA PLAN RESM� */
+        /* ARKA PLAN RESMİ */
         .main-wallpaper {
-            position: fixed; /* Ekran� a�a�� kayd�rsak da resim yerinde kal�r */
+            position: fixed; /* Ekranı aşağı kaydırsak da resim yerinde kalır */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-size: cover; /* Resmi s�nd�rmeden t�m ekrana yayar */
-            background-position: center; /* Resmin ortas�n� odaklar */
+            background-size: cover; /* Resmi sündürmeden tüm ekrana yayar */
+            background-position: center; /* Resmin ortasını odaklar */
             background-repeat: no-repeat; /* Resmin kendini tekrar etmesini engeller */
-            z-index: -2; /* Her �eyin en arkas�nda kalmas�n� sa�lar */
-            /* filter: Resmi %50 karart�r ve kontrast�n� biraz art�r�r (�n taraftaki cam kart daha �ok parlas�n diye) */
-            filter: brightness(0.5) contrast(1.1);
+            z-index: -2; /* Her şeyin en arkasında kalmasını sağlar */
+            /* filter: Arka planı hafifçe karartır */
+            filter: brightness(0.7) contrast(1.1);
         }
 
-        /* CAM G�R�N�ML� (GLASSMORPHISM) G�R�� KARTI - BU SAYFANIN EN �NEML� KISMI */
+        /* BEYAZ CAM GÖRÜNÜMLÜ (GLASSMORPHISM) GİRİŞ KARTI */
         .auth-card-glass {
             width: 100%;
-            max-width: 440px; /* Kart�n maksimum geni�li�i */
-            background: rgba(15, 23, 42, 0.85); /* Arka plan� koyu lacivert ama %85 saydam (hafif arkas� g�r�n�r) */
-            /* ��TE CAM EFEKT�N� YAPAN KOD: Arka plandaki resmi bu kart�n arkas�ndan ge�erken buzlu cam gibi 10px bulan�kla�t�r�r */
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); /* Safari taray�c� deste�i i�in */
+            max-width: 440px; /* Kartın maksimum genişliği */
+            background: var(--white-glass); /* Arka planı yarı saydam beyaz */
+            
+            /* İŞTE CAM EFEKTİNİ YAPAN KOD: Arka plandaki resmi bu kartın arkasından geçerken buzlu cam gibi 15px bulanıklaştırır */
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px); /* Safari tarayıcı desteği için */
 
-            border-radius: 40px; /* Kart�n k��elerini iyice yuvarlat�r */
-            border: 1px solid rgba(255, 255, 255, 0.15); /* Cama benzemesi i�in etraf�na incecik yar� �effaf beyaz bir �er�eve �izer */
-            padding: 50px 40px; /* �� bo�luklar */
-            box-shadow: 0 30px 60px rgba(0,0,0,0.4); /* Kart�n alt�na devasa ve yumu�ak bir koyu g�lge atar (Derinlik hissi) */
-            z-index: 1; /* Arka plan resminin �n�nde durmas�n� sa�lar */
+            border-radius: 40px; /* Kartın köşelerini iyice yuvarlatır */
+            border: 1px solid rgba(255, 255, 255, 0.6); /* Kenarlara ince parlaklık */
+            padding: 50px 40px; /* İç boşluklar */
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15); /* Kartın altına yumuşak bir gölge atar (Derinlik hissi) */
+            z-index: 1; /* Arka plan resminin önünde durmasını sağlar */
         }
 
         /* LOGO YUVASI */
@@ -166,32 +139,32 @@
             width: 75px;
             height: 75px;
             background: white;
-            border-radius: 22px; /* Kareye yak�n ama k��eleri yuvarlak bir kutu (Squircle) */
+            border-radius: 22px; /* Kareye yakın ama köşeleri yuvarlak bir kutu (Squircle) */
             margin: 0 auto;
             padding: 7px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08); /* Logoya hafif bir gölge ekledik */
         }
 
         .brand-img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: contain; /* Logoyu kutuya sığdırır */
         }
-        /* Logoyu kutuya s��d�r�r */
 
-        /* �NPUT �ST�NDEK� BA�LIKLAR (Kullan�c� Ad� / Parola) */
+        /* İNPUT ÜSTÜNDEKİ BAŞLIKLAR (Kullanıcı Adı / Parola) */
         .label-premium {
             font-size: 11px;
             font-weight: 800;
-            color: rgba(255,255,255,0.5); /* Yar� saydam beyaz */
+            color: rgba(15, 23, 42, 0.6); /* Koyu lacivertin yarı saydam hali */
             margin-bottom: 8px;
             display: block;
-            letter-spacing: 1px; /* Harf aras� bo�luk */
+            letter-spacing: 1px; /* Harf arası boşluk */
         }
 
-        /* �NPUT VE �KON TA�IYICI */
+        /* İNPUT VE İKON TAŞIYICI */
         .field-wrapper {
             position: relative;
             display: flex;
@@ -201,100 +174,100 @@
             .field-wrapper i {
                 position: absolute;
                 left: 18px;
-                color: rgba(255,255,255,0.3);
+                color: rgba(15, 23, 42, 0.4); /* Beyaz fonda ikon rengi */
                 font-size: 1.1rem;
             }
 
-            /* MET�N KUTULARI (INPUTLAR) */
+            /* METİN KUTULARI (INPUTLAR) */
             .field-wrapper input {
                 width: 100%;
                 height: 58px;
-                background: rgba(255, 255, 255, 0.05); /* Kutunun i�i zar zor g�r�nen �ok �effaf bir beyaz */
-                border: 1px solid rgba(255, 255, 255, 0.1); /* �ok ince �effaf beyaz kenarl�k */
+                background: rgba(0, 0, 0, 0.03); /* Çok hafif gri arka plan */
+                border: 1px solid rgba(0, 0, 0, 0.08); /* İnce gri çerçeve */
                 border-radius: 18px;
-                padding: 0 20px 0 52px; /* Soldaki ikonun �st�ne yaz� binmesin diye soldan 52px bo�luk */
-                color: white;
-                font-weight: 600; /* Girilen yaz� beyaz ve kal�n */
+                padding: 0 20px 0 52px; /* Soldaki ikonun üstüne yazı binmesin diye soldan 52px boşluk */
+                color: var(--gazi-navy); /* Yazı rengi koyu lacivert */
+                font-weight: 600; /* Girilen yazı kalın */
                 transition: 0.3s;
             }
 
-                /* INPUTA TIKLANILDI�INDA (YAZI YAZARKEN) OLANLAR */
+                /* INPUTA TIKLANILDIĞINDA (YAZI YAZARKEN) OLANLAR */
                 .field-wrapper input:focus {
-                    background: rgba(255, 255, 255, 0.1); /* Kutunun i�i biraz daha ayd�nlan�r */
-                    border-color: var(--gazi-gold); /* Etraf�ndaki �izgi alt�n rengine d�ner */
-                    outline: none; /* Taray�c�n�n varsay�lan mavi �er�evesini kald�r�r */
+                    background: white; /* Kutunun içi tam beyaz olur */
+                    border-color: var(--gazi-gold); /* Etrafındaki çizgi altın rengine döner */
+                    outline: none; /* Tarayıcının varsayılan mavi çerçevesini kaldırır */
+                    box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.1); /* Altın rengi hafif odaklanma parlaması */
                 }
 
-        /* S�R�M SE��M� A�ILIR L�STES� */
+        /* SÜRÜM SEÇİMİ AÇILIR LİSTESİ */
         .minimal-select {
             background: transparent;
             border: none;
-            color: white; /* Arka plans�z ve kenarl�ks�z sade tasar�m */
+            color: var(--gazi-navy); /* Yazı rengi koyu */
             font-size: 13px;
             font-weight: 700;
             cursor: pointer;
             outline: none;
         }
-            /* Se�eneklere t�klan�nca a��lan men�n�n arka plan� lacivert olur ki yaz�lar okunsun */
+            /* Seçeneklere tıklanınca açılan menünün arka planı */
             .minimal-select option {
-                background: var(--gazi-navy);
-                color: white;
+                background: white;
+                color: var(--gazi-navy);
             }
 
-        /* G�R�� BUTONU */
+        /* GİRİŞ BUTONU */
         .btn-gazi-primary {
             width: 100%;
             height: 65px;
-            background: linear-gradient(135deg, #1e40af 0%, #0f172a 100%); /* �ki farkl� lacivert/mavi tonunda ge�i�li arka plan */
-            border: 1px solid rgba(255,255,255,0.1);
+            background: linear-gradient(135deg, #1e40af 0%, #0f172a 100%); /* İki farklı lacivert/mavi tonunda geçişli arka plan */
+            border: none; /* Kenarlık kaldırıldı */
             border-radius: 20px;
             color: white;
             font-weight: 800;
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Yaz� ve oku iki uca atar */
+            justify-content: space-between; /* Yazı ve oku iki uca atar */
             padding: 0 25px;
-            transition: 0.4s; /* Hover efektine 0.4 saniyelik yumu�ak ge�i� */
+            transition: 0.4s; /* Hover efektine 0.4 saniyelik yumuşak geçiş */
         }
 
-            /* FARE BUTONUN �ZER�NE GELD���NDE (HOVER) */
+            /* FARE BUTONUN ÜZERİNE GELDİĞİNDE (HOVER) */
             .btn-gazi-primary:hover {
-                transform: translateY(-3px); /* Buton hafif�e havaya kalkar */
-                background: var(--gazi-gold); /* Butonun i�i MAV�DEN tamamen ALTIN RENG�NE d�ner */
-                color: var(--gazi-navy); /* ��indeki yaz� beyazdan laciverte d�ner */
-                box-shadow: 0 15px 30px rgba(197, 160, 89, 0.3); /* Butonun alt�na alt�n rengi parlak bir g�lge atar */
+                transform: translateY(-3px); /* Buton hafifçe havaya kalkar */
+                background: var(--gazi-gold); /* Butonun içi MAVİDEN tamamen ALTIN RENGİNE döner */
+                color: var(--gazi-navy); /* İçindeki yazı beyazdan laciverte döner */
+                box-shadow: 0 15px 30px rgba(197, 160, 89, 0.3); /* Butonun altına altın rengi parlak bir gölge atar */
             }
 
-        /* ALT L�NKLER (FOOTER) */
+        /* ALT LİNKLER (FOOTER) */
         .footer-links-modern {
             text-align: center;
         }
-            /* Linklerin rengi yar� saydam beyaz ve alt �izgileri yok */
+            /* Linklerin rengi ve alt çizgileri yok */
             .footer-links-modern a {
-                color: rgba(255,255,255,0.4);
+                color: rgba(15, 23, 42, 0.5); /* Yarı saydam koyu renk */
                 text-decoration: none;
-                font-size: 12px;
+                font-size: 13px;
                 font-weight: 700;
                 transition: 0.3s;
             }
-                /* Linklerin �zerine gelince tam parlak beyaz olurlar */
+                /* Linklerin üzerine gelince tam belirgin koyu lacivert olurlar */
                 .footer-links-modern a:hover {
-                    color: white;
+                    color: var(--gazi-navy);
                 }
 
         .dot-sep {
-            color: rgba(255,255,255,0.2);
+            color: rgba(15, 23, 42, 0.2); /* Ayrıcı nokta rengi */
             margin: 0 10px;
         }
-        /* Linkler aras�ndaki noktalar */
 
-        /* MOB�L UYUM (TELEFON EKRANLARI) */
-        /* Ekran 576 pikselden k���kse devreye girer */
+        /* MOBİL UYUM (TELEFON EKRANLARI) */
+        /* Ekran 576 pikselden küçükse devreye girer */
         @@media (max-width: 576px) {
             .auth-card-glass {
-                padding: 40px 25px; /* Kart�n i� bo�lu�u azalt�l�r */
-                border-radius: 30px; /* Ovallik biraz d���r�l�r */
-                margin: 10px; /* Ekran kenarlar�na s�f�ra s�f�r de�memesi i�in d�� bo�luk verilir */
+                padding: 40px 25px; /* Kartın iç boşluğu azaltılır */
+                border-radius: 30px; /* Ovallik biraz düşürülür */
+                margin: 15px; /* Ekran kenarlarına sıfıra sıfır değmemesi için dış boşluk verilir */
             }
         }
     </style>

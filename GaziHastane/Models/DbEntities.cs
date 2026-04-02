@@ -705,5 +705,63 @@ namespace GaziHastane.Models
 
             public bool AktifMi { get; set; } = true;
         }
-    
+
+    [Table("ArsivSekmeler")]
+    public class ArsivSekme
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string Baslik { get; set; } = null!; // Menüdeki Adý: (Örn: Hakkýmýzda)
+
+        [Required]
+        [StringLength(50)]
+        public string TabId { get; set; } = null!; // div id'si ve URL için (Örn: genel-bilgi)
+
+        [StringLength(50)]
+        public string? Ikon { get; set; } // (Örn: fa-box-archive)
+
+        // Dinamik sayfalar için kullanýlacak CKEditor içeriði
+        public string? Icerik { get; set; }
+
+        public int SiraNo { get; set; } = 1;
+
+        // EÐER TRUE ÝSE: Senin tasarladýðýn sabit HTML basýlýr.
+        // EÐER FALSE ÝSE: Veritabanýndaki "Icerik" kýsmý basýlýr.
+        public bool SabitTasarimMi { get; set; } = false;
+
+        public bool IsActive { get; set; } = true;
+    }
+
+    [Table("HizliIslemler")]
+    public class HizliIslem
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string Baslik { get; set; } = null!; // "Online<br>Randevu" þeklinde HTML destekli veya düz metin kaydedebilirsiniz.
+
+        [Required]
+        [StringLength(50)]
+        public string Ikon { get; set; } = null!; // Örn: "fa-solid fa-calendar-check"
+
+        [Required]
+        [StringLength(255)]
+        public string Url { get; set; } = null!; // Örn: "/Randevu/Giris" veya "https://..."
+
+        public bool YeniSekme { get; set; } = false; // Farklý siteye gidecekse "_blank" tetiklemek için
+
+        [StringLength(20)]
+        public string TemaRengi { get; set; } = "blue"; // blue, teal, cyan, indigo, violet, sky, rose vb. Tailwind renkleri
+
+        public int SiraNo { get; set; } = 1; // Sýralama yapmak için
+
+        public bool IsActive { get; set; } = true;
+    }
 }

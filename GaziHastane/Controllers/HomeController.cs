@@ -28,31 +28,20 @@ namespace GaziHastane.Controllers
         {
             var viewModel = new HomeViewModel
             {
-                // IsActive olan son 2 haberi getir
-                Haberler = _context.Haberler
-                                    .Where(h => h.IsActive)
-                                    .OrderByDescending(h => h.YayinTarihi)
-                                    .Take(2)
-                                    .ToList(),
+                Haberler = _context.Haberler.Where(h => h.IsActive).OrderByDescending(h => h.YayinTarihi).Take(2).ToList(),
+                Etkinlikler = _context.Etkinlikler.Where(e => e.IsActive && e.Tarih >= System.DateTime.Today).OrderBy(e => e.Tarih).Take(2).ToList(),
+                Duyurular = _context.Duyurular.Where(d => d.IsActive).OrderByDescending(d => d.YayinTarihi).ToList(),
+                HizliIslemler = _context.HizliIslemler.Where(h => h.IsActive).OrderBy(h => h.SiraNo).ToList(),
 
-                // IsActive olan yaklaşan son 2 etkinliği getir
-                Etkinlikler = _context.Etkinlikler
-                                      .Where(e => e.IsActive && e.Tarih >= System.DateTime.Today)
-                                      .OrderBy(e => e.Tarih)
-                                      .Take(2)
-                                      .ToList(),
-
-                // DUYURULARI VERİTABANINDAN ÇEKİYORUZ (Eksik olan kısım eklendi)
-                // Not: Eğer hata alırsanız veritabanında IsActive sütunu olup olmadığını kontrol edin.
-                Duyurular = _context.Duyurular
-                                    .Where(d => d.IsActive)
-                                    .OrderByDescending(d => d.YayinTarihi)
-                                    .ToList()
+                // YENİ EKLENEN KISIM: Ana Sayfa Slider Görsellerini Çekme
+                SliderGorselleri = _context.Medyalar
+                                           .Where(m => m.IsActive && m.IsSlider && m.Alan == "AnaSayfa") // Sadece AnaSayfa için eklenen sliderları al
+                                           .OrderBy(m => m.SiraNo)
+                                           .ToList()
             };
 
             return View(viewModel);
         }
-
         public async Task<IActionResult> Bolumler()
         {
             var aktifBolumler = await _context.Bolumler

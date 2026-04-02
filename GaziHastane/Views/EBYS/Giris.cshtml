@@ -1,53 +1,38 @@
-﻿@* RAZOR KOD BLO�U: Sunucu taraf�nda (C#) �al��an kodlar burada yer al�r.
-*@
+﻿@* RAZOR KOD BLOĞU: Sunucu tarafında (C#) çalışan kodlar burada yer alır. *@
 @{
-    // Taray�c�n�n �st sekmesinde (Title bar) g�r�necek sayfa ba�l���n� belirliyoruz.
-    ViewData["Title"] = "Gazi �niversitesi | EBYS Beyaz Giri�";
+    // Tarayıcının üst sekmesinde (Title bar) görünecek sayfa başlığını belirliyoruz.
+    ViewData["Title"] = "Gazi Üniversitesi | EBYS Beyaz Giriş";
 }
 
 <div class="ebys-white-wrapper">
-    <!-- T�m giri� ekran�n� sarmalayan ana kapsay�c�. Beyaz a��rl�kl� bir tema oldu�unu i�aret ediyor.-->
-
     <div class="main-wallpaper" style="background-image: url('/assets/gaziebys.jpg');"></div>
-    <!-- Sayfan�n arka plan�nda tam ekran kaplayan bir g�rsel. CSS ile karart�lm�� ve bulan�kla�t�r�lm��, b�ylece �zerindeki beyaz kart �ne ��kar. -->'
     <div class="auth-card-white animate__animated animate__fadeInUp">
-        <!--  Giri� formunun i�inde bulundu�u beyaz kutu. animate__fadeInUp s�n�f�, kutunun sayfa a��ld���nda a�a��dan yukar�ya do�ru kayarak gelmesini (animasyon) sa�lar.-->
-
         <div class="auth-card-content">
 
             <div class="text-center mb-5">
 
                 <div class="logo-premium-wrapper mb-3">
-                    <!--Logoyu estetik bir �er�eveye alan k�s�m.-->
-                    <img src="/assets/gazilogo.jpg" alt="Gazi Logo" class="brand-img"><!--Gazi �niversitesi'nin logosunu ekrana basar.-->
+                    <img src="/assets/gazilogo.jpg" alt="Gazi Logo" class="brand-img">
                 </div>
 
-                <h4 class="fw-800 text-navy mb-1">EBYS G�R��</h4><!--Kal�n puntolu (fw-800) ve lacivert renkli (text-navy) ana ba�l�k.-->
+                <h4 class="fw-800 text-navy mb-1">EBYS GİRİŞ</h4><p class="text-muted small mb-0">Elektronik Belge Yönetim Sistemi</p>
 
-                <p class="text-muted small mb-0">Elektronik Belge Y�netim Sistemi</p>
-
-                <div class="ebys-badge-gold">S�STEME G�VENL� ER���M</div> <!--Alt�n rengi temal� bir rozet/etiket; sistemin g�venli oldu�unu vurgulayan g�rsel bir �ge.-->
-
+                <div class="ebys-badge-gold">SİSTEME GÜVENLİ ERİŞİM</div>
             </div>
 
             <form action="/EBYS/Login" method="post">
-                <!--Formun kalbidir. Kullan�c� butona bast���nda veriler g�venli bir �ekilde (post) sunucudaki /EBYS/Login adresine g�nderilir.
-                -->
-
                 <div class="input-modern mb-4">
-                    <label class="premium-label-navy">KULLANICI �SM�</label>
+                    <label class="premium-label-navy">KULLANICI İSMİ</label>
 
                     <div class="field-wrapper-white">
-                        <i class="fas fa-id-card-alt text-navy-light"></i><!-- FontAwesome k�t�phanesinden bir kimlik kart� ikonu ekler.-->
-                        <input type="text" placeholder="Kullan�c� ad�n�z� giriniz" required><!--Kullan�c�n�n metin girece�i alan. required bo� b�rak�lmas�n� engeller.-->
+                        <i class="fas fa-id-card-alt text-navy-light"></i><input type="text" placeholder="Kullanıcı adınızı giriniz" required>
                     </div>
                 </div>
 
                 <div class="input-modern mb-4">
                     <label class="premium-label-navy">PAROLA</label>
                     <div class="field-wrapper-white">
-                        <i class="fas fa-lock text-navy-light"></i><!--Kilit ikonu ekler.-->
-                        <input type="password" placeholder="��������" required><!--Yaz�lan karakterlerin gizli (nokta �eklinde) g�r�nmesini sa�lar.-->
+                        <i class="fas fa-lock text-navy-light"></i><input type="password" placeholder="••••••••" required>
                     </div>
                 </div>
 
@@ -55,230 +40,224 @@
 
                     <div class="custom-checkbox-white">
                         <input type="checkbox" id="remember">
-                        <label for="remember" class="text-navy small ms-1">Oturumu A��k Tut</label><!--"Oturumu A��k Tut" se�ene�i i�in �zelle�tirilmi� onay kutusu.-->
+                        <label for="remember" class="text-navy small ms-1">Oturumu Açık Tut</label>
                     </div>
 
                     <div class="forgot-pass-link">
-                        <!--�ifresini unutanlar i�in "Parola ��lemleri" ba�lant�s�.-->
-                        <a href="#" class="small fw-600 text-navy-light">Parola ��lemleri</a>
+                        <a href="#" class="small fw-600 text-navy-light">Parola İşlemleri</a>
                     </div>
                 </div>
 
                 <button type="submit" class="btn-ebys-action-gold shadow-lg">
-                    <!--Formu g�nderen ana buton. Alt�n rengi efektine ve �zerine gelindi�inde parlayan bir g�lgeye (shadow-lg) sahiptir.-->
-                    <span>S�STEME G�R�� YAP</span>
-                    <i class="fas fa-sign-in-alt"></i><!-- Butonun yan�ndaki "giri� yap" ikonu.-->
+                    <span>SİSTEME GİRİŞ YAP</span>
+                    <i class="fas fa-sign-in-alt"></i>
                 </button>
             </form>
 
             <div class="footer-links-modern mt-5">
-                <!-- Kart�n en alt�nda bulunan yard�mc� linkler alan�.-->
-                <a href="#">Kullan�m K�lavuzu</a> <!--Kullan�c�ya sistemle ilgili yard�m alabilece�i y�nlendirmeler sunar.-->
-                <span class="dot-sep-navy">�</span><!-->: �ki link aras�na lacivert bir nokta i�areti koyar.-->
-                -->
-                <a href="#">Destek Talebi</a>
+                <a href="#">Kullanım Kılavuzu</a> <span class="dot-sep-navy">•</span><a href="#">Destek Talebi</a>
             </div>
         </div>
     </div>
 </div>
 
 
-@* CSS B�L�M�: Sadece bu sayfada ge�erli olacak stiller. 
-  _Layout.cshtml i�indeki '@RenderSection("Styles", required: false)' etiketinin oldu�u yere otomatik olarak yerle�ir.
+@* CSS BÖLÜMÜ: Sadece bu sayfada geçerli olacak stiller. 
+   _Layout.cshtml içindeki '@RenderSection("Styles", required: false)' etiketinin olduğu yere otomatik olarak yerleşir.
 *@
 @section Styles {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <style>
-        /* CSS DE���KENLER�: Kodun her yerinde ayn� renk kodunu ezberlemek yerine isim verilir. De�i�tirmek �ok kolayd�r */
+        /* CSS DEĞİŞKENLERİ: Kodun her yerinde aynı renk kodunu ezberlemek yerine isim verilir. Değiştirmek çok kolaydır */
         :root {
-            --gazi-navy: #0f172a; /* Koyu lacivert: Ba�l�klar ve buton yaz�lar� i�in */
-            --gazi-navy-light: #475569; /* A��k lacivert/gri: �konlar ve alt yaz�lar i�in */
-            --gazi-gold-premium: #c5a059; /* Alt�n/Hardal: Rozet ve butonun ana rengi */
-            --soft-gold: rgba(197, 160, 89, 0.4); /* Yar� saydam alt�n: Kart�n etraf�ndaki parlama(glow) g�lgesi i�in */
-            --btn-gold-gr-1: #c5a059; /* Buton gradyan� (renk ge�i�i) ba�lang�� rengi */
-            --btn-gold-gr-2: #e2c28d; /* Buton gradyan� biti� rengi (daha a��k ton) */
+            --gazi-navy: #0f172a; /* Koyu lacivert: Başlıklar ve buton yazıları için */
+            --gazi-navy-light: #475569; /* Açık lacivert/gri: İkonlar ve alt yazılar için */
+            --gazi-gold-premium: #c5a059; /* Altın/Hardal: Rozet ve butonun ana rengi */
+            --soft-gold: rgba(197, 160, 89, 0.4); /* Yarı saydam altın: Kartın etrafındaki parlama(glow) gölgesi için */
+            --btn-gold-gr-1: #c5a059; /* Buton gradyanı (renk geçişi) başlangıç rengi */
+            --btn-gold-gr-2: #e2c28d; /* Buton gradyanı bitiş rengi (daha açık ton) */
         }
 
-        /* Sayfa Genel Ayarlar� */
+        /* Sayfa Genel Ayarları */
         body {
             margin: 0;
-            padding: 0; /* Taray�c�n�n varsay�lan bo�luklar�n� s�f�rlar */
-            font-family: 'Plus Jakarta Sans', sans-serif; /* Modern, okunabilir yaz� fontu */
-            overflow-x: hidden; /* Sayfan�n sa�a sola kaymas�n� (yatay scroll) engeller */
+            padding: 0; /* Tarayıcının varsayılan boşluklarını sıfırlar */
+            font-family: 'Plus Jakarta Sans', sans-serif; /* Modern, okunabilir yazı fontu */
+            overflow-x: hidden; /* Sayfanın sağa sola kaymasını (yatay scroll) engeller */
         }
 
-        /* T�m Ekran� Kaplayan D�� Div */
+        /* Tüm Ekranı Kaplayan Dış Div */
         .ebys-white-wrapper {
-            min-height: 100vh; /* Ekran�n y�zde 100'�n� dikey olarak kaplar (G�r�n�r alan kadar) */
-            display: flex; /* ��indeki elemanlar� (kart�) esnek yerle�tirmeyi sa�lar */
-            align-items: center; /* Kart� dikey olarak tam ortaya (d��ey merkez) hizalar */
-            justify-content: center; /* Kart� yatay olarak tam ortaya hizalar */
-            position: relative; /* Arka plan resmini absolute yapabilmek i�in gerekli */
-            padding: 20px; /* Mobil ekranlarda kart�n kenarlara yap��mamas� i�in bo�luk */
+            min-height: 100vh; /* Ekranın yüzde 100'ünü dikey olarak kaplar (Görünür alan kadar) */
+            display: flex; /* İçindeki elemanları (kartı) esnek yerleştirmeyi sağlar */
+            align-items: center; /* Kartı dikey olarak tam ortaya (düşey merkez) hizalar */
+            justify-content: center; /* Kartı yatay olarak tam ortaya hizalar */
+            position: relative; /* Arka plan resmini absolute yapabilmek için gerekli */
+            padding: 20px; /* Mobil ekranlarda kartın kenarlara yapışmaması için boşluk */
         }
 
-        /* Arka Plan G�rseli �zellikleri */
+        /* Arka Plan Görseli Özellikleri */
         .main-wallpaper {
             position: fixed;
             top: 0;
-            left: 0; /* Ekran�n sol �st k��esine kilitler, kayd�r�lsa da yerinde kal�r */
+            left: 0; /* Ekranın sol üst köşesine kilitler, kaydırılsa da yerinde kalır */
             width: 100%;
-            height: 100%; /* Ekran�n tamam�n� doldurur */
-            background-size: cover; /* Resmi s�nd�rmeden, en-boy oran�n� koruyarak ekran� kaplat�r */
-            background-position: center; /* Resmin ortas�n� odaklar */
-            z-index: -2; /* Sayfan�n en arkas�na (alt katmana) atar */
-            filter: brightness(0.5) blur(3px); /* Resmi %50 karart�r ve 3px bulan�kla�t�r�r ki �zerindeki beyaz kart okunsun */
+            height: 100%; /* Ekranın tamamını doldurur */
+            background-size: cover; /* Resmi sündürmeden, en-boy oranını koruyarak ekranı kaplatır */
+            background-position: center; /* Resmin ortasını odaklar */
+            z-index: -2; /* Sayfanın en arkasına (alt katmana) atar */
+            filter: brightness(0.5) blur(3px); /* Resmi %50 karartır ve 3px bulanıklaştırır ki üzerindeki beyaz kart okunsun */
         }
 
-        /* Beyaz Giri� Kart� �zellikleri */
+        /* Beyaz Giriş Kartı Özellikleri */
         .auth-card-white {
             width: 100%;
-            max-width: 440px; /* Kart esnektir ama geni�li�i 440px'i ge�emez */
+            max-width: 440px; /* Kart esnektir ama genişliği 440px'i geçemez */
             background: #ffffff; /* Saf beyaz arka plan */
-            border-radius: 40px; /* Kart�n k��elerini yuvarlat�r (Modern g�r�n�m) */
-            padding: 50px 45px; /* Kart�n i�indeki yaz�larla kenarlar� aras�nda bo�luk b�rak�r */
-            /* G�lgelendirme: �lk de�er koyu alt g�lge, ikinci de�er etraf�ndaki alt�n rengi (glow) yans�ma */
+            border-radius: 40px; /* Kartın köşelerini yuvarlatır (Modern görünüm) */
+            padding: 50px 45px; /* Kartın içindeki yazılarla kenarları arasında boşluk bırakır */
+            /* Gölgelendirme: İlk değer koyu alt gölge, ikinci değer etrafındaki altın rengi (glow) yansıma */
             box-shadow: 0 40px 100px -15px rgba(0, 0, 0, 0.3), 0 0 10px var(--soft-gold);
-            z-index: 1; /* Arka plan resminin (z-index:-2) �st�nde g�r�nmesini sa�lar */
+            z-index: 1; /* Arka plan resminin (z-index:-2) üstünde görünmesini sağlar */
         }
 
-        /* Logo Yuvas� */
+        /* Logo Yuvası */
         .logo-premium-wrapper {
             width: 80px;
-            height: 80px; /* Logonun oturdu�u kutunun ebatlar� */
-            background: #f8fafc; /* Logonun arkas�na �ok a��k gri bir zemin */
-            border-radius: 20px; /* Logonun kutusunu yuvarlat�r */
+            height: 80px; /* Logonun oturduğu kutunun ebatları */
+            background: #f8fafc; /* Logonun arkasına çok açık gri bir zemin */
+            border-radius: 20px; /* Logonun kutusunu yuvarlatır */
             margin: 0 auto; /* Kutuyu yatayda tam ortaya hizalar */
-            padding: 8px; /* Logonun kutu d���na ta�mamas� i�in i� bo�luk */
+            padding: 8px; /* Logonun kutu dışına taşmaması için iç boşluk */
             display: flex;
             align-items: center;
-            justify-content: center; /* ��indeki logoyu tam merkeze oturtur */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Logonun alt�na hafif derinlik (g�lge) verir */
+            justify-content: center; /* İçindeki logoyu tam merkeze oturtur */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Logonun altına hafif derinlik (gölge) verir */
         }
 
         /* Logonun Kendisi */
         .brand-img {
             width: 100%;
-            height: 100%; /* Kutunun i�ini tam doldurur */
-            object-fit: contain; /* Logonun kenarlar�ndan kesilmeden, orant�l� s��mas�n� sa�lar */
+            height: 100%; /* Kutunun içini tam doldurur */
+            object-fit: contain; /* Logonun kenarlarından kesilmeden, orantılı sığmasını sağlar */
         }
 
-        /* Alt�n Rozet Tasar�m� */
+        /* Altın Rozet Tasarımı */
         .ebys-badge-gold {
             display: inline-block;
-            margin-top: 15px; /* �stteki yaz�dan biraz uzakla�t�r�r */
+            margin-top: 15px; /* Üstteki yazıdan biraz uzaklaştırır */
             font-size: 10px;
-            font-weight: 800; /* �ok k���k ama kal�n yaz�l�r */
-            letter-spacing: 2px; /* Harflerin aras�n� a�arak premium g�r�n�m katar */
-            color: #fff; /* Rozet i�i yaz� rengi beyaz */
-            background: var(--gazi-gold-premium); /* De�i�kendeki alt�n rengini zemin yapar */
-            border-radius: 50px; /* Rozetin u�lar�n� tam yuvarlak (hap �eklinde) yapar */
-            padding: 6px 18px; /* Rozetin i�i bo�luklar� */
+            font-weight: 800; /* Çok küçük ama kalın yazılır */
+            letter-spacing: 2px; /* Harflerin arasını açarak premium görünüm katar */
+            color: #fff; /* Rozet içi yazı rengi beyaz */
+            background: var(--gazi-gold-premium); /* Değişkendeki altın rengini zemin yapar */
+            border-radius: 50px; /* Rozetin uçlarını tam yuvarlak (hap şeklinde) yapar */
+            padding: 6px 18px; /* Rozetin içi boşlukları */
         }
 
-        /* Yaz� Renklendirmeleri */
+        /* Yazı Renklendirmeleri */
         .text-navy {
             color: var(--gazi-navy);
         }
-        /* Koyu lacivert atamas� */
+        /* Koyu lacivert ataması */
         .text-navy-light {
             color: var(--gazi-navy-light);
             text-decoration: none;
         }
-        /* A��k lacivert ve alt �izgisi olmayan link */
+        /* Açık lacivert ve alt çizgisi olmayan link */
         .fw-800 {
             font-weight: 800;
         }
-        /* Yaz�y� ekstra kal�nla�t�r�r */
+        /* Yazıyı ekstra kalınlaştırır */
 
-        /* Inputlar�n �zerindeki Ba�l�klar (KULLANICI �SM� vs.) */
+        /* Inputların Üzerindeki Başlıklar (KULLANICI İSMİ vs.) */
         .premium-label-navy {
             font-size: 11px;
             font-weight: 800;
             color: var(--gazi-navy-light);
             margin-bottom: 8px;
-            display: block; /* Etiketin alt�na inmesini (block) sa�lar */
-            letter-spacing: 1.5px; /* Harf aral��� */
+            display: block; /* Etiketin altına inmesini (block) sağlar */
+            letter-spacing: 1.5px; /* Harf aralığı */
         }
 
-        /* Inputlar (Metin Kutular�) ��in Ta��y�c� */
+        /* Inputlar (Metin Kutuları) İçin Taşıyıcı */
         .field-wrapper-white {
-            position: relative; /* ��indeki ikonun (absolute) konumlanabilmesi i�in referans noktas� olur */
+            position: relative; /* İçindeki ikonun (absolute) konumlanabilmesi için referans noktası olur */
             display: flex;
             align-items: center;
         }
 
-            /* Metin Kutular�n�n ��indeki �konlar */
+            /* Metin Kutularının İçindeki İkonlar */
             .field-wrapper-white i {
                 position: absolute;
-                left: 18px; /* �konu kutunun en soluna yaslar */
+                left: 18px; /* İkonu kutunun en soluna yaslar */
                 font-size: 1.1rem;
-                opacity: 0.8; /* �kon boyutu ve %80 saydaml�k */
+                opacity: 0.8; /* İkon boyutu ve %80 saydamlık */
             }
 
-            /* Metin Kutular� (Input'lar�n kendisi) */
+            /* Metin Kutuları (Input'ların kendisi) */
             .field-wrapper-white input {
                 width: 100%;
-                height: 58px; /* Kutunun geni�li�i ve y�ksekli�i */
-                background: #f8fafc; /* ��i hafif a��k gri */
-                border: 1px solid #e2e8f0; /* �ok ince gri d�� �izgi (border) */
-                border-radius: 15px; /* K��eleri yuvarlat�lm�� kutu */
-                padding: 0 20px 0 55px; /* Soldan 55px bo�luk b�rak�r, ��nk� orada ikon duruyor. Yaz� ikonun �st�ne binmez */
+                height: 58px; /* Kutunun genişliği ve yüksekliği */
+                background: #f8fafc; /* İçi hafif açık gri */
+                border: 1px solid #e2e8f0; /* Çok ince gri dış çizgi (border) */
+                border-radius: 15px; /* Köşeleri yuvarlatılmış kutu */
+                padding: 0 20px 0 55px; /* Soldan 55px boşluk bırakır, çünkü orada ikon duruyor. Yazı ikonun üstüne binmez */
                 color: var(--gazi-navy);
-                font-weight: 600; /* Girilen yaz�n�n rengi ve kal�nl��� */
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Focus efekti i�in yumu�ak ge�i� animasyonu s�resi */
+                font-weight: 600; /* Girilen yazının rengi ve kalınlığı */
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Focus efekti için yumuşak geçiş animasyonu süresi */
             }
 
-                /* Kullan�c� Input'a T�klad���nda (Yaz� Yazarken) Olanlar */
+                /* Kullanıcı Input'a Tıkladığında (Yazı Yazarken) Olanlar */
                 .field-wrapper-white input:focus {
-                    background: #ffffff; /* Kutunun i�i tam beyaz olur */
-                    border-color: var(--gazi-gold-premium); /* D�� �izgisi alt�n rengi olur */
-                    box-shadow: 0 0 15px var(--soft-gold); /* Kutunun etraf�na alt�n rengi bir parlama (glow) verir */
-                    outline: none; /* Taray�c�n�n varsay�lan mavi �izgisini yok eder */
+                    background: #ffffff; /* Kutunun içi tam beyaz olur */
+                    border-color: var(--gazi-gold-premium); /* Dış çizgisi altın rengi olur */
+                    box-shadow: 0 0 15px var(--soft-gold); /* Kutunun etrafına altın rengi bir parlama (glow) verir */
+                    outline: none; /* Tarayıcının varsayılan mavi çizgisini yok eder */
                 }
 
-        /* Giri� Yap Butonu */
+        /* Giriş Yap Butonu */
         .btn-ebys-action-gold {
             width: 100%;
             height: 60px;
-            /* Arka plana linear-gradient (iki renkli ge�i�) verir */
+            /* Arka plana linear-gradient (iki renkli geçiş) verir */
             background: linear-gradient(135deg, var(--btn-gold-gr-1) 0%, var(--btn-gold-gr-2) 100%);
             border: none;
             border-radius: 15px;
             color: var(--gazi-navy);
-            font-weight: 800; /* Buton yaz�s� lacivert ve kal�n */
+            font-weight: 800; /* Buton yazısı lacivert ve kalın */
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Yaz� sola, ikon sa�a yaslan�r */
+            justify-content: space-between; /* Yazı sola, ikon sağa yaslanır */
             padding: 0 25px;
-            transition: all 0.5s ease; /* Hover(�zerine gelme) efekti s�resi */
+            transition: all 0.5s ease; /* Hover(üzerine gelme) efekti süresi */
             letter-spacing: 1px;
         }
 
-            /* Farenin �mleci Butonun �zerine Geldi�inde (Hover) */
+            /* Farenin İmleci Butonun Üzerine Geldiğinde (Hover) */
             .btn-ebys-action-gold:hover {
-                transform: translateY(-3px); /* Butonu hafif�e 3 piksel yukar� kald�r�r (T�klanma hissi verir) */
-                /* Renk ge�i�ini tersine �evirip biraz daha a��k hale getirir */
+                transform: translateY(-3px); /* Butonu hafifçe 3 piksel yukarı kaldırır (Tıklanma hissi verir) */
+                /* Renk geçişini tersine çevirip biraz daha açık hale getirir */
                 background: linear-gradient(135deg, #e0bf81 0%, #c5a059 100%);
-                color: #fff; /* �st�ne gelince yaz� lacivertten beyaza d�ner */
-                box-shadow: 0 15px 30px var(--soft-gold); /* Alt�ndaki g�lgeyi/parlamay� b�y�t�r */
+                color: #fff; /* Üstüne gelince yazı lacivertten beyaza döner */
+                box-shadow: 0 15px 30px var(--soft-gold); /* Altındaki gölgeyi/parlamayı büyütür */
             }
 
-        /* Linklere T�klanma/Gelinme Efekti */
+        /* Linklere Tıklanma/Gelinme Efekti */
         .forgot-pass-link a:hover {
             color: var(--gazi-gold-premium);
         }
-        /* "Parola i�lemleri" linkinin �st�ne gelince sararmas� */
+        /* "Parola işlemleri" linkinin üstüne gelince sararması */
 
-        /* En Alttaki Footer Linkleri (Kullan�m K�lavuzu vs.) */
+        /* En Alttaki Footer Linkleri (Kullanım Kılavuzu vs.) */
         .footer-links-modern {
             text-align: center;
         }
             /* Linkleri ortalar */
             .footer-links-modern a {
                 color: var(--gazi-navy-light);
-                text-decoration: none; /* Alt �izgiyi kald�r�r */
+                text-decoration: none; /* Alt çizgiyi kaldırır */
                 font-size: 12px;
                 font-weight: 700;
                 transition: 0.3s;
@@ -292,17 +271,19 @@
             color: #cbd5e1;
             margin: 0 10px;
         }
-        /* Linkler aras�ndaki noktalar�n rengi ve bo�lu�u */
+        /* Linkler arasındaki noktaların rengi ve boşluğu */
 
-        /* MOB�L UYUM (Responsive Tasar�m) */
-        /* Ekran geni�li�i 576px'den (telefon ekranlar�) k���kse a�a��daki kodlar devreye girer */
+        /* MOBİL UYUM (Responsive Tasarım) */
+        /* Ekran genişliği 576px'den (telefon ekranları) küçükse aşağıdaki kodlar devreye girer */
         @@media (max-width: 576px) {
-            .auth-card-white {
-                padding: 40px 25px; /* Telefon ekran�nda i� bo�luklar� daraltarak kart�n ekrana s��mas�n� sa�lar */
-                border-radius: 30px; /* Ovali�i biraz azalt�r */
-                margin: 10px; /* D��ar�dan 10px pay b�rakarak telefonun kenarlar�na yap��mas�n� engeller */
-            }
+            .auth-card-white
+
+        {
+            padding: 40px 25px; /* Telefon ekranında iç boşlukları daraltarak kartın ekrana sığmasını sağlar */
+            border-radius: 30px; /* Ovaliği biraz azaltır */
+            margin: 10px; /* Dışarıdan 10px pay bırakarak telefonun kenarlarına yapışmasını engeller */
+        }
+
         }
     </style>
 }
-

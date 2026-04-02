@@ -57,8 +57,78 @@ namespace GaziHastane.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // ==========================================
+        // ARÞÝV BÝRÝMÝ YÖNETÝMÝ
+        // ==========================================
+
         [HttpGet]
-        public IActionResult ArsivBirimi() => View();
+        public async Task<IActionResult> ArsivBirimi()
+        {
+            var sekmeler = await _context.ArsivSekmeler
+                                         .OrderBy(x => x.SiraNo)
+                                         .ToListAsync();
+            return View(sekmeler);
+        }
+
+        [HttpGet]
+        public IActionResult ArsivSekmeEkle()
+        {
+            return View("ArsivSekmeForm", new ArsivSekme { SabitTasarimMi = false, IsActive = true });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ArsivSekmeEkle(ArsivSekme model)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.ArsivSekmeler.Add(model);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Yeni arþiv sekmesi baþarýyla eklendi.";
+                return RedirectToAction(nameof(ArsivBirimi));
+            }
+            return View("ArsivSekmeForm", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ArsivSekmeDuzenle(int id)
+        {
+            var sekme = await _context.ArsivSekmeler.FindAsync(id);
+            if (sekme == null) return NotFound();
+            return View("ArsivSekmeForm", sekme);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ArsivSekmeDuzenle(ArsivSekme model)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.ArsivSekmeler.Update(model);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Arþiv sekmesi baþarýyla güncellendi.";
+                return RedirectToAction(nameof(ArsivBirimi));
+            }
+            return View("ArsivSekmeForm", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ArsivSekmeSil(int id)
+        {
+            var sekme = await _context.ArsivSekmeler.FindAsync(id);
+            if (sekme != null)
+            {
+                _context.ArsivSekmeler.Remove(sekme);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Arþiv sekmesi baþarýyla silindi.";
+            }
+            return RedirectToAction(nameof(ArsivBirimi));
+        }
+
+        // ==========================================
+        // DÝÐER SABÝT SAYFALAR
+        // ==========================================
 
         [HttpGet]
         public IActionResult BasinVeKurumsalIletisim() => View();
@@ -74,6 +144,10 @@ namespace GaziHastane.Areas.Admin.Controllers
 
         [HttpGet]
         public IActionResult HastaIletisimBirimi() => View();
+
+        // ==========================================
+        // HEMÞÝRELÝK HÝZMETLERÝ YÖNETÝMÝ
+        // ==========================================
 
         [HttpGet]
         public IActionResult HemsirelikHizmetleri()
@@ -192,6 +266,10 @@ namespace GaziHastane.Areas.Admin.Controllers
             return Redirect($"{Url.Action(nameof(HemsirelikHizmetleri))}#tab-sekmeler");
         }
 
+        // ==========================================
+        // DÝÐER SABÝT SAYFALAR (Devamý)
+        // ==========================================
+
         [HttpGet]
         public IActionResult IcKontrol() => View();
 
@@ -209,6 +287,10 @@ namespace GaziHastane.Areas.Admin.Controllers
 
         [HttpGet]
         public IActionResult SatinAlma() => View();
+
+        // ==========================================
+        // DÝNAMÝK MENÜ YÖNETÝMÝ
+        // ==========================================
 
         [HttpPost]
         [ValidateAntiForgeryToken]

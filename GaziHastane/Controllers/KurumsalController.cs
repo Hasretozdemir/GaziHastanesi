@@ -113,7 +113,16 @@ namespace GaziHastane.Controllers
         public IActionResult Istatistik() { return View(); }
 
         // Arþiv Birimi
-        public IActionResult Arsiv() { return View(); }
+        public IActionResult Arsiv()
+        {
+            // Veritabanýndan aktif sekmeleri sýrasýna göre çekiyoruz
+            var sekmeler = _context.ArsivSekmeler
+                                   .Where(x => x.IsActive)
+                                   .OrderBy(x => x.SiraNo)
+                                   .ToList();
+
+            return View(sekmeler);
+        }
 
         // Hasta Ýletiþim Birimi
         public IActionResult HastaIletisim() { return View(); }

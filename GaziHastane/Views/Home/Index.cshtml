@@ -277,16 +277,13 @@
         }
 
         @@keyframes bounce-x {
-            0%, 100%
+            0%, 100% {
+                transform: translateX(0);
+            }
 
-        {
-            transform: translateX(0);
-        }
-
-        50% {
-            transform: translateX(5px);
-        }
-
+            50% {
+                transform: translateX(5px);
+            }
         }
 
         /* --- DUYURU SCROLL TASARIMI --- */
@@ -320,40 +317,106 @@
             const thumb1 = document.getElementById('thumb-1');
             const thumb2 = document.getElementById('thumb-2');
 
-            let currentIdx = 0;
-            const totalSlides = slides.length;
+            if (slides.length > 0 && thumb1 && thumb2 && wrapper && nextBtn && prevBtn) {
+                let currentIdx = 0;
+                const totalSlides = slides.length;
 
-            const images = [];
-            slides.forEach(slide => {
-                images.push(slide.querySelector('img').getAttribute('src'));
-            });
+                const images = [];
+                slides.forEach(slide => {
+                    const img = slide.querySelector('img');
+                    if (img) images.push(img.getAttribute('src'));
+                });
 
-            function updateSlider() {
-                wrapper.style.transform = `translateX(-${currentIdx * 100}%)`;
+                function updateSlider() {
+                    wrapper.style.transform = `translateX(-${currentIdx * 100}%)`;
 
-                let nextIdx1 = (currentIdx + 1) % totalSlides;
-                let nextIdx2 = (currentIdx + 2) % totalSlides;
+                    if (images.length > 0) {
+                        let nextIdx1 = (currentIdx + 1) % totalSlides;
+                        let nextIdx2 = (currentIdx + 2) % totalSlides;
 
-                thumb1.src = images[nextIdx1];
-                thumb2.src = images[nextIdx2];
+                        thumb1.src = images[nextIdx1] || images[0];
+                        thumb2.src = images[nextIdx2] || images[0];
+                    }
+                }
+
+                nextBtn.addEventListener('click', () => {
+                    currentIdx = (currentIdx + 1) % totalSlides;
+                    updateSlider();
+                });
+
+                prevBtn.addEventListener('click', () => {
+                    currentIdx = (currentIdx - 1 + totalSlides) % totalSlides;
+                    updateSlider();
+                });
+
+                setInterval(() => {
+                    currentIdx = (currentIdx + 1) % totalSlides;
+                    updateSlider();
+                }, 5000);
+
+                updateSlider();
             }
 
-            nextBtn.addEventListener('click', () => {
-                currentIdx = (currentIdx + 1) % totalSlides;
-                updateSlider();
-            });
+            const haberModal = document.getElementById('haberModal');
+            const haberModalContent = document.getElementById('haberModalContent');
+            const haberModalImage = document.getElementById('haberModalImage');
+            const haberModalKategori = document.getElementById('haberModalKategori');
+            const haberModalTarih = document.getElementById('haberModalTarih');
+            const haberModalBaslik = document.getElementById('haberModalBaslik');
+            const haberModalOzet = document.getElementById('haberModalOzet');
+            const haberModalIcerik = document.getElementById('haberModalIcerik');
 
-            prevBtn.addEventListener('click', () => {
-                currentIdx = (currentIdx - 1 + totalSlides) % totalSlides;
-                updateSlider();
-            });
+            const haberData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                (Model.Haberler ?? Enumerable.Empty<GaziHastane.Models.Haber>()).Select(h => new
+                {
+                    h.Id,
+                    h.Baslik,
+                    h.Ozet,
+                    Icerik = h.Icerik ?? string.Empty,
+                    h.GorselUrl,
+                    h.Kategori,
+                    Tarih = h.YayinTarihi.ToString("dd MMMM yyyy")
+                })
+            ));
 
-            setInterval(() => {
-                currentIdx = (currentIdx + 1) % totalSlides;
-                updateSlider();
-            }, 5000);
+            const haberMap = new Map(haberData.map(x => [x.Id ?? x.id, x]));
 
-            updateSlider();
+            function openHaberModal(id) {
+                const haber = haberMap.get(id);
+                if (!haber) return;
+
+                const gorselUrl = haber.GorselUrl ?? haber.gorselUrl;
+                const baslik = haber.Baslik ?? haber.baslik;
+                const kategori = haber.Kategori ?? haber.kategori;
+                const tarih = haber.Tarih ?? haber.tarih;
+                const ozet = haber.Ozet ?? haber.ozet;
+                const icerik = haber.Icerik ?? haber.icerik;
+
+                haberModalImage.src = gorselUrl;
+                haberModalImage.alt = baslik;
+                haberModalKategori.textContent = kategori;
+                haberModalTarih.textContent = tarih;
+                haberModalBaslik.textContent = baslik;
+                haberModalOzet.textContent = ozet || '';
+                haberModalIcerik.innerHTML = icerik || '<p class="text-slate-500 text-sm">Detay içeriği bulunmuyor.</p>';
+
+                haberModal.classList.remove('hidden');
+                setTimeout(() => {
+                    haberModal.classList.remove('opacity-0');
+                    haberModalContent.classList.remove('scale-95');
+                }, 10);
+            }
+
+            function closeHaberModal() {
+                haberModal.classList.add('opacity-0');
+                haberModalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    haberModal.classList.add('hidden');
+                }, 250);
+            }
+
+            window.openHaberModal = openHaberModal;
+            window.closeHaberModal = closeHaberModal;
         });
     </script>
 }
@@ -408,13 +471,35 @@
             </div>
 
             <div class="flex-1 w-full max-w-lg lg:max-w-none relative">
+
                 <div class="slider-main-container">
                     <div class="slider-wrapper">
-                        @for (int i = 1; i <= 5; i++)
+                        @if (Model.SliderGorselleri != null && Model.SliderGorselleri.Any())
                         {
-                            <div class="slide">
-                                <img src="~/assets/slider@(i).jpeg" alt="Gazi Slider @i">
-                            </div>
+                            @foreach (var slider in Model.SliderGorselleri)
+                            {
+                                <div class="slide">
+                                    @if (!string.IsNullOrEmpty(slider.HedefUrl))
+                                    {
+                                        <a href="@slider.HedefUrl">
+                                            <img src="@slider.GorselYolu" alt="@(slider.Baslik ?? "Gazi Hastanesi")">
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <img src="@slider.GorselYolu" alt="@(slider.Baslik ?? "Gazi Hastanesi")">
+                                    }
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <div class="slide">
+                                    <img src="~/assets/slider@(i).jpeg" alt="Gazi Slider @i">
+                                </div>
+                            }
                         }
                     </div>
 
@@ -453,82 +538,20 @@
 
         <div class="digital-ops-grid no-scrollbar" style="scrollbar-width: none; -ms-overflow-style: none;">
 
-            <a href="/Randevu/Giris" class="d-card group">
-                <div class="d-icon text-blue-500 bg-blue-50 group-hover:bg-blue-500 group-hover:text-white">
-                    <i class="fa-solid fa-calendar-check"></i>
-                </div>
-                <span class="d-label">Online<br>Randevu</span>
-            </a>
+            @if (Model.HizliIslemler != null && Model.HizliIslemler.Any())
+            {
+                @foreach (var islem in Model.HizliIslemler)
+                {
+                    string targetAttr = islem.YeniSekme ? "target=\"_blank\"" : "";
 
-            <a href="/Sonuc/Giris" class="d-card group">
-                <div class="d-icon text-teal-500 bg-teal-50 group-hover:bg-teal-500 group-hover:text-white">
-                    <i class="fa-solid fa-file-medical"></i>
-                </div>
-                <span class="d-label">Tahlil<br>Sonuçları</span>
-            </a>
-
-            <a href="/Home/Kroki" class="d-card group">
-                <div class="d-icon text-cyan-500 bg-cyan-50 group-hover:bg-cyan-500 group-hover:text-white">
-                    <i class="fa-solid fa-map-location-dot"></i>
-                </div>
-                <span class="d-label">Yerleşim<br>Planı</span>
-            </a>
-
-            <a href="/Odeme/Giris" class="d-card group">
-                <div class="d-icon text-indigo-500 bg-indigo-50 group-hover:bg-indigo-500 group-hover:text-white">
-                    <i class="fa-solid fa-credit-card"></i>
-                </div>
-                <span class="d-label">Güvenli<br>Ödeme</span>
-            </a>
-
-            <a href="http://mobilhbys.com:20108/nucleus-mobile/login" target="_blank" class="d-card group">
-                <div class="d-icon text-violet-500 bg-violet-50 group-hover:bg-violet-500 group-hover:text-white">
-                    <i class="fa-solid fa-mobile-screen-button"></i>
-                </div>
-                <span class="d-label">Mobil<br>HBYS</span>
-            </a>
-
-            <a href="/EBYS/Giris" class="d-card group">
-                <div class="d-icon text-sky-500 bg-sky-50 group-hover:bg-sky-500 group-hover:text-white">
-                    <i class="fa-solid fa-file-signature"></i>
-                </div>
-                <span class="d-label">EBYS<br>Sistemi</span>
-            </a>
-
-            <a href="/Mail/Giris" class="d-card group">
-                <div class="d-icon text-rose-500 bg-rose-50 group-hover:bg-rose-500 group-hover:text-white">
-                    <i class="fa-solid fa-envelope-open-text"></i>
-                </div>
-                <span class="d-label">Gazi<br>WebMail</span>
-            </a>
-
-            <a href="/Kalite/Index" class="d-card group">
-                <div class="d-icon text-slate-500 bg-slate-100 group-hover:bg-slate-500 group-hover:text-white">
-                    <i class="fa-solid fa-award"></i>
-                </div>
-                <span class="d-label">Kalite<br>Yönetimi</span>
-            </a>
-
-            <a href="/Egitim/Index" class="d-card group">
-                <div class="d-icon text-orange-500 bg-orange-50 group-hover:bg-orange-500 group-hover:text-white">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                </div>
-                <span class="d-label">Eğitim<br>Komitesi</span>
-            </a>
-
-            <a href="https://www.gaziuniversityhospital.com/" target="_blank" class="d-card group">
-                <div class="d-icon text-emerald-500 bg-emerald-50 group-hover:bg-emerald-500 group-hover:text-white">
-                    <i class="fa-solid fa-globe"></i>
-                </div>
-                <span class="d-label">Uluslararası<br>Hasta</span>
-            </a>
-
-            <a href="https://gaziemzirmedestekmerkezi.gazi.edu.tr/" target="_blank" class="d-card group">
-                <div class="d-icon text-pink-500 bg-pink-50 group-hover:bg-pink-500 group-hover:text-white">
-                    <i class="fa-solid fa-baby"></i>
-                </div>
-                <span class="d-label">Emzirme<br>Destek</span>
-            </a>
+                    <a href="@islem.Url" @Html.Raw(targetAttr) class="d-card group">
+                        <div class="d-icon text-@islem.TemaRengi-500 bg-@islem.TemaRengi-50 group-hover:bg-@islem.TemaRengi-500 group-hover:text-white">
+                            <i class="@islem.Ikon"></i>
+                        </div>
+                        <span class="d-label">@Html.Raw(islem.Baslik)</span>
+                    </a>
+                }
+            }
 
         </div>
     </div>
@@ -559,7 +582,7 @@
                 {
                     @foreach (var haber in Model.Haberler)
                     {
-                        <a href="#" class="hospital-news-card text-decoration-none group">
+                        <button type="button" onclick="openHaberModal(@haber.Id)" class="hospital-news-card text-decoration-none group text-left w-full">
                             <div class="hospital-news-img-box">
                                 <img src="@haber.GorselUrl" alt="@haber.Baslik" class="hospital-news-img">
                                 <span class="news-category-badge"><i class="fa-solid fa-tag mr-1"></i> @haber.Kategori</span>
@@ -572,7 +595,7 @@
                                 </div>
                                 <span class="text-sm font-bold text-blue-600 mt-4 flex items-center gap-2">Haberi Oku <i class="fa-solid fa-angle-right"></i></span>
                             </div>
-                        </a>
+                        </button>
                     }
                 }
             </div>
@@ -613,6 +636,26 @@
         </div>
     </div>
 </section>
+
+<div id="haberModal" class="fixed inset-0 z-[120] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center opacity-0 transition-opacity duration-200 p-4">
+    <div id="haberModalContent" class="bg-white w-full max-w-3xl rounded-3xl overflow-hidden shadow-2xl border border-slate-100 transform scale-95 transition-transform duration-200 max-h-[90vh] flex flex-col">
+        <div class="relative h-64">
+            <img id="haberModalImage" src="" alt="Haber" class="w-full h-full object-cover">
+            <button type="button" onclick="closeHaberModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 text-slate-700 hover:bg-white flex items-center justify-center shadow">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="p-6 overflow-y-auto">
+            <div class="flex items-center gap-3 mb-3">
+                <span id="haberModalKategori" class="text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded uppercase"></span>
+                <span id="haberModalTarih" class="text-xs text-slate-400 font-semibold"></span>
+            </div>
+            <h3 id="haberModalBaslik" class="text-2xl font-black text-slate-900 mb-3"></h3>
+            <p id="haberModalOzet" class="text-slate-500 text-sm mb-5"></p>
+            <div id="haberModalIcerik" class="prose prose-sm max-w-none text-slate-700"></div>
+        </div>
+    </div>
+</div>
 
 <section class="max-w-7xl mx-auto px-4 sm:px-6 py-12" style="background: #f8fafc;">
     <div class="flex justify-between items-end mb-8">

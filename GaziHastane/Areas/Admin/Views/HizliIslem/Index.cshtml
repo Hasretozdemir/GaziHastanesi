@@ -1,0 +1,284 @@
+﻿@model IEnumerable<GaziHastane.Models.HizliIslem>
+@{
+    ViewData["Title"] = "Dijital İşlemler Yönetimi";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="flex justify-between items-center mb-6">
+    <div>
+        <h2 class="text-2xl font-black text-white tracking-wide">Dijital İşlemler <span class="text-cyan-400">Yönetimi</span></h2>
+        <p class="text-sm text-slate-400 mt-1">Ana sayfadaki hızlı erişim butonlarını buradan yönetebilirsiniz.</p>
+    </div>
+    <button onclick="openModal()" class="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-bold py-2.5 px-5 rounded-xl shadow-lg shadow-cyan-500/30 transition-all active:scale-95 flex items-center gap-2">
+        <i class="fa-solid fa-plus"></i> Yeni Ekle
+    </button>
+</div>
+
+<div class="glass-card rounded-3xl overflow-hidden border border-white/10">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-white/5 border-b border-white/10 text-xs uppercase tracking-wider text-slate-300">
+                    <th class="p-4 font-semibold text-center w-16">Sıra</th>
+                    <th class="p-4 font-semibold">İkon & Başlık</th>
+                    <th class="p-4 font-semibold">Yönlendirme (URL)</th>
+                    <th class="p-4 font-semibold text-center">Tema</th>
+                    <th class="p-4 font-semibold text-center">Durum</th>
+                    <th class="p-4 font-semibold text-center">İşlem</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5 text-sm">
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr class="hover:bg-white/[0.02] transition-colors group">
+                            <td class="p-4 text-center text-slate-400 font-bold">@item.SiraNo</td>
+                            <td class="p-4">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-xl bg-@item.TemaRengi-500/20 text-@item.TemaRengi-400 flex items-center justify-center text-lg border border-@item.TemaRengi-500/30">
+                                        <i class="@item.Ikon"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-white">@Html.Raw(item.Baslik.Replace("<br>", " "))</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="p-4 text-slate-300">
+                                <span class="bg-black/30 px-3 py-1 rounded-lg border border-white/5 font-mono text-xs text-cyan-300">@item.Url</span>
+                                @if (item.YeniSekme)
+                                {
+                                    <span class="ml-2 text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded border border-purple-500/30">Yeni Sekme</span>
+                                }
+                            </td>
+                            <td class="p-4 text-center">
+                                <span class="px-2 py-1 rounded text-xs font-bold bg-white/10 text-@item.TemaRengi-400 capitalize">@item.TemaRengi</span>
+                            </td>
+                            <td class="p-4 text-center">
+                                @if (item.IsActive)
+                                {
+                                    <span class="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-lg text-xs font-bold border border-emerald-500/20"><i class="fa-solid fa-check mr-1"></i> Aktif</span>
+                                }
+                                else
+                                {
+                                    <span class="bg-rose-500/20 text-rose-400 px-3 py-1 rounded-lg text-xs font-bold border border-rose-500/20"><i class="fa-solid fa-xmark mr-1"></i> Pasif</span>
+                                }
+                            </td>
+                            <td class="p-4 text-center space-x-2">
+                                <button onclick="editModal(@item.Id)" class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 hover:bg-blue-500/40 hover:text-white transition flex items-center justify-center border border-blue-500/30 inline-flex">
+                                    <i class="fa-solid fa-pen text-xs"></i>
+                                </button>
+                                <form asp-action="HizliIslemSil" asp-route-id="@item.Id" method="post" class="inline-block" onsubmit="return confirm('Bu işlemi silmek istediğinize emin misiniz?');">
+                                    <button type="submit" class="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 hover:bg-rose-500/40 hover:text-white transition flex items-center justify-center border border-rose-500/30">
+                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="p-8 text-center text-slate-500">Henüz hiç dijital işlem eklenmemiş.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="islemModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center opacity-0 transition-opacity duration-300 p-4">
+    <div class="glass-card w-full max-w-2xl rounded-3xl border border-white/10 shadow-2xl transform scale-95 transition-transform duration-300" id="modalContent">
+        <div class="p-6 border-b border-white/10 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-white" id="modalTitle">Yeni İşlem Ekle</h3>
+            <button onclick="closeModal()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+
+        <form asp-action="HizliIslemKaydet" method="post" class="p-6 space-y-4">
+            <input type="hidden" id="Id" name="Id" value="0" />
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Başlık</label>
+                    <input type="text" id="Baslik" name="Baslik" placeholder="Örn: Online<br>Randevu" required class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition" />
+                    <p class="text-[10px] text-slate-500 mt-1">Alt satıra geçmek için araya &lt;br&gt; yazabilirsiniz.</p>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Sıra No</label>
+                    <input type="number" id="SiraNo" name="SiraNo" value="1" required class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition" />
+                </div>
+            </div>
+
+            <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">İkon Seçimi</label>
+                <input type="text" id="Ikon" name="Ikon" placeholder="Listeden seçin veya ikon sınıfını yazın (örn: fa-solid fa-globe)" required oninput="highlightIcon(this.value)" class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition mb-3 text-sm" />
+
+                <div class="grid grid-cols-8 gap-2 max-h-40 overflow-y-auto custom-scroll pr-2" id="iconGrid">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Yönlendirme (URL)</label>
+                    <input type="text" id="Url" name="Url" placeholder="/Randevu/Giris veya https://..." required class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition" />
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Tema Rengi</label>
+                    <select id="TemaRengi" name="TemaRengi" class="w-full bg-[#1e293b] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition">
+                        <option value="blue">Blue (Mavi)</option>
+                        <option value="teal">Teal (Turkuaz)</option>
+                        <option value="cyan">Cyan (Açık Mavi)</option>
+                        <option value="indigo">Indigo (Lacivert)</option>
+                        <option value="violet">Violet (Mor)</option>
+                        <option value="sky">Sky (Gökyüzü)</option>
+                        <option value="rose">Rose (Gül)</option>
+                        <option value="pink">Pink (Pembe)</option>
+                        <option value="emerald">Emerald (Zümrüt Yeşili)</option>
+                        <option value="orange">Orange (Turuncu)</option>
+                        <option value="slate">Slate (Gri)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex gap-6 mt-4 p-4 rounded-xl bg-white/5 border border-white/5">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="YeniSekme" name="YeniSekme" value="true" class="w-4 h-4 rounded border-white/20 bg-black/30 text-cyan-500 focus:ring-cyan-500 focus:ring-offset-slate-900" />
+                    <span class="text-sm font-semibold text-slate-300">Yeni Sekmede Aç</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="IsActive" name="IsActive" value="true" checked class="w-4 h-4 rounded border-white/20 bg-black/30 text-cyan-500 focus:ring-cyan-500 focus:ring-offset-slate-900" />
+                    <span class="text-sm font-semibold text-slate-300">Sitede Göster (Aktif)</span>
+                </label>
+            </div>
+
+            <div class="pt-4 flex justify-end gap-3">
+                <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-xl font-bold text-slate-300 hover:text-white hover:bg-white/10 transition">İptal</button>
+                <button type="submit" class="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg shadow-cyan-500/30 transition-transform active:scale-95">
+                    Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(56, 189, 248, 0.5);
+            border-radius: 10px;
+        }
+    </style>
+    <script>
+        const modal = document.getElementById('islemModal');
+        const modalContent = document.getElementById('modalContent');
+        const formTitle = document.getElementById('modalTitle');
+        const ikonInput = document.getElementById('Ikon');
+
+        // Hastane / Sağlık / Genel İkon Listesi
+        const popularIcons = [
+            "fa-solid fa-calendar-check", "fa-solid fa-file-medical", "fa-solid fa-map-location-dot",
+            "fa-solid fa-credit-card", "fa-solid fa-mobile-screen-button", "fa-solid fa-file-signature",
+            "fa-solid fa-envelope-open-text", "fa-solid fa-award", "fa-solid fa-graduation-cap",
+            "fa-solid fa-globe", "fa-solid fa-baby", "fa-solid fa-stethoscope",
+            "fa-solid fa-pills", "fa-solid fa-hospital", "fa-solid fa-user-doctor",
+            "fa-solid fa-syringe", "fa-solid fa-microscope", "fa-solid fa-wheelchair",
+            "fa-solid fa-truck-medical", "fa-solid fa-heart-pulse", "fa-solid fa-phone",
+            "fa-solid fa-notes-medical", "fa-solid fa-laptop-medical", "fa-solid fa-clipboard-list",
+            "fa-solid fa-virus-covid", "fa-solid fa-flask", "fa-solid fa-tooth", "fa-solid fa-eye",
+            "fa-solid fa-brain", "fa-solid fa-bone", "fa-solid fa-lungs", "fa-solid fa-droplet"
+        ];
+
+        // İkonları Ekrana Çiz
+        function renderIcons() {
+            const grid = document.getElementById('iconGrid');
+            grid.innerHTML = popularIcons.map(icon => `
+                <div onclick="selectIcon('${icon}')" class="icon-btn cursor-pointer w-full aspect-square flex flex-col items-center justify-center rounded-xl border border-white/5 bg-black/20 hover:bg-white/10 hover:border-white/20 text-slate-400 hover:text-white transition" data-icon="${icon}" title="${icon}">
+                    <i class="${icon} text-xl"></i>
+                </div>
+            `).join('');
+        }
+
+        // Tıklanan İkonu Seç
+        function selectIcon(iconClass) {
+            ikonInput.value = iconClass;
+            highlightIcon(iconClass);
+        }
+
+        // Seçili İkonu Mavi Yap
+        function highlightIcon(iconClass) {
+            document.querySelectorAll('.icon-btn').forEach(btn => {
+                if(btn.dataset.icon === iconClass) {
+                    btn.classList.add('bg-cyan-500/20', 'border-cyan-500/50', 'text-cyan-400');
+                    btn.classList.remove('bg-black/20', 'border-white/5', 'text-slate-400', 'hover:bg-white/10');
+                } else {
+                    btn.classList.remove('bg-cyan-500/20', 'border-cyan-500/50', 'text-cyan-400');
+                    btn.classList.add('bg-black/20', 'border-white/5', 'text-slate-400', 'hover:bg-white/10');
+                }
+            });
+        }
+
+        // Sayfa Yüklendiğinde İkonları Oluştur
+        document.addEventListener('DOMContentLoaded', renderIcons);
+
+        function openModal() {
+            document.getElementById('Id').value = 0;
+            document.getElementById('Baslik').value = '';
+            document.getElementById('Url').value = '';
+            document.getElementById('SiraNo').value = 1;
+            document.getElementById('TemaRengi').value = 'blue';
+            document.getElementById('YeniSekme').checked = false;
+            document.getElementById('IsActive').checked = true;
+            selectIcon(''); // İkon seçimini sıfırla
+
+            formTitle.innerText = "Yeni İşlem Ekle";
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function editModal(id) {
+            formTitle.innerText = "İşlemi Düzenle";
+
+            fetch('/Admin/HizliIslem/GetHizliIslem/' + id)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('Id').value = data.id;
+                    document.getElementById('Baslik').value = data.baslik;
+                    document.getElementById('Url').value = data.url;
+                    document.getElementById('SiraNo').value = data.siraNo;
+                    document.getElementById('TemaRengi').value = data.temaRengi;
+                    document.getElementById('YeniSekme').checked = data.yeniSekme;
+                    document.getElementById('IsActive').checked = data.isActive;
+
+                    selectIcon(data.ikon); // Mevcut ikonu seç
+
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modal.classList.remove('opacity-0');
+                        modalContent.classList.remove('scale-95');
+                    }, 10);
+                });
+        }
+    </script>
+}

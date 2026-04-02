@@ -8,5 +8,7 @@ namespace GaziHastane.Models
         public IEnumerable<Haber> Haberler { get; set; }
         public IEnumerable<Etkinlik> Etkinlikler { get; set; }
         public IEnumerable<Duyuru> Duyurular { get; set; }
+        public List<HizliIslem> HizliIslemler { get; set; }
+        public List<Medya> SliderGorselleri { get; set; }
     }
 }
