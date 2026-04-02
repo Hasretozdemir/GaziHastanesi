@@ -1,151 +1,424 @@
 @model IEnumerable<GaziHastane.Models.KrokiBlok>
 @{
-    ViewData["Title"] = "Gelişmiş İnteraktif Hastane Krokisi";
+    ViewData["Title"] = "Hastane Yerleşim Planı";
 }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
 <style>
+    @@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
     :root {
-        --gazi-blue: #003366;
-        --gazi-gold: #c5a059;
-        --text-dark: #2c3e50;
-        --bg-color: #f8fafc;
-        --active-block-color: #003366;
+        --active-block-color: #2563eb;
     }
 
     body {
-        background-color: var(--bg-color);
-        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
-    .kroki-container {
-        width: 100%;
-        max-width: 1050px;
-        margin: 0 auto;
-        padding: 30px;
-        background: white;
-        border-radius: 24px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.05);
-        border: 1px solid #f1f5f9;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        justify-content: center;
+    /* ── MİMARİ HARİTA (BLUEPRINT) ARKA PLANI ── */
+    .campus-map-container {
+        background-color: #e2e8f0;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.6) 2px, transparent 2px), linear-gradient(90deg, rgba(255, 255, 255, 0.6) 2px, transparent 2px);
+        background-size: 40px 40px;
+        border: 2px solid #cbd5e1;
+        border-radius: 2rem;
+        padding: 3rem 2rem;
+        position: relative;
+        box-shadow: inset 0 0 30px rgba(0,0,0,0.03);
     }
 
-    .bina-dynamic {
+    /* ── BİNA KROKİLERİ (TOP-DOWN VIEW) ── */
+    .bina-card {
+        position: relative;
+        background: #ffffff;
+        border: 4px solid var(--block-color);
+        border-radius: 16px;
+        height: 160px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        text-align: center;
-        color: white;
-        font-weight: 700;
-        font-size: 1.15rem;
-        letter-spacing: 0.5px;
-        border-radius: 16px;
         cursor: pointer;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-        border: 2px solid rgba(255,255,255,0.4);
-        padding: 30px 40px;
-        min-width: 220px;
-        text-shadow: 0px 2px 4px rgba(0,0,0,0.3);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 10;
+        box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.08), inset 0 0 0 4px rgba(255, 255, 255, 0.5);
     }
 
-    .bina-dynamic i { margin-bottom: 15px; font-size: 2rem; color: rgba(255,255,255,0.9); }
-    .bina-dynamic:hover, .bina-dynamic.aktif { transform: scale(1.08) translateY(-5px); box-shadow: 0 20px 30px rgba(0,0,0,0.25); border-color: white; }
+        .bina-card::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            width: 30px;
+            height: 8px;
+            background-color: #ffffff;
+            border-left: 2px solid var(--block-color);
+            border-right: 2px solid var(--block-color);
+            z-index: 11;
+        }
 
-    .content-container {
-        display: none; padding: 40px; background: white; border-radius: 24px;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.04); margin-top: 40px;
-        border: 1px solid #f1f5f9; animation-duration: 0.6s;
+        .bina-card:hover, .bina-card.aktif {
+            transform: translate(-6px, -6px);
+            background-color: var(--block-color);
+            box-shadow: 14px 14px 0px rgba(0, 0, 0, 0.12);
+        }
+
+        .bina-card i {
+            font-size: 2.5rem;
+            color: var(--block-color);
+            margin-bottom: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .bina-card h3 {
+            color: #1e293b;
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: 0.05em;
+            margin: 0;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .bina-card:hover i, .bina-card.aktif i,
+        .bina-card:hover h3, .bina-card.aktif h3 {
+            color: #ffffff;
+        }
+
+    /* ── İÇERİK KONTEYNERLERİ (DAHA BELİRGİN) ── */
+    .content-section {
+        display: none;
+        animation-duration: 0.5s;
+        /* Seçilen binanın rengiyle üstten kalın bir vurgu çizgisi */
+        border-top: 6px solid var(--active-block-color) !important;
+        background-color: #ffffff;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
     }
 
-    .floor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; margin-top: 25px; }
-
+    /* ── KAT (FLOOR) KARTLARI (3D BUTON GÖRÜNÜMÜ) ── */
     .floor-box {
-        background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px 15px;
-        text-align: center; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        position: relative; overflow: hidden;
+        background: #ffffff;
+        border: 2px solid #cbd5e1;
+        border-bottom-width: 5px; /* Alt kısmı kalın yaparak buton hissi veriyoruz */
+        border-radius: 1rem;
+        padding: 1.25rem 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
     }
-    .floor-box::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--active-block-color); transform: scaleX(0); transition: transform 0.3s ease; }
-    .floor-box i { font-size: 2.2rem; margin-bottom: 12px; color: var(--active-block-color); transition: all 0.3s ease; }
-    .floor-box span { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); }
-    .floor-box:hover, .floor-box.active-floor { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); border-color: var(--active-block-color); }
-    .floor-box:hover::before, .floor-box.active-floor::before { transform: scaleX(1); }
-    .floor-box:hover span, .floor-box.active-floor span { color: var(--active-block-color); }
 
-    .floor-box.empty-floor { background: #f8fafc; border: 1px dashed #cbd5e1; box-shadow: none; }
-    .floor-box.empty-floor::before { background: #94a3b8; }
-    .floor-box.empty-floor i { color: #94a3b8; }
-    .floor-box.empty-floor span { color: #64748b; }
+        .floor-box i {
+            font-size: 2rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+            transition: color 0.2s ease;
+        }
 
-    .unit-list { list-style: none; padding: 0; margin: 0; }
+        .floor-box span {
+            display: block;
+            font-weight: 800;
+            color: #334155;
+            font-size: 1.1rem;
+            transition: color 0.2s ease;
+        }
+
+        /* Kat Kartı Üzerine Gelince ve Tıklanınca */
+        .floor-box:hover, .floor-box.active-floor {
+            border-color: var(--active-block-color);
+            border-bottom-color: var(--active-block-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        .floor-box.active-floor {
+            background-color: #f8fafc;
+        }
+
+            .floor-box:hover i, .floor-box.active-floor i,
+            .floor-box:hover span, .floor-box.active-floor span {
+                color: var(--active-block-color);
+            }
+
+        .floor-box.empty-floor {
+            background: #f1f5f9;
+            border-style: dashed;
+            border-bottom-width: 2px;
+            opacity: 0.7;
+        }
+
+    /* ── BİRİM (DEPARTMENT) LİSTESİ (KART GÖRÜNÜMÜ) ── */
     .unit-list li {
-        background: #f8fafc; padding: 16px 20px; border-radius: 16px; margin-bottom: 12px;
-        display: flex; align-items: center; border: 1px solid #e2e8f0; transition: all 0.2s ease;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-left: 6px solid #cbd5e1; /* Varsayılan kalın sol çizgi */
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
     }
-    .unit-list li:hover { transform: translateX(8px); border-color: var(--active-block-color); background: white; box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
 
-    .unit-icon-wrapper {
-        min-width: 45px; height: 45px; border-radius: 50%; background: white; color: var(--active-block-color);
-        display: flex; align-items: center; justify-content: center; margin-right: 18px; font-size: 1.2rem;
-        transition: 0.3s; border: 1px solid #e2e8f0;
+        .unit-list li:hover {
+            border-left-color: var(--active-block-color);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            transform: translateX(8px); /* Üzerine gelince sağa doğru belirgin şekilde çıkar */
+        }
+
+    .unit-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: #f1f5f9;
+        color: #475569;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        margin-right: 1.25rem;
+        transition: all 0.3s ease;
     }
-    .unit-list li:hover .unit-icon-wrapper { background: var(--active-block-color); color: white; border-color: var(--active-block-color); }
-    .unit-text { font-weight: 600; color: var(--text-dark); font-size: 1.05rem; }
-    .unit-text.muted { color: #94a3b8; font-style: italic; }
+
+    .unit-list li:hover .unit-icon {
+        background: var(--active-block-color);
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .unit-text {
+        font-weight: 700;
+        color: #1e293b;
+        font-size: 1.05rem;
+    }
+
+        .unit-text.muted {
+            color: #94a3b8;
+        }
 </style>
 
-<div class="container py-5">
-    <div class="text-center mb-5 animate__animated animate__fadeInDown">
-        <h1 class="fw-bolder" style="color: var(--gazi-blue); font-size: 2.5rem;">
-            <i class="fas fa-map-marked-alt me-3 text-warning"></i>Gazi Hastanesi Blokları
+<div class="max-w-7xl mx-auto pt-8 pb-12 px-4">
+
+    <div class="text-center mb-10 animate__animated animate__fadeInDown">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-slate-800 mb-4 shadow-lg shadow-slate-800/20">
+            <i class="fa-solid fa-map text-2xl text-white"></i>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-black text-slate-800 tracking-tight mb-3">
+            Gazi Üniversitesi Hastanesi <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500">Yerleşim Planı</span>
         </h1>
-        <p class="lead mt-3" style="color: #64748b;">Aşağıdaki bloklardan birini seçerek kat ve bölüm planlarını dinamik olarak inceleyebilirsiniz.</p>
+        <p class="text-slate-500 font-medium max-w-2xl mx-auto">
+            Aşağıdaki harita üzerinden incelemek istediğiniz bloğu seçerek kat ve poliklinik yerleşimlerine ulaşabilirsiniz.
+        </p>
     </div>
 
-    <!-- Dinamik Bloklar -->
-    <div class="kroki-container animate__animated animate__fadeInUp">
-        @if(Model != null && Model.Any())
-        {
-            foreach(var blok in Model)
+    <div class="campus-map-container mb-10 animate__animated animate__fadeInUp">
+        <div class="absolute top-6 left-6 text-slate-500 font-bold tracking-widest uppercase text-xs opacity-80 bg-white/50 px-3 py-1 rounded-full backdrop-blur-sm">
+            <i class="fa-solid fa-compass me-2"></i>Kroki Görünümü
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 mt-6">
+            @if (Model != null && Model.Any())
             {
-                <div class="bina-dynamic" style="background-color: @(blok.Renk ?? "#003366");" onclick="loadFloors('@Html.Raw(blok.BlokAdi.Replace("'", "\\'"))', this, '@(blok.Renk ?? "#003366")')">
-                    <i class="fas fa-building d-block"></i>
-                    @blok.BlokAdi
+                foreach (var blok in Model)
+                {
+                    <div class="bina-card"
+                         style="--block-color: @(blok.Renk ?? "#3b82f6");"
+                         onclick="loadFloors('@Html.Raw(blok.BlokAdi.Replace("'", "\\'"))', this, '@(blok.Renk ?? "#3b82f6")')">
+                        <i class="fa-solid fa-building"></i>
+                        <h3>@blok.BlokAdi</h3>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-span-full">
+                    <div class="bg-white border-2 border-dashed border-slate-300 rounded-2xl p-10 text-center">
+                        <i class="fa-solid fa-map-location-dot text-4xl text-slate-300 mb-4"></i>
+                        <h3 class="text-slate-600 font-bold text-xl mb-1">Yerleşke Boş</h3>
+                        <p class="text-slate-500">Sisteme henüz herhangi bir blok kroki kaydı eklenmemiştir.</p>
+                    </div>
                 </div>
             }
-        }
-        else
-        {
-            <div class="alert alert-info w-100 text-center shadow-sm rounded-3 py-4">
-                <i class="fas fa-info-circle me-2 fs-5 mb-2 d-block"></i>
-                Yönetim paneli üzerinden henüz blok tanımlanmamıştır. Lütfen eklentilerinizi admin sayfasından yapınız.
+        </div>
+    </div>
+
+    <div id="floor-grid-container" class="content-section p-8 rounded-[1.5rem] border border-slate-200 mb-8">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 pb-4 border-b-2 border-slate-100">
+            <div>
+                <h3 class="text-2xl font-black text-slate-800 flex items-center gap-3">
+                    <i class="fa-solid fa-layer-group text-slate-400"></i>
+                    <span id="selected-block-title">Blok Katları</span>
+                </h3>
+                <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mt-2">İncelemek İstediğiniz Katı Seçin</p>
             </div>
-        }
+            <span class="px-5 py-2 rounded-xl text-sm font-black uppercase tracking-wider text-white shadow-md transition-colors" id="floor-count-badge" style="background-color: var(--active-block-color);">
+                0 Kat
+            </span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5" id="floor-grid-area">
+        </div>
     </div>
 
-    <!-- Katlar Alanı -->
-    <div id="floor-grid-container" class="content-container animate__animated">
-        <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3 mb-3 border-bottom pb-3">
-            <h3 class="m-0 fw-bold text-center text-sm-start" id="selected-block-title" style="color: var(--active-block-color);">Blok Katları</h3>
-            <span class="badge rounded-pill" style="background-color: var(--active-block-color); font-size: 0.9rem; padding: 8px 16px;" id="floor-count-badge">0 Kat</span>
+    <div id="departments-container" class="content-section p-8 rounded-[1.5rem] border border-slate-200">
+        <div class="mb-8 pb-4 border-b-2 border-slate-100">
+            <h3 class="text-2xl font-black text-slate-800 flex items-center gap-3">
+                <i class="fa-solid fa-door-open text-slate-400"></i>
+                <span id="selected-floor-title">Kat Detayı</span>
+            </h3>
+            <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mt-2">Bu Katta Bulunan Birimler</p>
         </div>
-        <div class="floor-grid" id="floor-grid-area"></div>
-    </div>
 
-    <!-- Departmanlar Alanı -->
-    <div id="departments-container" class="content-container animate__animated">
-        <div class="d-flex align-items-center mb-4 border-bottom pb-3">
-            <h3 class="m-0 fw-bold" id="selected-floor-title" style="color: var(--active-block-color);">Kat Detayı</h3>
-        </div>
-        <ul class="unit-list" id="department-list"></ul>
+        <ul class="unit-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2" id="department-list">
+        </ul>
     </div>
 </div>
 
+@section Scripts {
+    @{
+        var jsonData = "[]";
+        if (Model != null)
+        {
+            var dataList = Model.Select(b => new
+            {
+                Id = b.Id,
+                BlokAdi = b.BlokAdi ?? "",
+                Renk = b.Renk ?? "#3b82f6",
+                Katlar = b.Katlar != null ? b.Katlar.Select(k => new
+                {
+                    Id = k.Id,
+                    KatAdi = k.KatAdi ?? "",
+                    Bolumler = k.Bolumler != null ? k.Bolumler.Select(bolum => new
+                    {
+                        Id = bolum.Id,
+                        BirimAdi = bolum.BirimAdi ?? "",
+                        Ikon = bolum.Ikon ?? "fa-door-open",
+                        IsEmpty = bolum.IsEmpty
+                    }) : null
+                }) : null
+            });
+            jsonData = System.Text.Json.JsonSerializer.Serialize(dataList);
+        }
+    }
+
+    <script>
+        var hospitalData = @Html.Raw(jsonData);
+
+        function loadFloors(blockName, element, color) {
+            document.querySelectorAll('.bina-card').forEach(el => el.classList.remove('aktif'));
+            element.classList.add('aktif');
+
+            // Tüm bileşenlerin rengini değiştiren CSS Değişkeni
+            document.documentElement.style.setProperty('--active-block-color', color);
+
+            document.getElementById('selected-block-title').innerText = blockName + ' Kat Planı';
+            document.getElementById('departments-container').style.display = 'none';
+
+            var floorGridArea = document.getElementById('floor-grid-area');
+            floorGridArea.innerHTML = '';
+
+            var block = hospitalData.find(b => b.BlokAdi === blockName);
+
+            if (block && block.Katlar && block.Katlar.length > 0) {
+                document.getElementById('floor-count-badge').innerText = block.Katlar.length + ' Kat Bulundu';
+
+                block.Katlar.forEach(kat => {
+                    var isKatEmpty = !kat.Bolumler || kat.Bolumler.length === 0;
+
+                    var floorBox = document.createElement('div');
+                    floorBox.className = 'floor-box ' + (isKatEmpty ? 'empty-floor' : '');
+                    floorBox.onclick = function() { showDepartments(kat.Id, kat.KatAdi, this); };
+
+                    var icon = document.createElement('i');
+                    icon.className = 'fa-solid fa-layer-group';
+                    floorBox.appendChild(icon);
+
+                    var span = document.createElement('span');
+                    span.innerText = kat.KatAdi;
+                    floorBox.appendChild(span);
+
+                    floorGridArea.appendChild(floorBox);
+                });
+            } else {
+                document.getElementById('floor-count-badge').innerText = '0 Kat';
+                floorGridArea.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-slate-400 font-medium bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+                        <i class="fa-solid fa-box-open text-5xl mb-4 opacity-30 block"></i>
+                        Bu bloka ait kat bilgisi sisteme girilmemiştir.
+                    </div>`;
+            }
+
+            var container = document.getElementById('floor-grid-container');
+            container.style.display = 'block';
+            container.classList.remove('animate__fadeInUp');
+            void container.offsetWidth;
+            container.classList.add('animate__fadeInUp');
+
+            setTimeout(() => {
+                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        function showDepartments(katId, katAdi, element) {
+            document.querySelectorAll('.floor-box').forEach(el => el.classList.remove('active-floor'));
+            element.classList.add('active-floor');
+
+            document.getElementById('selected-floor-title').innerText = katAdi + ' Birimleri / Poliklinikleri';
+
+            var deptList = document.getElementById('department-list');
+            deptList.innerHTML = '';
+
+            var targetKat = null;
+            for(var i = 0; i < hospitalData.length; i++) {
+                if (hospitalData[i].Katlar) {
+                    targetKat = hospitalData[i].Katlar.find(k => k.Id === katId);
+                    if (targetKat) break;
+                }
+            }
+
+            if (targetKat && targetKat.Bolumler && targetKat.Bolumler.length > 0) {
+                targetKat.Bolumler.forEach(bolum => {
+                    var li = document.createElement('li');
+
+                    var iconWrapper = document.createElement('div');
+                    iconWrapper.className = 'unit-icon';
+                    var icon = document.createElement('i');
+                    icon.className = 'fa-solid ' + (bolum.Ikon ? bolum.Ikon : 'fa-door-open');
+                    iconWrapper.appendChild(icon);
+                    li.appendChild(iconWrapper);
+
+                    var span = document.createElement('span');
+                    span.className = 'unit-text flex-1 ' + (bolum.IsEmpty ? 'muted' : '');
+                    span.innerText = bolum.BirimAdi;
+                    li.appendChild(span);
+
+                    if (bolum.IsEmpty) {
+                        var badge = document.createElement('span');
+                        badge.className = 'px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-[11px] font-bold uppercase tracking-wider ml-auto border border-slate-200';
+                        badge.innerText = 'Pasif';
+                        li.appendChild(badge);
+                    }
+
+                    deptList.appendChild(li);
+                });
+            } else {
+                deptList.innerHTML = `
+                    <li class="col-span-full bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col justify-center items-center py-12 rounded-2xl shadow-none hover:transform-none hover:border-slate-300">
+                        <i class="fa-solid fa-ghost text-4xl text-slate-300 mb-3"></i>
+                        <span class="text-slate-500 font-semibold">Bu katta kayıtlı birim bulunamadı.</span>
+                    </li>`;
+            }
+
+            var container = document.getElementById('departments-container');
+            container.style.display = 'block';
+            container.classList.remove('animate__fadeInUp');
+            void container.offsetWidth;
+            container.classList.add('animate__fadeInUp');
+
+            setTimeout(() => {
+                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+    </script>
 }

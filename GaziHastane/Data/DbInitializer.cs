@@ -84,6 +84,51 @@ namespace GaziHastane.Data
                 context.Yetkililer.Add(admin);
                 context.SaveChanges();
             }
+
+            // 4. KURUMSAL SIDEBAR MENÜ TOHUMLAMA
+            if (!context.KurumsalMenuGruplar.Any())
+            {
+                var grupYonetim = new KurumsalMenuGrup
+                {
+                    GrupAdi = "Yönetim",
+                    Sira = 1,
+                    AktifMi = true
+                };
+
+                var grupKurumsal = new KurumsalMenuGrup
+                {
+                    GrupAdi = "Kurumsal",
+                    Sira = 2,
+                    AktifMi = true
+                };
+
+                context.KurumsalMenuGruplar.AddRange(grupYonetim, grupKurumsal);
+                context.SaveChanges();
+
+                var menuler = new KurumsalMenu[]
+                {
+                    new KurumsalMenu { GrupId = grupYonetim.Id, Baslik = "Baþhekimlik", Url = "/Kurumsal/Bashekimlik", IconClass = "fa-user-tie", Sira = 1, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupYonetim.Id, Baslik = "Baþmüdürlük", Url = "/Kurumsal/Basmudurluk", IconClass = "fa-users", Sira = 2, AktifMi = true },
+
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Hakkýmýzda", Url = "/Kurumsal/Index", IconClass = "fa-circle-info", Sira = 1, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Hemþirelik Hizmetleri", Url = "/Kurumsal/HemsirelikHizmetleri", IconClass = "fa-user-nurse", Sira = 2, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Bilgi Ýþlem Merkezi", Url = "/Kurumsal/BilgiIslem", IconClass = "fa-microchip", Sira = 3, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Ýþ Saðlýðý ve Güvenliði", Url = "/Kurumsal/IsSagligi", IconClass = "fa-shield-halved", Sira = 4, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Enfeksiyon Kontrol", Url = "/Kurumsal/Enfeksiyon", IconClass = "fa-virus-slash", Sira = 5, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Eczacýlýk Hizmetleri", Url = "/Kurumsal/Eczacilik", IconClass = "fa-pills", Sira = 6, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Satýn Alma", Url = "/Kurumsal/SatinAlma", IconClass = "fa-cart-shopping", Sira = 7, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Ýstatistik ve Raporlama", Url = "/Kurumsal/Istatistik", IconClass = "fa-chart-line", Sira = 8, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Arþiv Birimi", Url = "/Kurumsal/Arsiv", IconClass = "fa-box-archive", Sira = 9, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Hasta Ýletiþim Birimi", Url = "/Kurumsal/HastaIletisim", IconClass = "fa-comment-medical", Sira = 10, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Ýþ Akýþ Þemalarý", Url = "/Kurumsal/IsAkis", IconClass = "fa-diagram-project", Sira = 11, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Organizasyon Þemalarý", Url = "/Kurumsal/Organizasyon", IconClass = "fa-sitemap", Sira = 12, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Ýç Kontrol", Url = "/Kurumsal/IcKontrol", IconClass = "fa-check-double", Sira = 13, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Basýn ve Kurumsal Ýletiþim", Url = "/Kurumsal/BasinIletisim", IconClass = "fa-bullhorn", Sira = 14, AktifMi = true }
+                };
+
+                context.KurumsalMenuler.AddRange(menuler);
+                context.SaveChanges();
+            }
         }
     }
 }

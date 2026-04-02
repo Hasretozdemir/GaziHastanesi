@@ -1,249 +1,401 @@
 @model IEnumerable<GaziHastane.Models.KrokiBlok>
 @{
     ViewData["Title"] = "Hastane Krokisi Yönetimi";
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container-fluid py-4">
-    <!-- Header -->
-    <div class="row mb-4">
-        <div class="col-12 d-flex justify-content-between align-items-center">
-            <h2 class="mb-0 text-primary"><i class="fas fa-sitemap me-2"></i>Kroki Yönetimi</h2>
-            <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#blokModal" onclick="yeniBlok()">
-                <i class="fas fa-plus me-2"></i>Yeni Blok Ekle
-            </button>
-        </div>
-    </div>
+<style>
+    /* Modern Karanlık Tema Özel CSS'leri */
+    .kroki-wrapper {
+        background-color: rgba(20, 24, 44, 0.6);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        color: #e2e8f0;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    .kroki-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .kroki-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .kroki-title-icon {
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 1.5rem;
+    }
+
+    .btn-modern-primary {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+
+        .btn-modern-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+            color: white;
+        }
+
+    /* Ağaç Satır Tasarımları */
+    .tree-item {
+        display: flex;
+        align-items: center;
+        padding: 14px 20px;
+        border-radius: 12px;
+        margin-bottom: 8px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        transition: all 0.2s ease;
+    }
+
+        .tree-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+    .level-blok {
+        border-left: 4px solid #3b82f6;
+        margin-top: 16px;
+    }
+
+    .level-kat {
+        border-left: 4px solid #8b5cf6;
+        margin-left: 32px;
+    }
+
+    .level-birim {
+        border-left: 4px solid #10b981;
+        margin-left: 64px;
+        background: rgba(0, 0, 0, 0.1);
+    }
+
+    .item-info {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .item-name {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #f8fafc;
+    }
+
+    .item-meta {
+        flex: 1;
+        font-size: 0.85rem;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .item-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    /* Aksiyon Butonları */
+    .action-btn {
+        background: rgba(255, 255, 255, 0.05);
+        color: #cbd5e1;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .action-btn.add {
+            color: #60a5fa;
+        }
+
+            .action-btn.add:hover {
+                background: rgba(96, 165, 250, 0.15);
+                border-color: rgba(96, 165, 250, 0.3);
+            }
+
+        .action-btn.edit {
+            color: #fbbf24;
+        }
+
+            .action-btn.edit:hover {
+                background: rgba(251, 191, 36, 0.15);
+                border-color: rgba(251, 191, 36, 0.3);
+            }
+
+        .action-btn.delete {
+            color: #f87171;
+        }
+
+            .action-btn.delete:hover {
+                background: rgba(248, 113, 113, 0.15);
+                border-color: rgba(248, 113, 113, 0.3);
+            }
+
+    /* Modern Badge (Etiket) */
+    .modern-badge {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    .badge-active {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-passive {
+        background: rgba(148, 163, 184, 0.15);
+        color: #94a3b8;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    /* İkon Renkleri */
+    .icon-blok {
+        color: #60a5fa;
+    }
+
+    .icon-kat {
+        color: #a78bfa;
+    }
+
+    .icon-birim {
+        color: #34d399;
+    }
+</style>
+
+<div class="container-fluid mt-4">
 
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399;" role="alert">
             <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
 
-    <!-- Content -->
-    <div class="row">
-        @foreach(var blok in Model)
-        {
-            <div class="col-12 mb-4">
-                <div class="card shadow-sm border-0 border-start border-5" style="border-color: @(blok.Renk ?? "#000") !important;">
-                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                        <h4 class="mb-0 fw-bold">
-                            <span class="badge" style="background-color: @(blok.Renk ?? "#000");">@blok.BlokAdi</span>
-                        </h4>
-                        <div>
-                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#katModal" onclick="yeniKat(@blok.Id)">
-                                <i class="fas fa-plus"></i> Kat Ekle
-                            </button>
-                            <button class="btn btn-sm btn-outline-warning mx-1" data-bs-toggle="modal" data-bs-target="#blokModal" onclick="duzenleBlok(@blok.Id, '@blok.BlokAdi', '@blok.Renk')">
+    <div class="kroki-wrapper">
+
+        <div class="kroki-header">
+            <div class="kroki-title">
+                <i class="fas fa-layer-group kroki-title-icon"></i>
+                Hastane Krokisi ve Yerleşim Planı
+            </div>
+            <a asp-action="BlokEkle" class="btn-modern-primary">
+                <i class="fas fa-plus"></i> Yeni Blok Ekle
+            </a>
+        </div>
+
+        <div class="kroki-body">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var blok in Model)
+                {
+                    <div class="tree-item level-blok">
+                        <div class="item-info">
+                            <i class="fas fa-building icon-blok fs-5"></i>
+                            <span class="item-name">@blok.BlokAdi</span>
+                        </div>
+                        <div class="item-meta">
+                            <span class="modern-badge" style="background: @(blok.Renk ?? "#3b82f6"); color: #fff; border: none; box-shadow: 0 0 10px @(blok.Renk ?? "#3b82f6")80;">
+                                <i class="fas fa-palette me-1"></i> Tema: @(blok.Renk ?? "Varsayılan")
+                            </span>
+                        </div>
+                        <div class="item-actions">
+                            <a asp-action="KatEkle" asp-route-blokId="@blok.Id" class="action-btn add" title="Kat Ekle">
+                                <i class="fas fa-plus"></i> Kat
+                            </a>
+                            <a asp-action="BlokDuzenle" asp-route-id="@blok.Id" class="action-btn edit" title="Düzenle">
                                 <i class="fas fa-edit"></i>
-                            </button>
-                            <form asp-action="BlokSil" asp-route-id="@blok.Id" method="post" class="d-inline" onsubmit="return confirm('Bu bloğu ve içindeki tüm katları/bölümleri silmek istediğinize emin misiniz?');">
-                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                            </a>
+                            <form asp-area="Admin" asp-controller="Kroki" asp-action="BlokSil" asp-route-id="@blok.Id" method="post" class="m-0 btn-delete-form" data-name="@blok.BlokAdi" data-type="blok">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="action-btn delete" title="Sil">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </form>
                         </div>
                     </div>
-                    
-                    <div class="card-body bg-light">
-                        @if(blok.Katlar != null && blok.Katlar.Any())
+
+                    if (blok.Katlar != null && blok.Katlar.Any())
+                    {
+                        foreach (var kat in blok.Katlar)
                         {
-                            <div class="accordion" id="accBlok_@blok.Id">
-                                @foreach(var kat in blok.Katlar)
+                            <div class="tree-item level-kat">
+                                <div class="item-info">
+                                    <i class="fas fa-align-justify icon-kat"></i>
+                                    <span class="item-name" style="font-size: 0.95rem;">@kat.KatAdi</span>
+                                </div>
+                                <div class="item-meta">
+                                    <i class="fas fa-door-open"></i> @(kat.Bolumler?.Count() ?? 0) Kayıtlı Birim
+                                </div>
+                                <div class="item-actions">
+                                    <a asp-action="BolumEkle" asp-route-katId="@kat.Id" class="action-btn add" title="Birim Ekle">
+                                        <i class="fas fa-plus"></i> Birim
+                                    </a>
+                                    <a asp-action="KatDuzenle" asp-route-id="@kat.Id" class="action-btn edit" title="Düzenle">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form asp-area="Admin" asp-controller="Kroki" asp-action="KatSil" asp-route-id="@kat.Id" method="post" class="m-0 btn-delete-form" data-name="@kat.KatAdi" data-type="kat">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="action-btn delete" title="Sil">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            if (kat.Bolumler != null && kat.Bolumler.Any())
+                            {
+                                foreach (var bolum in kat.Bolumler)
                                 {
-                                    <div class="accordion-item mb-2 border-0 shadow-sm rounded">
-                                        <h2 class="accordion-header" id="heading_@kat.Id">
-                                            <button class="accordion-button collapsed fw-bold text-dark rounded" type="button" data-bs-toggle="collapse" data-bs-target="#col_@kat.Id" aria-expanded="false" aria-controls="col_@kat.Id">
-                                                <i class="fas fa-layer-group text-secondary me-2"></i>@kat.KatAdi
-                                            </button>
-                                        </h2>
-                                        <div id="col_@kat.Id" class="accordion-collapse collapse" aria-labelledby="heading_@kat.Id" data-bs-parent="#accBlok_@blok.Id">
-                                            <div class="accordion-body bg-white rounded-bottom">
-                                                
-                                                <div class="d-flex justify-content-between mb-3 border-bottom pb-2 align-items-center">
-                                                    <span class="text-muted small">Bu kata ait bölümler listesi</span>
-                                                    <div>
-                                                        <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#bolumModal" onclick="yeniBolum(@kat.Id)">
-                                                            <i class="fas fa-plus me-1"></i> Bölüm Ekle
-                                                        </button>
-                                                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#katModal" onclick="duzenleKat(@kat.Id, '@kat.KatAdi', @blok.Id)">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                        <form asp-action="KatSil" asp-route-id="@kat.Id" method="post" class="d-inline" onsubmit="return confirm('Bu katı silmek istediğinize emin misiniz?');">
-                                                            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-
-                                                <ul class="list-group list-group-flush">
-                                                    @if(kat.Bolumler != null && kat.Bolumler.Any())
-                                                    {
-                                                        @foreach(var bolum in kat.Bolumler)
-                                                        {
-                                                            <li class="list-group-item d-flex justify-content-between align-items-center py-3 border-0 rounded bg-light mb-2">
-                                                                <div>
-                                                                    <div class="rounded-circle d-inline-flex justify-content-center align-items-center bg-white shadow-sm me-3" style="width: 40px; height: 40px;">
-                                                                        <i class="fas @(bolum.Ikon ?? "fa-circle") text-primary"></i>
-                                                                    </div>
-                                                                    <span class="fw-semibold @(bolum.IsEmpty ? "text-muted fst-italic" : "text-dark")">@bolum.BirimAdi</span>
-                                                                    @if(bolum.IsEmpty) { <span class="badge bg-secondary ms-2 small">Sadece Görsel</span> }
-                                                                </div>
-                                                                <div>
-                                                                    <button class="btn btn-sm btn-light text-warning shadow-sm" data-bs-toggle="modal" data-bs-target="#bolumModal" onclick="duzenleBolum(@bolum.Id, '@bolum.BirimAdi', '@bolum.Ikon', @(bolum.IsEmpty.ToString().ToLower()), @kat.Id)">
-                                                                        <i class="fas fa-pen"></i>
-                                                                    </button>
-                                                                    <form asp-action="BolumSil" asp-route-id="@bolum.Id" method="post" class="d-inline" onsubmit="return confirm('Emin misiniz?');">
-                                                                        <button type="submit" class="btn btn-sm btn-light text-danger shadow-sm"><i class="fas fa-times"></i></button>
-                                                                    </form>
-                                                                </div>
-                                                            </li>
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        <li class="list-group-item text-center text-muted border-0 py-4 bg-transparent">Bu katta henüz bir bölüm yok.</li>
-                                                    }
-                                                </ul>
-
-                                            </div>
+                                    <div class="tree-item level-birim">
+                                        <div class="item-info">
+                                            <i class="fas @(bolum.Ikon ?? "fa-hashtag") icon-birim" style="opacity: 0.8;"></i>
+                                            <span class="item-name" style="font-size: 0.9rem; color: #cbd5e1;">@bolum.BirimAdi</span>
+                                        </div>
+                                        <div class="item-meta">
+                                            @if (bolum.IsEmpty)
+                                            {
+                                                <span class="modern-badge badge-passive">Pasif Alan</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="modern-badge badge-active">Aktif</span>
+                                            }
+                                        </div>
+                                        <div class="item-actions">
+                                            <a asp-action="BolumDuzenle" asp-route-id="@bolum.Id" class="action-btn edit" style="padding: 6px; border-radius: 6px;" title="Düzenle">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form asp-area="Admin" asp-controller="Kroki" asp-action="BolumSil" asp-route-id="@bolum.Id" method="post" class="m-0 btn-delete-form" data-name="@bolum.BirimAdi" data-type="birim">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="action-btn delete" style="padding: 6px; border-radius: 6px;" title="Sil">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 }
-                            </div>
+                            }
+                            else
+                            {
+                                <div class="tree-item level-birim" style="background: transparent; border: none;">
+                                    <span style="color: #64748b; font-size: 0.85rem; font-style: italic;"><i class="fas fa-info-circle me-1"></i> Bu katta henüz birim yok.</span>
+                                </div>
+                            }
                         }
-                        else
-                        {
-                            <p class="text-center text-muted my-3 mb-0">Bu bloka henüz kat eklenmemiş.</p>
-                        }
-                    </div>
+                    }
+                    else
+                    {
+                        <div class="tree-item level-kat" style="background: transparent; border: none;">
+                            <span style="color: #64748b; font-size: 0.85rem; font-style: italic;"><i class="fas fa-info-circle me-1"></i> Bu bloğa ait kat bulunmuyor.</span>
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                <div style="text-align: center; padding: 60px 20px;">
+                    <i class="fas fa-box-open fs-1" style="color: rgba(255,255,255,0.1); margin-bottom: 15px;"></i>
+                    <h5 style="color: #94a3b8; font-weight: 500;">Henüz Sistemde Kayıtlı Veri Yok</h5>
+                    <p style="color: #64748b; font-size: 0.9rem;">Sağ üstteki butonu kullanarak ilk bloğunuzu oluşturabilirsiniz.</p>
                 </div>
-            </div>
-        }
-    </div>
-</div>
-
-<!-- Blok Modal -->
-<div class="modal fade" id="blokModal" tabindex="-1">
-    <div class="modal-dialog">
-        <form asp-action="BlokKaydet" method="post" class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">Blok Bilgisi</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" name="Id" id="blok_Id" value="0" />
-                <div class="mb-3">
-                    <label class="form-label">Blok Adı (D Blok, Poliklinikler vb.)</label>
-                    <input type="text" name="BlokAdi" id="blok_Ad" class="form-control" required />
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Blok Rengi</label>
-                    <input type="color" name="Renk" id="blok_Renk" class="form-control form-control-color w-100" value="#003366" />
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Kaydet</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Kat Modal -->
-<div class="modal fade" id="katModal" tabindex="-1">
-    <div class="modal-dialog">
-        <form asp-action="KatKaydet" method="post" class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">Kat Bilgisi</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" name="Id" id="kat_Id" value="0" />
-                <input type="hidden" name="BlokId" id="kat_BlokId" />
-                <div class="mb-3">
-                    <label class="form-label">Kat Adı (Örn: Zemin Kat, 1. Kat)</label>
-                    <input type="text" name="KatAdi" id="kat_Ad" class="form-control" required />
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Kaydet</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Bölüm Modal -->
-<div class="modal fade" id="bolumModal" tabindex="-1">
-    <div class="modal-dialog">
-        <form asp-action="BolumKaydet" method="post" class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">Bölüm / Birim Bilgisi</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" name="Id" id="bolum_Id" value="0" />
-                <input type="hidden" name="KatId" id="bolum_KatId" />
-                <div class="mb-3">
-                    <label class="form-label">Birim/Bölüm Adı</label>
-                    <input type="text" name="BirimAdi" id="bolum_Ad" class="form-control" required />
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">FontAwesome İkon Sınıfı (Örn: fa-bed, fa-user-md)</label>
-                    <input type="text" name="Ikon" id="bolum_Ikon" class="form-control" value="fa-layer-group" />
-                    <small class="text-muted"><a href="https://fontawesome.com/icons" target="_blank">İkonları gör</a></small>
-                </div>
-                <div class="form-check form-switch mt-3">
-                    <input class="form-check-input" type="checkbox" role="switch" name="IsEmpty" id="bolum_Empty" value="true">
-                    <label class="form-check-label" for="bolum_Empty">Bu birim sadece boş idari/arşiv ofisi mi? (Açık renk görünür)</label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Kaydet</button>
-            </div>
-        </form>
+            }
+        </div>
     </div>
 </div>
 
 @section Scripts {
-<script>
-    function yeniBlok() {
-        document.getElementById('blok_Id').value = 0;
-        document.getElementById('blok_Ad').value = '';
-        document.getElementById('blok_Renk').value = '#003366';
-    }
-    function duzenleBlok(id, ad, renk) {
-        document.getElementById('blok_Id').value = id;
-        document.getElementById('blok_Ad').value = ad;
-        document.getElementById('blok_Renk').value = renk;
-    }
-    
-    function yeniKat(blokId) {
-        document.getElementById('kat_Id').value = 0;
-        document.getElementById('kat_BlokId').value = blokId;
-        document.getElementById('kat_Ad').value = '';
-    }
-    function duzenleKat(id, ad, blokId) {
-        document.getElementById('kat_Id').value = id;
-        document.getElementById('kat_BlokId').value = blokId;
-        document.getElementById('kat_Ad').value = ad;
-    }
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Tüm silme formlarını seç
+            const deleteForms = document.querySelectorAll('.btn-delete-form');
 
-    function yeniBolum(katId) {
-        document.getElementById('bolum_Id').value = 0;
-        document.getElementById('bolum_KatId').value = katId;
-        document.getElementById('bolum_Ad').value = '';
-        document.getElementById('bolum_Ikon').value = 'fa-layer-group';
-        document.getElementById('bolum_Empty').checked = false;
-    }
-    function duzenleBolum(id, ad, ikon, emp, katId) {
-        document.getElementById('bolum_Id').value = id;
-        document.getElementById('bolum_KatId').value = katId;
-        document.getElementById('bolum_Ad').value = ad;
-        document.getElementById('bolum_Ikon').value = ikon || 'fa-layer-group';
-        document.getElementById('bolum_Empty').checked = emp;
-    }
-</script>
+            deleteForms.forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    // Varsayılan form gönderimini engelle
+                    e.preventDefault();
+
+                    const name = this.getAttribute('data-name');
+                    const type = this.getAttribute('data-type');
+
+                    // Silinecek öğeye göre dinamik mesaj metni oluştur
+                    let alertHtml = '';
+                    if (type === 'blok') {
+                        alertHtml = `<span style='color: #ef4444; font-weight: bold;'>${name}</span> bloğunu silmek üzeresiniz.<br><br><small style='color: #94a3b8;'>DİKKAT: Bu bloğa ait <b>tüm katlar ve birimler</b> de kalıcı olarak silinecektir!</small>`;
+                    } else if (type === 'kat') {
+                        alertHtml = `<span style='color: #f59e0b; font-weight: bold;'>${name}</span> katını silmek üzeresiniz.<br><br><small style='color: #94a3b8;'>DİKKAT: Bu kata ait <b>tüm birimler</b> de kalıcı olarak silinecektir!</small>`;
+                    } else {
+                        alertHtml = `<span style='color: #3b82f6; font-weight: bold;'>${name}</span> birimini silmek üzeresiniz.`;
+                    }
+
+                    // SweetAlert2 Pop-up Gösterimi
+                    Swal.fire({
+                        title: 'Emin misiniz?',
+                        html: alertHtml,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#ef4444',
+                        cancelButtonColor: '#334155',
+                        confirmButtonText: '<i class="fas fa-trash me-1"></i> Evet, Sil!',
+                        cancelButtonText: '<i class="fas fa-times me-1"></i> İptal',
+                        background: '#0f172a', /* Koyu arka plan */
+                        color: '#f8fafc',      /* Açık renk metin */
+                        customClass: {
+                            popup: 'border border-secondary rounded-4 shadow-lg'
+                        }
+                    }).then((result) => {
+                        // Kullanıcı Evet butonuna basarsa formu gönder
+                        if (result.isConfirmed) {
+                            this.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 }

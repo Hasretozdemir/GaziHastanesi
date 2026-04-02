@@ -1,0 +1,99 @@
+@model GaziHastane.Models.KurumsalMenu
+@using GaziHastane.Models
+@{
+    ViewData["Title"] = "Kurumsal Menü Ýþlemleri";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var gruplar = ViewBag.Gruplar as List<KurumsalMenuGrup> ?? new List<KurumsalMenuGrup>();
+}
+
+<div class="max-w-3xl mx-auto mt-8">
+
+    <div class="mb-6 flex items-center gap-3 px-2">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+            <i class="fa-solid fa-bars-staggered text-white text-xl"></i>
+        </div>
+        <div>
+            <h2 class="text-2xl font-black text-white tracking-wide">Menü Yönetimi</h2>
+            <p class="text-sm text-slate-400 mt-1">Hastanemiz sayfasýnýn sol menüsünü buradan düzenleyebilirsiniz.</p>
+        </div>
+    </div>
+
+    <div class="glass-card bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+
+        <form asp-action="MenuForm" method="post" class="space-y-6">
+            @Html.AntiForgeryToken()
+            <input asp-for="Id" type="hidden" />
+
+            <div>
+                <label asp-for="GrupId" class="block text-sm font-semibold text-slate-300 mb-2">Menü Grubu <span class="text-red-400">*</span></label>
+                <div class="relative">
+                    <select asp-for="GrupId" class="w-full appearance-none rounded-xl bg-slate-800/50 border border-slate-600/50 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all duration-300 cursor-pointer">
+                        <option value="" class="bg-slate-800 text-slate-400">-- Lütfen Bir Menü Grubu Seçin --</option>
+                        @foreach (var grup in gruplar)
+                        {
+                            <option value="@grup.Id" class="bg-slate-800 text-white font-medium py-2">@grup.GrupAdi</option>
+                        }
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                        <i class="fa-solid fa-chevron-down text-sm"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label asp-for="Baslik" class="block text-sm font-semibold text-slate-300 mb-2">Menü Baþlýðý <span class="text-red-400">*</span></label>
+                <input asp-for="Baslik" class="w-full rounded-xl bg-slate-800/50 border border-slate-600/50 px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all duration-300 hover:border-slate-500" placeholder="Örn: Baþhekimlik, Kalite Birimi..." />
+            </div>
+
+            <div>
+                <label asp-for="Url" class="block text-sm font-semibold text-slate-300 mb-2">Yönlendirilecek URL Baðlantýsý</label>
+                <input asp-for="Url" class="w-full rounded-xl bg-slate-800/50 border border-slate-600/50 px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all duration-300 hover:border-slate-500" placeholder="/Kurumsal/Bashekimlik" />
+                <p class="text-xs text-slate-400 mt-2"><i class="fa-solid fa-circle-info mr-1"></i> Boþ býrakýrsanýz otomatik olarak <code>/Kurumsal/Sayfa/{menu-basligi}</code> oluþturulur ve sayfa kaydý açýlýr.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label asp-for="IconClass" class="block text-sm font-semibold text-slate-300 mb-2">Ýkon Sýnýfý (FontAwesome)</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                            <i class="fa-brands fa-font-awesome text-slate-400"></i>
+                        </div>
+                        <input asp-for="IconClass" class="w-full pl-10 rounded-xl bg-slate-800/50 border border-slate-600/50 px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all duration-300 hover:border-slate-500" placeholder="fa-solid fa-chevron-right" />
+                    </div>
+                </div>
+
+                <div>
+                    <label asp-for="Sira" class="block text-sm font-semibold text-slate-300 mb-2">Menü Sýralamasý</label>
+                    <input asp-for="Sira" type="number" class="w-full rounded-xl bg-slate-800/50 border border-slate-600/50 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all duration-300 hover:border-slate-500" placeholder="1" />
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <label class="relative flex items-center gap-3 p-4 rounded-xl border border-slate-600/50 bg-slate-800/30 hover:bg-slate-800/60 cursor-pointer transition-colors group">
+                    <div class="flex items-center">
+                        <input asp-for="AktifMi" class="w-5 h-5 rounded border-slate-500 bg-slate-700 text-cyan-500 focus:ring-cyan-500 focus:ring-offset-slate-900 cursor-pointer" />
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm font-semibold text-white group-hover:text-cyan-300 transition-colors">Menü Aktif Mi?</span>
+                        <span class="text-xs text-slate-400">Bu seçeneði kapatýrsanýz menü hastane sayfasýnda gizlenir.</span>
+                    </div>
+                </label>
+            </div>
+
+            <hr class="border-slate-700/50 my-6" />
+
+            <div class="flex items-center justify-end gap-3 pt-2">
+                <a href="/Admin/Kurumsal/Index" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 hover:text-white transition-all duration-300 font-medium">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Vazgeç
+                </a>
+
+                <button type="submit" class="flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 hover:-translate-y-0.5 transition-all duration-300">
+                    <i class="fa-solid fa-check"></i>
+                    Kaydet
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>

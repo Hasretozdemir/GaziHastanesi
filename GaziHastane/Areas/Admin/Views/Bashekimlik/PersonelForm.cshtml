@@ -1,0 +1,158 @@
+@model GaziHastane.Models.BashekimlikPersonel
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Yeni Personel Ekle" : "Personel Düzenle";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="max-w-4xl mx-auto mt-8">
+
+    <div class="mb-6 flex items-center gap-4 px-2">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_0_20px_rgba(59,130,246,0.4)] relative overflow-hidden">
+            <div class="absolute inset-0 bg-white/20 blur-md rounded-full transform -translate-x-4 -translate-y-4"></div>
+            <i class="fa-solid @(Model.Id == 0 ? "fa-user-plus" : "fa-user-pen") text-white text-2xl relative z-10"></i>
+        </div>
+        <div>
+            <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-200 tracking-wide">
+                @(Model.Id == 0 ? "Yeni Personel Ekle" : "Personeli Güncelle")
+            </h2>
+            <p class="text-sm text-blue-200/60 mt-1">Baþhekimlik kadrosundaki personel bilgilerini buradan yönetebilirsiniz.</p>
+        </div>
+    </div>
+
+    <div class="glass-card bg-slate-900/60 backdrop-blur-2xl border border-blue-500/20 rounded-3xl p-8 shadow-[0_0_40px_rgba(59,130,246,0.1)] relative overflow-hidden group">
+
+        <div class="absolute -top-24 -right-24 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-indigo-500/10 transition-colors duration-700"></div>
+
+        <form method="post" class="space-y-6 relative z-10">
+            @Html.AntiForgeryToken()
+            <input asp-for="Id" type="hidden" />
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="md:col-span-2">
+                    <label asp-for="AdSoyad" class="block text-sm font-semibold text-blue-100 mb-2">Ad Soyad <span class="text-rose-400">*</span></label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-blue-400/70">
+                            <i class="fa-solid fa-user-doctor"></i>
+                        </div>
+                        <input type="text" asp-for="AdSoyad" class="w-full rounded-xl bg-slate-800/50 border border-blue-500/20 py-3 pl-11 pr-4 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all hover:border-blue-500/40 shadow-inner" placeholder="Örn: Hakan ATALAR" required />
+                    </div>
+                    <span asp-validation-for="AdSoyad" class="text-xs text-rose-400 mt-1.5 block font-medium"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Unvan" class="block text-sm font-semibold text-blue-100 mb-2">Unvan <span class="text-rose-400">*</span></label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-blue-400/70">
+                            <i class="fa-solid fa-user-tag"></i>
+                        </div>
+                        <input type="text" asp-for="Unvan" class="w-full rounded-xl bg-slate-800/50 border border-blue-500/20 py-3 pl-11 pr-4 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all hover:border-blue-500/40 shadow-inner" placeholder="Örn: Prof. Dr. / Uzman" required />
+                    </div>
+                    <span asp-validation-for="Unvan" class="text-xs text-rose-400 mt-1.5 block font-medium"></span>
+                </div>
+
+                <div>
+                    <label asp-for="UzmanlikAlani" class="block text-sm font-semibold text-blue-100 mb-2">Uzmanlýk Alaný</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-blue-400/70">
+                            <i class="fa-solid fa-stethoscope"></i>
+                        </div>
+                        <input type="text" asp-for="UzmanlikAlani" class="w-full rounded-xl bg-slate-800/50 border border-blue-500/20 py-3 pl-11 pr-4 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all hover:border-blue-500/40 shadow-inner" placeholder="Örn: Kardiyoloji / Ortopedi" />
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-blue-500/10 my-6" />
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label asp-for="Email" class="block text-sm font-semibold text-blue-100 mb-2">E-posta Adresi</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-blue-400/70">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <input type="email" asp-for="Email" class="w-full rounded-xl bg-slate-800/50 border border-blue-500/20 py-3 pl-11 pr-4 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all hover:border-blue-500/40 shadow-inner" placeholder="ornek@gazi.edu.tr" />
+                    </div>
+                </div>
+
+                <div>
+                    <label asp-for="KurumBilgisi" class="block text-sm font-semibold text-blue-100 mb-2">Kurum Bilgisi</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-blue-400/70">
+                            <i class="fa-solid fa-hospital"></i>
+                        </div>
+                        <input type="text" asp-for="KurumBilgisi" class="w-full rounded-xl bg-slate-800/50 border border-blue-500/20 py-3 pl-11 pr-4 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all hover:border-blue-500/40 shadow-inner" placeholder="Örn: Gazi Üniversitesi Týp Fakültesi" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 bg-slate-800/30 p-5 rounded-2xl border border-blue-500/10 mt-6">
+                <div>
+                    <label asp-for="FotografYolu" class="block text-sm font-semibold text-blue-100 mb-2">Fotoðraf URL Baðlantýsý</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-blue-400/70">
+                            <i class="fa-solid fa-image"></i>
+                        </div>
+                        <input type="url" asp-for="FotografYolu" class="w-full rounded-xl bg-slate-800/50 border border-blue-500/20 py-3 pl-11 pr-4 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all hover:border-blue-500/40" placeholder="https://site.com/foto.jpg" />
+                    </div>
+                </div>
+
+                <div>
+                    <label asp-for="CvYolu" class="block text-sm font-semibold text-blue-100 mb-2">CV (Özgeçmiþ) URL Baðlantýsý</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-blue-400/70">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                        <input type="url" asp-for="CvYolu" class="w-full rounded-xl bg-slate-800/50 border border-blue-500/20 py-3 pl-11 pr-4 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all hover:border-blue-500/40" placeholder="https://site.com/cv.pdf" />
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-blue-500/10 my-6" />
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div>
+                    <label asp-for="Sira" class="block text-sm font-semibold text-blue-100 mb-2">Sýralama (Öncelik)</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-blue-400/70">
+                            <i class="fa-solid fa-arrow-down-1-9"></i>
+                        </div>
+                        <input type="number" asp-for="Sira" class="w-full rounded-xl bg-slate-800/50 border border-blue-500/20 py-3 pl-11 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all hover:border-blue-500/40" placeholder="1" />
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 grid sm:grid-cols-2 gap-4 pt-1">
+                    <label class="relative flex items-center gap-4 p-3.5 rounded-xl border border-amber-500/20 bg-slate-800/40 hover:bg-slate-800/70 cursor-pointer transition-all group">
+                        <div class="flex items-center justify-center w-6 h-6">
+                            <input type="checkbox" asp-for="IsBashekim" class="w-5 h-5 rounded border-amber-500/50 bg-slate-700 text-amber-500 focus:ring-amber-500 focus:ring-offset-slate-900 cursor-pointer transition-transform group-hover:scale-110" />
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-bold text-amber-400">Bu Kiþi Baþhekim Mi?</span>
+                            <span class="text-[11px] text-slate-400 mt-0.5">Ýþaretlerseniz hastane baþhekimi olarak en üstte çýkar.</span>
+                        </div>
+                    </label>
+
+                    <label class="relative flex items-center gap-4 p-3.5 rounded-xl border border-emerald-500/20 bg-slate-800/40 hover:bg-slate-800/70 cursor-pointer transition-all group">
+                        <div class="flex items-center justify-center w-6 h-6">
+                            <input type="checkbox" asp-for="AktifMi" class="w-5 h-5 rounded border-emerald-500/50 bg-slate-700 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-slate-900 cursor-pointer transition-transform group-hover:scale-110" />
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-bold text-emerald-400">Sitede Aktif Mi?</span>
+                            <span class="text-[11px] text-slate-400 mt-0.5">Personelin sitede görünürlüðünü açar.</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-6 border-t border-blue-500/10 mt-6">
+                <a href="/Admin/Bashekimlik/Index" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-600/50 text-slate-300 hover:text-white transition-all font-medium">
+                    <i class="fa-solid fa-arrow-left"></i> Vazgeç
+                </a>
+
+                <button type="submit" class="flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:shadow-[0_0_30px_rgba(99,102,241,0.6)] hover:-translate-y-0.5 transition-all">
+                    <i class="fa-solid fa-floppy-disk"></i> Kaydet
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>

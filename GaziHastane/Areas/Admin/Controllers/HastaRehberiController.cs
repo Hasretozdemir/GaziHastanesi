@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using GaziHastane.Data;
 using GaziHastane.Models;

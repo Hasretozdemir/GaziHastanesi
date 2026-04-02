@@ -121,10 +121,118 @@ namespace GaziHastane.Areas.Admin.Controllers
             return View();
         }
 
-        // --- GÖRSELLER PANELİ ---
-        public IActionResult Gorsel()
+        // --- GÖRSELLER PANELİ (KURUMSAL SLIDER) ---
+        public async Task<IActionResult> Gorsel()
         {
-            return View();
+            var liste = await _context.Medyalar
+                .Where(x => x.Alan == "Kurumsal")
+                .OrderBy(x => x.SiraNo)
+                .ThenByDescending(x => x.YuklenmeTarihi)
+                .ToListAsync();
+
+            return View(liste);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GorselYukle(string title, IFormFile imageFile, bool isSlider, string? hedefUrl, int siraNo = 0)
+        {
+            if (imageFile == null || imageFile.Length == 0)
+            {
+                TempData["Error"] = "Lütfen bir görsel seçin.";
+                return RedirectToAction(nameof(Gorsel));
+            }
+
+            var uploadPath = Path.Combine(_env.WebRootPath, "uploads", "slider", "kurumsal");
+            if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+            var ext = Path.GetExtension(imageFile.FileName);
+            var fileName = Guid.NewGuid() + ext;
+            var fullPath = Path.Combine(uploadPath, fileName);
+
+            await using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(stream);
+            }
+
+            var medya = new Medya
+            {
+                Baslik = title,
+                Alan = "Kurumsal",
+                GorselYolu = "/uploads/slider/kurumsal/" + fileName,
+                IsSlider = isSlider,
+                HedefUrl = string.IsNullOrWhiteSpace(hedefUrl) ? null : hedefUrl.Trim(),
+                SiraNo = siraNo,
+                IsActive = true,
+                YuklenmeTarihi = DateTime.UtcNow
+            };
+
+            _context.Medyalar.Add(medya);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Kurumsal slider görseli eklendi.";
+            return RedirectToAction(nameof(Gorsel));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GorselDuzenle(int id, string title, bool isSlider, string? hedefUrl, int siraNo = 0, bool isActive = true, IFormFile? imageFile = null)
+        {
+            var medya = await _context.Medyalar.FirstOrDefaultAsync(x => x.Id == id && x.Alan == "Kurumsal");
+            if (medya == null) return NotFound();
+
+            medya.Baslik = title;
+            medya.IsSlider = isSlider;
+            medya.HedefUrl = string.IsNullOrWhiteSpace(hedefUrl) ? null : hedefUrl.Trim();
+            medya.SiraNo = siraNo;
+            medya.IsActive = isActive;
+
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var uploadPath = Path.Combine(_env.WebRootPath, "uploads", "slider", "kurumsal");
+                if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+                var ext = Path.GetExtension(imageFile.FileName);
+                var fileName = Guid.NewGuid() + ext;
+                var fullPath = Path.Combine(uploadPath, fileName);
+
+                await using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await imageFile.CopyToAsync(stream);
+                }
+
+                medya.GorselYolu = "/uploads/slider/kurumsal/" + fileName;
+            }
+
+            await _context.SaveChangesAsync();
+            TempData["Success"] = "Kurumsal slider görseli güncellendi.";
+            return RedirectToAction(nameof(Gorsel));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GorselSil(int id)
+        {
+            var medya = await _context.Medyalar.FirstOrDefaultAsync(x => x.Id == id && x.Alan == "Kurumsal");
+            if (medya != null)
+            {
+                _context.Medyalar.Remove(medya);
+                await _context.SaveChangesAsync();
+            }
+
+            TempData["Success"] = "Görsel silindi.";
+            return RedirectToAction(nameof(Gorsel));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SliderDurumGuncelle(int id, bool status)
+        {
+            var medya = await _context.Medyalar.FirstOrDefaultAsync(x => x.Id == id && x.Alan == "Kurumsal");
+            if (medya == null) return NotFound();
+
+            medya.IsSlider = status;
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
         // --- BELGELER PANELİ ---

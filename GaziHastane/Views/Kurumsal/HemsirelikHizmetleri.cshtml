@@ -1,7 +1,9 @@
+@model GaziHastane.Models.HemsirelikViewModel
 @* RAZOR KOD BLOÐU: Sunucu tarafýnda çalýþan C# kodlarýnýn yazýldýðý alan. *@
 @{
     // Sayfanýn baþlýðýný belirliyoruz. Bu baþlýk tarayýcý sekmesinde görünür.
     ViewData["Title"] = "Hemþirelik Hizmetleri - Kurumsal Bilgi Sistemi";
+    var sekmeler = Model?.Sekmeler ?? new List<GaziHastane.Models.HemsirelikSekme>();
 }
 
 @section Scripts {
@@ -251,36 +253,20 @@
                 <div class="mobile-tab-menu w-full xl:w-72 flex-shrink-0 space-y-2 bg-white p-4 rounded-[1.75rem] border border-slate-100" style="box-shadow: 0 4px 24px rgba(0,0,0,0.03);">
                     <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-2">Ýçerik Menüsü</p>
 
-                    <button onclick="openTab(event, 'misyon-vizyon')" class="sub-menu-btn active">
-                        <i class="fa-solid fa-bullseye w-5 text-center"></i> Misyon - Vizyon
-                    </button>
-                    <button onclick="openTab(event, 'organizasyon')" class="sub-menu-btn">
-                        <i class="fa-solid fa-sitemap w-5 text-center"></i> Organizasyon Þemasý
-                    </button>
-                    <button onclick="openTab(event, 'yonetim')" class="sub-menu-btn">
-                        <i class="fa-solid fa-users-gear w-5 text-center"></i> Yönetim
-                    </button>
-                    <button onclick="openTab(event, 'gorevler')" class="sub-menu-btn">
-                        <i class="fa-solid fa-list-check w-5 text-center"></i> Görev & Yetkiler
-                    </button>
-                    <button onclick="openTab(event, 'icimizden-biri')" class="sub-menu-btn">
-                        <i class="fa-solid fa-user-nurse w-5 text-center"></i> Ýçimizden Biri
-                    </button>
-                    <button onclick="openTab(event, 'mevzuat')" class="sub-menu-btn">
-                        <i class="fa-solid fa-scale-balanced w-5 text-center"></i> Kanun & Yönetmelik
-                    </button>
-                    <button onclick="openTab(event, 'galeri')" class="sub-menu-btn">
-                        <i class="fa-solid fa-images w-5 text-center"></i> Fotoðraf Galerisi
-                    </button>
-                    <button onclick="openTab(event, 'etkinlik')" class="sub-menu-btn">
-                        <i class="fa-solid fa-calendar-days w-5 text-center"></i> Etkinlik - Duyuru
-                    </button>
-                    <button onclick="openTab(event, 'akis-semasi')" class="sub-menu-btn">
-                        <i class="fa-solid fa-diagram-project w-5 text-center"></i> Akýþ Þemasý
-                    </button>
-                    <button onclick="openTab(event, 'iletisim')" class="sub-menu-btn">
-                        <i class="fa-solid fa-address-book w-5 text-center"></i> Ýletiþim
-                    </button>
+                    @if (sekmeler.Any())
+                    {
+                        for (int i = 0; i < sekmeler.Count; i++)
+                        {
+                            var sekme = sekmeler[i];
+                            <button onclick="openTab(event, '@sekme.SekmeId')" class="sub-menu-btn @(i == 0 ? "active" : "")">
+                                <i class="fa-solid @(string.IsNullOrWhiteSpace(sekme.IconClass) ? "fa-circle-info" : sekme.IconClass) w-5 text-center"></i> @sekme.Baslik
+                            </button>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-sm text-slate-400 font-semibold px-2 py-2">Henüz sekme eklenmedi.</div>
+                    }
                 </div>
 
                 <div class="flex-1 w-full bg-white rounded-[1.75rem] p-7 sm:p-10 border border-slate-100" style="box-shadow: 0 12px 40px rgba(0,0,0,0.04); min-height: 600px;">
@@ -296,14 +282,14 @@
                                     <i class="fa-solid fa-hand-holding-medical"></i>
                                 </div>
                                 <h4 class="font-black text-lg mb-2">Misyonumuz</h4>
-                                <p class="text-blue-100 text-sm leading-relaxed font-medium">Gazi Üniversitesi Hastanesi Hemþirelik Hizmetleri olarak; hasta haklarýna saygýlý, etik ilkelere baðlý, kanýta dayalý ve yenilikçi bakým anlayýþýyla, toplum saðlýðýný korumak ve geliþtirmek için kesintisiz ve þefkatli bir saðlýk hizmeti sunmak.</p>
+                                <p class="text-blue-100 text-sm leading-relaxed font-medium">@Model.Ayarlar.Misyon</p>
                             </div>
                             <div class="feature-card bg-gradient-to-br from-slate-800 to-slate-900 text-white">
                                 <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center mb-4">
                                     <i class="fa-solid fa-star-of-life"></i>
                                 </div>
                                 <h4 class="font-black text-lg mb-2">Vizyonumuz</h4>
-                                <p class="text-slate-400 text-sm leading-relaxed font-medium">Ulusal ve uluslararasý standartlarda referans gösterilen, eðitim ve araþtýrmalarla hemþirelik mesleðinin geliþimine öncülük eden lider bir hemþirelik hizmetleri modeli oluþturmak.</p>
+                                <p class="text-slate-400 text-sm leading-relaxed font-medium">@Model.Ayarlar.Vizyon</p>
                             </div>
                         </div>
                     </div>
@@ -315,10 +301,17 @@
                         </div>
                         <p class="text-slate-600 leading-relaxed font-medium mb-6">Hemþirelik Hizmetleri Müdürlüðümüzün hiyerarþik yapýsý ve koordinasyon birimleri aþaðýdaki þemada gösterilmektedir.</p>
                         <div class="bg-slate-50 border border-slate-100 rounded-2xl p-8 flex items-center justify-center min-h-[300px]">
-                            <div class="text-center text-slate-400">
-                                <i class="fa-solid fa-sitemap text-4xl mb-3"></i>
-                                <p class="text-sm font-semibold">Organizasyon þemasý görseli buraya eklenecektir.</p>
-                            </div>
+                            @if (!string.IsNullOrWhiteSpace(Model.Ayarlar.OrganizasyonSemaUrl))
+                            {
+                                <img src="@Model.Ayarlar.OrganizasyonSemaUrl" alt="Organizasyon Þemasý" class="max-h-[320px] w-auto rounded-xl border border-slate-200" />
+                            }
+                            else
+                            {
+                                <div class="text-center text-slate-400">
+                                    <i class="fa-solid fa-sitemap text-4xl mb-3"></i>
+                                    <p class="text-sm font-semibold">Organizasyon þemasý görseli buraya eklenecektir.</p>
+                                </div>
+                            }
                         </div>
                     </div>
 
@@ -328,27 +321,25 @@
                             <h2 class="text-2xl font-black text-slate-800">Hemþirelik Hizmetleri Yönetimi</h2>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                            <div class="staff-card">
-                                <div class="w-20 h-20 bg-slate-200 rounded-full mx-auto mb-4 overflow-hidden">
-                                    <img src="/images/avatar-placeholder.jpg" alt="Yönetici" class="w-full h-full object-cover opacity-50" />
+                            @if (Model.YonetimKadrosu.Any())
+                            {
+                                foreach (var item in Model.YonetimKadrosu)
+                                {
+                                    <div class="staff-card">
+                                        <div class="w-20 h-20 bg-slate-200 rounded-full mx-auto mb-4 overflow-hidden">
+                                            <img src="@(!string.IsNullOrWhiteSpace(item.MedyaYolu) ? item.MedyaYolu : "/images/avatar-placeholder.jpg")" alt="@item.Baslik" class="w-full h-full object-cover @(string.IsNullOrWhiteSpace(item.MedyaYolu) ? "opacity-50" : "")" />
+                                        </div>
+                                        <h4 class="font-black text-slate-800 text-sm">@item.Baslik</h4>
+                                        <p class="text-[11px] text-blue-600 font-bold uppercase tracking-wide mt-1">@item.AltBaslik</p>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="staff-card">
+                                    <p class="text-sm text-slate-500 font-semibold">Yönetim kadrosu henüz eklenmedi.</p>
                                 </div>
-                                <h4 class="font-black text-slate-800 text-sm">Ayþe Yýlmaz</h4>
-                                <p class="text-[11px] text-blue-600 font-bold uppercase tracking-wide mt-1">Hemþirelik Hiz. Müdürü</p>
-                            </div>
-                            <div class="staff-card">
-                                <div class="w-20 h-20 bg-slate-200 rounded-full mx-auto mb-4 overflow-hidden">
-                                    <img src="/images/avatar-placeholder.jpg" alt="Yönetici" class="w-full h-full object-cover opacity-50" />
-                                </div>
-                                <h4 class="font-black text-slate-800 text-sm">Fatma Kaya</h4>
-                                <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wide mt-1">Müdür Yardýmcýsý</p>
-                            </div>
-                            <div class="staff-card">
-                                <div class="w-20 h-20 bg-slate-200 rounded-full mx-auto mb-4 overflow-hidden">
-                                    <img src="/images/avatar-placeholder.jpg" alt="Yönetici" class="w-full h-full object-cover opacity-50" />
-                                </div>
-                                <h4 class="font-black text-slate-800 text-sm">Zeynep Demir</h4>
-                                <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wide mt-1">Eðitim Hemþiresi</p>
-                            </div>
+                            }
                         </div>
                     </div>
 
@@ -358,27 +349,29 @@
                             <h2 class="text-2xl font-black text-slate-800">Görev, Yetki ve Sorumluluklar</h2>
                         </div>
                         <div class="space-y-3">
-                            <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                                <i class="fa-solid fa-check text-blue-600 mt-1"></i>
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Klinik Bakým Yönetimi</h4>
-                                    <p class="text-xs text-slate-600 leading-relaxed">Hastanýn kliniðe kabulünden taburcu olmasýna kadar geçen süreçte bakým gereksinimlerini belirlemek, planlamak ve uygulamak.</p>
+                            @if (Model.Gorevler.Any())
+                            {
+                                foreach (var item in Model.Gorevler)
+                                {
+                                    <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                        <i class="fa-solid fa-check text-blue-600 mt-1"></i>
+                                        <div>
+                                            <h4 class="font-bold text-slate-800 text-sm mb-1">@item.Baslik</h4>
+                                            <p class="text-xs text-slate-600 leading-relaxed">@item.Aciklama</p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                    <i class="fa-solid fa-check text-blue-600 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-bold text-slate-800 text-sm mb-1">Görev listesi boþ</h4>
+                                        <p class="text-xs text-slate-600 leading-relaxed">Görev ve sorumluluk içerikleri henüz eklenmedi.</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                                <i class="fa-solid fa-check text-blue-600 mt-1"></i>
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Eðitim ve Geliþim</h4>
-                                    <p class="text-xs text-slate-600 leading-relaxed">Yeni baþlayan personelin uyum eðitimlerini koordine etmek ve hasta/hasta yakýný eðitimlerini planlamak.</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                                <i class="fa-solid fa-check text-blue-600 mt-1"></i>
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Kalite Standartlarý</h4>
-                                    <p class="text-xs text-slate-600 leading-relaxed">Enfeksiyon kontrolü ve hasta güvenliði dahil olmak üzere, Saðlýk Bakanlýðý kalite standartlarýna uygun çalýþýlmasýný saðlamak.</p>
-                                </div>
-                            </div>
+                            }
                         </div>
                     </div>
 
@@ -388,11 +381,16 @@
                             <h2 class="text-2xl font-black text-slate-800">Ýçimizden Biri</h2>
                         </div>
                         <div class="bg-blue-50 border border-blue-100 rounded-2xl p-6 flex flex-col sm:flex-row gap-6 items-center sm:items-start">
-                            <div class="w-32 h-32 rounded-full bg-blue-200 flex-shrink-0"></div>
+                            <div class="w-32 h-32 rounded-full bg-blue-200 flex-shrink-0 overflow-hidden">
+                                @if (!string.IsNullOrWhiteSpace(Model.Ayarlar.AyinHemsiresiFotoUrl))
+                                {
+                                    <img src="@Model.Ayarlar.AyinHemsiresiFotoUrl" alt="@Model.Ayarlar.AyinHemsiresiAd" class="w-full h-full object-cover" />
+                                }
+                            </div>
                             <div>
-                                <h3 class="font-black text-slate-800 text-lg">Ayýn Hemþiresi: Elif Þahin</h3>
-                                <p class="text-sm text-blue-600 font-semibold mb-3">Yoðun Bakým Ünitesi</p>
-                                <p class="text-slate-600 text-sm leading-relaxed italic">"Hastalarýmýzýn iyileþme sürecinde yanlarýnda olmak, mesleðimizin en tatmin edici yaný. Gazi Hastanesi ailesinin bir parçasý olmaktan gurur duyuyorum."</p>
+                                <h3 class="font-black text-slate-800 text-lg">Ayýn Hemþiresi: @Model.Ayarlar.AyinHemsiresiAd</h3>
+                                <p class="text-sm text-blue-600 font-semibold mb-3">@Model.Ayarlar.AyinHemsiresiBirim</p>
+                                <p class="text-slate-600 text-sm leading-relaxed italic">@Model.Ayarlar.AyinHemsiresiSoz</p>
                             </div>
                         </div>
                     </div>
@@ -404,20 +402,23 @@
                         </div>
                         <p class="text-slate-600 leading-relaxed font-medium mb-6">Hemþirelik mesleðinin icrasýný düzenleyen ulusal mevzuat ve iç yönergelerimiz.</p>
                         <div class="space-y-3">
-                            <a href="#" class="flex items-center justify-between p-4 bg-slate-50 hover:bg-blue-50 border border-slate-100 rounded-xl transition group">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm text-slate-600"><i class="fa-solid fa-gavel"></i></div>
-                                    <div><p class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition">6283 Sayýlý Hemþirelik Kanunu</p></div>
-                                </div>
-                                <i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-blue-600"></i>
-                            </a>
-                            <a href="#" class="flex items-center justify-between p-4 bg-slate-50 hover:bg-blue-50 border border-slate-100 rounded-xl transition group">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm text-slate-600"><i class="fa-solid fa-book"></i></div>
-                                    <div><p class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition">Hemþirelik Yönetmeliði</p></div>
-                                </div>
-                                <i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-blue-600"></i>
-                            </a>
+                            @if (Model.Mevzuatlar.Any())
+                            {
+                                foreach (var item in Model.Mevzuatlar)
+                                {
+                                    <a href="@(string.IsNullOrWhiteSpace(item.MedyaYolu) ? "#" : item.MedyaYolu)" class="flex items-center justify-between p-4 bg-slate-50 hover:bg-blue-50 border border-slate-100 rounded-xl transition group">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm text-slate-600"><i class="fa-solid fa-book"></i></div>
+                                            <div><p class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition">@item.Baslik</p></div>
+                                        </div>
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-blue-600"></i>
+                                    </a>
+                                }
+                            }
+                            else
+                            {
+                                <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl text-sm text-slate-500 font-semibold">Mevzuat baðlantýsý eklenmedi.</div>
+                            }
                         </div>
                     </div>
 
@@ -427,9 +428,26 @@
                             <h2 class="text-2xl font-black text-slate-800">Fotoðraf Galerisi</h2>
                         </div>
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            <div class="bg-slate-200 aspect-square rounded-xl overflow-hidden hover:opacity-80 transition cursor-pointer flex items-center justify-center text-slate-400"><i class="fa-solid fa-camera text-2xl"></i></div>
-                            <div class="bg-slate-200 aspect-square rounded-xl overflow-hidden hover:opacity-80 transition cursor-pointer flex items-center justify-center text-slate-400"><i class="fa-solid fa-camera text-2xl"></i></div>
-                            <div class="bg-slate-200 aspect-square rounded-xl overflow-hidden hover:opacity-80 transition cursor-pointer flex items-center justify-center text-slate-400"><i class="fa-solid fa-camera text-2xl"></i></div>
+                            @if (Model.GaleriFotograflari.Any())
+                            {
+                                foreach (var item in Model.GaleriFotograflari)
+                                {
+                                    <div class="bg-slate-200 aspect-square rounded-xl overflow-hidden hover:opacity-80 transition cursor-pointer flex items-center justify-center text-slate-400">
+                                        @if (!string.IsNullOrWhiteSpace(item.MedyaYolu))
+                                        {
+                                            <img src="@item.MedyaYolu" alt="@item.Baslik" class="w-full h-full object-cover" />
+                                        }
+                                        else
+                                        {
+                                            <i class="fa-solid fa-camera text-2xl"></i>
+                                        }
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="bg-slate-200 aspect-square rounded-xl flex items-center justify-center text-slate-400"><i class="fa-solid fa-camera text-2xl"></i></div>
+                            }
                         </div>
                     </div>
 
@@ -439,18 +457,23 @@
                             <h2 class="text-2xl font-black text-slate-800">Etkinlik & Duyurular</h2>
                         </div>
                         <div class="border-l-2 border-blue-200 pl-4 space-y-6">
-                            <div class="relative">
-                                <div class="absolute -left-[21px] top-1 w-3 h-3 bg-blue-600 rounded-full ring-4 ring-white"></div>
-                                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">12 Mayýs 2026</span>
-                                <h4 class="font-black text-slate-800 mt-2">Hemþireler Haftasý Kutlama Programý</h4>
-                                <p class="text-sm text-slate-600 mt-1">Hastane konferans salonunda gerçekleþtirilecek plaket töreni ve seminere tüm hemþirelerimiz davetlidir.</p>
-                            </div>
-                            <div class="relative">
-                                <div class="absolute -left-[21px] top-1 w-3 h-3 bg-slate-300 rounded-full ring-4 ring-white"></div>
-                                <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">20 Nisan 2026</span>
-                                <h4 class="font-black text-slate-800 mt-2">Yenidoðan Canlandýrma (NRP) Eðitimi</h4>
-                                <p class="text-sm text-slate-600 mt-1">Kayýtlar eðitim birimi üzerinden alýnmaya baþlanmýþtýr.</p>
-                            </div>
+                            @if (Model.Etkinlikler.Any())
+                            {
+                                for (int i = 0; i < Model.Etkinlikler.Count; i++)
+                                {
+                                    var item = Model.Etkinlikler[i];
+                                    <div class="relative">
+                                        <div class="absolute -left-[21px] top-1 w-3 h-3 @(i == 0 ? "bg-blue-600" : "bg-slate-300") rounded-full ring-4 ring-white"></div>
+                                        <span class="text-xs font-bold @(i == 0 ? "text-blue-600 bg-blue-50" : "text-slate-500 bg-slate-100") px-2 py-1 rounded">@item.AltBaslik</span>
+                                        <h4 class="font-black text-slate-800 mt-2">@item.Baslik</h4>
+                                        <p class="text-sm text-slate-600 mt-1">@item.Aciklama</p>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-sm text-slate-500 font-semibold">Etkinlik ve duyuru bulunmuyor.</p>
+                            }
                         </div>
                     </div>
 
@@ -461,9 +484,17 @@
                         </div>
                         <p class="text-slate-600 leading-relaxed font-medium mb-6">Klinik iþleyiþ, hasta yatýþ/çýkýþ süreçleri ve acil durum eylem planlarýna ait akýþ þemalarý.</p>
                         <ul class="list-disc list-inside space-y-2 text-blue-600 text-sm font-semibold">
-                            <li><a href="#" class="hover:underline">Güvenli Ýlaç Uygulama Akýþ Þemasý</a></li>
-                            <li><a href="#" class="hover:underline">Hasta Düþmelerini Önleme Algoritmasý</a></li>
-                            <li><a href="#" class="hover:underline">Kan Transfüzyon Süreci Akýþ Þemasý</a></li>
+                            @if (Model.AkisSemalari.Any())
+                            {
+                                foreach (var item in Model.AkisSemalari)
+                                {
+                                    <li><a href="@(string.IsNullOrWhiteSpace(item.MedyaYolu) ? "#" : item.MedyaYolu)" class="hover:underline">@item.Baslik</a></li>
+                                }
+                            }
+                            else
+                            {
+                                <li class="text-slate-500">Akýþ þemasý bulunmuyor.</li>
+                            }
                         </ul>
                     </div>
 
@@ -477,21 +508,21 @@
                                 <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-phone"></i></div>
                                 <div>
                                     <p class="text-xs text-slate-500 uppercase tracking-wider font-bold">Telefon (Dahili)</p>
-                                    <p class="text-slate-800 font-semibold">0312 XXX XX XX / Dahili: 1234</p>
+                                    <p class="text-slate-800 font-semibold">@Model.Ayarlar.Telefon</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-4 mb-4">
                                 <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-envelope"></i></div>
                                 <div>
                                     <p class="text-xs text-slate-500 uppercase tracking-wider font-bold">E-Posta</p>
-                                    <p class="text-slate-800 font-semibold">hemsirelik@gazi.edu.tr</p>
+                                    <p class="text-slate-800 font-semibold">@Model.Ayarlar.Email</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-4">
                                 <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-location-dot"></i></div>
                                 <div>
                                     <p class="text-xs text-slate-500 uppercase tracking-wider font-bold">Adres</p>
-                                    <p class="text-slate-800 font-semibold">Gazi Üniversitesi Hastanesi Ana Bina, 1. Kat</p>
+                                    <p class="text-slate-800 font-semibold">@Model.Ayarlar.Adres</p>
                                 </div>
                             </div>
                         </div>

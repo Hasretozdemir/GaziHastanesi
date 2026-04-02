@@ -1,0 +1,77 @@
+@model GaziHastane.Models.KurumsalSayfa
+@{
+    ViewData["Title"] = "Kurumsal Sayfa Düzenle";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="max-w-5xl mx-auto mt-8">
+    <div class="mb-6 flex items-center gap-3 px-2">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+            <i class="fa-solid fa-file-pen text-white text-xl"></i>
+        </div>
+        <div>
+            <h2 class="text-2xl font-black text-white tracking-wide">Sayfa Ýçeriði Düzenle</h2>
+            <p class="text-sm text-slate-400 mt-1">Menü: @ViewBag.MenuBaslik</p>
+        </div>
+    </div>
+
+    <div class="glass-card bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+        <form asp-action="SayfaDuzenle" method="post" class="space-y-6">
+            @Html.AntiForgeryToken()
+            <input asp-for="Id" type="hidden" />
+            <input type="hidden" name="menuId" value="@ViewBag.MenuId" />
+            <input asp-for="Slug" type="hidden" />
+
+            <div>
+                <label asp-for="Baslik" class="block text-sm font-semibold text-slate-300 mb-2">Sayfa Baþlýðý</label>
+                <input asp-for="Baslik" class="w-full rounded-xl bg-slate-800/50 border border-slate-600/50 px-4 py-3 text-white" />
+            </div>
+
+            <div>
+                <label asp-for="Icerik" class="block text-sm font-semibold text-slate-300 mb-2">Ýçerik (HTML destekli)</label>
+                <textarea asp-for="Icerik" rows="14" class="w-full rounded-xl bg-slate-800/50 border border-slate-600/50 px-4 py-3 text-white"></textarea>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4">
+                <div>
+                    <label asp-for="FotografUrl" class="block text-sm font-semibold text-slate-300 mb-2"></label>
+                    <input asp-for="FotografUrl" class="w-full rounded-xl bg-slate-800/50 border border-slate-600/50 px-4 py-3 text-white" />
+                </div>
+                <div>
+                    <label asp-for="Unvan" class="block text-sm font-semibold text-slate-300 mb-2"></label>
+                    <input asp-for="Unvan" class="w-full rounded-xl bg-slate-800/50 border border-slate-600/50 px-4 py-3 text-white" />
+                </div>
+                <div>
+                    <label asp-for="Telefon" class="block text-sm font-semibold text-slate-300 mb-2"></label>
+                    <input asp-for="Telefon" class="w-full rounded-xl bg-slate-800/50 border border-slate-600/50 px-4 py-3 text-white" />
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <label class="relative flex items-center gap-3 p-4 rounded-xl border border-slate-600/50 bg-slate-800/30 hover:bg-slate-800/60 cursor-pointer transition-colors group">
+                    <div class="flex items-center">
+                        <input asp-for="AktifMi" class="w-5 h-5 rounded border-slate-500 bg-slate-700 text-cyan-500 focus:ring-cyan-500 focus:ring-offset-slate-900 cursor-pointer" />
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm font-semibold text-white group-hover:text-cyan-300 transition-colors">Sayfa Aktif Mi?</span>
+                        <span class="text-xs text-slate-400">Kapalý olursa sayfa bulunamadý olarak döner.</span>
+                    </div>
+                </label>
+            </div>
+
+            <hr class="border-slate-700/50 my-6" />
+
+            <div class="flex items-center justify-end gap-3 pt-2">
+                <a href="/Admin/Kurumsal/Index" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 hover:text-white transition-all duration-300 font-medium">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Geri
+                </a>
+
+                <button type="submit" class="flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 hover:-translate-y-0.5 transition-all duration-300">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Sayfayý Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

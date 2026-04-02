@@ -50,7 +50,7 @@ namespace GaziHastane.Models
         public virtual ICollection<TahlilSonuc> TahlilSonuclari { get; set; } = new List<TahlilSonuc>();
         public virtual ICollection<BorcOdeme> BorclarOdemeler { get; set; } = new List<BorcOdeme>();
     }
-
+    // 1. Bolumler Table
     [Table("Bolumler")]
     public class Bolum
     {
@@ -72,7 +72,6 @@ namespace GaziHastane.Models
         [Column("kategori")]
         public string? Kategori { get; set; }
 
-        // ?? YENÝ EKLENEN ALANLAR ??
         [Column("blok")]
         [StringLength(50)]
         public string? Blok { get; set; } // Örn: "A Blok", "Ana Bina"
@@ -84,10 +83,17 @@ namespace GaziHastane.Models
         [Column("isactive")]
         public bool IsActive { get; set; } = true;
 
+        [NotMapped]
+        public IFormFile? GorselDosya { get; set; }
+
+        // BÖLÜM -> DOKTORLAR ÝLÝÞKÝSÝ: Bu bölümdeki tüm doktorlarý getirir.
         public virtual ICollection<Doktor> Doktorlar { get; set; } = new List<Doktor>();
+
+        // BÖLÜM -> RANDEVULAR ÝLÝÞKÝSÝ
         public virtual ICollection<Randevu> Randevular { get; set; } = new List<Randevu>();
     }
-    // 3. Doktorlar Table
+
+    // 2. Doktorlar Table
     [Table("Doktorlar")]
     public class Doktor
     {
@@ -100,10 +106,12 @@ namespace GaziHastane.Models
         [ForeignKey("KullaniciId")]
         public virtual User? Kullanici { get; set; }
 
+        // DOKTOR -> BÖLÜM ÝLÝÞKÝSÝ (Foreign Key)
         [Column("bolumid")]
         public int? BolumId { get; set; }
+
         [ForeignKey("BolumId")]
-        public virtual Bolum? Bolum { get; set; }
+        public virtual Bolum? Bolum { get; set; } // Doktorun baðlý olduðu bölüm
 
         [StringLength(50)]
         [Column("unvan")]
@@ -133,39 +141,50 @@ namespace GaziHastane.Models
         [Column("isactive")]
         public bool IsActive { get; set; } = true;
 
+        [NotMapped]
+        public IFormFile? GorselDosya { get; set; }
+
+        // DOKTOR -> RANDEVULAR / TAHLÝLLER
         public virtual ICollection<Randevu> Randevular { get; set; } = new List<Randevu>();
         public virtual ICollection<TahlilSonuc> TahlilSonuclari { get; set; } = new List<TahlilSonuc>();
     }
 
-    // 4. Randevular Table
+    // 3. Randevular Table
     [Table("Randevular")]
     public class Randevu
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("id")]
         public int Id { get; set; }
 
+        [Column("hastaid")]
         public int? HastaId { get; set; }
         [ForeignKey("HastaId")]
         public virtual User? Hasta { get; set; }
 
+        [Column("doktorid")]
         public int? DoktorId { get; set; }
         [ForeignKey("DoktorId")]
         public virtual Doktor? Doktor { get; set; }
 
+        [Column("bolumid")]
         public int? BolumId { get; set; }
         [ForeignKey("BolumId")]
         public virtual Bolum? Bolum { get; set; }
 
+        [Column("randevutarihi")]
         public DateTime RandevuTarihi { get; set; }
 
+        [Column("durum")]
         public short Durum { get; set; }
 
+        [Column("sikayet")]
         public string? Sikayet { get; set; }
 
+        [Column("olusturulmatarihi")]
         public DateTime OlusturulmaTarihi { get; set; } = DateTime.UtcNow;
     }
-
     // 5. TahlilSonuclari Table
     [Table("TahlilSonuclari")]
     public class TahlilSonuc
@@ -570,9 +589,15 @@ namespace GaziHastane.Models
         [StringLength(255)]
         public string? Baslik { get; set; }
 
+        [StringLength(50)]
+        public string Alan { get; set; } = "Genel"; // Genel, Kurumsal vb.
+
         [Required]
         [StringLength(500)]
         public string GorselYolu { get; set; } = null!;
+
+        [StringLength(500)]
+        public string? HedefUrl { get; set; } // Týklanýnca gidilecek sayfa
 
         public bool IsSlider { get; set; } = false; // Slider'da görünüp görünmeyeceði
 
@@ -621,4 +646,64 @@ namespace GaziHastane.Models
         [ForeignKey("BolumId")]
         public virtual Bolum? Bolum { get; set; }
     }
+
+
+        public class BashekimlikPersonel
+        {
+            [Key]
+            public int Id { get; set; }
+
+            [Required(ErrorMessage = "Ad Soyad zorunludur.")]
+            public string AdSoyad { get; set; } = string.Empty;
+
+            [Required(ErrorMessage = "Unvan zorunludur.")]
+            public string Unvan { get; set; } = string.Empty;
+
+            // True ise Baþhekim, False ise Yardýmcý olacak
+            public bool IsBashekim { get; set; }
+
+            public string UzmanlikAlani { get; set; } = string.Empty;
+
+            public string KurumBilgisi { get; set; } = string.Empty;
+
+            public string FotografYolu { get; set; } = string.Empty;
+
+            public string Email { get; set; } = string.Empty;
+
+            public string CvYolu { get; set; } = string.Empty;
+
+            public int Sira { get; set; } // Sýralama için
+
+            public bool AktifMi { get; set; } = true;
+        }
+
+        public class BasmudurlikPersonel
+        {
+            [Key]
+            public int Id { get; set; }
+
+            [Required(ErrorMessage = "Ad Soyad zorunludur.")]
+            public string AdSoyad { get; set; } = string.Empty;
+
+            [Required(ErrorMessage = "Unvan zorunludur.")]
+            public string Unvan { get; set; } = string.Empty;
+
+            // True ise Baþmüdür, False ise Yardýmcý olacak
+            public bool IsBasmudur { get; set; }
+
+            public string UzmanlikAlani { get; set; } = string.Empty;
+
+            public string KurumBilgisi { get; set; } = string.Empty;
+
+            public string FotografYolu { get; set; } = string.Empty;
+
+            public string Email { get; set; } = string.Empty;
+
+            public string CvYolu { get; set; } = string.Empty;
+
+            public int Sira { get; set; } // Sýralama için
+
+            public bool AktifMi { get; set; } = true;
+        }
+    
 }

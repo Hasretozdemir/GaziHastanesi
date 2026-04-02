@@ -54,7 +54,7 @@
                 transform: translateX(-110%);
             }
 
-                #sidebar.open {
+                #sidebar.open {5
                     transform: translateX(0);
                 }
         }
@@ -200,10 +200,34 @@
                 <span class="font-semibold tracking-wide">Duyurular</span>
             </a>
 
-            <a href="/Admin/Kurumsal/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Kurumsal" ? activeClass : passiveClass)">
-                <i class="fa-solid fa-building text-lg @(ctrl == "Kurumsal" ? "neon-icon" : "group-hover:text-cyan-400")"></i>
-                <span class="font-semibold tracking-wide">Kurumsal</span>
-            </a>
+            <div class="space-y-1">
+                <button type="button" onclick="toggleKurumsalMenu()" class="w-full flex items-center justify-between gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Kurumsal" || ctrl == "Bashekimlik" || ctrl == "Basmudurluk" ? activeClass : passiveClass)">
+                    <span class="flex items-center gap-4">
+                        <i class="fa-solid fa-building text-lg @(ctrl == "Kurumsal" || ctrl == "Bashekimlik" || ctrl == "Basmudurluk" ? "neon-icon" : "group-hover:text-cyan-400")"></i>
+                        <span class="font-semibold tracking-wide">Kurumsal</span>
+                    </span>
+                    <i id="kurumsalChevron" class="fa-solid fa-chevron-down text-xs transition-transform @(ctrl == "Kurumsal" || ctrl == "Bashekimlik" || ctrl == "Basmudurluk" ? "rotate-180" : "")"></i>
+                </button>
+
+                <div id="kurumsalSubmenu" class="ml-6 space-y-1 @(ctrl == "Kurumsal" || ctrl == "Bashekimlik" || ctrl == "Basmudurluk" ? "" : "hidden")">
+                    <a href="/Admin/Kurumsal/Index" class="block text-xs px-3 py-2 rounded-xl transition @(action == "Index" && ctrl == "Kurumsal" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Sidebar Yönetimi</a>
+                    <a href="/Admin/Bashekimlik/Index" class="block text-xs px-3 py-2 rounded-xl transition @(ctrl == "Bashekimlik" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Başhekimlik</a>
+                    <a href="/Admin/Basmudurluk/Index" class="block text-xs px-3 py-2 rounded-xl transition @(ctrl == "Basmudurluk" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Başmüdürlük</a>
+                    <a href="/Admin/Kurumsal/HemsirelikHizmetleri" class="block text-xs px-3 py-2 rounded-xl transition @(action == "HemsirelikHizmetleri" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Hemşirelik Hizmetleri</a>
+                    <a href="/Admin/Kurumsal/BilgiIslemMerkezi" class="block text-xs px-3 py-2 rounded-xl transition @(action == "BilgiIslemMerkezi" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Bilgi İşlem Merkezi</a>
+                    <a href="/Admin/Kurumsal/IsSagligiVeGuvenligi" class="block text-xs px-3 py-2 rounded-xl transition @(action == "IsSagligiVeGuvenligi" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">İş Sağlığı ve Güvenliği</a>
+                    <a href="/Admin/Kurumsal/EnfeksiyonKontrol" class="block text-xs px-3 py-2 rounded-xl transition @(action == "EnfeksiyonKontrol" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Enfeksiyon Kontrol</a>
+                    <a href="/Admin/Kurumsal/EczacilikHizmetleri" class="block text-xs px-3 py-2 rounded-xl transition @(action == "EczacilikHizmetleri" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Eczacılık Hizmetleri</a>
+                    <a href="/Admin/Kurumsal/SatinAlma" class="block text-xs px-3 py-2 rounded-xl transition @(action == "SatinAlma" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Satın Alma</a>
+                    <a href="/Admin/Kurumsal/IstatistikVeRaporlama" class="block text-xs px-3 py-2 rounded-xl transition @(action == "IstatistikVeRaporlama" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">İstatistik ve Raporlama</a>
+                    <a href="/Admin/Kurumsal/ArsivBirimi" class="block text-xs px-3 py-2 rounded-xl transition @(action == "ArsivBirimi" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Arşiv Birimi</a>
+                    <a href="/Admin/Kurumsal/HastaIletisimBirimi" class="block text-xs px-3 py-2 rounded-xl transition @(action == "HastaIletisimBirimi" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Hasta İletişim Birimi</a>
+                    <a href="/Admin/Kurumsal/IsAkisSemalari" class="block text-xs px-3 py-2 rounded-xl transition @(action == "IsAkisSemalari" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">İş Akış Şemaları</a>
+                    <a href="/Admin/Kurumsal/OrganizasyonSemalari" class="block text-xs px-3 py-2 rounded-xl transition @(action == "OrganizasyonSemalari" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Organizasyon Şemaları</a>
+                    <a href="/Admin/Kurumsal/IcKontrol" class="block text-xs px-3 py-2 rounded-xl transition @(action == "IcKontrol" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">İç Kontrol</a>
+                    <a href="/Admin/Kurumsal/BasinVeKurumsalIletisim" class="block text-xs px-3 py-2 rounded-xl transition @(action == "BasinVeKurumsalIletisim" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Basın ve Kurumsal İletişim</a>
+                </div>
+            </div>
 
             <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 px-4 mt-6">Güvenlik & Erişim</p>
 
@@ -273,6 +297,15 @@
     </main>
 
     <script>
+        function toggleKurumsalMenu() {
+            const submenu = document.getElementById('kurumsalSubmenu');
+            const chevron = document.getElementById('kurumsalChevron');
+            if (!submenu || !chevron) return;
+
+            submenu.classList.toggle('hidden');
+            chevron.classList.toggle('rotate-180');
+        }
+
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');

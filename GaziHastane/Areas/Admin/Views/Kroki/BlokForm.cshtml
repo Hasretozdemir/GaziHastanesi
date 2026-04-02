@@ -1,0 +1,273 @@
+@model GaziHastane.Models.KrokiBlok
+@{
+    ViewData["Title"] = (Model.Id == 0 ? "Yeni Blok Ekle" : "Bloğu Düzenle");
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    :root {
+        --admin-primary: #3b82f6;
+        --admin-primary-hover: #2563eb;
+        --admin-bg-deep: #0f172a;
+        --admin-card-bg: rgba(30, 41, 59, 0.6);
+        --admin-border: rgba(255, 255, 255, 0.08);
+        --admin-text-bright: #f8fafc;
+        --admin-text-dim: #94a3b8;
+        --radius-lg: 24px;
+    }
+
+    /* Sayfayı tam ortalamak için kapsayıcı ayarları */
+    .admin-form-wrapper {
+        min-height: calc(100vh - 120px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Arka plan parlama efekti */
+    .bg-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(15,23,42,0) 70%);
+        border-radius: 50%;
+        filter: blur(60px);
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    /* Form Kartı */
+    .form-card {
+        width: 100%;
+        max-width: 600px;
+        background: var(--admin-card-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--admin-border);
+        border-radius: var(--radius-lg);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+    }
+
+    /* Kart Başlığı */
+    .form-header {
+        padding: 2.5rem 2rem 1.5rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-bottom: 1px solid var(--admin-border);
+        text-align: center;
+    }
+
+    .header-icon-box {
+        width: 64px;
+        height: 64px;
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        color: var(--admin-primary);
+        margin-bottom: 1rem;
+    }
+
+    .form-title {
+        color: var(--admin-text-bright);
+        font-weight: 800;
+        font-size: 1.5rem;
+        margin-bottom: 0.25rem;
+        letter-spacing: -0.5px;
+    }
+
+    .form-subtitle {
+        color: var(--admin-text-dim);
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin: 0;
+    }
+
+    /* Input Tasarımları */
+    .custom-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--admin-text-dim);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.75rem;
+        margin-left: 0.5rem;
+    }
+
+        .custom-label .required-star {
+            color: var(--admin-primary);
+        }
+
+    .premium-input {
+        background: rgba(15, 23, 42, 0.6) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: #fff !important;
+        border-radius: 16px !important;
+        padding: 1rem 1.25rem !important;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+        .premium-input:focus {
+            background: rgba(15, 23, 42, 0.9) !important;
+            border-color: var(--admin-primary) !important;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
+            outline: none;
+        }
+
+        .premium-input::placeholder {
+            color: rgba(148, 163, 184, 0.5);
+        }
+
+    /* Renk Seçici Kutusu */
+    .color-box {
+        background: rgba(15, 23, 42, 0.4);
+        border: 1px dashed rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 1.5rem;
+        transition: border-color 0.3s;
+    }
+
+        .color-box:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+    .color-picker-input {
+        width: 60px !important;
+        height: 60px !important;
+        padding: 0 !important;
+        border: none !important;
+        border-radius: 12px !important;
+        cursor: pointer;
+        background: transparent !important;
+    }
+
+        .color-picker-input::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .color-picker-input::-webkit-color-swatch {
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+        }
+
+    /* Butonlar */
+    .form-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-save {
+        background: var(--admin-text-bright);
+        color: var(--admin-bg-deep);
+        border: none;
+        padding: 0.875rem 2rem;
+        border-radius: 16px;
+        font-weight: 800;
+        font-size: 0.95rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .btn-save:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.15);
+            background: #ffffff;
+        }
+
+    .btn-cancel {
+        color: var(--admin-text-dim);
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: color 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .btn-cancel:hover {
+            color: var(--admin-text-bright);
+        }
+
+    /* Geri Dön Butonu Konumu */
+    .back-link-container {
+        width: 100%;
+        max-width: 600px;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="admin-form-wrapper">
+    <div class="bg-glow"></div>
+
+    <div class="back-link-container">
+        <a asp-action="Index" class="btn-cancel">
+            <i class="fas fa-arrow-left"></i> Listeye Dön
+        </a>
+    </div>
+
+    <div class="form-card shadow-lg">
+        <div class="form-header">
+            <div class="header-icon-box">
+                <i class="fas fa-building"></i>
+            </div>
+            <h2 class="form-title">@ViewData["Title"]</h2>
+            <p class="form-subtitle">Yapılandırma Modülü</p>
+        </div>
+
+        <div class="p-4 p-md-5">
+            <form asp-action="BlokKaydet" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+
+                <div asp-validation-summary="All" class="text-danger mb-4 small fw-bold"></div>
+
+                <div class="mb-4">
+                    <label asp-for="BlokAdi" class="custom-label">
+                        BLOK ADI <span class="required-star">*</span>
+                    </label>
+                    <input asp-for="BlokAdi" class="form-control premium-input" placeholder="Örn: A Blok, Acil Servis..." required autocomplete="off" />
+                </div>
+
+                <div class="color-box">
+                    <label class="custom-label mb-3">TEMSİLİ RENK</label>
+                    <div class="d-flex align-items-center gap-3">
+                        <input type="color" asp-for="Renk" class="form-control form-control-color color-picker-input" />
+                        <div>
+                            <div class="text-white fw-bold mb-1" style="font-size: 0.95rem;">Harita Rengi</div>
+                            <div style="color: var(--admin-text-dim); font-size: 0.85rem;">Bu renk krokide binayı ayırt etmek için kullanılır.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a asp-action="Index" class="btn-cancel">İptal</a>
+                    <button type="submit" class="btn-save">
+                        <i class="fas fa-check-circle"></i> DEĞİŞİKLİKLERİ KAYDET
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

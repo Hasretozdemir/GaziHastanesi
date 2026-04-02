@@ -1,0 +1,325 @@
+@model GaziHastane.Models.KrokiBolum
+@{
+    ViewData["Title"] = (Model.Id == 0 ? "Yeni Birim Ekle" : "Birimi Düzenle");
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    :root {
+        --admin-primary: #3b82f6;
+        --admin-bg-deep: #0f172a;
+        --admin-card-bg: rgba(30, 41, 59, 0.6);
+        --admin-border: rgba(255, 255, 255, 0.08);
+        --admin-text-bright: #f8fafc;
+        --admin-text-dim: #94a3b8;
+        --admin-success: #10b981;
+        --radius-lg: 24px;
+    }
+
+    /* Sayfayı tam ortalamak için kapsayıcı ayarları */
+    .admin-form-wrapper {
+        min-height: calc(100vh - 120px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Arka plan parlama efekti */
+    .bg-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(15,23,42,0) 70%);
+        border-radius: 50%;
+        filter: blur(60px);
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    /* Form Kartı */
+    .form-card {
+        width: 100%;
+        max-width: 650px;
+        background: var(--admin-card-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--admin-border);
+        border-radius: var(--radius-lg);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+    }
+
+    /* Kart Başlığı */
+    .form-header {
+        padding: 2.5rem 2rem 1.5rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-bottom: 1px solid var(--admin-border);
+        text-align: center;
+    }
+
+    .header-icon-box {
+        width: 64px;
+        height: 64px;
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        color: var(--admin-primary);
+        margin-bottom: 1rem;
+    }
+
+    .form-title {
+        color: var(--admin-text-bright);
+        font-weight: 800;
+        font-size: 1.5rem;
+        margin-bottom: 0.25rem;
+        letter-spacing: -0.5px;
+    }
+
+    .form-subtitle {
+        color: var(--admin-text-dim);
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin: 0;
+    }
+
+    /* Input Tasarımları */
+    .custom-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--admin-text-dim);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.75rem;
+        margin-left: 0.5rem;
+    }
+
+        .custom-label .required-star {
+            color: var(--admin-primary);
+        }
+
+    .premium-input {
+        background: rgba(15, 23, 42, 0.6) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: #fff !important;
+        border-radius: 16px !important;
+        padding: 1rem 1.25rem !important;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+        .premium-input:focus {
+            background: rgba(15, 23, 42, 0.9) !important;
+            border-color: var(--admin-primary) !important;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
+            outline: none;
+        }
+
+        .premium-input::placeholder {
+            color: rgba(148, 163, 184, 0.4);
+        }
+
+    /* İkon Seçici Kutusu */
+    .icon-picker-box {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px dashed rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 1.5rem;
+        transition: border-color 0.3s;
+    }
+
+        .icon-picker-box:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+    .preview-box {
+        width: 64px;
+        height: 64px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+        flex-shrink: 0;
+    }
+
+    .icon-info-text {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--admin-text-dim);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 0.5rem;
+    }
+
+    /* Switch Kutusu */
+    .switch-box {
+        background: rgba(16, 185, 129, 0.05);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        border-radius: 20px;
+        padding: 1.25rem 1.5rem;
+        transition: all 0.3s;
+    }
+
+        .switch-box:hover {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+    .custom-switch .form-check-input {
+        width: 3rem;
+        height: 1.5rem;
+        margin-top: 0.15rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: none;
+        cursor: pointer;
+    }
+
+        .custom-switch .form-check-input:checked {
+            background-color: var(--admin-success);
+        }
+
+        .custom-switch .form-check-input:focus {
+            box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.25);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%28255, 255, 255, 0.25%29'/%3e%3c/svg%3e");
+        }
+
+    /* Butonlar */
+    .form-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-save {
+        background: var(--admin-text-bright);
+        color: var(--admin-bg-deep);
+        border: none;
+        padding: 0.875rem 2rem;
+        border-radius: 16px;
+        font-weight: 800;
+        font-size: 0.95rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .btn-save:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.15);
+            background: #ffffff;
+        }
+
+    .btn-cancel {
+        color: var(--admin-text-dim);
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: color 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .btn-cancel:hover {
+            color: var(--admin-text-bright);
+        }
+
+    /* Geri Dön Butonu Konumu */
+    .back-link-container {
+        width: 100%;
+        max-width: 650px;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="admin-form-wrapper">
+    <div class="bg-glow"></div>
+
+    <div class="back-link-container">
+        <a asp-action="Index" class="btn-cancel">
+            <i class="fas fa-arrow-left"></i> Listeye Dön
+        </a>
+    </div>
+
+    <div class="form-card shadow-lg">
+        <div class="form-header">
+            <div class="header-icon-box">
+                <i class="fas fa-door-closed"></i>
+            </div>
+            <h2 class="form-title">@ViewData["Title"]</h2>
+            <p class="form-subtitle">Birim Yönetim Paneli</p>
+        </div>
+
+        <div class="p-4 p-md-5">
+            <form asp-action="BolumKaydet" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="KatId" />
+
+                <div asp-validation-summary="All" class="text-danger mb-4 small fw-bold"></div>
+
+                <div class="mb-4">
+                    <label asp-for="BirimAdi" class="custom-label">
+                        BİRİM / POLİKLİNİK ADI <span class="required-star">*</span>
+                    </label>
+                    <input asp-for="BirimAdi" class="form-control premium-input" placeholder="Örn: Dahiliye Servisi, Kan Alma..." required autocomplete="off" />
+                </div>
+
+                <div class="icon-picker-box mb-4">
+                    <label class="custom-label mb-3">GÖRSEL İKON (FONTAWESOME)</label>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="preview-box">
+                            <i id="icon-preview" class="fas @(string.IsNullOrEmpty(Model.Ikon) ? "fa-door-closed" : Model.Ikon) text-primary fs-3"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <input asp-for="Ikon" class="form-control premium-input"
+                                   onkeyup="document.getElementById('icon-preview').className = 'fas ' + (this.value ? this.value : 'fa-door-closed') + ' text-primary fs-3';"
+                                   placeholder="Örn: fa-stethoscope" required autocomplete="off" />
+                            <div class="icon-info-text">
+                                <i class="fas fa-link me-1"></i> FA-V6 İkon Sınıf Adı Giriniz
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="switch-box">
+                    <div class="form-check form-switch custom-switch d-flex align-items-center m-0 p-0">
+                        <input class="form-check-input m-0 me-3 shadow-none" type="checkbox" role="switch" asp-for="IsEmpty" id="EmptySwitch">
+                        <label class="form-check-label m-0" style="cursor: pointer;" for="EmptySwitch">
+                            <span class="text-white fw-bold d-block" style="font-size: 1rem;">Sadece Görsel Alan (Pasif Birim)</span>
+                            <span style="color: var(--admin-text-dim); font-size: 0.85rem;" class="d-block mt-1">Bu alan randevu verilebilir bir poliklinik değilse (Örn: Depo, WC) işaretleyin.</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a asp-action="Index" class="btn-cancel">İptal</a>
+                    <button type="submit" class="btn-save">
+                        <i class="fas fa-check-circle"></i> BİRİMİ KAYDET
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

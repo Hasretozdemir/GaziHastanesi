@@ -28,6 +28,14 @@ namespace GaziHastane.Data
         public DbSet<Yetkili> Yetkililer { get; set; }
         public DbSet<Haber> Haberler { get; set; }
         public DbSet<Etkinlik> Etkinlikler { get; set; }
-   
+        public DbSet<Medya> Medyalar { get; set; }
+        public DbSet<KurumsalMenuGrup> KurumsalMenuGruplar { get; set; }
+        public DbSet<KurumsalMenu> KurumsalMenuler { get; set; }
+        public DbSet<KurumsalSayfa> KurumsalSayfalar { get; set; }
+        public DbSet<BashekimlikPersonel> BashekimlikPersoneller { get; set; }
+        public DbSet<BasmudurlikPersonel> BasmudurlikPersoneller { get; set; }
+        public DbSet<HemsirelikAyar> HemsirelikAyarlar { get; set; }
+        public DbSet<HemsirelikIcerik> HemsirelikIcerikler { get; set; }
+        public DbSet<HemsirelikSekme> HemsirelikSekmeler { get; set; }
     }
 }

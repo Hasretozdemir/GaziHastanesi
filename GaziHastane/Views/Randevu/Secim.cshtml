@@ -1,20 +1,16 @@
 ﻿@* RAZOR KOD BLOĞU: Sunucu (C#) tarafında çalışan kodlar. *@
 @{
-    // Sayfanın başlığı belirleniyor. Bu başlık tarayıcı sekmesinde görünür.
+    // Sayfanın başlığı belirleniyor.
     ViewData["Title"] = "Gazi Sağlık | Randevu Planlama";
 }
 
 <div class="appointment-dashboard">
-
     <div class="container pb-5 dashboard-safe-area">
-
         <div class="dashboard-center-wrapper mx-auto" style="max-width: 1150px;">
 
             <header class="glass-nav d-flex justify-content-between align-items-center mb-5 p-3 animate__animated animate__fadeIn">
-
                 <div class="d-flex align-items-center ms-md-3 flex-wrap">
                     <div class="brand-box me-3"><i class="fas fa-h-square fa-2x text-primary"></i></div>
-
                     <div class="brand-text">
                         <h4 class="fw-800 mb-0 text-navy">GAZİ ÜNİVERSİTESİ</h4>
                         <span class="status-badge small text-muted">Hastane Randevu Sistemi</span>
@@ -32,18 +28,15 @@
 
             <input type="hidden" id="aktifHastaId" value="@ViewBag.KullaniciId" />
 
-            <div class="row g-4 justify-content-center">
-
+            <div class="row g-4 justify-content-center mb-5">
                 <div class="col-xl-8 col-lg-7">
                     <div class="content-card shadow-sm border-0 animate__animated animate__fadeInLeft">
-
                         <div class="mb-4">
-                            <h3 class="fw-800 text-navy">Randevu Detayları</h3>
-                            <p class="text-muted small">Lütfen poliklinik ve hekim seçiminizi yapınız.</p>
+                            <h3 class="fw-800 text-navy">Yeni Randevu Al</h3>
+                            <p class="text-muted small">Lütfen poliklinik, hekim ve uygun bir zaman dilimi seçiniz.</p>
                         </div>
 
                         <div class="row g-4">
-
                             <div class="col-md-6">
                                 <label class="section-label-small">Tıbbi Birim</label>
                                 <select class="form-select-modern" name="BolumId" id="birimSelect" onchange="updateSelection()">
@@ -52,7 +45,11 @@
                                     {
                                         foreach (var bolum in ViewBag.Bolumler)
                                         {
-                                            <option value="@bolum.Id" data-blok="Ana Bina" data-kat="Zemin" data-oda="100">@bolum.Ad</option>
+                                            <option value="@bolum.Id"
+                                                    data-blok="@(bolum.Blok ?? "Bilinmiyor")"
+                                                    data-kat="@(bolum.Kat ?? "Bilinmiyor")">
+                                                @bolum.Ad
+                                            </option>
                                         }
                                     }
                                 </select>
@@ -69,7 +66,7 @@
                                 <div class="location-notif d-flex align-items-center">
                                     <div class="loc-icon-mini me-3"><i class="fas fa-map-marker-alt"></i></div>
                                     <div>
-                                        <small class="text-muted d-block fw-bold" style="font-size: 10px;">RANDEVU KONUMU</small>
+                                        <small class="text-muted d-block fw-bold" style="font-size: 10px;">SEÇİLEN BİRİMİN KONUMU</small>
                                         <span id="txtFormKonum" class="fw-bold text-navy">-</span>
                                     </div>
                                 </div>
@@ -92,13 +89,8 @@
 
                             <div class="col-12 mt-4">
                                 <label class="section-label">Müsait Saatler</label>
-                                <div class="time-grid-modern">
-                                    <button class="time-chip" onclick="selectTime(this, '09:00')">09:00</button>
-                                    <button class="time-chip active" onclick="selectTime(this, '09:30')">09:30</button>
-                                    <button class="time-chip" onclick="selectTime(this, '10:00')">10:00</button>
-                                    <button class="time-chip" onclick="selectTime(this, '11:00')">11:00</button>
-                                    <button class="time-chip" onclick="selectTime(this, '14:00')">14:00</button>
-                                    <button class="time-chip" onclick="selectTime(this, '15:00')">15:00</button>
+                                <div class="time-grid-modern" id="saatAlani">
+                                    <p class="text-muted small mb-0 w-100">Lütfen saatleri görmek için hekim ve tarih seçiniz.</p>
                                 </div>
                             </div>
                         </div>
@@ -127,7 +119,7 @@
 
                             <div class="summary-item mb-4">
                                 <div class="s-icon orange"><i class="fas fa-calendar-day"></i></div>
-                                <div><small>Tarih & Saat</small><p id="sumTarihSaat" class="m-0 fw-bold text-primary">@DateTime.Now.ToString("dd MMM") - 09:30</p></div>
+                                <div><small>Tarih & Saat</small><p id="sumTarihSaat" class="m-0 fw-bold text-primary">-</p></div>
                             </div>
 
                             <div id="sumLocation" class="location-summary-box animate__animated animate__zoomIn" style="display:none;">
@@ -135,37 +127,137 @@
                                     <i class="fas fa-building text-muted me-2"></i>
                                     <span class="extra-small fw-bold text-muted">HASTANE KONUM BİLGİSİ</span>
                                 </div>
-                                <p id="txtSumKonum" class="m-0 mt-1 fw-800 text-success">A Blok - Kat: 3</p>
-                                <small class="text-muted" style="font-size: 11px;">Oda Numarası: <span id="txtSumOda">302</span></small>
+                                <p id="txtSumKonum" class="m-0 mt-1 fw-800 text-success">-</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="row g-4 justify-content-center animate__animated animate__fadeInUp">
+                <div class="col-12">
+                    <div class="content-card shadow-sm border-0">
+                        <h3 class="fw-800 text-navy mb-4">Randevularım</h3>
+
+                        <ul class="nav nav-pills custom-pills mb-4" id="pills-tab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="pills-gelecek-tab" data-bs-toggle="pill" data-bs-target="#pills-gelecek" type="button" role="tab" aria-selected="true">Yaklaşan Randevular</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="pills-gecmis-tab" data-bs-toggle="pill" data-bs-target="#pills-gecmis" type="button" role="tab" aria-selected="false">Geçmiş Randevular</button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content" id="pills-tabContent">
+
+                            <div class="tab-pane fade show active" id="pills-gelecek" role="tabpanel" aria-labelledby="pills-gelecek-tab">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle randevu-table">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Tarih & Saat</th>
+                                                <th>Poliklinik</th>
+                                                <th>Doktor</th>
+                                                <th>Durum</th>
+                                                <th>İşlem</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (ViewBag.YaklasanRandevular != null && ViewBag.YaklasanRandevular.Count > 0)
+                                            {
+                                                foreach (var randevu in ViewBag.YaklasanRandevular)
+                                                {
+                                                    <tr>
+                                                        <td><span class="fw-bold">@randevu.RandevuTarihi.ToString("dd MMM yyyy")</span> <br /> <small class="text-muted">@randevu.RandevuTarihi.ToString("HH:mm")</small></td>
+                                                        <td><span class="fw-bold text-navy">@(randevu.Bolum?.Ad ?? "-")</span></td>
+                                                        <td>Dr. @(randevu.Doktor?.Ad) @(randevu.Doktor?.Soyad)</td>
+                                                        <td><span class="badge bg-success">Aktif</span></td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-outline-danger" onclick="iptalEt(@randevu.Id)">İptal Et</button>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr><td colspan="5" class="text-center py-4 text-muted">Planlanmış bir randevunuz bulunmamaktadır.</td></tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="pills-gecmis" role="tabpanel" aria-labelledby="pills-gecmis-tab">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle randevu-table">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Tarih & Saat</th>
+                                                <th>Poliklinik</th>
+                                                <th>Doktor</th>
+                                                <th>Durum</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (ViewBag.GecmisRandevular != null && ViewBag.GecmisRandevular.Count > 0)
+                                            {
+                                                foreach (var randevu in ViewBag.GecmisRandevular)
+                                                {
+                                                    <tr>
+                                                        <td><span class="fw-bold">@randevu.RandevuTarihi.ToString("dd MMM yyyy")</span> <br /> <small class="text-muted">@randevu.RandevuTarihi.ToString("HH:mm")</small></td>
+                                                        <td><span class="fw-bold text-navy">@(randevu.Bolum?.Ad ?? "-")</span></td>
+                                                        <td>Dr. @(randevu.Doktor?.Ad) @(randevu.Doktor?.Soyad)</td>
+                                                        <td>
+                                                            @if (randevu.Durum == 2)
+                                                            {
+                                                                <span class="badge bg-danger">İptal Edildi</span>
+                                                            }
+                                                            else if (randevu.Durum == 3)
+                                                            {
+                                                                <span class="badge bg-warning text-dark">Gelmedi</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="badge bg-secondary">Tamamlandı</span>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr><td colspan="4" class="text-center py-4 text-muted">Geçmiş randevunuz bulunmamaktadır.</td></tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
 @section Styles {
     <style>
-        /* CSS Değişkenleri: Renkleri ve boyutları merkezi yönetmek için */
         :root {
-            --navy: #0f172a; /* Koyu lacivert tema rengi */
-            --primary: #2563eb; /* Ana mavi vurgu rengi */
-            --bg-gray: #eef2f6; /* Sayfa arka plan rengi */
-            --navbar-height: 90px; /* Üst Appbar yüksekliği (Layout'a göre ayarlanabilir) */
+            --navy: #0f172a;
+            --primary: #2563eb;
+            --bg-gray: #eef2f6;
+            --navbar-height: 90px;
         }
 
-        /* Genel Sayfa Ayarları */
         body, html {
             height: 100%;
             margin: 0;
             background-color: var(--bg-gray);
             font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden; /* Yatay kaydırmayı engelle */
+            overflow-x: hidden;
         }
 
-        /* Ana Kapsayıcı Flex Ayarları (Dikey Ortalama) */
         .appointment-dashboard {
             min-height: 100vh;
             display: flex;
@@ -174,41 +266,35 @@
             background-color: var(--bg-gray);
         }
 
-        /* Güvenli Alan: İçeriğin, üstteki sabit navbarın altında kalmasını engeller */
         .dashboard-safe-area {
             padding-top: calc(var(--navbar-height) + 30px);
         }
 
-        /* Merkez Hizalama Kutusu */
         .dashboard-center-wrapper {
             width: 100%;
             z-index: 2;
         }
 
-        /* Marka Başlığı Ayarları */
         .brand-text h4 {
             line-height: 1.2;
-            white-space: nowrap; /* Metnin alt satıra geçmesini engelle */
+            white-space: nowrap;
         }
 
-        /* İçerik ve Özet Kartlarının Ortak Stili */
         .content-card, .summary-panel-modern {
             background: #ffffff;
-            border-radius: 35px; /* Köşeleri yuvarla */
-            padding: 40px; /* İç boşluğu artır */
-            height: 100%; /* Kartların yüksekliğini eşitle */
+            border-radius: 35px;
+            padding: 40px;
+            height: 100%;
         }
 
-        /* Header (Nav) için Buzlu Cam Efekti */
         .glass-nav {
             background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px); /* Arka planı bulanıklaştır */
+            backdrop-filter: blur(10px);
             border-radius: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.03); /* Hafif gölge */
-            border: 1px solid rgba(255,255,255,0.5); /* Hafif kenarlık */
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+            border: 1px solid rgba(255,255,255,0.5);
         }
 
-        /* Küçük Etiket Stili (Tıbbi Birim vb.) */
         .section-label-small {
             font-size: 11px;
             font-weight: 800;
@@ -219,7 +305,6 @@
             letter-spacing: 1px;
         }
 
-        /* Normal Etiket Stili (Uygun Tarihler vb.) */
         .section-label {
             font-size: 13px;
             font-weight: 800;
@@ -228,7 +313,6 @@
             display: block;
         }
 
-        /* Modern Select Kutusu */
         .form-select-modern {
             width: 100%;
             padding: 15px;
@@ -240,21 +324,19 @@
             outline: none;
             transition: 0.3s;
         }
-            /* Select kutusu odaklanınca (focus) */
+
             .form-select-modern:focus {
-                border-color: var(--primary); /* Çerçeveyi mavi yap */
+                border-color: var(--primary);
                 background: white;
             }
 
-        /* Tarihlerin Yatay Kaydırılabilir Alanı */
         .date-swipe-wrapper {
             display: flex;
             gap: 12px;
-            overflow-x: auto; /* Yatay scroll */
+            overflow-x: auto;
             padding-bottom: 10px;
         }
 
-        /* Tarih Kartı */
         .date-card {
             min-width: 80px;
             padding: 15px 10px;
@@ -267,7 +349,7 @@
             display: flex;
             flex-direction: column;
         }
-            /* Tarih Kartı İçerikleri */
+
             .date-card .day {
                 font-size: 11px;
                 font-weight: 700;
@@ -288,25 +370,22 @@
                 color: #94a3b8;
             }
 
-            /* Seçili Tarih Kartı */
             .date-card.active {
                 background: var(--primary);
                 border-color: var(--primary);
                 box-shadow: 0 10px 20px rgba(37,99,235,0.2);
             }
-                /* Seçili kartın içindeki yazıları beyaz yap */
+
                 .date-card.active span {
                     color: white !important;
                 }
 
-        /* Saatlerin Izgara (Grid) Yapısı */
         .time-grid-modern {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); /* Sığdıkça yan yana diz */
+            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
             gap: 10px;
         }
 
-        /* Saat Butonu (Chip) */
         .time-chip {
             background: #f1f5f9;
             border: 2px solid transparent;
@@ -315,20 +394,27 @@
             font-weight: 700;
             color: #64748b;
             transition: 0.3s;
+            cursor: pointer;
+            width: 100%;
         }
-            /* Saat Üzerine Gelince */
+
             .time-chip:hover {
                 border-color: var(--navy);
                 color: var(--navy);
             }
-            /* Seçili Saat */
+
             .time-chip.active {
                 background: var(--navy);
                 color: #fff;
                 border-color: var(--navy);
             }
 
-        /* Onay Butonu */
+            .time-chip:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+                text-decoration: line-through;
+            }
+
         .btn-confirm-modern {
             width: 100%;
             height: 65px;
@@ -343,14 +429,13 @@
             justify-content: center;
             font-size: 1.1rem;
         }
-            /* Onay Butonu Hover */
+
             .btn-confirm-modern:hover {
                 background: var(--primary);
-                transform: translateY(-3px); /* Hafif yukarı kalkar */
+                transform: translateY(-3px);
                 box-shadow: 0 15px 30px rgba(37,99,235,0.2) !important;
             }
 
-        /* Kullanıcı Avatarı (Yuvarlak) */
         .avatar-circle {
             width: 45px;
             height: 45px;
@@ -363,7 +448,6 @@
             font-weight: 800;
         }
 
-        /* Özet Listesi Öğesi */
         .summary-item {
             display: flex;
             align-items: center;
@@ -377,7 +461,6 @@
                 letter-spacing: 1px;
             }
 
-        /* Simgelerin Kutusu */
         .s-icon {
             width: 45px;
             height: 45px;
@@ -389,7 +472,6 @@
             font-size: 1.2rem;
         }
 
-        /* Renk Temaları */
         .blue {
             background: #eff6ff;
             color: #2563eb;
@@ -405,7 +487,6 @@
             color: #ea580c;
         }
 
-        /* Konum Bildirim Alanı */
         .location-notif {
             background: #f0fdf4;
             border: 1px dashed #22c55e;
@@ -413,7 +494,6 @@
             border-radius: 20px;
         }
 
-        /* Konum Özeti Alanı */
         .location-summary-box {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -421,7 +501,6 @@
             border-radius: 20px;
         }
 
-        /* Küçük Yeşil Konum İkonu */
         .loc-icon-mini {
             color: #22c55e;
             background: #dcfce7;
@@ -433,7 +512,6 @@
             justify-content: center;
         }
 
-        /* Yardımcı Sınıflar */
         .fw-800 {
             font-weight: 800;
         }
@@ -442,130 +520,229 @@
             color: var(--navy);
         }
 
-        /* Mobil Cihaz Uyumluluğu (Responsive) */
+        .custom-pills .nav-link {
+            border-radius: 15px;
+            font-weight: 700;
+            color: #64748b;
+            padding: 10px 20px;
+            margin-right: 10px;
+            transition: 0.3s;
+        }
+
+            .custom-pills .nav-link.active {
+                background-color: var(--primary);
+                color: white;
+                box-shadow: 0 5px 15px rgba(37,99,235,0.2);
+            }
+
+        .randevu-table th {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+        }
+
+        .randevu-table td {
+            font-size: 14px;
+            padding: 15px 10px;
+        }
+
         @@media (max-width: 768px) {
             .content-card, .summary-panel-modern {
-                padding: 25px; /* Kart iç boşluğunu azalt */
+                padding: 25px;
             }
 
             .dashboard-safe-area {
-                padding-top: calc(var(--navbar-height) + 15px); /* Üst boşluğu ayarla */
+                padding-top: calc(var(--navbar-height) + 15px);
             }
+        }
+
+        /* SweetAlert Özel Stilleri (Opsiyonel: Tasarıma daha iyi uyması için) */
+        .swal2-popup {
+            border-radius: 25px !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+        }
+
+        .swal2-title {
+            color: var(--navy) !important;
+            font-weight: 800 !important;
+        }
+
+        .swal2-confirm {
+            border-radius: 15px !important;
+            font-weight: 700 !important;
+        }
+
+        .swal2-cancel {
+            border-radius: 15px !important;
+            font-weight: 700 !important;
         }
     </style>
 }
 
 @section Scripts {
-    <script>
-        // Sayfa yüklendiğinde varsayılan tarih ve saat değerleri
-        let seciliTarih = '@DateTime.Now.ToString("yyyy-MM-dd")';
-        let seciliSaat = '09:30';
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        // Görsel Tarih Kutularına Tıklama İşlemi
+    <script>
+        let seciliTarih = '@DateTime.Now.ToString("yyyy-MM-dd")';
+        let seciliSaat = '';
+
+        // Sayfa yüklendiğinde güncel tarihi özete yazalım
+        window.onload = function() {
+            var gunAy = document.querySelector('.date-card.active .number').innerText + " " + document.querySelector('.date-card.active .month').innerText;
+            document.getElementById('sumTarihSaat').innerText = gunAy + " - (Saat Seçilmedi)";
+        };
+
         function selectDate(element) {
             document.querySelectorAll('.date-card').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
-
             seciliTarih = element.getAttribute('data-tarih');
+            seciliSaat = ''; // Tarih değişince saat sıfırlanır
+
             updateSummaryTarihSaat();
+            saatleriGetir(); // Yeni tarihe göre boş saatleri çek
         }
 
-        // Görsel Saat Kutularına Tıklama İşlemi
         function selectTime(element, saat) {
+            if(element.disabled) return;
             document.querySelectorAll('.time-chip').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
-
             seciliSaat = saat;
             updateSummaryTarihSaat();
         }
 
-        // Seçimler değiştikçe sağ taraftaki özeti güncelleyen fonksiyon
         function updateSummaryTarihSaat() {
             var gunAy = document.querySelector('.date-card.active .number').innerText + " " + document.querySelector('.date-card.active .month').innerText;
-            document.getElementById('sumTarihSaat').innerText = gunAy + " - " + seciliSaat;
+            var saatYazisi = seciliSaat !== '' ? seciliSaat : "(Saat Seçilmedi)";
+            document.getElementById('sumTarihSaat').innerText = gunAy + " - " + saatYazisi;
         }
 
-        // Seçimler değiştiğinde çalışacak fonksiyon
         function updateSelection() {
             var birim = document.getElementById("birimSelect");
             var hekimSelect = document.getElementById("drSelect");
+            seciliSaat = ''; // Birim değişince seçimleri temizle
+            updateSummaryTarihSaat();
 
-            // Eğer bir birim seçildiyse;
             if(birim.selectedIndex > 0) {
-                // Seçilen opsiyonu al
                 var selectedBirim = birim.options[birim.selectedIndex];
                 var bolumId = selectedBirim.value;
 
-                // Sağ taraftaki özete birim adını yaz
                 document.getElementById("sumBirim").innerText = selectedBirim.text;
 
-                // Seçilen birimin "data-" özelliklerinden konum bilgilerini al
+                // Veritabanından gelen Dinamik Konum
                 var blok = selectedBirim.getAttribute("data-blok");
                 var kat = selectedBirim.getAttribute("data-kat");
-                var oda = selectedBirim.getAttribute("data-oda");
+                var konumMetni = blok + " - " + kat;
 
-                // Formun içindeki konum uyarısını göster ve güncelle
                 document.getElementById("locationAlert").style.display = "block";
-                document.getElementById("txtFormKonum").innerText = blok + " - " + kat;
-
-                // Sağ taraftaki konum özet kutusunu göster ve güncelle
+                document.getElementById("txtFormKonum").innerText = konumMetni;
                 document.getElementById("sumLocation").style.display = "block";
-                document.getElementById("txtSumKonum").innerText = blok + " - " + kat;
-                document.getElementById("txtSumOda").innerText = oda;
+                document.getElementById("txtSumKonum").innerText = konumMetni;
 
-                // Bölüme ait doktorları Fetch API ile veritabanından getir
                 hekimSelect.innerHTML = '<option value="" selected disabled>Yükleniyor...</option>';
 
                 fetch('/Randevu/GetDoktorlar?bolumId=' + bolumId)
                     .then(response => response.json())
                     .then(data => {
                         hekimSelect.innerHTML = '<option value="" selected disabled>Hekim Seçiniz</option>';
-                        document.getElementById("sumHekim").innerText = "-"; // Özeti sıfırla
+                        document.getElementById("sumHekim").innerText = "-";
+                        document.getElementById("saatAlani").innerHTML = '<p class="text-muted small mb-0 w-100">Lütfen önce hekim seçiniz.</p>';
 
-                        // Gelen doktorları Select içine ekle
                         data.forEach(dr => {
                             var option = document.createElement("option");
                             option.value = dr.id;
                             option.text = dr.adSoyad;
                             hekimSelect.appendChild(option);
                         });
-                    })
-                    .catch(error => {
-                        console.error("Doktorlar yüklenirken hata oluştu:", error);
-                        hekimSelect.innerHTML = '<option value="" selected disabled>Hata Oluştu</option>';
-                    });
+                    }).catch(err => console.error(err));
             }
         }
 
-        // Hekim seçimi değiştiğinde sağ paneli güncelleyecek ayrı bir fonksiyon
         function updateDoctorSelection() {
             var hekim = document.getElementById("drSelect");
+            seciliSaat = '';
+            updateSummaryTarihSaat();
+
             if(hekim.selectedIndex > 0) {
-                // Sağ taraftaki özete hekim adını yaz
                 document.getElementById("sumHekim").innerText = hekim.options[hekim.selectedIndex].text;
+                saatleriGetir(); // Hekim seçilince o hekimin boş saatlerini çek
             }
         }
 
-        // Onay butonuna basıldığında çalışacak POST işlemi
+        // Seçilen Doktor ve Tarihe göre Çakışmayan Saatleri Fetch API ile Çeken Fonksiyon
+        function saatleriGetir() {
+            var doktorId = document.getElementById("drSelect").value;
+            var saatAlani = document.getElementById("saatAlani");
+
+            if(!doktorId) return;
+
+            saatAlani.innerHTML = '<p class="text-muted small w-100">Uygun saatler aranıyor <i class="fas fa-spinner fa-spin"></i></p>';
+
+            fetch(`/Randevu/GetUygunSaatler?doktorId=${doktorId}&tarih=${seciliTarih}`)
+                .then(response => response.json())
+                .then(data => {
+                    saatAlani.innerHTML = '';
+
+                    if(data.length === 0) {
+                        saatAlani.innerHTML = '<span class="text-danger fw-bold w-100">Seçili tarihte uygun randevu saati bulunmamaktadır.</span>';
+                        return;
+                    }
+
+                    data.forEach(saat => {
+                        var btn = document.createElement("button");
+                        btn.className = "time-chip";
+                        btn.innerText = saat;
+                        btn.type = "button";
+                        btn.onclick = function() { selectTime(this, saat); };
+                        saatAlani.appendChild(btn);
+                    });
+                })
+                .catch(err => {
+                    saatAlani.innerHTML = '<span class="text-danger w-100">Saatler yüklenirken hata oluştu.</span>';
+                });
+        }
+
         function confirmAppointment() {
             var bolumId = document.getElementById("birimSelect").value;
             var doktorId = document.getElementById("drSelect").value;
-            var hastaId = document.getElementById("aktifHastaId").value; // Gerçek kullanıcı ID'si alındı
+            var hastaId = document.getElementById("aktifHastaId").value;
 
             if(!bolumId || !doktorId) {
-                alert("Lütfen önce bölüm ve hekim seçimi yapınız.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Eksik Seçim',
+                    text: 'Lütfen önce poliklinik ve hekim seçimi yapınız.',
+                    confirmButtonColor: '#0f172a'
+                });
+                return;
+            }
+            if(!seciliSaat) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Saat Seçilmedi',
+                    text: 'Lütfen uygun bir randevu saati seçiniz.',
+                    confirmButtonColor: '#0f172a'
+                });
                 return;
             }
 
-            // Gönderilecek verileri hazırlıyoruz
             var formData = new FormData();
             formData.append("BolumId", bolumId);
             formData.append("DoktorId", doktorId);
             formData.append("Tarih", seciliTarih);
             formData.append("Saat", seciliSaat);
-            formData.append("HastaId", hastaId); // Controller'a kimlik gidiyor
+            formData.append("HastaId", hastaId);
 
-            // Fetch API ile veriyi Controller'a gönderiyoruz
+            // Bekleme ekranı göster
+            Swal.fire({
+                title: 'İşleniyor...',
+                text: 'Randevunuz oluşturuluyor, lütfen bekleyin.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
             fetch('/Randevu/RandevuKaydet', {
                 method: 'POST',
                 body: formData
@@ -573,15 +750,85 @@
             .then(response => response.json())
             .then(data => {
                 if(data.success) {
-                    alert(data.message); // Başarılı mesajı
-                    window.location.href = '/Randevu/Giris'; // İşlem bitince Giriş sayfasına yönlendir
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Randevu Onaylandı!',
+                        text: data.message,
+                        confirmButtonColor: '#2563eb'
+                    }).then(() => {
+                        window.location.reload();
+                    });
                 } else {
-                    alert("Hata: " + data.message); // Hata mesajı
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata',
+                        text: data.message,
+                        confirmButtonColor: '#0f172a'
+                    });
                 }
             })
             .catch(error => {
-                console.error('Randevu kaydedilemedi:', error);
-                alert("Sistemsel bir sorun oluştu, lütfen daha sonra tekrar deneyin.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Sistemsel Hata',
+                    text: 'Sistemsel bir sorun oluştu. Lütfen daha sonra tekrar deneyin.',
+                    confirmButtonColor: '#0f172a'
+                });
+            });
+        }
+
+        // Profesyonel Randevu İptal Fonksiyonu
+        function iptalEt(randevuId) {
+            Swal.fire({
+                title: 'Emin misiniz?',
+                text: "Bu randevuyu iptal etmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Evet, İptal Et',
+                cancelButtonText: 'Vazgeç'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    Swal.fire({
+                        title: 'İptal Ediliyor...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    fetch('/Randevu/RandevuIptal?id=' + randevuId, { method: 'POST' })
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data.success){
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'İptal Edildi!',
+                                text: 'Randevunuz başarıyla iptal edildi.',
+                                confirmButtonColor: '#2563eb'
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Hata',
+                                text: 'İptal işlemi sırasında bir hata oluştu.',
+                                confirmButtonColor: '#0f172a'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Sistemsel Hata',
+                            text: 'Sistemsel bir sorun oluştu.',
+                            confirmButtonColor: '#0f172a'
+                        });
+                    });
+                }
             });
         }
     </script>
