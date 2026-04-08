@@ -1,0 +1,46 @@
+@{
+    ViewData["Title"] = "Panel Ayarlarý";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var doktorKapasite = ViewBag.DoktorGunlukRandevuKapasitesi?.ToString() ?? "24";
+}
+
+<div class="max-w-4xl mx-auto pt-8 pb-12 px-4">
+    <div class="glass-card rounded-[2rem] p-8 md:p-10">
+        <h2 class="text-2xl font-black text-white mb-2">Panel Ayarlarý</h2>
+        <p class="text-slate-400 text-sm mb-6">Dashboard hesaplarý için kullanýlan sistem deðerlerini buradan yönetebilirsiniz.</p>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="mb-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 text-emerald-300 text-sm font-semibold">@TempData["Success"]</div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="mb-4 bg-rose-500/10 border border-rose-500/20 rounded-xl p-4 text-rose-300 text-sm font-semibold">@TempData["Error"]</div>
+        }
+
+        <div class="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 text-blue-200 text-sm font-medium mb-6">
+            <i class="fa-solid fa-circle-info mr-2"></i>
+            Bu ayar, dashboard üzerindeki <span class="font-bold">Sistem Yükü</span> oraný hesabýnda kullanýlýr.
+        </div>
+
+        @if (User.IsInRole("Süper Admin"))
+        {
+            <form asp-action="Index" method="post" class="space-y-4 mb-6">
+                @Html.AntiForgeryToken()
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Doktor Baþýna Günlük Randevu Kapasitesi</label>
+                    <input type="number" name="doktorGunlukRandevuKapasitesi" min="1" value="@doktorKapasite" class="w-full md:w-72 bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white outline-none focus:border-cyan-500/50 transition font-semibold" />
+                </div>
+                <button type="submit" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 py-3 rounded-xl text-sm font-black hover:scale-[1.02] transition">Kapasiteyi Kaydet</button>
+            </form>
+
+            <div class="mt-6 flex justify-end">
+                <div class="flex gap-3">
+                    <a href="/Admin/DoktorRandevuPlan/Index" class="bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 px-5 py-3 rounded-xl text-sm font-black hover:bg-cyan-500/30 transition">Doktor Randevu Planý</a>
+                    <a href="/Admin/Ayarlar/Menu" class="bg-white/5 border border-white/10 text-white px-5 py-3 rounded-xl text-sm font-black hover:bg-white/10 transition">Admin Menü Yönetimi</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

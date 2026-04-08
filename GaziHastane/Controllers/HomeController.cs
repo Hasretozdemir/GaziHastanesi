@@ -47,6 +47,19 @@ namespace GaziHastane.Controllers
             var aktifBolumler = await _context.Bolumler
                                               .Where(b => b.IsActive)
                                               .ToListAsync();
+
+            ViewBag.Doktorlar = await _context.Doktorlar
+                                              .Where(d => d.IsActive && d.BolumId != null)
+                                              .Select(d => new
+                                              {
+                                                  d.BolumId,
+                                                  d.Ad,
+                                                  d.Soyad,
+                                                  d.Unvan,
+                                                  d.Ozgecmis,
+                                                  d.FotografUrl
+                                              })
+                                              .ToListAsync();
             return View(aktifBolumler);
         }
 

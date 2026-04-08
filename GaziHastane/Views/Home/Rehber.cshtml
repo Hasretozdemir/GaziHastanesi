@@ -15,6 +15,58 @@
     int kartIndeks = 0;
 }
 
+@section Scripts {
+    <script>
+        const rehberData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+            (Model ?? Enumerable.Empty<GaziHastane.Models.HastaRehberi>()).Select(x => new
+            {
+                x.Id,
+                x.Baslik,
+                x.Icerik,
+                x.ModalIcerik
+            })
+        ));
+
+        window.openRehberDetay = function (id) {
+            const item = rehberData.find(x => (x.id ?? x.Id) === id);
+            if (!item) return;
+
+            const titleEl = document.getElementById('rehberModalTitle');
+            const bodyEl = document.getElementById('rehberModalBody');
+            const modal = document.getElementById('rehberModal');
+            const content = document.getElementById('rehberModalContent');
+
+            if (!titleEl || !bodyEl || !modal || !content) return;
+
+            titleEl.textContent = item.baslik ?? item.Baslik;
+            bodyEl.innerHTML = item.modalIcerik ?? item.ModalIcerik ?? item.icerik ?? item.Icerik ?? '';
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            }, 10);
+        }
+
+        window.closeRehberModal = function () {
+            const modal = document.getElementById('rehberModal');
+            const content = document.getElementById('rehberModalContent');
+            if (!modal || !content) return;
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('rehberModal');
+            if (!modal || modal.classList.contains('hidden')) return;
+            if (e.target && e.target.id === 'rehberModal') {
+                window.closeRehberModal();
+            }
+        });
+    </script>
+}
+
 <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-12 mt-24 min-h-screen">
 
     <div class="bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900 rounded-[2rem] p-8 sm:p-12 relative overflow-hidden shadow-[0_20px_50px_rgba(15,23,42,0.2)]">
@@ -60,7 +112,7 @@
                 var tema = renkTemalari[kartIndeks % renkTemalari.Count];
                 kartIndeks++;
 
-                <div class="group bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full relative overflow-hidden cursor-pointer">
+                <button type="button" onclick="openRehberDetay(@item.Id)" class="group bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full relative overflow-hidden cursor-pointer text-left w-full">
 
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r @tema.UstCizgi opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
@@ -79,8 +131,7 @@
                         </div>
                     </div>
 
-                    <a href="/HastaRehberi/Detay/@item.Id" class="absolute inset-0 z-10"></a>
-                </div>
+                </button>
             }
         }
         else
@@ -94,4 +145,15 @@
             </div>
         }
     </div>
+<div id="rehberModal" class="fixed inset-0 z-[120] hidden bg-black/55 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
+    <div id="rehberModalContent" class="bg-white w-full max-w-3xl rounded-3xl border border-slate-200 shadow-2xl transform scale-95 transition-transform duration-200 max-h-[88vh] flex flex-col overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+            <h3 id="rehberModalTitle" class="text-xl font-black text-slate-800"></h3>
+            <button type="button" onclick="closeRehberModal()" class="w-9 h-9 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div id="rehberModalBody" class="p-6 overflow-y-auto text-slate-700 leading-relaxed"></div>
+    </div>
+</div>
 </main>

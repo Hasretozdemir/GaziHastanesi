@@ -39,5 +39,9 @@ namespace GaziHastane.Data
         public DbSet<HemsirelikSekme> HemsirelikSekmeler { get; set; }
         public DbSet<ArsivSekme> ArsivSekmeler { get; set; }
         public DbSet<HizliIslem> HizliIslemler { get; set; }
+        public DbSet<AdminMenuItem> AdminMenuItems { get; set; }
+        public DbSet<PanelAyar> PanelAyarlari { get; set; }
+        public DbSet<DoktorRandevuPlani> DoktorRandevuPlanlari { get; set; }
+        public DbSet<DoktorRandevuPlanGunu> DoktorRandevuPlanGunleri { get; set; }
     }
 }

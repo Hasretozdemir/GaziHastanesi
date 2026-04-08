@@ -384,6 +384,14 @@ namespace GaziHastane.Models
         [Required]
         public string Icerik { get; set; } = null!;
 
+        public string? ModalIcerik { get; set; }
+
+        [StringLength(20)]
+        public string AcilisTipi { get; set; } = "Modal"; // Modal / Link
+
+        [StringLength(500)]
+        public string? HedefUrl { get; set; }
+
         [StringLength(50)]
         public string? Ikon { get; set; }
 
@@ -545,11 +553,17 @@ namespace GaziHastane.Models
         [StringLength(50)]
         public string Rol { get; set; } = "Yönetici";
 
+        [StringLength(2000)]
+        public string? AdminSayfaYetkileri { get; set; }
+
         public DateTime KayitTarihi { get; set; } = DateTime.UtcNow;
 
         public DateTime? SonGirisTarihi { get; set; }
 
         public bool IsActive { get; set; } = true;
+
+        [NotMapped]
+        public List<string> SecilenSayfaYetkileri { get; set; } = new();
     }
 
     // --- YENÝ EKLENEN TABLOLAR ---
@@ -763,5 +777,128 @@ namespace GaziHastane.Models
         public int SiraNo { get; set; } = 1; // Sýralama yapmak için
 
         public bool IsActive { get; set; } = true;
+    }
+
+    [Table("AdminMenuItems")]
+    public class AdminMenuItem
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string Section { get; set; } = null!; // Main, System, Content, KurumsalSub, Security
+
+        [StringLength(50)]
+        public string? PermissionKey { get; set; } // AdminPanelPermissions key
+
+        [Required]
+        [StringLength(255)]
+        public string Url { get; set; } = null!;
+
+        [Required]
+        [StringLength(150)]
+        public string Label { get; set; } = null!;
+
+        [StringLength(100)]
+        public string? IconClass { get; set; }
+
+        [StringLength(50)]
+        public string? Controller { get; set; }
+
+        [StringLength(50)]
+        public string? Action { get; set; }
+
+        [StringLength(250)]
+        public string? ActiveIconClass { get; set; }
+
+        [StringLength(250)]
+        public string? HoverIconClass { get; set; }
+
+        public int SortOrder { get; set; } = 1;
+
+        public bool IsSuperAdminOnly { get; set; } = false;
+
+        public bool IsActive { get; set; } = true;
+    }
+
+    [Table("PanelAyarlar")]
+    public class PanelAyar
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string AyarKey { get; set; } = null!;
+
+        [Required]
+        [StringLength(500)]
+        public string AyarValue { get; set; } = null!;
+    }
+
+    [Table("DoktorRandevuPlanlari")]
+    public class DoktorRandevuPlani
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public int DoktorId { get; set; }
+
+        public int? BolumId { get; set; }
+
+        public int Yil { get; set; }
+
+        public int Ay { get; set; }
+
+        public int AylikMaxRandevu { get; set; } = 100;
+
+        public int SlotSureDakika { get; set; } = 30;
+
+        public TimeSpan BaslangicSaati { get; set; } = new TimeSpan(9, 0, 0);
+
+        public TimeSpan BitisSaati { get; set; } = new TimeSpan(17, 0, 0);
+
+        public int MolaHerHastaSayisi { get; set; } = 4;
+
+        public int MolaSureDakika { get; set; } = 15;
+
+        public TimeSpan OgleMolaBaslangicSaati { get; set; } = new TimeSpan(12, 0, 0);
+
+        public TimeSpan OgleMolaBitisSaati { get; set; } = new TimeSpan(13, 0, 0);
+
+        public virtual Doktor? Doktor { get; set; }
+
+        public virtual ICollection<DoktorRandevuPlanGunu> Gunler { get; set; } = new List<DoktorRandevuPlanGunu>();
+    }
+
+    [Table("DoktorRandevuPlanGunleri")]
+    public class DoktorRandevuPlanGunu
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public int PlanId { get; set; }
+
+        public DateTime Tarih { get; set; }
+
+        public bool IsRandevuAcik { get; set; } = true;
+
+        public int GunlukMaxRandevu { get; set; } = 20;
+
+        public int? MolaHerHastaSayisi { get; set; }
+
+        public int? MolaSureDakika { get; set; }
+
+        public TimeSpan? BaslangicSaati { get; set; }
+
+        public TimeSpan? BitisSaati { get; set; }
+
+        [ForeignKey("PlanId")]
+        public virtual DoktorRandevuPlani? Plan { get; set; }
     }
 }

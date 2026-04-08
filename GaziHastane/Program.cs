@@ -1,4 +1,5 @@
 using GaziHastane.Data;
+using GaziHastane.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
@@ -17,7 +18,10 @@ namespace GaziHastane
             builder.Services.AddDbContext<GaziHastaneContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add<AdminPagePermissionFilter>();
+            });
 
             // ------------------------------------------------------------------
             // KÝMLÝK DOÐRULAMA VE ÇEREZ (COOKIE) AYARLARI
@@ -41,6 +45,7 @@ namespace GaziHastane
                 try
                 {
                     var context = services.GetRequiredService<GaziHastaneContext>();
+                    context.Database.Migrate();
                     DbInitializer.Initialize(context);
                 }
                 catch (Exception ex)

@@ -23,6 +23,7 @@ namespace GaziHastane.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var iletisimBilgileri = await _context.Set<Iletisim>().ToListAsync();
+            ViewBag.UlasimRehberleri = await _context.Set<UlasimRehberi>().OrderBy(x => x.UlasimTipi).ToListAsync();
             return View(iletisimBilgileri);
         }
 
@@ -94,6 +95,70 @@ namespace GaziHastane.Areas.Admin.Controllers
             if (iletisim != null)
             {
                 _context.Set<Iletisim>().Remove(iletisim);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult UlasimCreate()
+        {
+            return View(new UlasimRehberi { TemaRengi = "amber", IsActive = true, Ikon = "fa-solid fa-bus" });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UlasimCreate(UlasimRehberi model)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(model);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> UlasimEdit(int? id)
+        {
+            if (id == null) return NotFound();
+            var kayit = await _context.Set<UlasimRehberi>().FindAsync(id);
+            if (kayit == null) return NotFound();
+            return View(kayit);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UlasimEdit(int id, UlasimRehberi model)
+        {
+            if (id != model.Id) return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                _context.Update(model);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> UlasimDelete(int? id)
+        {
+            if (id == null) return NotFound();
+            var kayit = await _context.Set<UlasimRehberi>().FirstOrDefaultAsync(x => x.Id == id);
+            if (kayit == null) return NotFound();
+            return View(kayit);
+        }
+
+        [HttpPost, ActionName("UlasimDelete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UlasimDeleteConfirmed(int id)
+        {
+            var kayit = await _context.Set<UlasimRehberi>().FindAsync(id);
+            if (kayit != null)
+            {
+                _context.Set<UlasimRehberi>().Remove(kayit);
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));

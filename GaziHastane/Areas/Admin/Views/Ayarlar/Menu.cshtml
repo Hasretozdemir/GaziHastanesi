@@ -1,0 +1,186 @@
+@model List<GaziHastane.Models.AdminMenuItem>
+@{
+    ViewData["Title"] = "Menü Yönetimi";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="max-w-7xl mx-auto pt-6 pb-12 px-4">
+    <div class="glass-card rounded-[2rem] p-6 md:p-8">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <div>
+                <h2 class="text-2xl font-black text-white">Admin Menü Yönetimi</h2>
+                <p class="text-slate-400 text-sm mt-1">Sol menü öðelerini tasarýmý bozmadan buradan düzenleyebilirsiniz.</p>
+            </div>
+            <a href="/Admin/Ayarlar" class="bg-white/5 hover:bg-white/10 text-slate-300 px-4 py-2 rounded-xl text-sm font-bold transition">Panele Dön</a>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="mb-5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 rounded-xl px-4 py-3 text-sm font-semibold">
+                @TempData["Success"]
+            </div>
+        }
+
+        <form method="post" asp-action="Menu" class="space-y-5">
+            @Html.AntiForgeryToken()
+
+            <div class="flex flex-col md:flex-row md:items-center gap-3 justify-between bg-white/5 border border-white/10 rounded-xl p-3">
+                <div class="flex items-center gap-2">
+                    <label for="sectionFilter" class="text-xs font-bold text-slate-300">Bölüm Filtresi</label>
+                    <select id="sectionFilter" class="bg-slate-900 border border-white/10 text-slate-200 rounded-lg px-3 py-2 text-xs font-semibold">
+                        <option value="">Tümü</option>
+                        @foreach (var sec in Model.Select(x => x.Section).Distinct())
+                        {
+                            <option value="@sec">@sec</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <button type="button" id="activateVisible" class="px-3 py-2 rounded-lg text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/30 transition">Görünürleri Aktif Yap</button>
+                    <button type="button" id="deactivateVisible" class="px-3 py-2 rounded-lg text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 hover:bg-rose-500/30 transition">Görünürleri Pasif Yap</button>
+                    <button type="button" id="normalizeOrder" class="px-3 py-2 rounded-lg text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-500/30 transition">Sýralarý Düzelt</button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-[1200px] text-sm">
+                    <thead>
+                        <tr class="text-[11px] uppercase tracking-widest text-slate-400 border-b border-white/10">
+                            <th class="py-3 text-left">Bölüm</th>
+                            <th class="py-3 text-left">Etiket</th>
+                            <th class="py-3 text-left">URL</th>
+                            <th class="py-3 text-left">Controller/Action</th>
+                            <th class="py-3 text-left">Icon</th>
+                            <th class="py-3 text-left">Sýrala</th>
+                            <th class="py-3 text-left">Sýra</th>
+                            <th class="py-3 text-left">Aktif</th>
+                            <th class="py-3 text-left">S.Admin</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5">
+                        @for (var i = 0; i < Model.Count; i++)
+                        {
+                            <tr class="align-top menu-row" data-section="@Model[i].Section">
+                                <td class="py-3 pr-3">
+                                    <input type="hidden" asp-for="@Model[i].Id" />
+                                    <input type="hidden" asp-for="@Model[i].Section" />
+                                    <input type="hidden" asp-for="@Model[i].PermissionKey" />
+                                    <span class="text-xs text-slate-300 bg-white/5 px-2 py-1 rounded-lg">@Model[i].Section</span>
+                                </td>
+                                <td class="py-3 pr-3">
+                                    <input asp-for="@Model[i].Label" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white" />
+                                </td>
+                                <td class="py-3 pr-3">
+                                    <input asp-for="@Model[i].Url" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white" />
+                                </td>
+                                <td class="py-3 pr-3">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <input asp-for="@Model[i].Controller" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white" placeholder="Controller" />
+                                        <input asp-for="@Model[i].Action" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white" placeholder="Action" />
+                                    </div>
+                                </td>
+                                <td class="py-3 pr-3">
+                                    <input asp-for="@Model[i].IconClass" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white" placeholder="fa-solid fa-cube" />
+                                </td>
+                                <td class="py-3 pr-3">
+                                    <div class="flex items-center gap-2">
+                                        <button type="button" class="move-up w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300"><i class="fa-solid fa-arrow-up"></i></button>
+                                        <button type="button" class="move-down w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300"><i class="fa-solid fa-arrow-down"></i></button>
+                                    </div>
+                                </td>
+                                <td class="py-3 pr-3 w-24">
+                                    <input asp-for="@Model[i].SortOrder" type="number" class="sort-order w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white" />
+                                </td>
+                                <td class="py-3 pr-3">
+                                    <input asp-for="@Model[i].IsActive" class="is-active w-4 h-4 accent-cyan-500" />
+                                </td>
+                                <td class="py-3 pr-3">
+                                    <input asp-for="@Model[i].IsSuperAdminOnly" class="w-4 h-4 accent-rose-500" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pt-4 border-t border-white/10 flex justify-end">
+                <button type="submit" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-xl font-black text-sm hover:scale-[1.02] transition">
+                    Menü Ayarlarýný Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const filter = document.getElementById('sectionFilter');
+        const rows = () => Array.from(document.querySelectorAll('.menu-row'));
+
+        function applyFilter() {
+            const val = filter.value;
+            rows().forEach(r => {
+                const match = !val || r.dataset.section === val;
+                r.classList.toggle('hidden', !match);
+            });
+        }
+
+        function normalizeSortOrders() {
+            const grouped = {};
+
+            rows().forEach(r => {
+                const section = r.dataset.section || '';
+                if (!grouped[section]) grouped[section] = [];
+                grouped[section].push(r);
+            });
+
+            Object.keys(grouped).forEach(section => {
+                grouped[section].forEach((r, index) => {
+                    const input = r.querySelector('.sort-order');
+                    if (input) input.value = index + 1;
+                });
+            });
+        }
+
+        function moveRow(btn, direction) {
+            const row = btn.closest('tr');
+            const tbody = row.parentElement;
+            const section = row.dataset.section;
+            const sectionRows = rows().filter(r => r.dataset.section === section);
+            const idx = sectionRows.indexOf(row);
+
+            if (direction === 'up' && idx > 0) {
+                tbody.insertBefore(row, sectionRows[idx - 1]);
+            }
+
+            if (direction === 'down' && idx < sectionRows.length - 1) {
+                tbody.insertBefore(sectionRows[idx + 1], row);
+            }
+
+            normalizeSortOrders();
+            applyFilter();
+        }
+
+        document.querySelectorAll('.move-up').forEach(btn => btn.addEventListener('click', () => moveRow(btn, 'up')));
+        document.querySelectorAll('.move-down').forEach(btn => btn.addEventListener('click', () => moveRow(btn, 'down')));
+
+        document.getElementById('activateVisible').addEventListener('click', () => {
+            rows().filter(r => !r.classList.contains('hidden')).forEach(r => {
+                const cb = r.querySelector('.is-active');
+                if (cb) cb.checked = true;
+            });
+        });
+
+        document.getElementById('deactivateVisible').addEventListener('click', () => {
+            rows().filter(r => !r.classList.contains('hidden')).forEach(r => {
+                const cb = r.querySelector('.is-active');
+                if (cb) cb.checked = false;
+            });
+        });
+
+        document.getElementById('normalizeOrder').addEventListener('click', normalizeSortOrders);
+        filter.addEventListener('change', applyFilter);
+        applyFilter();
+    })();
+</script>

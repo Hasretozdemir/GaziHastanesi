@@ -34,8 +34,15 @@
                     <label asp-for="Kategori" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Kategori</label>
                     <div class="relative">
                         <i class="fa-solid fa-layer-group absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                        <input asp-for="Kategori" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/50 transition" placeholder="Örn: Cerrahi Bilimler, Dahiliye vb.">
+                        <select asp-for="Kategori" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white focus:outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/50 transition appearance-none" required>
+                            <option value="">-- Kategori Seçiniz --</option>
+                            <option value="Dahili">Dahili</option>
+                            <option value="Cerrahi">Cerrahi</option>
+                            <option value="Temel">Temel</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"></i>
                     </div>
+                    <span asp-validation-for="Kategori" class="text-rose-400 text-xs mt-1.5 font-bold block"></span>
                 </div>
 
                 <div>
@@ -58,7 +65,10 @@
                 </div>
 
                 <div class="md:col-span-2">
-                    <label asp-for="Aciklama" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Bölüm Açıklaması / Detaylar</label>
+                    <div class="flex items-center justify-between mb-2">
+                        <label asp-for="Aciklama" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest">Bölüm Açıklaması / Detaylar</label>
+                        <button type="button" onclick="openBilgiPreviewModal()" class="text-[10px] font-bold text-cyan-400 hover:text-cyan-300">Bilgilendirme Önizleme</button>
+                    </div>
                     <textarea asp-for="Aciklama" rows="4" class="w-full bg-black/20 border border-white/10 rounded-xl p-4 text-sm font-medium text-white placeholder-slate-600 focus:outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/50 transition custom-scroll" placeholder="Bu poliklinikte verilen hizmetler hakkında kısa bilgi..."></textarea>
                 </div>
 

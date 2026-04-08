@@ -33,17 +33,17 @@ namespace GaziHastane.Areas.Admin.Controllers
         // Ekleme Ekranını Açma (GET)
         public IActionResult Create()
         {
-            // ViewBag adını 'Bolumler' yaptık.
-            // Show all poliklinikler in admin dropdown (do not filter by IsActive)
-            ViewBag.Bolumler = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Bolumler.OrderBy(b => b.Ad).ToList(), "Id", "Ad");
+            PopulateBolumlerViewBag();
             return View();
         }
 
         // Formdan Gelen Veriyi Kaydetme (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Doktor doktor)
+        public async Task<IActionResult> Create(Doktor doktor, string? kategoriSecim)
         {
+            ValidateBolumKategori(doktor.BolumId, kategoriSecim);
+
             if (ModelState.IsValid)
             {
                 _context.Add(doktor);
@@ -51,8 +51,7 @@ namespace GaziHastane.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index)); // Kayıt başarılıysa listeye dön
             }
 
-            // Eğer formda hata varsa dropdown boş gelmesin diye burayı da 'Bolumler' yapıyoruz
-            ViewBag.Bolumler = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Bolumler.OrderBy(b => b.Ad).ToList(), "Id", "Ad", doktor.BolumId);
+            PopulateBolumlerViewBag(kategoriSecim);
             return View(doktor);
         }
 
@@ -66,17 +65,22 @@ namespace GaziHastane.Areas.Admin.Controllers
             var doktor = await _context.Doktorlar.FindAsync(id);
             if (doktor == null) return NotFound();
 
-            // DİKKAT: ViewBag.BolumId yerine ViewBag.Bolumler yapıldı
-            ViewBag.Bolumler = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Bolumler.Where(b => b.IsActive), "Id", "Ad", doktor.BolumId);
+            var seciliKategori = doktor.BolumId.HasValue
+                ? _context.Bolumler.Where(b => b.Id == doktor.BolumId.Value).Select(b => b.Kategori).FirstOrDefault()
+                : null;
+
+            PopulateBolumlerViewBag(seciliKategori);
             return View(doktor);
         }
 
         // Formdan Gelen Güncel Veriyi Kaydetme (POST) - Değiştir dediğinizde çalışan kısım
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Doktor doktor)
+        public async Task<IActionResult> Edit(int id, Doktor doktor, string? kategoriSecim)
         {
             if (id != doktor.Id) return NotFound();
+
+            ValidateBolumKategori(doktor.BolumId, kategoriSecim);
 
             if (ModelState.IsValid)
             {
@@ -93,8 +97,7 @@ namespace GaziHastane.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index)); // Başarılıysa listeye dön
             }
 
-            // Hata varsa dropdown boş gelmesin
-            ViewBag.Bolumler = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Bolumler.Where(b => b.IsActive), "Id", "Ad", doktor.BolumId);
+            PopulateBolumlerViewBag(kategoriSecim);
             return View(doktor);
         }
         public async Task<IActionResult> Delete(int? id)
@@ -122,6 +125,42 @@ namespace GaziHastane.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        private void PopulateBolumlerViewBag(string? seciliKategori = null)
+        {
+            var bolumler = _context.Bolumler
+                .OrderBy(b => b.Ad)
+                .Select(b => new { b.Id, b.Ad, b.Kategori })
+                .ToList();
+
+            ViewBag.Bolumler = bolumler;
+            ViewBag.KategoriSecim = seciliKategori;
+        }
+
+        private void ValidateBolumKategori(int? bolumId, string? kategoriSecim)
+        {
+            if (!bolumId.HasValue)
+            {
+                ModelState.AddModelError("BolumId", "Lütfen bir kategoriye ait poliklinik seçiniz.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(kategoriSecim))
+            {
+                ModelState.AddModelError("", "Lütfen kategori seçiniz (Dahili, Cerrahi, Temel).");
+                return;
+            }
+
+            var bolumKategori = _context.Bolumler
+                .Where(b => b.Id == bolumId.Value)
+                .Select(b => b.Kategori)
+                .FirstOrDefault();
+
+            if (!string.Equals(bolumKategori, kategoriSecim, System.StringComparison.OrdinalIgnoreCase))
+            {
+                ModelState.AddModelError("BolumId", "Seçilen poliklinik, seçtiğiniz kategori ile uyuşmuyor.");
+            }
         }
     }
 }

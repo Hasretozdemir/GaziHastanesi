@@ -1,0 +1,36 @@
+@model GaziHastane.Models.Yetkili
+@{
+    ViewData["Title"] = "Kullanýcý Bilgileri";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="max-w-3xl mx-auto pt-8 pb-12 px-4">
+    <div class="glass-card rounded-[2rem] p-8 md:p-10">
+        <div class="flex items-center gap-5 mb-8">
+            <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(Model.AdSoyad)&background=0D8ABC&color=fff&rounded=true" class="w-16 h-16 rounded-2xl" alt="@Model.AdSoyad" />
+            <div>
+                <h2 class="text-2xl font-black text-white">Kullanýcý Bilgileri</h2>
+                <p class="text-slate-400 text-sm">Hesabýnýza ait temel bilgiler</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                <p class="text-slate-400 text-xs mb-1">Ad Soyad</p>
+                <p class="text-white font-bold">@Model.AdSoyad</p>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                <p class="text-slate-400 text-xs mb-1">E-Posta</p>
+                <p class="text-white font-bold">@Model.Email</p>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                <p class="text-slate-400 text-xs mb-1">Rol</p>
+                <p class="text-cyan-300 font-bold">@Model.Rol</p>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                <p class="text-slate-400 text-xs mb-1">Durum</p>
+                <p class="font-bold @(Model.IsActive ? "text-emerald-400" : "text-rose-400")">@(Model.IsActive ? "Aktif" : "Pasif")</p>
+            </div>
+        </div>
+    </div>
+</div>

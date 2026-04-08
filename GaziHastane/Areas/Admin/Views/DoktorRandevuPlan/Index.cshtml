@@ -1,0 +1,177 @@
+@model GaziHastane.Models.DoktorRandevuPlanViewModel
+@{
+    ViewData["Title"] = "Doktor Randevu Planý";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var doktorlar = ViewBag.Doktorlar as List<GaziHastane.Models.Doktor> ?? new List<GaziHastane.Models.Doktor>();
+    var bolumler = ViewBag.Bolumler as List<GaziHastane.Models.Bolum> ?? new List<GaziHastane.Models.Bolum>();
+}
+
+<div class="max-w-7xl mx-auto p-4 space-y-6">
+    <div class="glass-card rounded-[2rem] p-6">
+        <h2 class="text-2xl font-black text-white mb-2">Doktor Randevu Planlama</h2>
+        <p class="text-slate-400 text-sm">Doktor seçip aylýk takvimde randevu açýlacak günleri, mola ve kapasite kurallarýný toplu veya gün bazýnda belirleyin.</p>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 text-emerald-300 text-sm font-semibold">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="bg-rose-500/10 border border-rose-500/20 rounded-xl p-4 text-rose-300 text-sm font-semibold">@TempData["Error"]</div>
+    }
+
+    <form method="get" class="glass-card rounded-[2rem] p-6 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        <div>
+            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Doktor</label>
+            <select name="doktorId" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white">
+                @foreach (var d in doktorlar)
+                {
+                    var selected = d.Id == Model.DoktorId;
+                    <option value="@d.Id" selected="@selected">@d.Unvan @d.Ad @d.Soyad</option>
+                }
+            </select>
+        </div>
+        <div>
+            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Yýl</label>
+            <input name="yil" type="number" value="@Model.Yil" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white" />
+        </div>
+        <div>
+            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Ay</label>
+            <input name="ay" type="number" min="1" max="12" value="@Model.Ay" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white" />
+        </div>
+        <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-white font-black rounded-xl py-3">Takvimi Getir</button>
+    </form>
+
+    @if (doktorlar.Any())
+    {
+        <form method="post" class="glass-card rounded-[2rem] p-6 space-y-6">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="DoktorId" />
+            <input type="hidden" asp-for="Yil" />
+            <input type="hidden" asp-for="Ay" />
+
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Bölüm</label>
+                    <select asp-for="BolumId" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white">
+                        <option value="">Bölüm Seçin</option>
+                        @foreach (var b in bolumler)
+                        {
+                            <option value="@b.Id">@b.Ad</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Slot Süresi (dk)</label>
+                    <input asp-for="SlotSureDakika" type="number" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white" />
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Baþlangýç</label>
+                    <input asp-for="BaslangicSaati" type="time" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white" />
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Bitiþ</label>
+                    <input asp-for="BitisSaati" type="time" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white" />
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Öðlen Mola Baþlangýç</label>
+                    <input asp-for="OgleMolaBaslangicSaati" type="time" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white" />
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Öðlen Mola Bitiþ</label>
+                    <input asp-for="OgleMolaBitisSaati" type="time" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white" />
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Günlük Randevu Sayýsý</label>
+                    <input asp-for="VarsayilanGunlukMaxRandevu" type="number" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white" />
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+                <button type="button" onclick="isaretleHaftaIci()" class="px-3 py-2 text-xs font-bold rounded-lg bg-cyan-500/20 border border-cyan-500/30 text-cyan-300">Hafta Ýçi Aç</button>
+                <button type="button" onclick="isaretleHaftaSonu()" class="px-3 py-2 text-xs font-bold rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-300">Hafta Sonu Aç</button>
+                <button type="button" onclick="isaretleTumGunler()" class="px-3 py-2 text-xs font-bold rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300">Tüm Günleri Aç</button>
+                <button type="button" onclick="kapatTumGunler()" class="px-3 py-2 text-xs font-bold rounded-lg bg-rose-500/20 border border-rose-500/30 text-rose-300">Tümünü Kapat</button>
+                <button type="button" onclick="topluKurallariUygula()" class="px-3 py-2 text-xs font-bold rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-indigo-300">Toplu Kural Uygula</button>
+            </div>
+
+            <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                <p class="text-sm text-slate-300 mb-3 font-bold">Gün Gün Plan (Açýk günleri iþaretleyin)</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[900px] text-sm">
+                        <thead>
+                            <tr class="text-slate-400 border-b border-white/10 text-[11px] uppercase">
+                                <th class="py-2 text-left">Açýk</th>
+                                <th class="py-2 text-left">Tarih</th>
+                                <th class="py-2 text-left">Günlük Randevu Sayýsý</th>
+                                <th class="py-2 text-left">Baþlangýç</th>
+                                <th class="py-2 text-left">Bitiþ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < Model.Gunler.Count; i++)
+                            {
+                                var gunNo = (int)Model.Gunler[i].Tarih.DayOfWeek;
+                                <tr class="border-b border-white/5">
+                                    <td class="py-2">
+                                        <input asp-for="Gunler[i].IsRandevuAcik" class="w-4 h-4 accent-cyan-500 gun-acik" data-gun="@gunNo" />
+                                    </td>
+                                    <td class="py-2">
+                                        <input type="hidden" asp-for="Gunler[i].Tarih" />
+                                        <span class="text-slate-300">@Model.Gunler[i].Tarih.ToString("dd.MM.yyyy dddd")</span>
+                                    </td>
+                                    <td class="py-2"><input asp-for="Gunler[i].GunlukMaxRandevu" type="number" class="w-24 bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-white" /></td>
+                                    <td class="py-2"><input asp-for="Gunler[i].BaslangicSaati" type="time" class="bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-white" /></td>
+                                    <td class="py-2"><input asp-for="Gunler[i].BitisSaati" type="time" class="bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-white" /></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="submit" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-xl font-black">Aylýk Planý Kaydet</button>
+            </div>
+        </form>
+    }
+</div>
+
+<script>
+    function tumAciklar() {
+        return Array.from(document.querySelectorAll('.gun-acik'));
+    }
+
+    function isaretleHaftaIci() {
+        tumAciklar().forEach(x => {
+            const g = parseInt(x.dataset.gun);
+            x.checked = g >= 1 && g <= 5;
+        });
+    }
+
+    function isaretleHaftaSonu() {
+        tumAciklar().forEach(x => {
+            const g = parseInt(x.dataset.gun);
+            x.checked = g === 0 || g === 6;
+        });
+    }
+
+    function isaretleTumGunler() {
+        tumAciklar().forEach(x => x.checked = true);
+    }
+
+    function kapatTumGunler() {
+        tumAciklar().forEach(x => x.checked = false);
+    }
+
+    function topluKurallariUygula() {
+        const gunlukMax = document.querySelector('input[name="VarsayilanGunlukMaxRandevu"]')?.value || '20';
+        const baslangic = document.querySelector('input[name="BaslangicSaati"]')?.value || '';
+        const bitis = document.querySelector('input[name="BitisSaati"]')?.value || '';
+
+        document.querySelectorAll('input[name$=".GunlukMaxRandevu"]').forEach(x => x.value = gunlukMax);
+        document.querySelectorAll('input[name$=".BaslangicSaati"]').forEach(x => x.value = baslangic);
+        document.querySelectorAll('input[name$=".BitisSaati"]').forEach(x => x.value = bitis);
+    }
+</script>

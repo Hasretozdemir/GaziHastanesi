@@ -38,8 +38,15 @@
                     <label asp-for="Kategori" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Kategori</label>
                     <div class="relative">
                         <i class="fa-solid fa-layer-group absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                        <input asp-for="Kategori" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/50 transition outline-none">
+                        <select asp-for="Kategori" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-white focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/50 transition outline-none appearance-none" required>
+                            <option value="">-- Kategori Seçiniz --</option>
+                            <option value="Dahili">Dahili</option>
+                            <option value="Cerrahi">Cerrahi</option>
+                            <option value="Temel">Temel</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"></i>
                     </div>
+                    <span asp-validation-for="Kategori" class="text-rose-400 text-xs mt-1.5 font-bold block"></span>
                 </div>
 
                 <div>
@@ -69,7 +76,10 @@
                 </div>
 
                 <div class="md:col-span-2">
-                    <label asp-for="Aciklama" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Bölüm Açıklaması / Detaylar</label>
+                    <div class="flex items-center justify-between mb-2">
+                        <label asp-for="Aciklama" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest">Bölüm Açıklaması / Detaylar</label>
+                        <button type="button" onclick="openBilgiPreviewModal()" class="text-[10px] font-bold text-cyan-400 hover:text-cyan-300">Bilgilendirme Önizleme</button>
+                    </div>
                     <textarea asp-for="Aciklama" rows="4" class="w-full bg-black/20 border border-white/10 rounded-xl p-4 text-sm font-medium text-white focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/50 transition outline-none custom-scroll"></textarea>
                 </div>
 
@@ -83,6 +93,34 @@
                         <p class="text-[10px] text-slate-400">Pasif yaparsanız, randevu sisteminde seçilemez hale gelir.</p>
                     </div>
                 </div>
+
+<div id="bilgiPreviewModal" class="fixed inset-0 z-[120] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div class="glass-card bg-slate-900/95 border border-cyan-500/20 rounded-3xl w-full max-w-2xl p-6">
+        <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
+            <h3 class="text-white font-black text-lg">Bölüm Bilgilendirme Önizleme</h3>
+            <button type="button" onclick="closeBilgiPreviewModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <p class="text-slate-300 text-sm leading-relaxed" id="bilgiPreviewText">Açıklama alanına metin giriniz.</p>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function openBilgiPreviewModal() {
+            const text = document.getElementById('Aciklama').value;
+            document.getElementById('bilgiPreviewText').textContent = text || 'Açıklama alanına metin giriniz.';
+            const modal = document.getElementById('bilgiPreviewModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeBilgiPreviewModal() {
+            const modal = document.getElementById('bilgiPreviewModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    </script>
+}
             </div>
 
             <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-white/10">

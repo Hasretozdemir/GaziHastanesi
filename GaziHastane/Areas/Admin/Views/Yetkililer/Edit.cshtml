@@ -1,7 +1,11 @@
 ﻿@model GaziHastane.Models.Yetkili
+@using GaziHastane.Security
+@using System.Linq
 @{
     ViewData["Title"] = "Yetkili Düzenle";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var adminSayfaYetkileri = ViewBag.AdminSayfaYetkileri as IReadOnlyList<AdminPermissionItem> ?? new List<AdminPermissionItem>();
+    var secilenYetkiler = (Model.SecilenSayfaYetkileri ?? new List<string>()).ToHashSet(StringComparer.OrdinalIgnoreCase);
 }
 
 <div class="glass-card rounded-[2rem] p-6 md:p-8 max-w-2xl mx-auto">
@@ -32,15 +36,34 @@
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Rol</label>
-                <select asp-for="Rol" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white outline-none focus:border-amber-500/50 transition font-semibold appearance-none">
+                <select asp-for="Rol" id="rolSelect" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white outline-none focus:border-amber-500/50 transition font-semibold appearance-none">
                     <option value="Yönetici">Yönetici</option>
                     <option value="Editör">Editör</option>
+                    <option value="Doktor">Doktor</option>
                     <option value="Süper Admin">Süper Admin</option>
                 </select>
             </div>
             <div>
                 <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Yeni Şifre (Boş bırakılabilir)</label>
                 <input asp-for="SifreHash" type="password" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white outline-none focus:border-amber-500/50 transition font-semibold" placeholder="••••••••">
+            </div>
+        </div>
+
+        <div id="izinPanel" class="p-5 rounded-2xl border border-white/10 bg-white/5 space-y-4">
+            <div>
+                <h3 class="text-sm font-black text-white">Sayfa Erişim Yetkileri</h3>
+                <p class="text-xs text-slate-400 mt-1">Bu kullanıcı panelde sadece işaretlenen menü/sayfalara erişebilir.</p>
+            </div>
+
+            <div id="izinCheckboxList" class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                @foreach (var yetki in adminSayfaYetkileri)
+                {
+                    var secili = Model.Rol == "Süper Admin" || secilenYetkiler.Contains(yetki.Key);
+                    <label class="flex items-center gap-2 text-xs text-slate-300 bg-black/20 rounded-xl px-3 py-2 border border-white/5">
+                        <input type="checkbox" name="SecilenSayfaYetkileri" value="@yetki.Key" @(secili ? "checked" : null) class="w-4 h-4 accent-amber-500">
+                        <span>@yetki.DisplayName</span>
+                    </label>
+                }
             </div>
         </div>
 

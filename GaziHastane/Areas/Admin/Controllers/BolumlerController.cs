@@ -4,6 +4,7 @@ using GaziHastane.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace GaziHastane.Areas.Admin.Controllers
 {
@@ -35,6 +36,8 @@ namespace GaziHastane.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Bolum bolum)
         {
+            NormalizeAndValidateKategori(bolum);
+
             if (ModelState.IsValid)
             {
                 _context.Add(bolum);
@@ -58,6 +61,8 @@ namespace GaziHastane.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int id, Bolum bolum)
         {
             if (id != bolum.Id) return NotFound();
+
+            NormalizeAndValidateKategori(bolum);
 
             if (ModelState.IsValid)
             {
@@ -96,6 +101,27 @@ namespace GaziHastane.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        private void NormalizeAndValidateKategori(Bolum bolum)
+        {
+            var allowed = new[] { "Dahili", "Cerrahi", "Temel" };
+
+            if (string.IsNullOrWhiteSpace(bolum.Kategori))
+            {
+                ModelState.AddModelError("Kategori", "Kategori seçimi zorunludur.");
+                return;
+            }
+
+            var selected = bolum.Kategori.Trim();
+            var normalized = allowed.FirstOrDefault(x => x.Equals(selected, System.StringComparison.OrdinalIgnoreCase));
+            if (normalized == null)
+            {
+                ModelState.AddModelError("Kategori", "Kategori sadece Dahili, Cerrahi veya Temel olabilir.");
+                return;
+            }
+
+            bolum.Kategori = normalized;
         }
     }
 }

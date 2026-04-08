@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<GaziHastane.Models.Bolum>
+
 @* RAZOR KOD BLOĞU: Sunucu (C#) tarafında sayfa ayarları *@
 @{
-    ViewData["Title"] = "Bölümlerimiz";
+    ViewData["Title"] = "Tıbbi Birimlerimiz";
 
     // Veritabanından gelen verilere göre dinamik sayıları hesaplıyoruz
     int dahiliCount = Model.Count(b => b.Kategori == "Dahili");
@@ -16,12 +17,25 @@
         /* Google Fonts'tan 'Plus Jakarta Sans' font ailesini projeye dahil et. */
         @@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@300;400;500;600;700;800&display=swap');
 
+        html {
+            scroll-behavior: smooth; /* Menüden tıklanınca yumuşak kaydırma */
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc; /* Daha yumuşak, kurumsal bir arka plan */
+        }
+
         /* ── YAPIŞKAN YAN MENÜ (STICKY SIDEBAR) ── */
         .sidebar-sticky {
             position: sticky;
-            top: 7rem;
-            max-height: calc(100vh - 8rem);
+            top: 6rem;
+            max-height: calc(100vh - 7rem);
             overflow-y: auto;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
         }
 
             .sidebar-sticky::-webkit-scrollbar {
@@ -33,7 +47,7 @@
             }
 
             .sidebar-sticky::-webkit-scrollbar-thumb {
-                background: #e2e8f0;
+                background: #cbd5e1;
                 border-radius: 10px;
             }
 
@@ -41,71 +55,105 @@
         .cat-link {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            border-radius: 14px;
-            font-size: 0.82rem;
-            font-weight: 700;
+            gap: 0.85rem;
+            padding: 0.85rem 1.2rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
             color: #64748b;
             text-decoration: none;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
+
+            .cat-link::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 3px;
+                background: currentColor;
+                opacity: 0;
+                transition: all 0.3s ease;
+            }
 
             .cat-link:hover {
                 background: #f1f5f9;
-                color: #1e293b;
-                transform: translateX(3px);
+                color: #0f172a;
+                transform: translateX(4px);
             }
+
+                .cat-link:hover::after {
+                    opacity: 1;
+                }
 
             .cat-link.active-blue {
-                background: #eff6ff;
-                color: #2563eb;
+                color: #3b82f6;
             }
 
+                .cat-link.active-blue:hover {
+                    background: #eff6ff;
+                }
+
             .cat-link.active-red {
-                background: #fef2f2;
                 color: #ef4444;
             }
 
+                .cat-link.active-red:hover {
+                    background: #fef2f2;
+                }
+
             .cat-link.active-green {
-                background: #f0fdf4;
-                color: #16a34a;
+                color: #10b981;
             }
 
+                .cat-link.active-green:hover {
+                    background: #ecfdf5;
+                }
+
         /* ── ARAMA KUTUSU ── */
-        .search-input:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
-            border-color: #93c5fd;
+        .search-input {
+            transition: all 0.3s ease;
         }
 
-        /* ── BÖLÜM AYIRICI ÇİZGİ VE BAŞLIK I ── */
+            .search-input:focus {
+                outline: none;
+                box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+                border-color: #60a5fa;
+                background: #ffffff;
+            }
+
+        /* ── BÖLÜM AYIRICI ÇİZGİ VE BAŞLIK ── */
         .section-bar {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-top: 2rem; /* Kaydırma boşluğu için */
         }
 
         .section-bar-line {
             flex: 1;
             height: 1px;
-            background: linear-gradient(to right, #e2e8f0, transparent);
+            background: linear-gradient(to right, #cbd5e1, transparent);
         }
 
-        /* ── BÖLÜM KARTLARI (KARDİYOLOJİ VB.) ── */
+        /* ── BÖLÜM KARTLARI ── */
         .dept-card {
-            background: white;
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            border: 1px solid #f1f5f9;
-            transition: all 0.25s ease;
+            background: #ffffff;
+            border-radius: 1.25rem;
+            padding: 1.75rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 1rem;
             cursor: pointer;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
 
             .dept-card::before {
@@ -114,14 +162,13 @@
                 top: 0;
                 left: 0;
                 right: 0;
-                height: 3px;
+                height: 4px;
                 opacity: 0;
-                transition: opacity 0.25s ease;
-                border-radius: 1.5rem 1.5rem 0 0;
+                transition: opacity 0.3s ease;
             }
 
             .dept-card:hover {
-                transform: translateY(-4px);
+                transform: translateY(-5px);
             }
 
                 .dept-card:hover::before {
@@ -129,16 +176,16 @@
                 }
 
             .dept-card.type-dahili:hover {
-                box-shadow: 0 12px 40px rgba(37,99,235,0.1);
+                box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.15), 0 10px 10px -5px rgba(59, 130, 246, 0.04);
                 border-color: #bfdbfe;
             }
 
             .dept-card.type-dahili::before {
-                background: linear-gradient(90deg, #2563eb, #60a5fa);
+                background: linear-gradient(90deg, #3b82f6, #60a5fa);
             }
 
             .dept-card.type-cerrahi:hover {
-                box-shadow: 0 12px 40px rgba(239,68,68,0.1);
+                box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.15), 0 10px 10px -5px rgba(239, 68, 68, 0.04);
                 border-color: #fecaca;
             }
 
@@ -147,29 +194,34 @@
             }
 
             .dept-card.type-temel:hover {
-                box-shadow: 0 12px 40px rgba(22,163,74,0.1);
-                border-color: #bbf7d0;
+                box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.15), 0 10px 10px -5px rgba(16, 185, 129, 0.04);
+                border-color: #a7f3d0;
             }
 
             .dept-card.type-temel::before {
-                background: linear-gradient(90deg, #16a34a, #4ade80);
+                background: linear-gradient(90deg, #10b981, #34d399);
             }
 
-        /* ── İKON KUTULARI (Kartın sol üstündeki kare ikonlar) ── */
+        /* ── İKON KUTULARI ── */
         .icon-box {
-            width: 46px;
-            height: 46px;
-            border-radius: 13px;
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .dept-card:hover .icon-box {
+            transform: scale(1.1);
         }
 
         .ib-blue {
             background: #eff6ff;
-            color: #2563eb;
+            color: #3b82f6;
         }
 
         .ib-red {
@@ -178,56 +230,136 @@
         }
 
         .ib-green {
-            background: #f0fdf4;
-            color: #16a34a;
+            background: #ecfdf5;
+            color: #10b981;
         }
 
-        /* ── KART OK İKONU (Kartın sağ üstündeki küçük ok) ── */
+        /* ── KART OK İKONU ── */
         .card-arrow {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #f8fafc;
             color: #94a3b8;
-            font-size: 0.65rem;
-            transition: all 0.2s;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
             margin-left: auto;
         }
 
         .dept-card:hover .card-arrow {
-            background: #eff6ff;
-            color: #2563eb;
+            background: currentColor;
+            color: white;
+            transform: rotate(-45deg);
         }
+
+        .dept-card.type-dahili:hover .card-arrow {
+            color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .dept-card.type-cerrahi:hover .card-arrow {
+            color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .dept-card.type-temel:hover .card-arrow {
+            color: #10b981;
+            background: #ecfdf5;
+        }
+
+        .card-menu-wrap {
+            position: relative;
+            margin-left: auto;
+        }
+
+        .card-menu-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f8fafc;
+            color: #94a3b8;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+            .card-menu-btn:hover {
+                background: #eef2ff;
+                color: #2563eb;
+            }
+
+        .card-menu-panel {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 6px);
+            min-width: 170px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(15,23,42,0.12);
+            padding: 8px;
+            z-index: 30;
+            display: none;
+        }
+
+            .card-menu-panel.open {
+                display: block;
+            }
+
+        .card-menu-item {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            text-align: left;
+            border-radius: 10px;
+            padding: 8px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .card-menu-item:hover {
+                background: #f8fafc;
+            }
 
         /* ── TİP ETİKETLERİ (BADGES) ── */
         .badge {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            font-size: 0.6rem;
-            font-weight: 800;
+            gap: 6px;
+            font-size: 0.65rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
-            padding: 3px 8px;
+            letter-spacing: 0.1em;
+            padding: 4px 12px;
             border-radius: 99px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .badge-blue {
-            background: #dbeafe;
-            color: #1d4ed8;
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
         }
 
         .badge-red {
-            background: #fee2e2;
-            color: #b91c1c;
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
         }
 
         .badge-green {
-            background: #dcfce7;
-            color: #15803d;
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
         }
 
         /* ── MOBİL YAN MENÜ KATMANLARI ── */
@@ -235,31 +367,59 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(15,23,42,0.4);
+            background: rgba(15,23,42,0.6);
             z-index: 40;
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
             #mob-overlay.open {
                 display: block;
+                opacity: 1;
             }
 
         #mob-sidebar {
             position: fixed;
             top: 0;
             left: -100%;
-            width: 300px;
+            width: 320px;
+            max-width: 85vw;
             height: 100%;
             background: white;
             z-index: 50;
-            transition: left 0.3s ease;
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-y: auto;
-            padding: 1.5rem 1rem;
-            box-shadow: 8px 0 30px rgba(0,0,0,0.1);
+            padding: 2rem 1.5rem;
+            box-shadow: 20px 0 50px rgba(0,0,0,0.15);
         }
 
             #mob-sidebar.open {
                 left: 0;
+            }
+
+        /* Yüzen Mobil Menü Butonu */
+        .fab-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 35;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            background: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .fab-button:hover {
+                transform: scale(1.05);
+                background: #1d4ed8;
             }
 
         /* ── GİZLEME VE BOŞ DURUM SINIFLARI ── */
@@ -273,274 +433,449 @@
 
             #empty-state.show {
                 display: flex;
+                animation: fadeIn 0.5s ease;
             }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
         /* ── SAYI ETİKETİ ── */
         .count-pill {
-            font-size: 0.6rem;
-            font-weight: 800;
-            padding: 2px 7px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 8px;
             border-radius: 99px;
-            background: #f1f5f9;
-            color: #64748b;
+            background: #e2e8f0;
+            color: #475569;
         }
     </style>
 
     <script>
-        const mobToggle  = document.getElementById('mob-toggle');
-        const mobSidebar = document.getElementById('mob-sidebar');
-        const mobOverlay = document.getElementById('mob-overlay');
-        const mobClose   = document.getElementById('mob-close');
+        const bolumDoktorData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.Doktorlar ?? new List<object>()));
 
-        if(mobToggle) { mobToggle.addEventListener('click', openMob); }
-        if(mobClose) { mobClose.addEventListener('click', closeMob); }
-        if(mobOverlay) { mobOverlay.addEventListener('click', closeMob); }
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobToggle  = document.getElementById('mob-toggle');
+            const mobSidebar = document.getElementById('mob-sidebar');
+            const mobOverlay = document.getElementById('mob-overlay');
+            const mobClose   = document.getElementById('mob-close');
 
-        function openMob()  {
-            mobSidebar.classList.add('open');
-            mobOverlay.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
+            const openMob = () => {
+                mobSidebar.classList.add('open');
+                mobOverlay.classList.add('open');
+                document.body.style.overflow = 'hidden'; // Arka plan kaymasını engelle
+            };
 
-        function closeMob() {
-            mobSidebar.classList.remove('open');
-            mobOverlay.classList.remove('open');
-            document.body.style.overflow = '';
-        }
+            const closeMob = () => {
+                mobSidebar.classList.remove('open');
+                mobOverlay.classList.remove('open');
+                document.body.style.overflow = '';
+            };
 
-        function runSearch(term) {
-            const cards = document.querySelectorAll('.dept-card');
-            cards.forEach(card => {
-                const text = card.querySelector('h3').innerText.toLowerCase();
-                card.classList.toggle('hidden-card', !text.includes(term));
-            });
+            if(mobToggle) mobToggle.addEventListener('click', openMob);
+            if(mobClose) mobClose.addEventListener('click', closeMob);
+            if(mobOverlay) mobOverlay.addEventListener('click', closeMob);
 
-            let anyVisible = false;
-            document.querySelectorAll('section.bolum-section').forEach(section => {
-                const visible = section.querySelectorAll('.dept-card:not(.hidden-card)').length;
-                section.style.display = visible === 0 ? 'none' : 'block';
-                if (visible > 0) anyVisible = true;
-            });
+            // Arama Fonksiyonu
+            function runSearch(term) {
+                const cards = document.querySelectorAll('.dept-card');
+                cards.forEach(card => {
+                    const text = card.querySelector('h3').innerText.toLowerCase();
+                    card.classList.toggle('hidden-card', !text.includes(term));
+                });
 
-            const empty = document.getElementById('empty-state');
-            if (!anyVisible && term) {
-                empty.classList.add('show');
-            } else {
-                empty.classList.remove('show');
+                let anyVisible = false;
+                document.querySelectorAll('section.bolum-section').forEach(section => {
+                    const visible = section.querySelectorAll('.dept-card:not(.hidden-card)').length;
+                    section.style.display = visible === 0 ? 'none' : 'block';
+                    if (visible > 0) anyVisible = true;
+                });
+
+                const empty = document.getElementById('empty-state');
+                if (!anyVisible && term) {
+                    empty.classList.add('show');
+                } else {
+                    empty.classList.remove('show');
+                }
             }
-        }
 
-        document.getElementById('deptSearch')?.addEventListener('input', e => runSearch(e.target.value.toLowerCase().trim()));
-        document.getElementById('deptSearchMob')?.addEventListener('input', e => runSearch(e.target.value.toLowerCase().trim()));
+            document.getElementById('deptSearch')?.addEventListener('input', e => runSearch(e.target.value.toLowerCase().trim()));
+            document.getElementById('deptSearchMob')?.addEventListener('input', e => runSearch(e.target.value.toLowerCase().trim()));
+
+            // Mobil menüdeki linklere tıklanınca menüyü kapat
+            document.querySelectorAll('#mob-sidebar .cat-link').forEach(link => {
+                link.addEventListener('click', closeMob);
+            });
+
+            const doktorModal = document.getElementById('bolumDoktorModal');
+            const doktorModalContent = document.getElementById('bolumDoktorModalContent');
+            const doktorModalTitle = document.getElementById('bolumDoktorModalTitle');
+            const doktorModalList = document.getElementById('bolumDoktorModalList');
+
+            const infoModal = document.getElementById('bolumInfoModal');
+            const infoModalContent = document.getElementById('bolumInfoModalContent');
+            const infoModalTitle = document.getElementById('bolumInfoModalTitle');
+            const infoModalText = document.getElementById('bolumInfoModalText');
+
+            window.toggleCardMenu = function (menuId, event) {
+                event.stopPropagation();
+                document.querySelectorAll('.card-menu-panel').forEach(m => {
+                    if (m.id !== menuId) m.classList.remove('open');
+                });
+                document.getElementById(menuId)?.classList.toggle('open');
+            };
+
+            window.openDoktorModalFromCard = function (btn) {
+                const card = btn.closest('.dept-card');
+                if (!card) return;
+
+                const bolumId = Number(card.dataset.bolumId);
+                const bolumAd = card.dataset.bolumAd || 'Bölüm';
+
+                const doktorlar = bolumDoktorData.filter(x => Number(x.bolumId ?? x.BolumId) === bolumId);
+                doktorModalTitle.textContent = `${bolumAd} - Doktorlar`;
+
+                if (!doktorlar.length) {
+                    doktorModalList.innerHTML = '<p class="text-sm text-slate-500 font-semibold">Bu bölüm için kayıtlı doktor bulunmuyor.</p>';
+                } else {
+                    doktorModalList.innerHTML = doktorlar.map(d => {
+                        const ad = d.ad ?? d.Ad ?? '';
+                        const soyad = d.soyad ?? d.Soyad ?? '';
+                        const unvan = d.unvan ?? d.Unvan ?? '';
+                        const ozgecmis = d.ozgecmis ?? d.Ozgecmis;
+                        return `
+                            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                                <p class="font-black text-slate-800 text-sm">${unvan ? `${unvan} ` : ''}${ad} ${soyad}</p>
+                                ${ozgecmis ? `<a href="${ozgecmis}" target="_blank" class="text-xs font-bold text-blue-600 hover:underline">Özgeçmiş</a>` : '<p class="text-xs text-slate-400">Özgeçmiş eklenmemiş</p>'}
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                document.querySelectorAll('.card-menu-panel').forEach(m => m.classList.remove('open'));
+                doktorModal.classList.remove('hidden');
+                setTimeout(() => {
+                    doktorModal.classList.remove('opacity-0');
+                    doktorModalContent.classList.remove('scale-95');
+                }, 10);
+            };
+
+            window.openInfoModalFromCard = function (btn) {
+                const card = btn.closest('.dept-card');
+                if (!card) return;
+
+                const bolumAd = card.dataset.bolumAd || 'Bölüm Bilgilendirme';
+                const aciklama = card.dataset.bolumAciklama || 'Bu bölüm için bilgilendirme metni henüz girilmedi.';
+
+                infoModalTitle.textContent = `${bolumAd} - Bilgilendirme`;
+                infoModalText.textContent = aciklama;
+
+                document.querySelectorAll('.card-menu-panel').forEach(m => m.classList.remove('open'));
+                infoModal.classList.remove('hidden');
+                setTimeout(() => {
+                    infoModal.classList.remove('opacity-0');
+                    infoModalContent.classList.remove('scale-95');
+                }, 10);
+            };
+
+            window.closeBolumDoktorModal = function () {
+                doktorModal.classList.add('opacity-0');
+                doktorModalContent.classList.add('scale-95');
+                setTimeout(() => doktorModal.classList.add('hidden'), 200);
+            };
+
+            window.closeBolumInfoModal = function () {
+                infoModal.classList.add('opacity-0');
+                infoModalContent.classList.add('scale-95');
+                setTimeout(() => infoModal.classList.add('hidden'), 200);
+            };
+
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.card-menu-panel').forEach(m => m.classList.remove('open'));
+            });
+        });
     </script>
 }
 
+<button id="mob-toggle" class="fab-button lg:hidden">
+    <i class="fa-solid fa-bars text-xl"></i>
+</button>
+
 <div id="mob-overlay"></div>
-<div id="mob-sidebar">
-    <div class="flex items-center justify-between mb-5">
-        <span class="font-black text-slate-800 text-sm uppercase tracking-wider">Birimler</span>
-        <button id="mob-close" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 transition">
-            <i class="fa-solid fa-xmark text-sm"></i>
+<div id="mob-sidebar" class="bg-white">
+    <div class="flex items-start justify-between mb-8">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 bg-[#2563eb] rounded-[16px] flex items-center justify-center shadow-lg shadow-blue-200/50 flex-shrink-0">
+                <i class="fa-solid fa-hospital-user text-white text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="font-extrabold text-[#1e293b] text-lg leading-tight mb-1">Tıbbi Birimler</h1>
+                <p class="text-[13px] text-slate-500 font-medium">@totalCount aktif anabilim dalı</p>
+            </div>
+        </div>
+        <button id="mob-close" class="mt-2 w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-500 transition">
+            <i class="fa-solid fa-xmark text-lg"></i>
         </button>
     </div>
-    <div class="relative mb-5">
-        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-        <input type="text" id="deptSearchMob" placeholder="Bölüm ara..."
-               class="search-input w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 transition">
+
+    <div class="relative mb-8">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+        <input type="text" id="deptSearchMob" placeholder="Hızlı ara..."
+               class="w-full pl-11 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl text-sm font-medium text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all placeholder:text-slate-400">
     </div>
-    <nav class="space-y-1">
-        <a href="#dahili" class="cat-link active-blue" onclick="closeMob()">
-            <span class="w-2.5 h-2.5 rounded-full bg-blue-500 flex-shrink-0"></span>
-            <span>Dahili Tıp Bilimleri</span>
-            <span class="count-pill ml-auto">@dahiliCount</span>
-        </a>
-        <a href="#cerrahi" class="cat-link active-red" onclick="closeMob()">
-            <span class="w-2.5 h-2.5 rounded-full bg-red-500 flex-shrink-0"></span>
-            <span>Cerrahi Tıp Bilimleri</span>
-            <span class="count-pill ml-auto">@cerrahiCount</span>
-        </a>
-        <a href="#temel" class="cat-link active-green" onclick="closeMob()">
-            <span class="w-2.5 h-2.5 rounded-full bg-green-500 flex-shrink-0"></span>
-            <span>Temel Tıp Bilimleri</span>
-            <span class="count-pill ml-auto">@temelCount</span>
-        </a>
-    </nav>
-    <div class="mt-6 p-4 bg-gradient-to-br from-red-50 to-red-100/60 rounded-2xl border border-red-100">
-        <div class="flex items-center gap-2 mb-1">
-            <div class="w-5 h-5 bg-red-500 rounded-lg flex items-center justify-center">
-                <i class="fa-solid fa-phone text-white text-[8px]"></i>
+
+    <div class="mb-8">
+        <p class="text-[12px] font-extrabold text-slate-400 uppercase tracking-[0.15em] mb-4 ml-1">Kategoriler</p>
+        <nav class="space-y-4">
+            <a href="#dahili" onclick="document.getElementById('mob-close').click()" class="flex items-center gap-4 px-1 group text-decoration-none transition-transform hover:translate-x-1">
+                <span class="w-3 h-3 rounded-full bg-blue-500 flex-shrink-0"></span>
+                <span class="font-bold text-[15px] text-blue-500">Dahili Tıp Bilimleri</span>
+                <span class="ml-auto bg-slate-100 text-slate-600 text-xs font-black py-1.5 px-3 rounded-full">@dahiliCount</span>
+            </a>
+
+            <a href="#cerrahi" onclick="document.getElementById('mob-close').click()" class="flex items-center gap-4 px-1 group text-decoration-none transition-transform hover:translate-x-1">
+                <span class="w-3 h-3 rounded-full bg-red-500 flex-shrink-0"></span>
+                <span class="font-bold text-[15px] text-red-500">Cerrahi Tıp Bilimleri</span>
+                <span class="ml-auto bg-slate-100 text-slate-600 text-xs font-black py-1.5 px-3 rounded-full">@cerrahiCount</span>
+            </a>
+
+            <a href="#temel" onclick="document.getElementById('mob-close').click()" class="flex items-center gap-4 px-1 group text-decoration-none transition-transform hover:translate-x-1">
+                <span class="w-3 h-3 rounded-full bg-[#10b981] flex-shrink-0"></span>
+                <span class="font-bold text-[15px] text-[#10b981]">Temel Tıp Bilimleri</span>
+                <span class="ml-auto bg-slate-100 text-slate-600 text-xs font-black py-1.5 px-3 rounded-full">@temelCount</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="h-px bg-slate-100 mb-8 mx-1"></div>
+
+    <div class="p-6 bg-[#fff5f5] rounded-3xl border border-red-50 mb-6">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 bg-[#ef4444] rounded-full flex items-center justify-center shadow-md shadow-red-200/50">
+                <i class="fa-solid fa-headset text-white text-xs"></i>
             </div>
-            <p class="text-[10px] font-black text-red-700 uppercase tracking-widest">Acil Çağrı</p>
+            <p class="text-[12px] font-bold text-[#b91c1c] uppercase tracking-wider">Acil Çağrı Merkezi</p>
         </div>
-        <p class="text-xl font-black text-red-600 mt-1">444 0 911</p>
+        <p class="text-[32px] font-extrabold text-[#dc2626] tracking-tight leading-none mb-2">444 0 911</p>
+        <p class="text-[13px] text-[#f87171] font-medium">7/24 kesintisiz hizmet</p>
     </div>
+
+    <a href="#" class="flex items-center justify-center gap-3 w-full bg-[#1e293b] text-white rounded-2xl py-4 text-[15px] font-bold hover:bg-[#0f172a] transition-colors shadow-lg shadow-slate-200">
+        <i class="fa-regular fa-calendar-check text-lg"></i>
+        E-Randevu Al
+    </a>
 </div>
 
-<div class="max-w-[1400px] mx-auto px-4 sm:px-6 py-8 flex flex-col lg:flex-row gap-7 mt-24">
-    <aside class="hidden lg:block w-72 flex-shrink-0">
-        <div class="sidebar-sticky bg-white rounded-[1.75rem] p-4 border border-slate-100" style="box-shadow: 0 4px 24px rgba(0,0,0,0.05);">
-            <div class="flex items-center gap-3 mb-5 px-1">
-                <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-md shadow-blue-200">
-                    <i class="fa-solid fa-hospital text-white text-sm"></i>
+<div class="max-w-[1400px] mx-auto px-4 sm:px-6 py-10 flex flex-col lg:flex-row gap-8">
+
+    <aside class="hidden lg:block w-[300px] flex-shrink-0">
+        <div class="sidebar-sticky bg-white p-6 rounded-[24px]" style="box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); border: 1px solid #f1f5f9;">
+
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-14 h-14 bg-[#2563eb] rounded-[16px] flex items-center justify-center shadow-lg shadow-blue-200/50 flex-shrink-0">
+                    <i class="fa-solid fa-hospital-user text-white text-2xl"></i>
                 </div>
                 <div>
-                    <p class="font-black text-slate-800 text-sm leading-none">Tıbbi Birimler</p>
-                    <p class="text-[10px] text-slate-400 font-bold mt-0.5">@totalCount aktif anabilim dalı</p>
+                    <h1 class="font-extrabold text-[#1e293b] text-lg leading-tight mb-1">Tıbbi Birimler</h1>
+                    <p class="text-[13px] text-slate-500 font-medium">@totalCount aktif anabilim dalı</p>
                 </div>
             </div>
 
-            <div class="relative mb-4">
-                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                <input type="text" id="deptSearch" placeholder="Bölüm ara..."
-                       class="search-input w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 transition">
+            <div class="relative mb-8">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                <input type="text" id="deptSearch" placeholder="Hızlı ara..."
+                       class="w-full pl-11 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl text-sm font-medium text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all placeholder:text-slate-400">
             </div>
 
-            <nav class="space-y-1 mb-5">
-                <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] px-2 py-1">Kategoriler</p>
-                <a href="#dahili" class="cat-link active-blue">
-                    <span class="w-2.5 h-2.5 rounded-full bg-blue-500 flex-shrink-0"></span>
-                    <span>Dahili Tıp Bilimleri</span>
-                    <span class="count-pill ml-auto">@dahiliCount</span>
-                </a>
-                <a href="#cerrahi" class="cat-link active-red">
-                    <span class="w-2.5 h-2.5 rounded-full bg-red-500 flex-shrink-0"></span>
-                    <span>Cerrahi Tıp Bilimleri</span>
-                    <span class="count-pill ml-auto">@cerrahiCount</span>
-                </a>
-                <a href="#temel" class="cat-link active-green">
-                    <span class="w-2.5 h-2.5 rounded-full bg-green-500 flex-shrink-0"></span>
-                    <span>Temel Tıp Bilimleri</span>
-                    <span class="count-pill ml-auto">@temelCount</span>
-                </a>
-            </nav>
+            <div class="mb-8">
+                <p class="text-[12px] font-extrabold text-slate-400 uppercase tracking-[0.15em] mb-4 ml-1">Kategoriler</p>
+                <nav class="space-y-4">
+                    <a href="#dahili" class="flex items-center gap-4 px-1 group text-decoration-none transition-transform hover:translate-x-1">
+                        <span class="w-3 h-3 rounded-full bg-blue-500 flex-shrink-0"></span>
+                        <span class="font-bold text-[15px] text-blue-500">Dahili Tıp Bilimleri</span>
+                        <span class="ml-auto bg-slate-100 text-slate-600 text-xs font-black py-1.5 px-3 rounded-full">@dahiliCount</span>
+                    </a>
 
-            <div class="h-px bg-slate-100 mb-4"></div>
+                    <a href="#cerrahi" class="flex items-center gap-4 px-1 group text-decoration-none transition-transform hover:translate-x-1">
+                        <span class="w-3 h-3 rounded-full bg-red-500 flex-shrink-0"></span>
+                        <span class="font-bold text-[15px] text-red-500">Cerrahi Tıp Bilimleri</span>
+                        <span class="ml-auto bg-slate-100 text-slate-600 text-xs font-black py-1.5 px-3 rounded-full">@cerrahiCount</span>
+                    </a>
 
-            <div class="p-4 bg-gradient-to-br from-red-50 to-red-100/50 rounded-2xl border border-red-100 mb-4">
-                <div class="flex items-center gap-2 mb-2">
-                    <div class="w-6 h-6 bg-red-500 rounded-lg flex items-center justify-center">
-                        <i class="fa-solid fa-phone text-white text-[9px]"></i>
+                    <a href="#temel" class="flex items-center gap-4 px-1 group text-decoration-none transition-transform hover:translate-x-1">
+                        <span class="w-3 h-3 rounded-full bg-[#10b981] flex-shrink-0"></span>
+                        <span class="font-bold text-[15px] text-[#10b981]">Temel Tıp Bilimleri</span>
+                        <span class="ml-auto bg-slate-100 text-slate-600 text-xs font-black py-1.5 px-3 rounded-full">@temelCount</span>
+                    </a>
+                </nav>
+            </div>
+
+            <div class="h-px bg-slate-100 mb-8 mx-1"></div>
+
+            <div class="p-6 bg-[#fff5f5] rounded-3xl border border-red-50 mb-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-8 h-8 bg-[#ef4444] rounded-full flex items-center justify-center shadow-md shadow-red-200/50">
+                        <i class="fa-solid fa-headset text-white text-xs"></i>
                     </div>
-                    <p class="text-[10px] font-black text-red-700 uppercase tracking-widest">Acil Çağrı</p>
+                    <p class="text-[12px] font-bold text-[#b91c1c] uppercase tracking-wider">Acil Çağrı Merkezi</p>
                 </div>
-                <p class="text-2xl font-black text-red-600">444 0 911</p>
-                <p class="text-[10px] text-red-400 font-semibold mt-0.5">7/24 hizmetinizdeyiz</p>
+                <p class="text-[32px] font-extrabold text-[#dc2626] tracking-tight leading-none mb-2">444 0 911</p>
+                <p class="text-[13px] text-[#f87171] font-medium">7/24 kesintisiz hizmet</p>
             </div>
 
-            <a href="#" class="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl py-2.5 text-xs font-black tracking-wider hover:from-blue-700 hover:to-blue-800 transition shadow-md shadow-blue-200/60">
-                <i class="fa-solid fa-calendar-check text-xs"></i>
-                RANDEVU AL
+            <a href="#" class="flex items-center justify-center gap-3 w-full bg-[#1e293b] text-white rounded-2xl py-4 text-[15px] font-bold hover:bg-[#0f172a] transition-colors shadow-lg shadow-slate-200">
+                <i class="fa-regular fa-calendar-check text-lg"></i>
+                E-Randevu Al
             </a>
         </div>
     </aside>
 
     <main class="flex-1 min-w-0">
-        <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-[1.75rem] p-6 sm:p-8 mb-7 relative overflow-hidden" style="box-shadow: 0 12px 40px rgba(37,99,235,0.25);">
-            <div class="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full translate-x-16 -translate-y-16"></div>
-            <div class="absolute bottom-0 right-20 w-28 h-28 bg-white/5 rounded-full translate-y-10"></div>
-            <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-3xl p-8 sm:p-10 mb-10 relative overflow-hidden shadow-2xl shadow-blue-900/20">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-2xl translate-x-1/2 -translate-y-1/2"></div>
+            <div class="absolute bottom-0 right-1/4 w-32 h-32 bg-indigo-400/20 rounded-full blur-xl translate-y-1/2"></div>
+
+            <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div>
-                    <p class="text-blue-300 text-[10px] font-black tracking-[0.2em] uppercase mb-1">Gazi Üniversitesi Hastanesi</p>
-                    <h2 class="text-white text-2xl sm:text-3xl font-black leading-tight tracking-tight">Tıbbi Birimlerimiz</h2>
-                    <p class="text-blue-200/80 text-sm font-medium mt-1.5">@totalCount anabilim dalı · 3 kategori · Akademik düzeyde uzman hizmet</p>
+                    <span class="inline-block px-3 py-1 bg-blue-500/30 border border-blue-400/30 rounded-full text-blue-100 text-[10px] font-bold tracking-widest uppercase mb-4 backdrop-blur-sm">
+                        Gazi Üniversitesi Hastanesi
+                    </span>
+                    <h2 class="text-white text-3xl sm:text-4xl font-extrabold leading-tight tracking-tight mb-2">
+                        Uzman Kadromuzla <br class="hidden sm:block" /> Yanınızdayız
+                    </h2>
+                    <p class="text-blue-100/80 text-sm font-medium max-w-lg">
+                        Modern tıbbın sunduğu en güncel teşhis ve tedavi yöntemleriyle, @totalCount farklı anabilim dalında akademik düzeyde sağlık hizmeti sunuyoruz.
+                    </p>
                 </div>
-                <div class="flex gap-4 flex-shrink-0">
-                    <div class="text-center">
-                        <p class="text-white text-2xl font-black">@totalCount</p>
-                        <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Birim</p>
+                <div class="flex gap-6 flex-shrink-0 bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
+                    <div class="text-center px-2">
+                        <p class="text-white text-3xl font-black mb-1">@totalCount</p>
+                        <p class="text-blue-200 text-[10px] font-bold uppercase tracking-widest">Tıbbi Birim</p>
                     </div>
                     <div class="w-px bg-white/20"></div>
-                    <div class="text-center">
-                        <p class="text-white text-2xl font-black">850+</p>
-                        <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Uzman</p>
+                    <div class="text-center px-2">
+                        <p class="text-white text-3xl font-black mb-1">850<span class="text-blue-300">+</span></p>
+                        <p class="text-blue-200 text-[10px] font-bold uppercase tracking-widest">Akademisyen</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="empty-state" class="flex-col items-center justify-center py-20 text-center bg-white rounded-[1.75rem] border border-slate-100 mb-7" style="box-shadow: 0 4px 24px rgba(0,0,0,0.04);">
-            <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <i class="fa-solid fa-magnifying-glass text-slate-400 text-xl"></i>
+        <div id="empty-state" class="flex-col items-center justify-center py-20 text-center bg-white rounded-3xl border border-slate-200 mb-10 shadow-sm">
+            <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100">
+                <i class="fa-solid fa-magnifying-glass text-slate-300 text-3xl"></i>
             </div>
-            <p class="font-black text-slate-700 text-lg">Sonuç bulunamadı</p>
-            <p class="text-slate-400 text-sm mt-1">Farklı bir arama terimi deneyin.</p>
+            <p class="font-extrabold text-slate-800 text-xl">Sonuç bulunamadı</p>
+            <p class="text-slate-500 text-sm mt-2">Aradığınız kriterlere uygun bir bölüm mevcut değil.</p>
         </div>
 
-        <section id="dahili" class="mb-10 bolum-section">
+        <section id="dahili" class="mb-12 bolum-section scroll-mt-24">
             <div class="section-bar">
                 <div class="flex items-center gap-3">
-                    <span class="badge badge-blue"><i class="fa-solid fa-circle-dot"></i> Dahili</span>
-                    <h2 class="text-lg font-black text-slate-800">Dahili Tıp Bilimleri</h2>
+                    <span class="badge badge-blue"><i class="fa-solid fa-stethoscope"></i> Dahili Tıp</span>
+                    <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Dahili Tıp Bilimleri</h2>
                 </div>
                 <div class="section-bar-line"></div>
-                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider flex-shrink-0">@dahiliCount birim</span>
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest flex-shrink-0">@dahiliCount Birim</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" id="dahiliGrid">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5" id="dahiliGrid">
                 @foreach (var bolum in Model.Where(b => b.Kategori == "Dahili" && b.IsActive))
                 {
-                    <div class="dept-card type-dahili">
+                    <div class="dept-card type-dahili" data-bolum-id="@bolum.Id" data-bolum-ad="@bolum.Ad" data-bolum-aciklama="@bolum.Aciklama">
                         <div class="flex items-start justify-between">
-                            <div class="icon-box ib-blue"><i class="@(string.IsNullOrEmpty(bolum.FotografUrl) ? "fa-solid fa-stethoscope" : bolum.FotografUrl)"></i></div>
-                            <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                            <div class="icon-box ib-blue"><i class="@(string.IsNullOrEmpty(bolum.FotografUrl) ? "fa-solid fa-heart-pulse" : bolum.FotografUrl)"></i></div>
+                            <div class="card-menu-wrap" onclick="event.stopPropagation()">
+                                <button type="button" class="card-menu-btn" onclick="toggleCardMenu('menu-@bolum.Id', event)">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </button>
+                                <div id="menu-@bolum.Id" class="card-menu-panel">
+                                    <button type="button" class="card-menu-item" onclick="openDoktorModalFromCard(this)"><i class="fa-solid fa-user-doctor text-blue-600"></i> Doktorlar</button>
+                                    <button type="button" class="card-menu-item" onclick="openInfoModalFromCard(this)"><i class="fa-solid fa-circle-info text-indigo-600"></i> Açıklama</button>
+                                </div>
+                            </div>
                         </div>
                         <div>
-                            <h3 class="text-sm font-black text-slate-800 leading-snug">@bolum.Ad</h3>
-                            <p class="text-slate-500 text-xs mt-1 leading-relaxed">@bolum.Aciklama</p>
+                            <h3 class="text-base font-bold text-slate-800 leading-snug mb-1.5">@bolum.Ad</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed line-clamp-2">@bolum.Aciklama</p>
                         </div>
                     </div>
                 }
             </div>
         </section>
 
-        <section id="cerrahi" class="mb-10 bolum-section">
+        <section id="cerrahi" class="mb-12 bolum-section scroll-mt-24">
             <div class="section-bar">
                 <div class="flex items-center gap-3">
-                    <span class="badge badge-red"><i class="fa-solid fa-circle-dot"></i> Cerrahi</span>
-                    <h2 class="text-lg font-black text-slate-800">Cerrahi Tıp Bilimleri</h2>
+                    <span class="badge badge-red"><i class="fa-solid fa-scalpel"></i> Cerrahi Tıp</span>
+                    <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Cerrahi Tıp Bilimleri</h2>
                 </div>
                 <div class="section-bar-line"></div>
-                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider flex-shrink-0">@cerrahiCount birim</span>
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest flex-shrink-0">@cerrahiCount Birim</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" id="cerrahiGrid">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5" id="cerrahiGrid">
                 @foreach (var bolum in Model.Where(b => b.Kategori == "Cerrahi" && b.IsActive))
                 {
-                    <div class="dept-card type-cerrahi">
+                    <div class="dept-card type-cerrahi" data-bolum-id="@bolum.Id" data-bolum-ad="@bolum.Ad" data-bolum-aciklama="@bolum.Aciklama">
                         <div class="flex items-start justify-between">
-                            <div class="icon-box ib-red"><i class="@(string.IsNullOrEmpty(bolum.FotografUrl) ? "fa-solid fa-scalpel" : bolum.FotografUrl)"></i></div>
-                            <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                            <div class="icon-box ib-red"><i class="@(string.IsNullOrEmpty(bolum.FotografUrl) ? "fa-solid fa-scissors" : bolum.FotografUrl)"></i></div>
+                            <div class="card-menu-wrap" onclick="event.stopPropagation()">
+                                <button type="button" class="card-menu-btn" onclick="toggleCardMenu('menu-@bolum.Id', event)">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </button>
+                                <div id="menu-@bolum.Id" class="card-menu-panel">
+                                    <button type="button" class="card-menu-item" onclick="openDoktorModalFromCard(this)"><i class="fa-solid fa-user-doctor text-blue-600"></i> Doktorlar</button>
+                                    <button type="button" class="card-menu-item" onclick="openInfoModalFromCard(this)"><i class="fa-solid fa-circle-info text-indigo-600"></i> Açıklama</button>
+                                </div>
+                            </div>
                         </div>
                         <div>
-                            <h3 class="text-sm font-black text-slate-800 leading-snug">@bolum.Ad</h3>
-                            <p class="text-slate-500 text-xs mt-1 leading-relaxed">@bolum.Aciklama</p>
+                            <h3 class="text-base font-bold text-slate-800 leading-snug mb-1.5">@bolum.Ad</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed line-clamp-2">@bolum.Aciklama</p>
                         </div>
                     </div>
                 }
             </div>
         </section>
 
-        <section id="temel" class="mb-10 bolum-section">
+        <section id="temel" class="mb-12 bolum-section scroll-mt-24">
             <div class="section-bar">
                 <div class="flex items-center gap-3">
-                    <span class="badge badge-green"><i class="fa-solid fa-circle-dot"></i> Temel</span>
-                    <h2 class="text-lg font-black text-slate-800">Temel Tıp Bilimleri</h2>
+                    <span class="badge badge-green"><i class="fa-solid fa-microscope"></i> Temel Tıp</span>
+                    <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Temel Tıp Bilimleri</h2>
                 </div>
                 <div class="section-bar-line"></div>
-                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider flex-shrink-0">@temelCount birim</span>
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest flex-shrink-0">@temelCount Birim</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" id="temelGrid">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5" id="temelGrid">
                 @foreach (var bolum in Model.Where(b => b.Kategori == "Temel" && b.IsActive))
                 {
-                    <div class="dept-card type-temel">
+                    <div class="dept-card type-temel" data-bolum-id="@bolum.Id" data-bolum-ad="@bolum.Ad" data-bolum-aciklama="@bolum.Aciklama">
                         <div class="flex items-start justify-between">
-                            <div class="icon-box ib-green"><i class="@(string.IsNullOrEmpty(bolum.FotografUrl) ? "fa-solid fa-microscope" : bolum.FotografUrl)"></i></div>
-                            <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                            <div class="icon-box ib-green"><i class="@(string.IsNullOrEmpty(bolum.FotografUrl) ? "fa-solid fa-flask" : bolum.FotografUrl)"></i></div>
+                            <div class="card-menu-wrap" onclick="event.stopPropagation()">
+                                <button type="button" class="card-menu-btn" onclick="toggleCardMenu('menu-@bolum.Id', event)">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </button>
+                                <div id="menu-@bolum.Id" class="card-menu-panel">
+                                    <button type="button" class="card-menu-item" onclick="openDoktorModalFromCard(this)"><i class="fa-solid fa-user-doctor text-blue-600"></i> Doktorlar</button>
+                                    <button type="button" class="card-menu-item" onclick="openInfoModalFromCard(this)"><i class="fa-solid fa-circle-info text-indigo-600"></i> Açıklama</button>
+                                </div>
+                            </div>
                         </div>
                         <div>
-                            <h3 class="text-sm font-black text-slate-800 leading-snug">@bolum.Ad</h3>
-                            <p class="text-slate-500 text-xs mt-1 leading-relaxed">@bolum.Aciklama</p>
+                            <h3 class="text-base font-bold text-slate-800 leading-snug mb-1.5">@bolum.Ad</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed line-clamp-2">@bolum.Aciklama</p>
                         </div>
                     </div>
                 }
@@ -548,4 +883,26 @@
         </section>
 
     </main>
+</div>
+
+<div id="bolumDoktorModal" class="fixed inset-0 z-[120] hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
+    <div id="bolumDoktorModalContent" class="bg-white w-full max-w-2xl rounded-3xl border border-slate-200 shadow-2xl transform scale-95 transition-transform duration-200">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+            <h3 id="bolumDoktorModalTitle" class="text-lg font-black text-slate-800">Bölüm Doktorları</h3>
+            <button type="button" onclick="closeBolumDoktorModal()" class="w-9 h-9 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="bolumDoktorModalList" class="p-6 space-y-3 max-h-[60vh] overflow-y-auto"></div>
+    </div>
+</div>
+
+<div id="bolumInfoModal" class="fixed inset-0 z-[120] hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
+    <div id="bolumInfoModalContent" class="bg-white w-full max-w-2xl rounded-3xl border border-slate-200 shadow-2xl transform scale-95 transition-transform duration-200">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+            <h3 id="bolumInfoModalTitle" class="text-lg font-black text-slate-800">Bölüm Bilgilendirme</h3>
+            <button type="button" onclick="closeBolumInfoModal()" class="w-9 h-9 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="p-6">
+            <p id="bolumInfoModalText" class="text-slate-600 leading-relaxed"></p>
+        </div>
+    </div>
 </div>

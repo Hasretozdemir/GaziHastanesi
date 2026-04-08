@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using GaziHastane.Security;
 
 namespace GaziHastane.Areas.Admin.Controllers
 {
@@ -54,7 +55,8 @@ namespace GaziHastane.Areas.Admin.Controllers
                 {
                     new Claim(ClaimTypes.Name, yetkili.AdSoyad),
                     new Claim(ClaimTypes.Email, yetkili.Email),
-                    new Claim(ClaimTypes.Role, yetkili.Rol)
+                    new Claim(ClaimTypes.Role, yetkili.Rol),
+                    new Claim(AdminPanelPermissions.ClaimType, yetkili.AdminSayfaYetkileri ?? string.Empty)
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -145,6 +147,13 @@ namespace GaziHastane.Areas.Admin.Controllers
         [Authorize]
         [HttpGet]
         public IActionResult Ayarlar()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult AccessDenied()
         {
             return View();
         }

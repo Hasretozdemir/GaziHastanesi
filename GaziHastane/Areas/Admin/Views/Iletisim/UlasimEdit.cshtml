@@ -1,0 +1,62 @@
+@model GaziHastane.Models.UlasimRehberi
+@{
+    ViewData["Title"] = "Ulaþým Kartý Düzenle";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="max-w-3xl mx-auto pt-8 pb-12 px-4">
+    <div class="mb-8 flex flex-col items-center text-center">
+        <a href="/Admin/Iletisim/Index" class="text-amber-400 hover:text-amber-300 text-sm font-bold flex items-center gap-2 mb-4 transition">
+            <i class="fa-solid fa-arrow-left"></i> Listeye Dön
+        </a>
+        <h2 class="text-3xl font-black mb-2 tracking-tight">Ulaþým Kartý <span class="text-gradient">Düzenle</span></h2>
+    </div>
+
+    <div class="glass-card p-8 rounded-[2rem]">
+        <form asp-action="UlasimEdit" method="post" class="space-y-5">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="All" class="text-rose-400 text-sm font-bold"></div>
+
+            <div>
+                <label asp-for="UlasimTipi" class="block text-xs font-black text-slate-400 mb-2">Baþlýk</label>
+                <input asp-for="UlasimTipi" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white" />
+            </div>
+
+            <div>
+                <label asp-for="Ikon" class="block text-xs font-black text-slate-400 mb-2">Ýkon (FontAwesome)</label>
+                <input asp-for="Ikon" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white" />
+            </div>
+
+            <div>
+                <label asp-for="TemaRengi" class="block text-xs font-black text-slate-400 mb-2">Tema Rengi</label>
+                <select asp-for="TemaRengi" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white">
+                    <option value="amber">amber</option>
+                    <option value="blue">blue</option>
+                    <option value="emerald">emerald</option>
+                    <option value="rose">rose</option>
+                    <option value="cyan">cyan</option>
+                    <option value="violet">violet</option>
+                </select>
+            </div>
+
+            <div>
+                <label asp-for="Icerik" class="block text-xs font-black text-slate-400 mb-2">Ýçerik</label>
+                <textarea asp-for="Icerik" rows="5" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white"></textarea>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <input asp-for="IsActive" type="checkbox" class="w-4 h-4" />
+                <label asp-for="IsActive" class="text-sm text-slate-300">Aktif</label>
+            </div>
+
+            <div class="pt-4 flex justify-end gap-3">
+                <a href="/Admin/Iletisim/Index" class="px-5 py-2.5 rounded-xl font-bold text-slate-300">Ýptal</a>
+                <button type="submit" class="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-2.5 rounded-xl font-bold">Güncelle</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

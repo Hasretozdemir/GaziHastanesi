@@ -18,6 +18,52 @@ namespace GaziHastane.Controllers
             _context = context;
         }
 
+        [HttpGet]
+        public JsonResult GetDoktorAcilanGunler(int doktorId, int yil, int ay)
+        {
+            try
+            {
+                var plan = _context.DoktorRandevuPlanlari
+                    .Include(x => x.Gunler)
+                    .FirstOrDefault(x => x.DoktorId == doktorId && x.Yil == yil && x.Ay == ay);
+
+                var culture = new System.Globalization.CultureInfo("tr-TR");
+                var result = new List<object>();
+
+                var ayBaslangic = new DateTime(yil, ay, 1);
+                var ayBitis = ayBaslangic.AddMonths(1).AddDays(-1);
+
+                for (var gun = ayBaslangic; gun <= ayBitis; gun = gun.AddDays(1))
+                {
+                    var planGunAcik = plan != null && plan.Gunler.Any(x => x.Tarih.Date == gun.Date && x.IsRandevuAcik);
+                    var uygunSaatler = planGunAcik ? HesaplaUygunSaatler(doktorId, gun) : new List<string>();
+
+                    if (planGunAcik && gun.Date == DateTime.Today)
+                    {
+                        var simdi = DateTime.Now.TimeOfDay;
+                        uygunSaatler = uygunSaatler.Where(s => TimeSpan.Parse(s) > simdi).ToList();
+                    }
+
+                    result.Add(new
+                    {
+                        tarih = gun.ToString("yyyy-MM-dd"),
+                        gun = gun.ToString("ddd", culture),
+                        gunNo = gun.Day,
+                        ay = gun.ToString("MMM", culture),
+                        isOpen = planGunAcik,
+                        isFull = planGunAcik && uygunSaatler.Count == 0,
+                        slot = uygunSaatler.Count
+                    });
+                }
+
+                return Json(result);
+            }
+            catch
+            {
+                return Json(new List<object>());
+            }
+        }
+
         // Giriþ Ekraný
         [HttpGet]
         public IActionResult Giris()
@@ -114,7 +160,7 @@ namespace GaziHastane.Controllers
             return Json(doktorlar);
         }
 
-        // Doktor ve Tarih seçildiðinde sadece BOÞ saatleri getiren Endpoint
+        // Doktor ve Tarih seçildiðinde planlanan tüm saatleri (müsait/dolu) getiren Endpoint
         [HttpGet]
         public JsonResult GetUygunSaatler(int doktorId, string tarih)
         {
@@ -122,31 +168,22 @@ namespace GaziHastane.Controllers
             {
                 DateTime secilenTarih = DateTime.Parse(tarih);
 
-                // O doktora ait o gündeki Aktif (Durum = 1) randevularý bul
-                var doluSaatler = _context.Randevular
-                    .Where(r => r.DoktorId == doktorId
-                             && r.RandevuTarihi.Date == secilenTarih.Date
-                             && r.Durum == 1)
-                    .Select(r => r.RandevuTarihi.ToString("HH:mm"))
-                    .ToList();
+                var slotlar = HesaplaGunSlotDurumlari(doktorId, secilenTarih);
 
-                // Hastanenin genel mesai saatleri
-                var tumSaatler = new List<string> {
-                    "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-                    "13:30", "14:00", "14:30", "15:00", "15:30", "16:00"
-                };
-
-                // Tüm saatlerden dolu olanlarý çýkararak boþlarý bul
-                var bosSaatler = tumSaatler.Except(doluSaatler).ToList();
-
-                // Eðer bugüne randevu alýnýyorsa, geçmiþ saatleri listeden çýkar
+                // Bugün için geçmiþ saatleri de dolu/pasif iþaretle
                 if (secilenTarih.Date == DateTime.Today)
                 {
-                    var suAnkiSaat = DateTime.Now.TimeOfDay;
-                    bosSaatler = bosSaatler.Where(s => TimeSpan.Parse(s) > suAnkiSaat).ToList();
+                    var simdi = DateTime.Now.TimeOfDay;
+                    foreach (var slot in slotlar)
+                    {
+                        if (TimeSpan.Parse(slot.Saat) <= simdi)
+                        {
+                            slot.Musait = false;
+                        }
+                    }
                 }
 
-                return Json(bosSaatler);
+                return Json(slotlar.Select(x => new { saat = x.Saat, musait = x.Musait, dolu = x.Dolu, ogleMolasi = x.OgleMolasi }).ToList());
             }
             catch (Exception ex)
             {
@@ -166,6 +203,16 @@ namespace GaziHastane.Controllers
                 }
 
                 DateTime randevuZamani = DateTime.Parse($"{Tarih} {Saat}");
+
+                var musaitSaatler = HesaplaGunSlotDurumlari(DoktorId, randevuZamani.Date)
+                    .Where(x => x.Musait)
+                    .Select(x => x.Saat)
+                    .ToHashSet();
+
+                if (!musaitSaatler.Contains(randevuZamani.ToString("HH:mm")))
+                {
+                    return Json(new { success = false, message = "Seçilen saat doktor planýna uygun deðil veya dolu." });
+                }
 
                 // GÜVENLÝK KONTROLÜ: Ayný doktora, ayný saate baþka bir aktif randevu var mý?
                 bool saatDoluMu = _context.Randevular.Any(r =>
@@ -199,6 +246,84 @@ namespace GaziHastane.Controllers
                 string hataMesaji = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 return Json(new { success = false, message = "Sistemsel Hata: " + hataMesaji });
             }
+        }
+
+        private List<string> HesaplaUygunSaatler(int doktorId, DateTime secilenTarih)
+        {
+            return HesaplaGunSlotDurumlari(doktorId, secilenTarih)
+                .Where(x => x.Musait)
+                .Select(x => x.Saat)
+                .ToList();
+        }
+
+        private List<GunSlotDurumu> HesaplaGunSlotDurumlari(int doktorId, DateTime secilenTarih)
+        {
+            var plan = _context.DoktorRandevuPlanlari
+                .Include(x => x.Gunler)
+                .FirstOrDefault(x => x.DoktorId == doktorId && x.Yil == secilenTarih.Year && x.Ay == secilenTarih.Month);
+
+            if (plan == null)
+            {
+                return new List<GunSlotDurumu>();
+            }
+
+            var planGun = plan.Gunler.FirstOrDefault(x => x.Tarih.Date == secilenTarih.Date && x.IsRandevuAcik);
+            if (planGun == null)
+            {
+                return new List<GunSlotDurumu>();
+            }
+
+            var gunlukRandevuAdedi = _context.Randevular.Count(r =>
+                r.DoktorId == doktorId &&
+                r.Durum == 1 &&
+                r.RandevuTarihi.Date == secilenTarih.Date);
+
+            var gunlukMax = planGun.GunlukMaxRandevu > 0 ? planGun.GunlukMaxRandevu : 20;
+
+            var slotSure = plan.SlotSureDakika <= 0 ? 30 : plan.SlotSureDakika;
+            var baslangic = planGun.BaslangicSaati ?? plan.BaslangicSaati;
+            var bitis = planGun.BitisSaati ?? plan.BitisSaati;
+            var ogleBaslangic = plan.OgleMolaBaslangicSaati;
+            var ogleBitis = plan.OgleMolaBitisSaati;
+
+            var doluSaatler = _context.Randevular
+                .Where(r => r.DoktorId == doktorId && r.Durum == 1 && r.RandevuTarihi.Date == secilenTarih.Date)
+                .Select(r => r.RandevuTarihi.ToString("HH:mm"))
+                .ToHashSet();
+
+            var saatler = new List<GunSlotDurumu>();
+            var current = baslangic;
+            var uretilenSlot = 0;
+            var gunlukDolu = gunlukRandevuAdedi >= gunlukMax;
+
+            while (current.Add(TimeSpan.FromMinutes(slotSure)) <= bitis && uretilenSlot < gunlukMax)
+            {
+                var saat = current.ToString("hh\\:mm");
+                var slotBitis = current.Add(TimeSpan.FromMinutes(slotSure));
+                var ogeleCarpisiyor = current < ogleBitis && slotBitis > ogleBaslangic;
+                var dolu = doluSaatler.Contains(saat);
+                var musait = !gunlukDolu && !dolu && !ogeleCarpisiyor;
+                saatler.Add(new GunSlotDurumu
+                {
+                    Saat = saat,
+                    Musait = musait,
+                    Dolu = dolu,
+                    OgleMolasi = ogeleCarpisiyor
+                });
+
+                uretilenSlot++;
+                current = current.Add(TimeSpan.FromMinutes(slotSure));
+            }
+
+            return saatler;
+        }
+
+        private class GunSlotDurumu
+        {
+            public string Saat { get; set; } = string.Empty;
+            public bool Musait { get; set; }
+            public bool Dolu { get; set; }
+            public bool OgleMolasi { get; set; }
         }
 
         // RANDEVU ÝPTAL ÝÞLEMÝ (POST)

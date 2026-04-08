@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@using System.Linq
+@using GaziHastane.Security
+@inject GaziHastane.Data.GaziHastaneContext Db
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
@@ -114,109 +118,84 @@
             var action = ViewContext.RouteData.Values["Action"]?.ToString();
             var activeClass = "bg-gradient-to-r from-cyan-500/20 to-purple-500/5 text-cyan-300 border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)]";
             var passiveClass = "hover:bg-white/5 text-slate-400 hover:text-white border border-transparent";
+            List<GaziHastane.Models.AdminMenuItem> menuItems;
+            try
+            {
+                menuItems = Db.AdminMenuItems.Where(x => x.IsActive).OrderBy(x => x.SortOrder).ToList();
+            }
+            catch
+            {
+                menuItems = new List<GaziHastane.Models.AdminMenuItem>();
+            }
+
+            var mainLinks = (menuItems.Any()
+                    ? AdminPanelPermissions.BuildSidebarLinks(menuItems, "Main")
+                    : AdminPanelPermissions.MainScreenLinks.ToList())
+                .Where(x => string.IsNullOrWhiteSpace(x.PermissionKey) || AdminPanelPermissions.UserHasPermission(User, x.PermissionKey))
+                .ToList();
+
+            var systemLinks = (menuItems.Any()
+                    ? AdminPanelPermissions.BuildSidebarLinks(menuItems, "System")
+                    : AdminPanelPermissions.SystemSettingsLinks.ToList())
+                .Where(x => string.IsNullOrWhiteSpace(x.PermissionKey) || AdminPanelPermissions.UserHasPermission(User, x.PermissionKey))
+                .ToList();
+
+            var contentLinks = (menuItems.Any()
+                    ? AdminPanelPermissions.BuildSidebarLinks(menuItems, "Content")
+                    : AdminPanelPermissions.ContentLinks.ToList())
+                .Where(x => string.IsNullOrWhiteSpace(x.PermissionKey) || AdminPanelPermissions.UserHasPermission(User, x.PermissionKey))
+                .ToList();
+
+            var kurumsalSubLinks = (menuItems.Any()
+                    ? AdminPanelPermissions.BuildSidebarSubLinks(menuItems, "KurumsalSub")
+                    : AdminPanelPermissions.KurumsalSubLinks.ToList());
+
+            var securityLinks = menuItems.Any()
+                ? menuItems.Where(x => x.Section == "Security" && x.IsActive).OrderBy(x => x.SortOrder).ToList()
+                : new List<GaziHastane.Models.AdminMenuItem>();
+
+            var canKurumsal = AdminPanelPermissions.UserHasPermission(User, AdminPanelPermissions.Keys.Kurumsal);
+            var isSuperAdmin = AdminPanelPermissions.IsSuperAdmin(User);
+            var currentUserName = User.FindFirstValue(ClaimTypes.Name) ?? "Yetkili";
+            var currentUserRole = User.FindFirstValue(ClaimTypes.Role) ?? "Yönetici";
         }
 
         <nav class="flex-1 px-4 py-8 overflow-y-auto space-y-2 relative z-10">
             <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 px-4">Ana Ekranlar</p>
 
-            <a href="/Admin/Home/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Home" ? activeClass : passiveClass)">
-                <i class="fa-solid fa-cube text-lg @(ctrl == "Home" ? "neon-icon" : "group-hover:text-cyan-400")"></i>
-                <span class="font-bold tracking-wide">Gösterge Paneli</span>
-            </a>
-            <a href="/Admin/Doktorlar/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Doktorlar" ? activeClass : passiveClass)">
-                <i class="fa-solid fa-user-doctor text-lg @(ctrl == "Doktorlar" ? "neon-icon" : "group-hover:text-purple-400")"></i>
-                <span class="font-semibold tracking-wide">Doktorlar</span>
-            </a>
-            <a href="/Admin/Bolumler/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Bolumler" ? activeClass : passiveClass)">
-                <i class="fa-solid fa-network-wired text-lg @(ctrl == "Bolumler" ? "neon-icon" : "group-hover:text-pink-400")"></i>
-                <span class="font-semibold tracking-wide">Poliklinikler</span>
-            </a>
-            <a href="/Admin/HastaRehberi/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "HastaRehberi" ? activeClass : passiveClass)">
-                <i class="fa-solid fa-book-medical text-lg @(ctrl == "HastaRehberi" ? "neon-icon" : "group-hover:text-emerald-400")"></i>
-                <span class="font-semibold tracking-wide">Hasta Rehberi</span>
-            </a>
-            <a href="/Admin/Iletisim/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Iletisim" ? activeClass : passiveClass)">
-                <i class="fa-solid fa-address-book text-lg @(ctrl == "Iletisim" ? "neon-icon" : "group-hover:text-orange-400")"></i>
-                <span class="font-semibold tracking-wide">İletişim</span>
-            </a>
+            @foreach (var item in mainLinks)
+            {
+                var isActive = AdminPanelPermissions.IsSidebarLinkActive(ctrl, action, item);
+                <a href="@item.Url" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(isActive ? activeClass : passiveClass)">
+                    <i class="@item.IconClass text-lg @(isActive ? item.ActiveIconClass : item.HoverIconClass)"></i>
+                    <span class="font-semibold tracking-wide">@item.Label</span>
+                </a>
+            }
 
             <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 px-4 mt-6">Sistem Ayarları</p>
 
-            <a href="/Admin/HizliIslem/Kalite" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "HizliIslem" && action == "Kalite" ? activeClass : passiveClass)">
-                <i class="fa-solid fa-shield-heart text-lg @(ctrl == "HizliIslem" && action == "Kalite" ? "neon-icon" : "group-hover:text-blue-400")"></i>
-                <span class="font-semibold tracking-wide">Kalite Yönetimi</span>
-            </a>
-            <a href="/Admin/Egitim/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Egitim" ? activeClass : passiveClass)">
-                <i class="fa-solid fa-graduation-cap text-lg @(ctrl == "Egitim" ? "neon-icon" : "group-hover:text-orange-500")"></i>
-                <span class="font-semibold tracking-wide">Eğitim Komitesi</span>
-            </a>
-
-            <a href="/Admin/HizliIslem/YemekListesi" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "HizliIslem" && action == "YemekListesi" ? activeClass : passiveClass)">
-                <i class="fa-solid fa-utensils text-lg @(ctrl == "HizliIslem" && action == "YemekListesi" ? "neon-icon" : "group-hover:text-orange-500")"></i>
-                <span class="font-semibold tracking-wide">Yemek Listesi</span>
-            </a>
-
-            <a href="/Admin/Kroki/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Kroki" ? activeClass : passiveClass)">
-                <i class="fa-solid fa-map-location-dot text-lg @(ctrl == "Kroki" ? "neon-icon" : "group-hover:text-cyan-400")"></i>
-                <span class="font-semibold tracking-wide">Kroki Yönetimi</span>
-            </a>
-
-            <a href="/Admin/HizliIslem/Gorsel"
-               class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group
-               @(ctrl == "HizliIslem" && action == "Gorsel" ? activeClass : passiveClass)">
-
-                <i class="fa-solid fa-images text-lg transition-all duration-300
-                   @(ctrl == "HizliIslem" && action == "Gorsel"
-                                                                            ? "text-pink-500 drop-shadow-[0_0_8px_rgba(236,72,153,0.8)] scale-110"
-                                                                            : "group-hover:text-pink-400 group-hover:scale-110")"></i>
-
-                <span class="font-semibold tracking-wide">Görseller</span>
-            </a>
-
-            <a href="/Admin/HizliIslem/AnaSayfaGorsel"
-               class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group
-               @(ctrl == "HizliIslem" && action == "AnaSayfaGorsel" ? activeClass : passiveClass)">
-
-                <i class="fa-solid fa-image text-lg transition-all duration-300
-                   @(ctrl == "HizliIslem" && action == "AnaSayfaGorsel"
-                                                                            ? "text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)] scale-110"
-                                                                            : "group-hover:text-yellow-400 group-hover:scale-110")"></i>
-
-                <span class="font-semibold tracking-wide">Ana Sayfa Slider</span>
-            </a>
-
-            <a href="/Admin/HizliIslem/Belge"
-               class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group
-               @(ctrl == "HizliIslem" && action == "Belge" ? activeClass : passiveClass)">
-
-                <i class="fa-solid fa-file-lines text-lg transition-all duration-300
-                   @(ctrl == "HizliIslem" && action == "Belge"
-                                                                            ? "text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)] scale-110"
-                                                                            : "group-hover:text-blue-400 group-hover:scale-110")"></i>
-
-                <span class="font-semibold tracking-wide">Belgeler</span>
-            </a>
+            @foreach (var item in systemLinks)
+            {
+                var isActive = AdminPanelPermissions.IsSidebarLinkActive(ctrl, action, item);
+                <a href="@item.Url" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group @(isActive ? activeClass : passiveClass)">
+                    <i class="@item.IconClass text-lg transition-all duration-300 @(isActive ? item.ActiveIconClass : item.HoverIconClass)"></i>
+                    <span class="font-semibold tracking-wide">@item.Label</span>
+                </a>
+            }
 
             <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 px-4 mt-6">İçerik Yönetimi</p>
 
-            <a href="/Admin/HizliIslem/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "HizliIslem" && (action == "Index" || action == null) ? activeClass : passiveClass)">
-                <i class="fa-solid fa-layer-group text-lg @(ctrl == "HizliIslem" && (action == "Index" || action == null) ? "neon-icon text-cyan-400" : "group-hover:text-cyan-400")"></i>
-                <span class="font-semibold tracking-wide">Dijital İşlemler</span>
-            </a>
+            @foreach (var item in contentLinks)
+            {
+                var isActive = AdminPanelPermissions.IsSidebarLinkActive(ctrl, action, item);
+                <a href="@item.Url" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(isActive ? activeClass : passiveClass)">
+                    <i class="@item.IconClass text-lg @(isActive ? item.ActiveIconClass : item.HoverIconClass)"></i>
+                    <span class="font-semibold tracking-wide">@item.Label</span>
+                </a>
+            }
 
-            <a href="/Admin/Haberler/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Haberler" ? activeClass : passiveClass)">
-                <i class="fa-solid fa-newspaper text-lg @(ctrl == "Haberler" ? "neon-icon" : "group-hover:text-blue-400")"></i>
-                <span class="font-semibold tracking-wide">Haberler</span>
-            </a>
-            <a href="/Admin/Etkinlikler/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Etkinlikler" ? activeClass : passiveClass)">
-                <i class="fa-solid fa-calendar-days text-lg @(ctrl == "Etkinlikler" ? "neon-icon" : "group-hover:text-fuchsia-400")"></i>
-                <span class="font-semibold tracking-wide">Etkinlikler</span>
-            </a>
-            <a href="/Admin/Duyurular/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Duyurular" ? activeClass : passiveClass)">
-                <i class="fa-solid fa-bullhorn text-lg @(ctrl == "Duyurular" ? "neon-icon" : "group-hover:text-yellow-400")"></i>
-                <span class="font-semibold tracking-wide">Duyurular</span>
-            </a>
-
+            @if (canKurumsal)
+            {
             <div class="space-y-1">
                 <button type="button" onclick="toggleKurumsalMenu()" class="w-full flex items-center justify-between gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Kurumsal" || ctrl == "Bashekimlik" || ctrl == "Basmudurluk" ? activeClass : passiveClass)">
                     <span class="flex items-center gap-4">
@@ -227,31 +206,43 @@
                 </button>
 
                 <div id="kurumsalSubmenu" class="ml-6 space-y-1 @(ctrl == "Kurumsal" || ctrl == "Bashekimlik" || ctrl == "Basmudurluk" ? "" : "hidden")">
-                    <a href="/Admin/Kurumsal/Index" class="block text-xs px-3 py-2 rounded-xl transition @(action == "Index" && ctrl == "Kurumsal" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Sidebar Yönetimi</a>
-                    <a href="/Admin/Bashekimlik/Index" class="block text-xs px-3 py-2 rounded-xl transition @(ctrl == "Bashekimlik" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Başhekimlik</a>
-                    <a href="/Admin/Basmudurluk/Index" class="block text-xs px-3 py-2 rounded-xl transition @(ctrl == "Basmudurluk" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Başmüdürlük</a>
-                    <a href="/Admin/Kurumsal/HemsirelikHizmetleri" class="block text-xs px-3 py-2 rounded-xl transition @(action == "HemsirelikHizmetleri" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Hemşirelik Hizmetleri</a>
-                    <a href="/Admin/Kurumsal/BilgiIslemMerkezi" class="block text-xs px-3 py-2 rounded-xl transition @(action == "BilgiIslemMerkezi" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Bilgi İşlem Merkezi</a>
-                    <a href="/Admin/Kurumsal/IsSagligiVeGuvenligi" class="block text-xs px-3 py-2 rounded-xl transition @(action == "IsSagligiVeGuvenligi" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">İş Sağlığı ve Güvenliği</a>
-                    <a href="/Admin/Kurumsal/EnfeksiyonKontrol" class="block text-xs px-3 py-2 rounded-xl transition @(action == "EnfeksiyonKontrol" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Enfeksiyon Kontrol</a>
-                    <a href="/Admin/Kurumsal/EczacilikHizmetleri" class="block text-xs px-3 py-2 rounded-xl transition @(action == "EczacilikHizmetleri" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Eczacılık Hizmetleri</a>
-                    <a href="/Admin/Kurumsal/SatinAlma" class="block text-xs px-3 py-2 rounded-xl transition @(action == "SatinAlma" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Satın Alma</a>
-                    <a href="/Admin/Kurumsal/IstatistikVeRaporlama" class="block text-xs px-3 py-2 rounded-xl transition @(action == "IstatistikVeRaporlama" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">İstatistik ve Raporlama</a>
-                    <a href="/Admin/Kurumsal/ArsivBirimi" class="block text-xs px-3 py-2 rounded-xl transition @(action == "ArsivBirimi" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Arşiv Birimi</a>
-                    <a href="/Admin/Kurumsal/HastaIletisimBirimi" class="block text-xs px-3 py-2 rounded-xl transition @(action == "HastaIletisimBirimi" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Hasta İletişim Birimi</a>
-                    <a href="/Admin/Kurumsal/IsAkisSemalari" class="block text-xs px-3 py-2 rounded-xl transition @(action == "IsAkisSemalari" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">İş Akış Şemaları</a>
-                    <a href="/Admin/Kurumsal/OrganizasyonSemalari" class="block text-xs px-3 py-2 rounded-xl transition @(action == "OrganizasyonSemalari" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Organizasyon Şemaları</a>
-                    <a href="/Admin/Kurumsal/IcKontrol" class="block text-xs px-3 py-2 rounded-xl transition @(action == "IcKontrol" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">İç Kontrol</a>
-                    <a href="/Admin/Kurumsal/BasinVeKurumsalIletisim" class="block text-xs px-3 py-2 rounded-xl transition @(action == "BasinVeKurumsalIletisim" ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">Basın ve Kurumsal İletişim</a>
+                    @foreach (var item in kurumsalSubLinks)
+                    {
+                        var isSubActive = AdminPanelPermissions.IsSidebarSubLinkActive(ctrl, action, item);
+                        <a href="@item.Url" class="block text-xs px-3 py-2 rounded-xl transition @(isSubActive ? "bg-cyan-500/15 text-cyan-300" : "text-slate-400 hover:bg-white/5 hover:text-white")">@item.Label</a>
+                    }
                 </div>
             </div>
+            }
 
             <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 px-4 mt-6">Güvenlik & Erişim</p>
 
-            <a href="/Admin/Yetkililer/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Yetkililer" ? activeClass : passiveClass)">
-                <i class="fa-solid fa-user-shield text-lg @(ctrl == "Yetkililer" ? "neon-icon" : "group-hover:text-rose-400")"></i>
-                <span class="font-semibold tracking-wide">Yetkili Listesi</span>
-            </a>
+            @if (securityLinks.Any())
+            {
+                foreach (var item in securityLinks)
+                {
+                    if (item.IsSuperAdminOnly && !isSuperAdmin)
+                    {
+                        continue;
+                    }
+
+                    var isActive = string.Equals(ctrl, item.Controller, StringComparison.OrdinalIgnoreCase)
+                        && (string.IsNullOrWhiteSpace(item.Action)
+                            || string.Equals(action, item.Action, StringComparison.OrdinalIgnoreCase));
+
+                    <a href="@item.Url" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(isActive ? activeClass : passiveClass)">
+                        <i class="@item.IconClass text-lg @(isActive ? "neon-icon" : item.HoverIconClass)"></i>
+                        <span class="font-semibold tracking-wide">@item.Label</span>
+                    </a>
+                }
+            }
+            else if (isSuperAdmin)
+            {
+                <a href="/Admin/Yetkililer/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Yetkililer" ? activeClass : passiveClass)">
+                    <i class="fa-solid fa-user-shield text-lg @(ctrl == "Yetkililer" ? "neon-icon" : "group-hover:text-rose-400")"></i>
+                    <span class="font-semibold tracking-wide">Yetkili Listesi</span>
+                </a>
+            }
 
         </nav>
     </aside>
@@ -281,10 +272,10 @@
 
                 <div class="relative group ml-2">
                     <button class="flex items-center gap-3 bg-black/20 p-2 pr-4 rounded-2xl border border-white/5 hover:bg-black/40 hover:border-white/10 transition shadow-lg">
-                        <img src="https://ui-avatars.com/api/?name=Hasret+Özdemir&background=0D8ABC&color=fff&rounded=true" class="w-9 h-9 rounded-xl" alt="Hasret Özdemir">
+                        <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(currentUserName)&background=0D8ABC&color=fff&rounded=true" class="w-9 h-9 rounded-xl" alt="@currentUserName">
                         <div class="text-left hidden sm:block">
-                            <p class="text-sm font-bold text-white leading-none">Hasret Özdemir</p>
-                            <p class="text-[10px] text-emerald-400 font-bold tracking-wider flex items-center gap-1 mt-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Çevrimiçi</p>
+                            <p class="text-sm font-bold text-white leading-none">@currentUserName</p>
+                            <p class="text-[10px] text-emerald-400 font-bold tracking-wider flex items-center gap-1 mt-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> @currentUserRole</p>
                         </div>
                         <i class="fa-solid fa-chevron-down text-slate-400 text-xs ml-1 group-hover:text-white transition"></i>
                     </button>
@@ -298,7 +289,7 @@
                                 <i class="fa-solid fa-sliders text-indigo-400"></i> Panel Ayarları
                             </a>
                             <div class="h-px bg-white/10 my-1"></div>
-                            <a href="/Auth/Logout" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition">
+                            <a href="/Admin/Auth/Logout" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition">
                                 <i class="fa-solid fa-arrow-right-from-bracket"></i> Oturumu Kapat
                             </a>
                         </div>

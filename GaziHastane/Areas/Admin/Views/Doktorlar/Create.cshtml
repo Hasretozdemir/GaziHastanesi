@@ -50,12 +50,30 @@
                 </div>
 
                 <div>
-                    <label asp-for="BolumId" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Birim (Poliklinik) (Opsiyonel)</label>
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Kategori *</label>
+                    <div class="relative group">
+                        <i class="fa-solid fa-layer-group absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 z-10 group-focus-within:text-cyan-400 transition-colors"></i>
+                        <select id="kategoriSecim" name="kategoriSecim" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-slate-300 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition appearance-none cursor-pointer" required>
+                            <option value="">-- Kategori Seçiniz --</option>
+                            <option value="Dahili">Dahili</option>
+                            <option value="Cerrahi">Cerrahi</option>
+                            <option value="Temel">Temel</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"></i>
+                    </div>
+                </div>
+
+                <div>
+                    <label asp-for="BolumId" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Birim (Poliklinik) *</label>
                     <div class="relative group">
                         <i class="fa-solid fa-network-wired absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 z-10 group-focus-within:text-cyan-400 transition-colors"></i>
 
-                        <select asp-for="BolumId" asp-items="ViewBag.Bolumler" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-slate-300 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition appearance-none cursor-pointer">
+                        <select asp-for="BolumId" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-medium text-slate-300 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition appearance-none cursor-pointer" required>
                             <option value="">-- Poliklinik Seçiniz --</option>
+                            @foreach (var bolum in (IEnumerable<dynamic>)ViewBag.Bolumler)
+                            {
+                                <option value="@bolum.Id" data-kategori="@bolum.Kategori">@bolum.Ad (@bolum.Kategori)</option>
+                            }
                         </select>
                         <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"></i>
                     </div>
@@ -128,4 +146,32 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        const kategoriSelect = document.getElementById('kategoriSecim');
+        const bolumSelect = document.getElementById('BolumId');
+
+        function filterBolumByKategori() {
+            const kategori = kategoriSelect.value;
+            const options = bolumSelect.querySelectorAll('option');
+
+            options.forEach((opt, index) => {
+                if (index === 0) {
+                    opt.hidden = false;
+                    return;
+                }
+
+                const optKategori = opt.getAttribute('data-kategori');
+                opt.hidden = !kategori || optKategori !== kategori;
+            });
+
+            const selectedOption = bolumSelect.options[bolumSelect.selectedIndex];
+            if (selectedOption && selectedOption.hidden) {
+                bolumSelect.value = '';
+            }
+        }
+
+        kategoriSelect.addEventListener('change', filterBolumByKategori);
+        filterBolumByKategori();
+    </script>
 }
