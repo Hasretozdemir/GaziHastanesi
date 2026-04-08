@@ -854,17 +854,11 @@ namespace GaziHastane.Models
 
         public int Ay { get; set; }
 
-        public int AylikMaxRandevu { get; set; } = 100;
-
         public int SlotSureDakika { get; set; } = 30;
 
         public TimeSpan BaslangicSaati { get; set; } = new TimeSpan(9, 0, 0);
 
         public TimeSpan BitisSaati { get; set; } = new TimeSpan(17, 0, 0);
-
-        public int MolaHerHastaSayisi { get; set; } = 4;
-
-        public int MolaSureDakika { get; set; } = 15;
 
         public TimeSpan OgleMolaBaslangicSaati { get; set; } = new TimeSpan(12, 0, 0);
 
@@ -888,11 +882,8 @@ namespace GaziHastane.Models
 
         public bool IsRandevuAcik { get; set; } = true;
 
+        [Column("GunlukRandevuSayisi")]
         public int GunlukMaxRandevu { get; set; } = 20;
-
-        public int? MolaHerHastaSayisi { get; set; }
-
-        public int? MolaSureDakika { get; set; }
 
         public TimeSpan? BaslangicSaati { get; set; }
 

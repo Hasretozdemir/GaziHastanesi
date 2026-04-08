@@ -3,6 +3,7 @@ using GaziHastane.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace GaziHastane.Areas.Admin.Controllers
 {
@@ -25,6 +26,9 @@ namespace GaziHastane.Areas.Admin.Controllers
                 .OrderBy(x => x.Ad)
                 .ThenBy(x => x.Soyad)
                 .ToList();
+
+            doktorlar = FiltrelenmisDoktorlar(doktorlar);
+
             var bolumler = _context.Bolumler.Where(x => x.IsActive).OrderBy(x => x.Ad).ToList();
 
             if (!doktorlar.Any())
@@ -35,8 +39,15 @@ namespace GaziHastane.Areas.Admin.Controllers
             }
 
             var seciliDoktorId = doktorId ?? doktorlar.First().Id;
+
+            if (!doktorlar.Any(x => x.Id == seciliDoktorId))
+            {
+                seciliDoktorId = doktorlar.First().Id;
+            }
+
             var seciliYil = yil ?? DateTime.Today.Year;
             var seciliAy = ay ?? DateTime.Today.Month;
+            var seciliDoktorBolumId = doktorlar.FirstOrDefault(x => x.Id == seciliDoktorId)?.BolumId;
 
             var plan = _context.DoktorRandevuPlanlari
                 .Include(x => x.Gunler)
@@ -45,7 +56,7 @@ namespace GaziHastane.Areas.Admin.Controllers
             var vm = new DoktorRandevuPlanViewModel
             {
                 DoktorId = seciliDoktorId,
-                BolumId = plan?.BolumId ?? doktorlar.FirstOrDefault(x => x.Id == seciliDoktorId)?.BolumId,
+                BolumId = seciliDoktorBolumId,
                 Yil = seciliYil,
                 Ay = seciliAy,
                 SlotSureDakika = plan?.SlotSureDakika ?? 30,
@@ -83,6 +94,25 @@ namespace GaziHastane.Areas.Admin.Controllers
         public IActionResult Index(DoktorRandevuPlanViewModel model)
         {
             var doktorlar = _context.Doktorlar.Where(x => x.IsActive).OrderBy(x => x.Ad).ThenBy(x => x.Soyad).ToList();
+            doktorlar = FiltrelenmisDoktorlar(doktorlar);
+
+            if (!doktorlar.Any())
+            {
+                TempData["Error"] = "Plan düzenleme yetkinize ait doktor kaydý bulunamadý.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (DoktorRolundeMi())
+            {
+                model.DoktorId = doktorlar.First().Id;
+            }
+
+            if (!doktorlar.Any(x => x.Id == model.DoktorId))
+            {
+                TempData["Error"] = "Bu doktor planýný düzenleme yetkiniz yok.";
+                return RedirectToAction(nameof(Index));
+            }
+
             var bolumler = _context.Bolumler.Where(x => x.IsActive).OrderBy(x => x.Ad).ToList();
             ViewBag.Doktorlar = doktorlar;
             ViewBag.Bolumler = bolumler;
@@ -117,17 +147,18 @@ namespace GaziHastane.Areas.Admin.Controllers
 
             if (plan == null)
             {
+                var doktorBolumId = _context.Doktorlar.Where(x => x.Id == model.DoktorId).Select(x => x.BolumId).FirstOrDefault();
                 plan = new DoktorRandevuPlani
                 {
                     DoktorId = model.DoktorId,
-                    BolumId = model.BolumId,
+                    BolumId = doktorBolumId,
                     Yil = model.Yil,
                     Ay = model.Ay
                 };
                 _context.DoktorRandevuPlanlari.Add(plan);
             }
 
-            plan.BolumId = model.BolumId;
+            plan.BolumId = _context.Doktorlar.Where(x => x.Id == model.DoktorId).Select(x => x.BolumId).FirstOrDefault();
             plan.SlotSureDakika = model.SlotSureDakika;
             plan.BaslangicSaati = baslangic;
             plan.BitisSaati = bitis;
@@ -173,6 +204,30 @@ namespace GaziHastane.Areas.Admin.Controllers
             _context.SaveChanges();
             TempData["Success"] = "Doktor randevu planý güncellendi.";
             return RedirectToAction(nameof(Index), new { doktorId = model.DoktorId, yil = model.Yil, ay = model.Ay });
+        }
+
+        private List<Doktor> FiltrelenmisDoktorlar(List<Doktor> doktorlar)
+        {
+            if (!DoktorRolundeMi())
+            {
+                return doktorlar;
+            }
+
+            var adSoyad = User.FindFirstValue(ClaimTypes.Name)?.Trim();
+            if (string.IsNullOrWhiteSpace(adSoyad))
+            {
+                return new List<Doktor>();
+            }
+
+            return doktorlar
+                .Where(x => string.Equals($"{x.Ad} {x.Soyad}".Trim(), adSoyad, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        private bool DoktorRolundeMi()
+        {
+            var rol = User.FindFirstValue(ClaimTypes.Role);
+            return string.Equals(rol, "Doktor", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

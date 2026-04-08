@@ -17,6 +17,7 @@ namespace GaziHastane.Models
         public string OgleMolaBaslangicSaati { get; set; } = "12:00";
         public string OgleMolaBitisSaati { get; set; } = "13:00";
 
+        [Display(Name = "Günlük randevu sayýsý")]
         [Range(1, 500)]
         public int VarsayilanGunlukMaxRandevu { get; set; } = 20;
 
@@ -28,6 +29,7 @@ namespace GaziHastane.Models
         public int? PlanGunId { get; set; }
         public DateTime Tarih { get; set; }
         public bool IsRandevuAcik { get; set; }
+        [Display(Name = "Günlük randevu sayýsý")]
         public int GunlukMaxRandevu { get; set; } = 20;
         public string? BaslangicSaati { get; set; }
         public string? BitisSaati { get; set; }
