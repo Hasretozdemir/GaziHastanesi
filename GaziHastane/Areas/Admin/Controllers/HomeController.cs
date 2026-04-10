@@ -48,6 +48,10 @@ public class HomeController : Controller
             ? 0
             : Math.Min(100, (int)Math.Round((double)bugunkuRandevu * 100 / toplamGunlukKapasite));
 
+        var bolumGrafikEtiketler = bugunkuRandevuDagilim.Select(x => x.Key).ToList();
+        var bolumGrafikDegerler = bugunkuRandevuDagilim.Select(x => x.Value).ToList();
+        var sistemYukuGrafikDegerler = new List<int> { sistemYuku, Math.Max(0, 100 - sistemYuku) };
+
         var aktifKisiler = _context.Doktorlar
             .Include(x => x.Bolum)
             .Where(x => x.IsActive)
@@ -61,6 +65,9 @@ public class HomeController : Controller
         ViewBag.BugunkuRandevuDagilim = bugunkuRandevuDagilim;
         ViewBag.AktifBolum = aktifBolum;
         ViewBag.SistemYuku = sistemYuku;
+        ViewBag.SistemYukuGrafikDegerler = sistemYukuGrafikDegerler;
+        ViewBag.BolumGrafikEtiketler = bolumGrafikEtiketler;
+        ViewBag.BolumGrafikDegerler = bolumGrafikDegerler;
         ViewBag.DoktorBasinaGunlukKapasite = doktorBasinaGunlukKapasite;
         ViewBag.AktifKisiler = aktifKisiler;
 

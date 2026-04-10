@@ -1,4 +1,5 @@
 ﻿@using System.Linq
+@using System.Text.Json
 @{
     ViewData["Title"] = "Gösterge Paneli";
     // Şablonun tam yolunu buraya veriyoruz ki başka yeri okumasın!
@@ -53,9 +54,9 @@
         <p class="text-xs text-slate-400 mt-2 font-medium relative z-10"><span class="text-purple-400 font-bold"><i class="fa-solid fa-calendar-day"></i> @bugunkuRandevu</span> bugünkü randevu</p>
         @if (bugunkuRandevuDagilim.Any())
         {
-            <p class="text-[11px] text-slate-500 mt-1 truncate" title="@string.Join(", ", bugunkuRandevuDagilim.Select(x => $"{x.Key}: {x.Value}"))">
-                En yoğun: @string.Join(" • ", bugunkuRandevuDagilim.Select(x => $"{x.Key} ({x.Value})"))
-            </p>
+            <div class="w-full h-24 mt-3 relative z-10">
+                <canvas id="bolumDolulukChart" class="w-full h-full"></canvas>
+            </div>
         }
     </div>
 
@@ -87,17 +88,104 @@
                 <i class="fa-solid fa-server neon-icon"></i>
             </div>
         </div>
-        <div class="w-full flex items-end gap-1 h-8 mt-4 relative z-10">
-            <div class="w-1/6 bg-pink-500/40 rounded-t-sm h-[30%]"></div>
-            <div class="w-1/6 bg-pink-500/60 rounded-t-sm h-[50%]"></div>
-            <div class="w-1/6 bg-pink-500/80 rounded-t-sm h-[80%]"></div>
-            <div class="w-1/6 bg-pink-400 rounded-t-sm h-[60%]"></div>
-            <div class="w-1/6 bg-pink-500/40 rounded-t-sm h-[40%]"></div>
-            <div class="w-1/6 bg-pink-500/90 rounded-t-sm h-[100%] shadow-[0_0_10px_#ec4899]"></div>
+        <div class="w-full h-24 mt-4 relative z-10">
+            <canvas id="sistemYukuChart" class="w-full h-full"></canvas>
         </div>
     </div>
 
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sistemYukuGrafikDegerler = @Html.Raw(JsonSerializer.Serialize((ViewBag.SistemYukuGrafikDegerler as List<int>) ?? new List<int> { 0, 100 }));
+            const bolumGrafikEtiketler = @Html.Raw(JsonSerializer.Serialize((ViewBag.BolumGrafikEtiketler as List<string>) ?? new List<string>()));
+            const bolumGrafikDegerler = @Html.Raw(JsonSerializer.Serialize((ViewBag.BolumGrafikDegerler as List<int>) ?? new List<int>()));
+            const bolumToplam = bolumGrafikDegerler.reduce((sum, value) => sum + value, 0);
+            const bolumGrafikYuzdeler = bolumToplam > 0
+                ? bolumGrafikDegerler.map(value => Number(((value * 100) / bolumToplam).toFixed(1)))
+                : bolumGrafikDegerler.map(() => 0);
+
+            const sistemYukuCanvas = document.getElementById('sistemYukuChart');
+            if (sistemYukuCanvas) {
+                new Chart(sistemYukuCanvas, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Kullanılan', 'Boş Kapasite'],
+                        datasets: [{
+                            data: sistemYukuGrafikDegerler,
+                            backgroundColor: ['#ec4899', 'rgba(236, 72, 153, 0.2)'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '68%',
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: true }
+                        }
+                    }
+                });
+            }
+
+            const bolumDolulukCanvas = document.getElementById('bolumDolulukChart');
+            if (bolumDolulukCanvas && bolumGrafikEtiketler.length > 0) {
+                new Chart(bolumDolulukCanvas, {
+                    type: 'bar',
+                    data: {
+                        labels: bolumGrafikEtiketler,
+                        datasets: [{
+                            label: 'Doluluk (%)',
+                            data: bolumGrafikYuzdeler,
+                            borderWidth: 0,
+                            borderRadius: 8,
+                            backgroundColor: ['#a855f7', '#c084fc', '#e879f9']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        const index = context.dataIndex;
+                                        const yuzde = context.parsed.y;
+                                        const adet = bolumGrafikDegerler[index] ?? 0;
+                                        return `%${yuzde} (${adet} randevu)`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: '#94a3b8', font: { size: 10 } }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: { color: 'rgba(148, 163, 184, 0.12)' },
+                                ticks: {
+                                    color: '#94a3b8',
+                                    precision: 0,
+                                    font: { size: 10 },
+                                    callback: function (value) {
+                                        return `%${value}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+}
 
 <div class="glass-card rounded-[2rem] overflow-hidden mb-8">
     <div class="p-8 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
