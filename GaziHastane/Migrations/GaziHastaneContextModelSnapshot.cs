@@ -409,6 +409,10 @@ namespace GaziHastane.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<string>("GorselUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
@@ -416,6 +420,9 @@ namespace GaziHastane.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
+
+                    b.Property<string>("ModalIcerik")
+                        .HasColumnType("text");
 
                     b.Property<string>("SaatAraligi")
                         .IsRequired()

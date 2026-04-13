@@ -365,6 +365,16 @@
             const haberModalBaslik = document.getElementById('haberModalBaslik');
             const haberModalOzet = document.getElementById('haberModalOzet');
             const haberModalIcerik = document.getElementById('haberModalIcerik');
+            const etkinlikModal = document.getElementById('etkinlikModal');
+            const etkinlikModalContent = document.getElementById('etkinlikModalContent');
+            const etkinlikModalImage = document.getElementById('etkinlikModalImage');
+            const etkinlikModalBaslik = document.getElementById('etkinlikModalBaslik');
+            const etkinlikModalTip = document.getElementById('etkinlikModalTip');
+            const etkinlikModalTarih = document.getElementById('etkinlikModalTarih');
+            const etkinlikModalSaat = document.getElementById('etkinlikModalSaat');
+            const etkinlikModalKonum = document.getElementById('etkinlikModalKonum');
+            const etkinlikModalOzet = document.getElementById('etkinlikModalOzet');
+            const etkinlikModalIcerik = document.getElementById('etkinlikModalIcerik');
 
             const haberData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
                 (Model.Haberler ?? Enumerable.Empty<GaziHastane.Models.Haber>()).Select(h => new
@@ -380,6 +390,23 @@
             ));
 
             const haberMap = new Map(haberData.map(x => [x.Id ?? x.id, x]));
+
+            const etkinlikData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                (Model.Etkinlikler ?? Enumerable.Empty<GaziHastane.Models.Etkinlik>()).Select(e => new
+                {
+                    e.Id,
+                    e.Baslik,
+                    e.EtkinlikTipi,
+                    e.Konum,
+                    e.SaatAraligi,
+                    e.Aciklama,
+                    e.ModalIcerik,
+                    e.GorselUrl,
+                    Tarih = e.Tarih.ToString("dd MMMM yyyy")
+                })
+            ));
+
+            const etkinlikMap = new Map(etkinlikData.map(x => [x.Id ?? x.id, x]));
 
             function openHaberModal(id) {
                 const haber = haberMap.get(id);
@@ -415,8 +442,54 @@
                 }, 250);
             }
 
+            function openEtkinlikModal(id) {
+                const etkinlik = etkinlikMap.get(id);
+                if (!etkinlik) return;
+
+                const gorselUrl = etkinlik.GorselUrl ?? etkinlik.gorselUrl;
+                const baslik = etkinlik.Baslik ?? etkinlik.baslik;
+                const tip = etkinlik.EtkinlikTipi ?? etkinlik.etkinlikTipi;
+                const tarih = etkinlik.Tarih ?? etkinlik.tarih;
+                const saat = etkinlik.SaatAraligi ?? etkinlik.saatAraligi;
+                const konum = etkinlik.Konum ?? etkinlik.konum;
+                const aciklama = etkinlik.Aciklama ?? etkinlik.aciklama;
+                const icerik = etkinlik.ModalIcerik ?? etkinlik.modalIcerik;
+
+                if (gorselUrl) {
+                    etkinlikModalImage.src = gorselUrl;
+                    etkinlikModalImage.alt = baslik;
+                    etkinlikModalImage.classList.remove('hidden');
+                } else {
+                    etkinlikModalImage.classList.add('hidden');
+                }
+
+                etkinlikModalBaslik.textContent = baslik;
+                etkinlikModalTip.textContent = tip || '';
+                etkinlikModalTarih.textContent = tarih || '';
+                etkinlikModalSaat.textContent = saat || '';
+                etkinlikModalKonum.textContent = konum || '';
+                etkinlikModalOzet.textContent = aciklama || '';
+                etkinlikModalIcerik.innerHTML = icerik || '<p class="text-slate-500 text-sm">Detay içerik bulunmuyor.</p>';
+
+                etkinlikModal.classList.remove('hidden');
+                setTimeout(() => {
+                    etkinlikModal.classList.remove('opacity-0');
+                    etkinlikModalContent.classList.remove('scale-95');
+                }, 10);
+            }
+
+            function closeEtkinlikModal() {
+                etkinlikModal.classList.add('opacity-0');
+                etkinlikModalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    etkinlikModal.classList.add('hidden');
+                }, 250);
+            }
+
             window.openHaberModal = openHaberModal;
             window.closeHaberModal = closeHaberModal;
+            window.openEtkinlikModal = openEtkinlikModal;
+            window.closeEtkinlikModal = closeEtkinlikModal;
         });
     </script>
 }
@@ -657,6 +730,30 @@
     </div>
 </div>
 
+<div id="etkinlikModal" class="fixed inset-0 z-[121] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center opacity-0 transition-opacity duration-200 p-4">
+    <div id="etkinlikModalContent" class="bg-white w-full max-w-3xl rounded-3xl overflow-hidden shadow-2xl border border-slate-100 transform scale-95 transition-transform duration-200 max-h-[90vh] flex flex-col">
+        <div class="relative">
+            <img id="etkinlikModalImage" src="" alt="Etkinlik" class="w-full h-64 object-cover">
+            <button type="button" onclick="closeEtkinlikModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 text-slate-700 hover:bg-white flex items-center justify-center shadow">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="p-6 overflow-y-auto">
+            <div class="flex flex-wrap items-center gap-3 mb-3">
+                <span id="etkinlikModalTip" class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-1 rounded uppercase"></span>
+                <span id="etkinlikModalTarih" class="text-xs text-slate-400 font-semibold"></span>
+            </div>
+            <h3 id="etkinlikModalBaslik" class="text-2xl font-black text-slate-900 mb-2"></h3>
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3 text-sm text-slate-500 font-medium mb-4">
+                <span id="etkinlikModalSaat" class="flex items-center gap-2"><i class="fa-regular fa-clock"></i></span>
+                <span id="etkinlikModalKonum" class="flex items-center gap-2"><i class="fa-solid fa-location-dot"></i></span>
+            </div>
+            <p id="etkinlikModalOzet" class="text-slate-500 text-sm mb-5"></p>
+            <div id="etkinlikModalIcerik" class="prose prose-sm max-w-none text-slate-700"></div>
+        </div>
+    </div>
+</div>
+
 <section class="max-w-7xl mx-auto px-4 sm:px-6 py-12" style="background: #f8fafc;">
     <div class="flex justify-between items-end mb-8">
         <div>
@@ -671,7 +768,7 @@
         {
             @foreach (var etkinlik in Model.Etkinlikler)
             {
-                <a href="#" class="activity-card group text-decoration-none">
+                <button type="button" onclick="openEtkinlikModal(@etkinlik.Id)" class="activity-card group text-decoration-none text-left w-full">
                     <div class="activity-date-box">
                         <span class="text-2xl font-black">@etkinlik.Tarih.ToString("dd")</span>
                         <span class="text-[10px] font-bold uppercase">@etkinlik.Tarih.ToString("MMM")</span>
@@ -683,7 +780,7 @@
                         <h3 class="text-base font-bold text-slate-800 group-hover:text-blue-600 transition">@etkinlik.Baslik</h3>
                         <p class="text-sm text-slate-500"><i class="fa-solid fa-location-dot mr-1"></i> @etkinlik.Konum</p>
                     </div>
-                </a>
+                </button>
             }
         }
     </div>

@@ -37,15 +37,20 @@
             <div>
                 <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Rol</label>
                 <select asp-for="Rol" id="rolSelect" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white outline-none focus:border-amber-500/50 transition font-semibold appearance-none">
-                    <option value="Yönetici">Yönetici</option>
-                    <option value="Editör">Editör</option>
-                    <option value="Doktor">Doktor</option>
-                    <option value="Süper Admin">Süper Admin</option>
+                    <option value="Yönetici" class="bg-slate-800 text-white">Yönetici</option>
+                    <option value="Editör" class="bg-slate-800 text-white">Editör</option>
+                    <option value="Doktor" class="bg-slate-800 text-white">Doktor</option>
+                    <option value="Süper Admin" class="bg-slate-800 text-white">Süper Admin</option>
                 </select>
             </div>
             <div>
                 <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Yeni Şifre (Boş bırakılabilir)</label>
-                <input asp-for="SifreHash" type="password" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white outline-none focus:border-amber-500/50 transition font-semibold" placeholder="••••••••">
+                <div class="relative">
+                    <input asp-for="SifreHash" id="sifreInput" type="password" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 pr-12 text-white outline-none focus:border-amber-500/50 transition font-semibold" placeholder="••••••••">
+                    <button type="button" onclick="togglePassword()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-500 transition focus:outline-none">
+                        <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -78,3 +83,20 @@
         </div>
     </form>
 </div>
+
+<script>
+    function togglePassword() {
+        var input = document.getElementById("sifreInput");
+        var icon = document.getElementById("eyeIcon");
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    }
+</script>

@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <form asp-action="Create" asp-controller="Etkinlikler" asp-area="Admin" method="post">
+    <form asp-action="Create" asp-controller="Etkinlikler" asp-area="Admin" method="post" enctype="multipart/form-data">
 
         <div asp-validation-summary="All" class="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-4 rounded-xl mb-6 text-sm font-medium"></div>
 
@@ -71,6 +71,18 @@
                 <label asp-for="Aciklama" class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Kısa Açıklama</label>
                 <textarea asp-for="Aciklama" rows="4" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition duration-200 resize-none" placeholder="Etkinliğin içeriği hakkında kısa bir bilgi girin..."></textarea>
                 <span asp-validation-for="Aciklama" class="text-rose-400 text-[11px] font-medium mt-1 block"></span>
+            </div>
+
+            <div class="md:col-span-2">
+                <label asp-for="ModalIcerik" class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Modal İçeriği</label>
+                <textarea asp-for="ModalIcerik" id="ModalIcerikEditor" rows="10" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white"></textarea>
+                <span asp-validation-for="ModalIcerik" class="text-rose-400 text-[11px] font-medium mt-1 block"></span>
+            </div>
+
+            <div class="md:col-span-2">
+                <label asp-for="GorselDosya" class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Modal Görseli</label>
+                <input asp-for="GorselDosya" type="file" accept="image/*" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-fuchsia-500/20 file:text-fuchsia-300 hover:file:bg-fuchsia-500/30 transition" />
+                <span asp-validation-for="GorselDosya" class="text-rose-400 text-[11px] font-medium mt-1 block"></span>
             </div>
 
             <div class="md:col-span-2 flex items-center p-4 rounded-xl border border-slate-700/50 bg-slate-800/30 transition hover:bg-slate-800/50">

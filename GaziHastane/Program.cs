@@ -46,6 +46,17 @@ namespace GaziHastane
                 {
                     var context = services.GetRequiredService<GaziHastaneContext>();
                     context.Database.Migrate();
+
+                    context.Database.ExecuteSqlRaw("""
+                        ALTER TABLE "Etkinlikler"
+                        ADD COLUMN IF NOT EXISTS "GorselUrl" character varying(255);
+                        """);
+
+                    context.Database.ExecuteSqlRaw("""
+                        ALTER TABLE "Etkinlikler"
+                        ADD COLUMN IF NOT EXISTS "ModalIcerik" text;
+                        """);
+
                     DbInitializer.Initialize(context);
                 }
                 catch (Exception ex)

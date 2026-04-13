@@ -189,6 +189,46 @@
                 box-shadow: 0 0 0 4px rgba(37,99,235,0.1);
             }
 
+        .radio-group-pro {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .radio-option-pro {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border: 1px solid var(--border-soft);
+            border-radius: 12px;
+            background: #f8fafc;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--navy);
+            transition: .2s;
+        }
+
+        .radio-option-pro:hover {
+            border-color: #93c5fd;
+            background: #ffffff;
+        }
+
+        .radio-option-pro input[type="radio"] {
+            accent-color: #2563eb;
+            width: 15px;
+            height: 15px;
+            margin: 0;
+        }
+
+        .radio-option-pro:has(input[type="radio"]:checked) {
+            border-color: #2563eb;
+            background: #eff6ff;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+        }
+
         .btn-search {
             background: var(--primary);
             color: white;
@@ -556,6 +596,16 @@
             color: #64748b;
         }
 
+        .badge-muayene-soft {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .badge-sonuc-soft {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
         .btn-action-outline {
             border: 1px solid #e2e8f0;
             background: transparent;
@@ -866,12 +916,26 @@
                         </select>
                     </div>
 
-                    <div class="select-wrapper mb-4">
+                    <div class="select-wrapper mb-3">
                         <label class="form-label-custom">Uzman Hekim</label>
                         <i class="fas fa-user-md"></i>
                         <select class="form-select-pro" id="drSelect" onchange="resetSearchState()">
                             <option value="" selected disabled>Önce Birim Seçiniz</option>
                         </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label-custom">Randevu Türü</label>
+                        <div class="radio-group-pro">
+                            <label class="radio-option-pro">
+                                <input type="radio" name="randevuTipi" value="1" onchange="resetSearchState()" />
+                                <span><i class="fa-solid fa-stethoscope me-1 text-primary"></i> Muayene</span>
+                            </label>
+                            <label class="radio-option-pro">
+                                <input type="radio" name="randevuTipi" value="2" onchange="resetSearchState()" />
+                                <span><i class="fa-solid fa-flask me-1" style="color:#6d28d9"></i> Sonuç</span>
+                            </label>
+                        </div>
                     </div>
 
                     <button class="btn-search mt-2" onclick="randevuAra()">
@@ -945,6 +1009,7 @@
                                         <th>Randevu Zamanı</th>
                                         <th>Poliklinik Bilgisi</th>
                                         <th>Uzman Hekim</th>
+                                        <th>Randevu Türü</th>
                                         <th>Durum</th>
                                         <th class="text-end">İşlem</th>
                                     </tr>
@@ -964,6 +1029,16 @@
                                             </td>
                                             <td class="fw-600 text-navy" style="font-size: 14px;">@(randevu.Bolum?.Ad ?? "-")</td>
                                             <td class="text-muted fw-500" style="font-size: 14px;">Dr. @(randevu.Doktor?.Ad) @(randevu.Doktor?.Soyad)</td>
+                                            <td>
+                                                @if (randevu.RandevuTipi == 2)
+                                                {
+                                                    <span class="soft-badge badge-sonuc-soft"><i class="fa-solid fa-flask"></i> Sonuç</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="soft-badge badge-muayene-soft"><i class="fa-solid fa-stethoscope"></i> Muayene</span>
+                                                }
+                                            </td>
                                             <td><span class="soft-badge badge-success-soft"><i class="fas fa-circle" style="font-size:6px;"></i> Onaylandı</span></td>
                                             <td class="text-end">
                                                 <button class="btn-action-outline" onclick="iptalEt(@randevu.Id)">İptal Et</button>
@@ -995,6 +1070,7 @@
                                         <th>Randevu Zamanı</th>
                                         <th>Poliklinik Bilgisi</th>
                                         <th>Uzman Hekim</th>
+                                        <th>Randevu Türü</th>
                                         <th>Durum</th>
                                     </tr>
                                 </thead>
@@ -1013,6 +1089,16 @@
                                             </td>
                                             <td class="fw-600 text-navy" style="font-size: 14px;">@(randevu.Bolum?.Ad ?? "-")</td>
                                             <td class="text-muted fw-500" style="font-size: 14px;">Dr. @(randevu.Doktor?.Ad) @(randevu.Doktor?.Soyad)</td>
+                                            <td>
+                                                @if (randevu.RandevuTipi == 2)
+                                                {
+                                                    <span class="soft-badge badge-sonuc-soft"><i class="fa-solid fa-flask"></i> Sonuç</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="soft-badge badge-muayene-soft"><i class="fa-solid fa-stethoscope"></i> Muayene</span>
+                                                }
+                                            </td>
                                             <td>
                                                 @if (randevu.Durum == 2)
                                                 {
@@ -1085,6 +1171,7 @@
         // --- DEĞİŞKENLER ---
         let seciliTarih = '';
         let seciliSaat = '';
+        let seciliRandevuTipi = '';
         let seciliGunAdi = '';
         let seciliYil = new Date().getFullYear();
         let seciliAy = new Date().getMonth() + 1;
@@ -1139,17 +1226,20 @@
         function randevuAra() {
             const birim = document.getElementById("birimSelect");
             const drSelect = document.getElementById("drSelect");
+            const randevuTipiSecili = document.querySelector('input[name="randevuTipi"]:checked');
 
-            if(birim.selectedIndex <= 0 || drSelect.selectedIndex <= 0) {
+            if(birim.selectedIndex <= 0 || drSelect.selectedIndex <= 0 || !randevuTipiSecili) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Uyarı',
-                    text: 'Lütfen arama yapmadan önce poliklinik ve doktor seçin.',
+                    text: 'Lütfen poliklinik, doktor ve randevu türünü seçin.',
                     buttonsStyling: false,
                     customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', htmlContainer: 'custom-swal-text', confirmButton: 'custom-swal-confirm-btn' }
                 });
                 return;
             }
+
+            seciliRandevuTipi = randevuTipiSecili.value;
 
             const drName = drSelect.options[drSelect.selectedIndex].text;
             const brName = birim.options[birim.selectedIndex].text;
@@ -1292,8 +1382,10 @@
             const bolumId = document.getElementById("birimSelect").value;
             const doktorId = document.getElementById("drSelect").value;
             const hastaId = document.getElementById("aktifHastaId").value;
+            const randevuTipiSecili = document.querySelector('input[name="randevuTipi"]:checked');
+            const randevuTipi = seciliRandevuTipi || (randevuTipiSecili ? randevuTipiSecili.value : '');
 
-            if(!bolumId || !doktorId || !seciliTarih || !seciliSaat) return;
+            if(!bolumId || !doktorId || !seciliTarih || !seciliSaat || !randevuTipi) return;
 
             const formData = new FormData();
             formData.append("BolumId", bolumId);
@@ -1301,6 +1393,7 @@
             formData.append("Tarih", seciliTarih);
             formData.append("Saat", seciliSaat);
             formData.append("HastaId", hastaId);
+            formData.append("RandevuTipi", randevuTipi);
 
             Swal.fire({
                 title: 'İşleniyor...',

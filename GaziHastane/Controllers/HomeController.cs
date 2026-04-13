@@ -26,10 +26,32 @@ namespace GaziHastane.Controllers
 
         public IActionResult Index()
         {
+            var bugun = System.DateTime.Today;
+
+            var yaklasanEtkinlikler = _context.Etkinlikler
+                .Where(e => e.IsActive && e.Tarih >= bugun)
+                .OrderBy(e => e.Tarih)
+                .Take(4)
+                .ToList();
+
+            if (yaklasanEtkinlikler.Count < 4)
+            {
+                var eksikAdet = 4 - yaklasanEtkinlikler.Count;
+                var mevcutIdler = yaklasanEtkinlikler.Select(x => x.Id).ToList();
+
+                var gecmisEtkinlikler = _context.Etkinlikler
+                    .Where(e => e.IsActive && e.Tarih < bugun && !mevcutIdler.Contains(e.Id))
+                    .OrderByDescending(e => e.Tarih)
+                    .Take(eksikAdet)
+                    .ToList();
+
+                yaklasanEtkinlikler.AddRange(gecmisEtkinlikler);
+            }
+
             var viewModel = new HomeViewModel
             {
                 Haberler = _context.Haberler.Where(h => h.IsActive).OrderByDescending(h => h.YayinTarihi).Take(2).ToList(),
-                Etkinlikler = _context.Etkinlikler.Where(e => e.IsActive && e.Tarih >= System.DateTime.Today).OrderBy(e => e.Tarih).Take(2).ToList(),
+                Etkinlikler = yaklasanEtkinlikler,
                 Duyurular = _context.Duyurular.Where(d => d.IsActive).OrderByDescending(d => d.YayinTarihi).ToList(),
                 HizliIslemler = _context.HizliIslemler.Where(h => h.IsActive).OrderBy(h => h.SiraNo).ToList(),
 

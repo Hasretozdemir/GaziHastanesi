@@ -179,6 +179,9 @@ namespace GaziHastane.Models
         [Column("durum")]
         public short Durum { get; set; }
 
+        [Column("randevutipi")]
+        public short RandevuTipi { get; set; } = 1; // 1: Muayene, 2: Sonuç
+
         [Column("sikayet")]
         public string? Sikayet { get; set; }
 
@@ -525,6 +528,14 @@ namespace GaziHastane.Models
         public string Konum { get; set; } = null!;
 
         public string? Aciklama { get; set; }
+
+        public string? ModalIcerik { get; set; }
+
+        [StringLength(255)]
+        public string? GorselUrl { get; set; }
+
+        [NotMapped]
+        public IFormFile? GorselDosya { get; set; }
 
         public bool IsActive { get; set; } = true;
     }

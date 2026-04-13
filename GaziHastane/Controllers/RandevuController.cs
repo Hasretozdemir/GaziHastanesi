@@ -193,13 +193,18 @@ namespace GaziHastane.Controllers
 
         // RANDEVU KAYDETME ÝÞLEMÝ (POST)
         [HttpPost]
-        public JsonResult RandevuKaydet(int BolumId, int DoktorId, string Tarih, string Saat, int HastaId)
+        public JsonResult RandevuKaydet(int BolumId, int DoktorId, string Tarih, string Saat, int HastaId, short RandevuTipi = 1)
         {
             try
             {
                 if (BolumId <= 0 || DoktorId <= 0 || string.IsNullOrEmpty(Tarih) || string.IsNullOrEmpty(Saat) || HastaId <= 0)
                 {
                     return Json(new { success = false, message = "Lütfen seçimleri eksiksiz yapýnýz." });
+                }
+
+                if (RandevuTipi != 1 && RandevuTipi != 2)
+                {
+                    return Json(new { success = false, message = "Geçersiz randevu tipi seçildi." });
                 }
 
                 DateTime randevuZamani = DateTime.Parse($"{Tarih} {Saat}");
@@ -231,8 +236,9 @@ namespace GaziHastane.Controllers
                     DoktorId = DoktorId,
                     RandevuTarihi = randevuZamani,
                     Durum = 1, // 1: Aktif
+                    RandevuTipi = RandevuTipi,
                     OlusturulmaTarihi = DateTime.UtcNow,
-                    Sikayet = "Kullanýcý arayüzünden oluþturuldu",
+                    Sikayet = RandevuTipi == 2 ? "Sonuç randevusu" : "Muayene randevusu",
                     HastaId = HastaId
                 };
 
