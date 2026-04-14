@@ -99,6 +99,14 @@
                         </button>
                     </form>
 
+                    <a href="https://enabiz.gov.tr" target="_blank" class="btn-enabiz mt-3">
+                        <span class="b-text d-flex align-items-center">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/E-Nab%C4%B1z_logo.png/640px-E-Nab%C4%B1z_logo.png" style="height: 18px; margin-right: 10px;" alt="E-Nabýz Logo">
+                            ÝLE GÝRÝÞ YAP
+                        </span>
+                        <div class="b-icon"><i class="fas fa-external-link-alt"></i></div>
+                    </a>
+
                     <div class="extra-actions mt-4 text-center">
                         <a href="#" class="link-luxury me-3 me-md-4">Þifremi Unuttum</a>
                         <a href="#" class="link-luxury">Kayýt Ol</a>
@@ -472,7 +480,7 @@
             background: var(--primary);
         }
 
-        /* Buton stili */
+        /* Ana Giriþ Butonu Stili */
         .btn-glow-premium {
             width: 100%;
             height: 65px;
@@ -487,14 +495,13 @@
             padding: 0 25px;
             transition: 0.4s;
         }
-            /* Buton hover efekti */
+
             .btn-glow-premium:hover {
                 background: var(--primary);
                 transform: translateY(-3px);
                 box-shadow: 0 15px 30px rgba(37,99,235,0.25);
             }
 
-        /* Buton ikonu */
         .b-icon {
             width: 35px;
             height: 35px;
@@ -503,7 +510,50 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: 0.4s;
         }
+
+        /* YENÝ EKLENEN E-NABIZ BUTON STÝLÝ */
+        .btn-enabiz {
+            width: 100%;
+            height: 65px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 22px;
+            color: var(--navy);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            transition: 0.4s;
+            text-decoration: none;
+        }
+
+            .btn-enabiz:hover {
+                border-color: #ef4444; /* E-nabiz kýrmýzýsý hover'da belli olur */
+                background: #fffafa;
+                transform: translateY(-3px);
+                box-shadow: 0 15px 30px rgba(239, 68, 68, 0.1);
+                color: #ef4444;
+            }
+
+            .btn-enabiz .b-icon {
+                background: #f1f5f9;
+            }
+
+                .btn-enabiz .b-icon i {
+                    color: #94a3b8;
+                    transition: 0.4s;
+                }
+
+            .btn-enabiz:hover .b-icon {
+                background: #fee2e2;
+            }
+
+                .btn-enabiz:hover .b-icon i {
+                    color: #ef4444;
+                }
 
         /* Alt linkler */
         .link-luxury {

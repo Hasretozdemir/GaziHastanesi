@@ -29,7 +29,7 @@
                                 <div class="transaction-item active">
                                     <div class="d-flex align-items-center">
                                         <div class="custom-check-wrapper">
-                                            <input type="checkbox" checked id="item_@borc.Id" class="debt-checkbox" data-price="@borc.Tutar.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)">
+                                            <input type="checkbox" checked id="item_@borc.Id" class="debt-checkbox" data-id="@borc.Id" data-price="@borc.Tutar.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)">
                                             <label for="item_@borc.Id"></label>
                                         </div>
                                         <div class="ms-3">
@@ -81,7 +81,10 @@
                         </div>
                     </div>
 
-                    <form>
+                    <form id="paymentForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="paymentUserId" value="@ViewBag.KullaniciId" />
+                        <input type="hidden" id="paymentProtokol" value="@ViewBag.Protokol" />
                         <div class="mb-3">
                             <label class="premium-label">KART ÜZERÝNDEKÝ ÝSÝM</label>
                             <input type="text" class="premium-input" placeholder="AD SOYAD">
@@ -101,7 +104,7 @@
                             </div>
                         </div>
 
-                        <button type="button" class="btn-pay-now" onclick="alert('Ödeme altyapýsý baþarýyla test edildi!')">
+                        <button type="button" id="btnPayNow" class="btn-pay-now">
                             <span>ÖDEMEYÝ ONAYLA</span>
                             <i class="fas fa-lock"></i>
                         </button>
@@ -144,6 +147,53 @@
                     calculateTotal();
                 });
             });
+
+            const btnPayNow = document.getElementById('btnPayNow');
+            if (btnPayNow) {
+                btnPayNow.addEventListener('click', function () {
+                    const seciliBorclar = Array.from(document.querySelectorAll('.debt-checkbox:checked'));
+                    if (!seciliBorclar.length) {
+                        alert('Lütfen ödeme için en az bir borç seçiniz.');
+                        return;
+                    }
+
+                    const userId = document.getElementById('paymentUserId')?.value;
+                    const protokol = document.getElementById('paymentProtokol')?.value;
+                    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+                    const formData = new FormData();
+                    formData.append('userId', userId);
+                    formData.append('protokol', protokol || '');
+                    seciliBorclar.forEach(x => formData.append('borcIds', x.getAttribute('data-id')));
+                    if (token) {
+                        formData.append('__RequestVerificationToken', token);
+                    }
+
+                    btnPayNow.disabled = true;
+                    btnPayNow.innerHTML = '<span>ÝÞLENÝYOR...</span><i class="fas fa-spinner fa-spin"></i>';
+
+                    fetch('/Odeme/OdemeTamamla', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message || 'Ödeme tamamlandý.');
+                            window.location.href = data.redirectUrl || window.location.href;
+                        } else {
+                            alert(data.message || 'Ödeme sýrasýnda bir hata oluþtu.');
+                        }
+                    })
+                    .catch(() => {
+                        alert('Ödeme isteði sýrasýnda baðlantý hatasý oluþtu.');
+                    })
+                    .finally(() => {
+                        btnPayNow.disabled = false;
+                        btnPayNow.innerHTML = '<span>ÖDEMEYÝ ONAYLA</span><i class="fas fa-lock"></i>';
+                    });
+                });
+            }
         });
     </script>
 }

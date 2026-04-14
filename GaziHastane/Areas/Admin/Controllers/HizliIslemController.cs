@@ -165,8 +165,8 @@ namespace GaziHastane.Areas.Admin.Controllers
         public async Task<IActionResult> Gorsel()
         {
             var liste = await _context.Medyalar
-                .Where(x => x.Alan == "Kurumsal")
-                .OrderBy(x => x.SiraNo)
+                .OrderBy(x => x.Alan)
+                .ThenBy(x => x.SiraNo)
                 .ThenByDescending(x => x.YuklenmeTarihi)
                 .ToListAsync();
 
@@ -175,7 +175,7 @@ namespace GaziHastane.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GorselYukle(string title, IFormFile imageFile, bool isSlider, string? hedefUrl, int siraNo = 0)
+        public async Task<IActionResult> GorselYukle(string title, IFormFile imageFile, bool isSlider, string? hedefUrl, int siraNo = 0, string? alan = "Kurumsal")
         {
             if (imageFile == null || imageFile.Length == 0)
             {
@@ -183,7 +183,9 @@ namespace GaziHastane.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Gorsel));
             }
 
-            var uploadPath = Path.Combine(_env.WebRootPath, "uploads", "slider", "kurumsal");
+            var seciliAlan = string.IsNullOrWhiteSpace(alan) ? "Kurumsal" : alan.Trim();
+            var alanKlasoru = seciliAlan.ToLowerInvariant().Replace(" ", "");
+            var uploadPath = Path.Combine(_env.WebRootPath, "uploads", "slider", alanKlasoru);
             if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
 
             var ext = Path.GetExtension(imageFile.FileName);
@@ -198,8 +200,8 @@ namespace GaziHastane.Areas.Admin.Controllers
             var medya = new Medya
             {
                 Baslik = title,
-                Alan = "Kurumsal",
-                GorselYolu = "/uploads/slider/kurumsal/" + fileName,
+                Alan = seciliAlan,
+                GorselYolu = "/uploads/slider/" + alanKlasoru + "/" + fileName,
                 IsSlider = isSlider,
                 HedefUrl = string.IsNullOrWhiteSpace(hedefUrl) ? null : hedefUrl.Trim(),
                 SiraNo = siraNo,
@@ -216,9 +218,9 @@ namespace GaziHastane.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GorselDuzenle(int id, string title, bool isSlider, string? hedefUrl, int siraNo = 0, bool isActive = true, IFormFile? imageFile = null)
+        public async Task<IActionResult> GorselDuzenle(int id, string title, bool isSlider, string? hedefUrl, int siraNo = 0, bool isActive = true, IFormFile? imageFile = null, string? alan = null)
         {
-            var medya = await _context.Medyalar.FirstOrDefaultAsync(x => x.Id == id && x.Alan == "Kurumsal");
+            var medya = await _context.Medyalar.FirstOrDefaultAsync(x => x.Id == id);
             if (medya == null) return NotFound();
 
             medya.Baslik = title;
@@ -226,10 +228,15 @@ namespace GaziHastane.Areas.Admin.Controllers
             medya.HedefUrl = string.IsNullOrWhiteSpace(hedefUrl) ? null : hedefUrl.Trim();
             medya.SiraNo = siraNo;
             medya.IsActive = isActive;
+            if (!string.IsNullOrWhiteSpace(alan))
+            {
+                medya.Alan = alan.Trim();
+            }
 
             if (imageFile != null && imageFile.Length > 0)
             {
-                var uploadPath = Path.Combine(_env.WebRootPath, "uploads", "slider", "kurumsal");
+                var alanKlasoru = medya.Alan.ToLowerInvariant().Replace(" ", "");
+                var uploadPath = Path.Combine(_env.WebRootPath, "uploads", "slider", alanKlasoru);
                 if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
 
                 var ext = Path.GetExtension(imageFile.FileName);
@@ -241,7 +248,7 @@ namespace GaziHastane.Areas.Admin.Controllers
                     await imageFile.CopyToAsync(stream);
                 }
 
-                medya.GorselYolu = "/uploads/slider/kurumsal/" + fileName;
+                medya.GorselYolu = "/uploads/slider/" + alanKlasoru + "/" + fileName;
             }
 
             await _context.SaveChangesAsync();
@@ -253,7 +260,7 @@ namespace GaziHastane.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GorselSil(int id)
         {
-            var medya = await _context.Medyalar.FirstOrDefaultAsync(x => x.Id == id && x.Alan == "Kurumsal");
+            var medya = await _context.Medyalar.FirstOrDefaultAsync(x => x.Id == id);
             if (medya != null)
             {
                 _context.Medyalar.Remove(medya);
@@ -267,7 +274,7 @@ namespace GaziHastane.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> SliderDurumGuncelle(int id, bool status)
         {
-            var medya = await _context.Medyalar.FirstOrDefaultAsync(x => x.Id == id && x.Alan == "Kurumsal");
+            var medya = await _context.Medyalar.FirstOrDefaultAsync(x => x.Id == id);
             if (medya == null) return NotFound();
 
             medya.IsSlider = status;
@@ -394,9 +401,75 @@ namespace GaziHastane.Areas.Admin.Controllers
         // ==========================================
         // --- BELGELER PANELİ ---
         // ==========================================
-        public IActionResult Belge()
+        public async Task<IActionResult> Belge()
         {
-            return View();
+            var liste = await _context.Belgeler
+                .OrderByDescending(x => x.YuklenmeTarihi)
+                .ToListAsync();
+            return View(liste);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BelgeYukle(string title, IFormFile? file, string? externalUrl)
+        {
+            string? dosyaYolu = null;
+
+            if (file != null && file.Length > 0)
+            {
+                var uploadPath = Path.Combine(_env.WebRootPath, "uploads", "belgeler");
+                if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+                var ext = Path.GetExtension(file.FileName);
+                var fileName = Guid.NewGuid() + ext;
+                var fullPath = Path.Combine(uploadPath, fileName);
+
+                await using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                dosyaYolu = "/uploads/belgeler/" + fileName;
+            }
+            else if (!string.IsNullOrWhiteSpace(externalUrl))
+            {
+                dosyaYolu = externalUrl.Trim();
+            }
+
+            if (string.IsNullOrWhiteSpace(dosyaYolu))
+            {
+                TempData["Error"] = "Belge dosyası veya harici URL giriniz.";
+                return RedirectToAction(nameof(Belge));
+            }
+
+            var belge = new Belge
+            {
+                Baslik = string.IsNullOrWhiteSpace(title) ? "Belge" : title.Trim(),
+                DosyaYolu = dosyaYolu,
+                DosyaTipi = Path.GetExtension(dosyaYolu),
+                YuklenmeTarihi = DateTime.UtcNow,
+                IsActive = true
+            };
+
+            _context.Belgeler.Add(belge);
+            await _context.SaveChangesAsync();
+            TempData["Success"] = "Belge kaydedildi.";
+            return RedirectToAction(nameof(Belge));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BelgeSil(int id)
+        {
+            var belge = await _context.Belgeler.FindAsync(id);
+            if (belge != null)
+            {
+                _context.Belgeler.Remove(belge);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Belge silindi.";
+            }
+
+            return RedirectToAction(nameof(Belge));
         }
     }
 }

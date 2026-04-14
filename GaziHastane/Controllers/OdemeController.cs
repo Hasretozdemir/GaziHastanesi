@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GaziHastane.Data;
 using System.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace GaziHastane.Controllers
 {
@@ -59,6 +61,7 @@ namespace GaziHastane.Controllers
             var aktifKullanici = _context.Users.Find(userId);
             ViewBag.KullaniciAdSoyad = aktifKullanici?.Ad.ToUpper() + " " + aktifKullanici?.Soyad.ToUpper();
             ViewBag.Protokol = string.IsNullOrEmpty(protokol) ? "Bilinmiyor" : protokol;
+            ViewBag.KullaniciId = aktifKullanici?.Id;
 
             // 2. Kullanýcýnýn ÖDENMEMÝÞ borçlarýný veritabanýndan çek
             var borclar = _context.BorclarOdemeler

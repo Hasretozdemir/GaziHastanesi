@@ -1,0 +1,161 @@
+@model GaziHastane.Models.TahlilSonucGirisViewModel
+@{
+    ViewData["Title"] = "Tahlil Sonucu Giriþi";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="max-w-4xl mx-auto pt-8 pb-12 px-4">
+    <div class="mb-8 flex justify-between items-end">
+        <div>
+            <h2 class="text-3xl md:text-4xl font-black mb-2 tracking-tight">Tahlil Sonucu <span class="text-gradient">Giriþi</span></h2>
+            <p class="text-slate-400 font-medium">Hastanýn T.C. kimlik numarasý ile yeni sonuç kaydý oluþturun.</p>
+        </div>
+        <a href="/Admin/TahlilSonuclari/Sorgula" class="text-cyan-400 hover:text-cyan-300 text-sm font-bold">TC ile Sorgula</a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="mb-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-emerald-300 text-sm font-bold">@TempData["Success"]</div>
+    }
+
+    <div class="glass-card p-8 rounded-[2rem]">
+        <form asp-action="Giris" method="post" enctype="multipart/form-data" class="space-y-5" id="tahlilForm">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-rose-400 text-sm font-bold"></div>
+
+            <div id="hastaBilgiKutusu" class="hidden rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-4 py-3 text-cyan-200 text-sm">
+                <span class="font-black">Hasta:</span>
+                <span id="hastaBilgiMetin"></span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                    <label asp-for="TCKimlikNo" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Hasta T.C. Kimlik No *</label>
+                    <div class="flex gap-2">
+                        <input asp-for="TCKimlikNo" maxlength="11" id="tcKimlikNoInput" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-cyan-500/50" />
+                        <button type="button" id="btnHastaSorgula" class="px-4 rounded-xl bg-cyan-600 text-white text-xs font-black">Sorgula</button>
+                    </div>
+                    <span asp-validation-for="TCKimlikNo" class="text-rose-400 text-xs"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Tarih" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Tarih *</label>
+                    <input asp-for="Tarih" type="date" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-cyan-500/50" />
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Kategori</label>
+                    <div class="flex flex-wrap gap-4 text-sm text-slate-200">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" asp-for="TestKategorisi" value="Laboratuvar" />
+                            <span>Laboratuvar</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" asp-for="TestKategorisi" value="Radyoloji" />
+                            <span>Radyoloji</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" asp-for="TestKategorisi" value="Patoloji" />
+                            <span>Patoloji</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label asp-for="DoktorId" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Doktor (Opsiyonel)</label>
+                    <select asp-for="DoktorId" class="w-full bg-white border border-slate-300 rounded-xl py-3 px-4 text-sm text-slate-900 focus:outline-none focus:border-cyan-500/50">
+                        <option value="">Doktor seçmeden kaydet</option>
+                        @if (ViewBag.Doktorlar != null)
+                        {
+                            foreach (var dr in ViewBag.Doktorlar)
+                            {
+                                <option value="@dr.Id">@dr.AdSoyad</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label asp-for="TestAdi" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Test Adý *</label>
+                    <input asp-for="TestAdi" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-cyan-500/50" />
+                    <span asp-validation-for="TestAdi" class="text-rose-400 text-xs"></span>
+                </div>
+
+                <div>
+                    <label asp-for="SonucDegeri" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Sonuç Deðeri</label>
+                    <input asp-for="SonucDegeri" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-cyan-500/50" />
+                </div>
+
+                <div>
+                    <label asp-for="ReferansAraligi" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Referans Aralýðý</label>
+                    <input asp-for="ReferansAraligi" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-cyan-500/50" />
+                </div>
+
+                <div class="md:col-span-2">
+                    <label asp-for="RaporDosyaUrl" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Rapor PDF URL (Opsiyonel)</label>
+                    <input asp-for="RaporDosyaUrl" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-cyan-500/50" />
+                </div>
+
+                <div class="md:col-span-2">
+                    <label asp-for="RaporDosya" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">PDF Dosya Yükle (Opsiyonel)</label>
+                    <input asp-for="RaporDosya" type="file" accept=".pdf,application/pdf" class="w-full bg-black/20 border border-white/10 rounded-xl py-2.5 px-4 text-sm text-white focus:outline-none focus:border-cyan-500/50" />
+                    <span asp-validation-for="RaporDosya" class="text-rose-400 text-xs"></span>
+                </div>
+            </div>
+
+            <div class="pt-3 flex justify-end">
+                <button type="submit" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-7 py-2.5 rounded-xl font-bold text-sm">Kaydet</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        const tcInput = document.getElementById('tcKimlikNoInput');
+        const btnHastaSorgula = document.getElementById('btnHastaSorgula');
+        const hastaBilgiKutusu = document.getElementById('hastaBilgiKutusu');
+        const hastaBilgiMetin = document.getElementById('hastaBilgiMetin');
+
+        function hastaSorgula() {
+            const tc = (tcInput?.value || '').trim();
+            if (tc.length !== 11) {
+                hastaBilgiKutusu.classList.remove('hidden');
+                hastaBilgiKutusu.classList.remove('border-cyan-500/30', 'bg-cyan-500/10', 'text-cyan-200');
+                hastaBilgiKutusu.classList.add('border-rose-500/30', 'bg-rose-500/10', 'text-rose-200');
+                hastaBilgiMetin.textContent = 'T.C. Kimlik No 11 haneli olmalýdýr.';
+                return;
+            }
+
+            fetch(`/Admin/TahlilSonuclari/HastaAra?tcKimlikNo=${encodeURIComponent(tc)}`)
+                .then(r => r.json())
+                .then(data => {
+                    hastaBilgiKutusu.classList.remove('hidden');
+                    if (data.success) {
+                        hastaBilgiKutusu.classList.remove('border-rose-500/30', 'bg-rose-500/10', 'text-rose-200');
+                        hastaBilgiKutusu.classList.add('border-cyan-500/30', 'bg-cyan-500/10', 'text-cyan-200');
+                        hastaBilgiMetin.textContent = `${data.adSoyad} (TC: ${data.tcKimlikNo})`;
+                    } else {
+                        hastaBilgiKutusu.classList.remove('border-cyan-500/30', 'bg-cyan-500/10', 'text-cyan-200');
+                        hastaBilgiKutusu.classList.add('border-rose-500/30', 'bg-rose-500/10', 'text-rose-200');
+                        hastaBilgiMetin.textContent = data.message || 'Hasta bulunamadý.';
+                    }
+                })
+                .catch(() => {
+                    hastaBilgiKutusu.classList.remove('hidden');
+                    hastaBilgiKutusu.classList.remove('border-cyan-500/30', 'bg-cyan-500/10', 'text-cyan-200');
+                    hastaBilgiKutusu.classList.add('border-rose-500/30', 'bg-rose-500/10', 'text-rose-200');
+                    hastaBilgiMetin.textContent = 'Sorgu sýrasýnda baðlantý hatasý oluþtu.';
+                });
+        }
+
+        btnHastaSorgula?.addEventListener('click', hastaSorgula);
+        tcInput?.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                hastaSorgula();
+            }
+        });
+    </script>
+}

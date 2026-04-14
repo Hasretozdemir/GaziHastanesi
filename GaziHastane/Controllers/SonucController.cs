@@ -47,7 +47,7 @@ namespace GaziHastane.Controllers
 
         // E-Nabýz stili sonuç listesi ekraný
         [HttpGet]
-        public IActionResult Panel(int? userId)
+        public IActionResult Panel(int? userId, string? kategori)
         {
             if (userId == null)
             {
@@ -61,12 +61,50 @@ namespace GaziHastane.Controllers
             ViewBag.KullaniciAdSoyad = aktifKullanici.Ad.ToUpper() + " " + aktifKullanici.Soyad.ToUpper();
             ViewBag.KullaniciBasHarfler = aktifKullanici.Ad.Substring(0, 1) + aktifKullanici.Soyad.Substring(0, 1);
             ViewBag.HastaNo = aktifKullanici.Id.ToString().PadLeft(6, '0'); // Örn: 000012
+            ViewBag.KullaniciId = aktifKullanici.Id;
 
-            // 2. Hastaya ait tahlil sonuçlarýný tarihe göre azalan (en yeni en üstte) þekilde getir
-            var sonuclar = _context.TahlilSonuclari
-                .Where(t => t.HastaId == userId)
+            var seciliKategori = (kategori ?? "laboratuvar").Trim().ToLowerInvariant();
+
+            var hastaSonuclariQuery = _context.TahlilSonuclari
+                .AsNoTracking()
+                .Where(t => t.HastaId == userId);
+
+            var radyolojiSayisi = hastaSonuclariQuery.Count(t =>
+                EF.Functions.ILike(t.TestKategorisi ?? string.Empty, "%radyoloj%"));
+
+            var patolojiSayisi = hastaSonuclariQuery.Count(t =>
+                EF.Functions.ILike(t.TestKategorisi ?? string.Empty, "%patoloj%"));
+
+            var laboratuvarSayisi = hastaSonuclariQuery.Count() - radyolojiSayisi - patolojiSayisi;
+
+            var filtreliQuery = hastaSonuclariQuery;
+
+            if (seciliKategori == "radyoloji")
+            {
+                filtreliQuery = filtreliQuery.Where(t =>
+                    EF.Functions.ILike(t.TestKategorisi ?? string.Empty, "%radyoloj%"));
+            }
+            else if (seciliKategori == "patoloji")
+            {
+                filtreliQuery = filtreliQuery.Where(t =>
+                    EF.Functions.ILike(t.TestKategorisi ?? string.Empty, "%patoloj%"));
+            }
+            else
+            {
+                seciliKategori = "laboratuvar";
+                filtreliQuery = filtreliQuery.Where(t =>
+                    !EF.Functions.ILike(t.TestKategorisi ?? string.Empty, "%radyoloj%") &&
+                    !EF.Functions.ILike(t.TestKategorisi ?? string.Empty, "%patoloj%"));
+            }
+
+            var sonuclar = filtreliQuery
                 .OrderByDescending(t => t.Tarih)
                 .ToList();
+
+            ViewBag.SeciliKategori = seciliKategori;
+            ViewBag.LaboratuvarSayisi = laboratuvarSayisi;
+            ViewBag.RadyolojiSayisi = radyolojiSayisi;
+            ViewBag.PatolojiSayisi = patolojiSayisi;
 
             return View(sonuclar);
         }
