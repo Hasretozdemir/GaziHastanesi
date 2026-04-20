@@ -103,24 +103,35 @@
             }
 
         @@keyframes pulse-ring {
-            0%
+            0% {
+                box-shadow: 0 0 0 0 rgba(239,68,68,0.4);
+            }
 
-        {
-            box-shadow: 0 0 0 0 rgba(239,68,68,0.4);
-        }
+            70% {
+                box-shadow: 0 0 0 10px rgba(239,68,68,0);
+            }
 
-        70% {
-            box-shadow: 0 0 0 10px rgba(239,68,68,0);
-        }
-
-        100% {
-            box-shadow: 0 0 0 0 rgba(239,68,68,0);
-        }
-
+            100% {
+                box-shadow: 0 0 0 0 rgba(239,68,68,0);
+            }
         }
 
         .pulse-icon {
             animation: pulse-ring 2s ease infinite;
+        }
+
+        /* Chat Scrollbar Stili */
+        #chatBody::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #chatBody::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #chatBody::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 20px;
         }
     </style>
 
@@ -203,6 +214,140 @@
 
     @RenderBody()
 
+    <button id="aiChatBtn" class="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-full shadow-lg shadow-blue-300/50 flex items-center justify-center text-2xl hover:scale-110 hover:shadow-blue-400 transition-all z-50 border-0">
+        <i class="fa-solid fa-comment-dots"></i>
+    </button>
+
+    <div id="aiChatWindow" class="fixed bottom-24 right-6 w-[340px] sm:w-[380px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50 hidden border border-slate-100 transition-all">
+
+        <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-4 flex items-center justify-between text-white">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                    <i class="fa-solid fa-robot text-lg"></i>
+                </div>
+                <div>
+                    <h4 class="text-sm font-extrabold m-0 leading-tight tracking-wide">Gazi Asistan</h4>
+                    <p class="text-[10px] text-blue-100 m-0 font-medium tracking-wider">DİJİTAL HASTANE REHBERİ</p>
+                </div>
+            </div>
+            <button id="closeChatBtn" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors border-0 cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div id="chatBody" class="p-4 h-[350px] overflow-y-auto bg-slate-50 flex flex-col gap-3 text-sm font-medium">
+            <div class="max-w-[85%] px-4 py-3 rounded-2xl rounded-tl-sm bg-white border border-slate-100 text-slate-700 shadow-sm self-start leading-relaxed">
+                Merhaba! 👋 Ben Gazi Hastanesi dijital asistanıyım. Size doktorlarımız, bölümlerimiz veya hastanemiz hakkında nasıl yardımcı olabilirim?
+            </div>
+        </div>
+
+        <div class="p-3 bg-white border-t border-slate-100 flex items-center gap-2">
+            <input type="text" id="chatInput" placeholder="Bir soru sorun..." class="flex-1 bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium" onkeypress="handleKeyPress(event)" />
+            <button id="sendChatBtn" onclick="sendMessage()" class="w-11 h-11 bg-blue-600 text-white rounded-xl flex items-center justify-center hover:bg-blue-700 shadow-md shadow-blue-200 transition-colors border-0">
+                <i class="fa-solid fa-paper-plane text-sm"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Chat Açma / Kapama Animasyonları
+        const chatBtn = document.getElementById('aiChatBtn');
+        const chatWindow = document.getElementById('aiChatWindow');
+        const closeChatBtn = document.getElementById('closeChatBtn');
+
+        chatBtn.addEventListener('click', () => {
+            chatWindow.classList.remove('hidden');
+            chatBtn.classList.add('hidden');
+            document.getElementById('chatInput').focus();
+        });
+
+        closeChatBtn.addEventListener('click', () => {
+            chatWindow.classList.add('hidden');
+            chatBtn.classList.remove('hidden');
+        });
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function renderChatActions(actions) {
+            if (!actions || !Array.isArray(actions) || actions.length === 0) return '';
+
+            const buttons = actions
+                .filter(a => a && a.url && a.text)
+                .map(a => `<a href="${a.url}" class="inline-flex items-center justify-center px-3 py-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold border border-blue-100 transition" style="text-decoration:none;">${a.text}</a>`)
+                .join('');
+
+            if (!buttons) return '';
+            return `<div class="mt-3 flex flex-wrap gap-2">${buttons}</div>`;
+        }
+
+        async function sendMessage() {
+            const inputFld = document.getElementById('chatInput');
+            const message = inputFld.value.trim();
+            if (!message) return;
+
+            const chatBody = document.getElementById('chatBody');
+
+            // Kullanıcı Mesajını Ekle
+            chatBody.innerHTML += `
+                <div class="max-w-[85%] px-4 py-3 rounded-2xl rounded-tr-sm bg-blue-600 text-white shadow-sm self-end leading-relaxed">
+                    ${message}
+                </div>`;
+            inputFld.value = '';
+
+            // Yükleniyor (Typing) Animasyonu Ekle
+            const loadingId = 'loading-' + Date.now();
+            chatBody.innerHTML += `
+                <div id="${loadingId}" class="max-w-[85%] px-4 py-3 rounded-2xl rounded-tl-sm bg-white border border-slate-100 text-slate-400 shadow-sm self-start flex gap-1 items-center h-10">
+                    <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
+                    <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                    <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                </div>`;
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            try {
+                // C# Backend'e İstek Atıyoruz
+                const response = await fetch('/Chat/SendMessage', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ UserMessage: message })
+                });
+
+                const data = await response.json();
+
+                // Yükleniyor animasyonunu sil
+                document.getElementById(loadingId).remove();
+
+                // Yapay Zeka Cevabını Ekle
+                if (data.success) {
+                    // Kalın yazıları (**) HTML bold etiketine çevir
+                    const formattedReply = data.reply.replace(/\*\*(.*?)\*\*/g, '<b class="text-slate-900">$1</b>');
+                    const actionButtons = renderChatActions(data.actions);
+                    chatBody.innerHTML += `
+                        <div class="max-w-[85%] px-4 py-3 rounded-2xl rounded-tl-sm bg-white border border-slate-100 text-slate-700 shadow-sm self-start leading-relaxed">
+                            ${formattedReply}
+                            ${actionButtons}
+                        </div>`;
+                } else {
+                    chatBody.innerHTML += `
+                        <div class="max-w-[85%] px-4 py-3 rounded-2xl rounded-tl-sm bg-red-50 border border-red-100 text-red-600 shadow-sm self-start leading-relaxed">
+                            <i class="fa-solid fa-circle-exclamation mr-1"></i> ${data.reply}
+                        </div>`;
+                }
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                chatBody.innerHTML += `
+                    <div class="max-w-[85%] px-4 py-3 rounded-2xl rounded-tl-sm bg-red-50 border border-red-100 text-red-600 shadow-sm self-start leading-relaxed">
+                        <i class="fa-solid fa-wifi mr-1"></i> Bağlantı hatası oluştu. Lütfen tekrar deneyin.
+                    </div>`;
+            }
+
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+    </script>
     <footer class="bg-white border-t border-slate-100" style="box-shadow: 0 -2px 20px rgba(0,0,0,0.03);">
         <div class="max-w-7xl mx-auto px-6 py-8">
             <div class="flex flex-col sm:flex-row justify-between items-start gap-8 mb-8">
@@ -224,7 +369,7 @@
                         <ul class="space-y-2" style="padding-left:0; list-style:none;">
                             <li><a href="/Kurumsal/Index" class="text-xs font-semibold text-slate-600 hover:text-blue-600 transition" style="text-decoration: none;">Hastanemiz</a></li>
                             <li><a href="#" class="text-xs font-semibold text-slate-600 hover:text-blue-600 transition" style="text-decoration: none;">Kalite Politikası</a></li>
-                           
+
                         </ul>
                     </div>
                     <div>

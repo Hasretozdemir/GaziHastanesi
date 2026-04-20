@@ -1,31 +1,21 @@
-@* RAZOR KOD BLOÐU: Sunucu tarafýnda çalýþan C# kodlarýnýn yazýldýðý alan. *@
+@using Microsoft.EntityFrameworkCore
+@using GaziHastane.Data
+@inject GaziHastaneContext _context
 @{
-    // Sayfanýn baþlýðýný belirliyoruz. Bu baþlýk tarayýcý sekmesinde görünür.
+    Layout = "_KurumsalLayout";
     ViewData["Title"] = "Hakkýmýzda - Kurumsal Bilgi Sistemi";
+
+    var menuGruplari = _context.KurumsalMenuGruplar
+        .Where(g => g.AktifMi)
+        .OrderBy(g => g.Sira)
+        .Include(g => g.Menuler.Where(m => m.AktifMi).OrderBy(m => m.Sira))
+        .ToList();
 }
 
 @section Scripts {
-    <style>
-        /* 1. SAYFA YÜKLENME ANÝMASYONU (Zýplamayý Engeller) */
-        .page-fade-in {
-            animation: fadeInPage 0.6s ease-out forwards;
-            opacity: 0;
-        }
-
-        @@keyframes fadeInPage {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* 2. RESPONSIVE ÝÇ MENÜ (Mobilde yatay kaydýrýlabilir menü) */
-        @@media (max-width: 1279px) { /* Tailwind xl breakpoint altý için */
+<style>
+    /* 2. RESPONSIVE ÝÇ MENÜ (Mobilde yatay kaydýrýlabilir menü) */
+    @@media (max-width: 1279px) { /* Tailwind xl breakpoint altý için */
             .mobile-tab-menu {
                 display: flex !important;
                 flex-direction: row !important;
@@ -55,81 +45,118 @@
             }
         }
 
-        /* YAN MENÜ LÝNKLERÝ (Mevcut stillerin) */
-        .sidebar-link {
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.65rem 0.9rem;
-            border-radius: 12px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: #64748b;
-            text-decoration: none;
-        }
-
-            .sidebar-link:hover {
-                background: #eff6ff;
-                color: #2563eb;
-                transform: translateX(4px);
-            }
-
-            .sidebar-link[href="/Kurumsal/Index"] {
-                background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-                color: white;
-                box-shadow: 0 4px 14px rgba(37,99,235,0.25);
-            }
-
-        .section-title {
-            font-size: 0.68rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: #94a3b8;
-            margin: 1.4rem 0.9rem 0.4rem;
-        }
-
-        .custom-scroll::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .custom-scroll::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: #e2e8f0;
-            border-radius: 10px;
-        }
-
         .sub-menu-btn {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 1rem;
             width: 100%;
-            padding: 0.85rem 1rem;
-            border-radius: 14px;
-            font-size: 0.8rem;
+            padding: 1rem 1.25rem;
+            border-radius: 1rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: #475569;
             background: white;
             border: 1px solid #f1f5f9;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.25s;
             text-align: left;
+            margin-bottom: 0.25rem;
         }
+
+        .sub-menu-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+            .sub-menu-dropdown::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 100%;
+                width: 100%;
+                height: 12px;
+            }
+
+            .sub-menu-dropdown .dropdown-trigger {
+                display: flex;
+                align-items: center;
+                gap: 0.35rem;
+                color: #2563eb;
+                background: transparent;
+                border: 0;
+                padding: 0;
+                font: inherit;
+                cursor: pointer;
+                list-style: none;
+            }
+
+                .sub-menu-dropdown .dropdown-trigger::-webkit-details-marker {
+                    display: none;
+                }
+
+            .sub-menu-dropdown .dropdown-panel {
+                position: absolute;
+                top: calc(100% + 0.55rem);
+                left: 0;
+                min-width: 240px;
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 0.9rem;
+                padding: 0.6rem;
+                box-shadow: 0 14px 34px rgba(15, 23, 42, 0.12);
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(8px);
+                transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+                z-index: 60;
+            }
+
+            .sub-menu-dropdown:hover .dropdown-panel,
+            .sub-menu-dropdown[open] .dropdown-panel,
+            .sub-menu-dropdown:focus-within .dropdown-panel {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+        .dropdown-item {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border-radius: 0.7rem;
+            padding: 0.6rem 0.75rem;
+            color: #475569;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+            .dropdown-item:hover {
+                background: #f8fafc;
+                color: #2563eb;
+            }
+
+            .dropdown-item.active {
+                background: #eff6ff;
+                color: #1d4ed8;
+            }
 
             .sub-menu-btn:hover {
                 background: #f8fafc;
-                transform: translateX(3px);
+                border-color: #e2e8f0;
+                transform: translateX(4px);
             }
 
             .sub-menu-btn.active {
-                background: #eff6ff;
-                color: #2563eb;
-                border-color: #bfdbfe;
-                box-shadow: 0 4px 12px rgba(37,99,235,0.08);
+                background: #f0f9ff;
+                color: #0284c7;
+                border-color: #bae6fd;
+                box-shadow: none;
             }
 
         /* 3. TAB ÝÇERÝKLERÝ YUMUÞAK GEÇÝÞ ANÝMASYONU */
@@ -182,6 +209,7 @@
 
             // 1. Tüm butonlarý pasif yap
             document.querySelectorAll('.sub-menu-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.dropdown-item').forEach(item => item.classList.remove('active'));
 
             // 2. Týklanan butonu aktif yap
             if(event) {
@@ -203,6 +231,11 @@
             if(history.pushState) {
                 history.pushState(null, null, '#' + tabId);
             }
+
+            const dropdown = document.querySelector('.sub-menu-dropdown');
+            if (dropdown) {
+                dropdown.removeAttribute('open');
+            }
         }
 
         // Sayfa ilk yüklendiðinde URL'de #varsa (örn: .../Kurumsal/Index#misyon) o sekmeyi aç
@@ -215,13 +248,7 @@
     </script>
 }
 
-<main class="max-w-[1400px] mx-auto px-4 sm:px-6 py-8 mt-24 page-fade-in">
-
-    <div class="flex flex-col lg:flex-row gap-7">
-
-        <aside class="w-full lg:w-72 flex-shrink-0">
-            @await Html.PartialAsync("_KurumsalSidebar")
-        </aside>
+    <div class="flex flex-col w-full h-full">
 
         <section class="flex-1 min-w-0">
 
@@ -230,41 +257,23 @@
                 <i class="fa-solid fa-chevron-right text-[8px]"></i>
                 <span>Kurumsal</span>
                 <i class="fa-solid fa-chevron-right text-[8px]"></i>
-                <span class="text-blue-600">Hakkýmýzda</span>
+                <details class="sub-menu-dropdown">
+                    <summary class="dropdown-trigger">Hakkýmýzda <i class="fa-solid fa-chevron-down text-[8px]"></i></summary>
+                    <div class="dropdown-panel">
+                        <button onclick="openTab(event, 'tarihce')" class="dropdown-item active"><i class="fa-solid fa-clock-rotate-left w-4 text-center"></i> Tarihçemiz</button>
+                        <button onclick="openTab(event, 'misyon')" class="dropdown-item"><i class="fa-solid fa-bullseye w-4 text-center"></i> Misyon & Vizyon</button>
+                        <button onclick="openTab(event, 'stratejik')" class="dropdown-item"><i class="fa-solid fa-chart-line w-4 text-center"></i> Stratejik Plan</button>
+                        <button onclick="openTab(event, 'yonetmelik')" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-4 text-center"></i> Yönetmelik</button>
+                        <button onclick="openTab(event, 'amac')" class="dropdown-item"><i class="fa-solid fa-flag-checkered w-4 text-center"></i> Amaç ve Hedefler</button>
+                        <button onclick="openTab(event, 'rehberler')" class="dropdown-item"><i class="fa-solid fa-book-medical w-4 text-center"></i> Saðlýk Rehberleri</button>
+                        <button onclick="openTab(event, 'uyum')" class="dropdown-item"><i class="fa-solid fa-handshake-angle w-4 text-center"></i> Uyum Rehberi</button>
+                        <button onclick="openTab(event, 'egitim')" class="dropdown-item"><i class="fa-solid fa-graduation-cap w-4 text-center"></i> Eðitim Komitesi</button>
+                    </div>
+                </details>
             </nav>
 
-            <div class="flex flex-col xl:flex-row gap-6 items-start">
-
-                <div class="mobile-tab-menu w-full xl:w-72 flex-shrink-0 space-y-2 bg-white p-4 rounded-[1.75rem] border border-slate-100" style="box-shadow: 0 4px 24px rgba(0,0,0,0.03);">
-                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-2">Kurumsal Ýçerik</p>
-
-                    <button onclick="openTab(event, 'tarihce')" class="sub-menu-btn active">
-                        <i class="fa-solid fa-clock-rotate-left w-5 text-center"></i> Tarihçemiz
-                    </button>
-                    <button onclick="openTab(event, 'misyon')" class="sub-menu-btn">
-                        <i class="fa-solid fa-bullseye w-5 text-center"></i> Misyon & Vizyon
-                    </button>
-                    <button onclick="openTab(event, 'stratejik')" class="sub-menu-btn">
-                        <i class="fa-solid fa-chart-line w-5 text-center"></i> Stratejik Plan
-                    </button>
-                    <button onclick="openTab(event, 'yonetmelik')" class="sub-menu-btn">
-                        <i class="fa-solid fa-scale-balanced w-5 text-center"></i> Yönetmelik
-                    </button>
-                    <button onclick="openTab(event, 'amac')" class="sub-menu-btn">
-                        <i class="fa-solid fa-flag-checkered w-5 text-center"></i> Amaç ve Hedefler
-                    </button>
-                    <button onclick="openTab(event, 'rehberler')" class="sub-menu-btn">
-                        <i class="fa-solid fa-book-medical w-5 text-center"></i> Saðlýk Rehberleri
-                    </button>
-                    <button onclick="openTab(event, 'uyum')" class="sub-menu-btn">
-                        <i class="fa-solid fa-handshake-angle w-5 text-center"></i> Uyum Rehberi
-                    </button>
-                    <button onclick="openTab(event, 'egitim')" class="sub-menu-btn">
-                        <i class="fa-solid fa-graduation-cap w-5 text-center"></i> Eðitim Komitesi
-                    </button>
-                </div>
-
-                <div class="flex-1 w-full bg-white rounded-[1.75rem] p-7 sm:p-10 border border-slate-100" style="box-shadow: 0 12px 40px rgba(0,0,0,0.04); min-height: 600px;">
+            <div class="flex flex-col gap-5 items-start h-full">
+                <div class="w-full bg-white rounded-[1.75rem] p-7 sm:p-10 border border-slate-100" style="box-shadow: 0 12px 40px rgba(0,0,0,0.04); min-height: 600px;">
 
                     <div id="tarihce" class="tab-content active">
                         <div class="flex items-center gap-3 mb-8">
@@ -410,5 +419,5 @@
             </div>
 
         </section>
+
     </div>
-</main>
