@@ -3,53 +3,123 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    /* Cam Efekti ve Gradient Metin Stilleri */
+    .glass-card {
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-image: linear-gradient(to right, #818cf8, #2dd4bf); /* Indigo - Teal */
+    }
+    /* Koyu Tema Input Stilleri */
+    .glass-input {
+        background: rgba(30, 41, 59, 0.5); /* slate-800/50 */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        border-radius: 0.75rem;
+        padding: 0.6rem 1rem;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+        .glass-input:focus {
+            outline: none;
+            border-color: #6366f1; /* indigo-500 */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        .glass-input::placeholder {
+            color: #64748b; /* slate-500 */
+        }
+    /* Date input için takvim ikonunu açık renk yapma */
+    input[type="date"].glass-input {
+        color-scheme: dark;
+    }
+    /* Select seçeneklerinin okunabilir olması için arka planı koyulaştır */
+    select.glass-input option {
+        background-color: #1e293b;
+        color: white;
+    }
+</style>
+
 <div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
-    <div class="sm:flex sm:justify-between sm:items-center mb-8">
+
+    <div class="sm:flex sm:justify-between sm:items-center mb-8 pl-2">
         <div class="mb-4 sm:mb-0">
-            <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">Yeni Borç Ekle</h1>
+            <h1 class="text-3xl md:text-4xl text-white font-black tracking-tight">Yeni Borç <span class="text-gradient">Ekle</span> ✍️</h1>
+            <p class="text-slate-400 font-medium mt-1">Hastayı T.C. Kimlik numarası ile bulup finansal işlem kaydını oluşturun.</p>
         </div>
         <div class="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
-            <a href="@Url.Action("Index")" class="btn bg-white border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-600">
-                Geri Dön
+            <a href="@Url.Action("Index")" class="bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white px-5 py-2 rounded-xl font-medium transition duration-200 flex items-center shadow-sm">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Geri Dön
             </a>
         </div>
     </div>
 
     @if (TempData["Error"] != null)
     {
-        <div class="bg-rose-100 text-rose-600 border border-rose-200 px-4 py-3 rounded-sm relative mb-4 font-medium">
-            <span class="block sm:inline"><i class="fa-solid fa-triangle-exclamation mr-2"></i>@TempData["Error"]</span>
+        <div class="bg-rose-500/10 text-rose-400 border border-rose-500/20 px-4 py-3 rounded-xl relative mb-6 font-medium shadow-[0_0_15px_rgba(244,63,94,0.1)] flex items-center">
+            <i class="fa-solid fa-triangle-exclamation mr-3 text-lg"></i>
+            <span class="block sm:inline">@TempData["Error"]</span>
         </div>
     }
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        <div class="bg-white shadow-lg rounded-sm border border-slate-200 p-6 glass-card h-fit">
-            <h2 class="text-lg font-bold text-slate-800 mb-4">1. Hasta Bul (T.C. Kimlik Sorgula)</h2>
-            <div class="flex gap-2">
-                <input type="text" id="tcKimlikInput" class="form-input w-full" placeholder="Hastanın T.C. Kimlik numarasını girin" maxlength="11" />
-                <button type="button" id="btnSorgula" class="btn bg-indigo-500 hover:bg-indigo-600 text-white">Sorgula</button>
+        <div class="glass-card rounded-2xl p-6 h-fit">
+            <div class="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
+                <div class="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-400 border border-indigo-500/30">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <h2 class="text-lg font-bold text-white">1. Hasta Bul (T.C. Sorgula)</h2>
             </div>
-            <div id="sorguSonuc" class="mt-4 text-sm font-medium hidden p-3 rounded-sm border"></div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <div class="flex-grow">
+                    <input type="text" id="tcKimlikInput" class="glass-input" placeholder="T.C. Kimlik numarasını girin" maxlength="11" />
+                </div>
+                <button type="button" id="btnSorgula" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-2.5 rounded-xl font-bold shadow-[0_0_15px_rgba(99,102,241,0.3)] hover:scale-105 transition shrink-0">
+                    <i class="fa-solid fa-magnifying-glass mr-1"></i> Sorgula
+                </button>
+            </div>
+
+            <div id="sorguSonuc" class="mt-4 text-sm font-medium hidden p-3.5 rounded-xl border"></div>
         </div>
 
-        <div class="bg-white shadow-lg rounded-sm border border-slate-200 p-6 glass-card">
-            <h2 class="text-lg font-bold text-slate-800 mb-4 border-b border-slate-100 pb-2">2. İşlem ve Borç Bilgileri</h2>
+        <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+            <div class="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
+                <div class="w-10 h-10 rounded-lg bg-teal-500/20 flex items-center justify-center text-teal-400 border border-teal-500/30">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                </div>
+                <h2 class="text-lg font-bold text-white">2. İşlem ve Borç Bilgileri</h2>
+            </div>
 
-            <div id="borcFormAlani" class="relative mt-2">
-                <div id="formOverlay" class="absolute inset-0 bg-white/70 backdrop-blur-[1px] z-10 flex items-center justify-center transition-all duration-300">
-                    <div class="bg-slate-800 text-white px-4 py-2 rounded-sm text-sm font-medium shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-lock text-slate-300"></i> Önce hasta sorgulayın
+            <div id="borcFormAlani" class="relative">
+
+                <div id="formOverlay" class="absolute -inset-6 bg-[#0f172a]/70 backdrop-blur-sm z-10 flex items-center justify-center transition-all duration-300 rounded-2xl">
+                    <div class="bg-slate-800/90 border border-white/10 text-slate-300 px-5 py-3 rounded-xl text-sm font-medium shadow-2xl flex items-center gap-3">
+                        <i class="fa-solid fa-lock text-rose-400 text-lg"></i>
+                        Önce T.C. Kimlik ile hasta sorgulaması yapmalısınız.
                     </div>
                 </div>
 
                 <form asp-action="BorcEkle" method="post" id="mainForm">
                     <input type="hidden" id="HastaId" name="HastaId" value="0" required />
 
-                    <div class="space-y-4">
+                    <div class="space-y-5">
+
                         <div>
-                            <label class="block text-sm font-medium mb-1 text-slate-700" for="IslemTipi">İşlem Tipi <span class="text-rose-500">*</span></label>
-                            <select id="IslemTipi" name="IslemTipi" class="form-select w-full" required>
+                            <label class="block text-sm font-medium mb-1.5 text-slate-300" for="IslemTipi">İşlem Tipi <span class="text-rose-400">*</span></label>
+                            <select id="IslemTipi" name="IslemTipi" class="glass-input" required>
                                 <option value="">İşlem Seçiniz...</option>
                                 <option value="Uzman Doktor Muayenesi">Uzman Doktor Muayenesi</option>
                                 <option value="Kardiyoloji Muayenesi">Kardiyoloji Muayenesi</option>
@@ -62,22 +132,25 @@
                             </select>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
-                                <label class="block text-sm font-medium mb-1 text-slate-700" for="Tutar">Borç Tutarı (TL) <span class="text-rose-500">*</span></label>
-                                <input id="Tutar" name="Tutar" type="number" step="0.01" class="form-input w-full font-semibold text-slate-900" placeholder="Örn: 1500.00" required />
+                                <label class="block text-sm font-medium mb-1.5 text-slate-300" for="Tutar">Borç Tutarı (TL) <span class="text-rose-400">*</span></label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 font-bold">₺</span>
+                                    <input id="Tutar" name="Tutar" type="number" step="0.01" class="glass-input pl-10 font-bold text-white tracking-wider" placeholder="0.00" required />
+                                </div>
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium mb-1 text-slate-700" for="SonOdemeTarihi">Son Ödeme Tarihi <span class="text-rose-500">*</span></label>
-                                <input id="SonOdemeTarihi" name="SonOdemeTarihi" type="date" class="form-input w-full" required />
+                                <label class="block text-sm font-medium mb-1.5 text-slate-300" for="SonOdemeTarihi">Son Ödeme Tarihi <span class="text-rose-400">*</span></label>
+                                <input id="SonOdemeTarihi" name="SonOdemeTarihi" type="date" class="glass-input" required />
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-6 flex justify-end border-t border-slate-100 pt-4">
-                        <button type="submit" class="btn bg-indigo-500 hover:bg-indigo-600 text-white">
-                            <i class="fa-solid fa-check mr-2"></i> İşlemi Kaydet
+                    <div class="mt-8 flex justify-end border-t border-white/10 pt-5">
+                        <button type="submit" class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-2.5 rounded-xl font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:scale-105 transition flex items-center w-full sm:w-auto justify-center">
+                            <i class="fa-solid fa-check-circle mr-2"></i> Borcu Kaydet
                         </button>
                     </div>
                 </form>
@@ -95,14 +168,15 @@
             const hastaIdInput = document.getElementById('HastaId');
 
             if (!tc) {
-                sonucDiv.className = "mt-4 text-sm font-medium p-3 rounded-sm bg-amber-100 text-amber-600 border border-amber-200 block";
-                sonucDiv.innerHTML = "<i class='fa-solid fa-circle-exclamation mr-2'></i>Lütfen T.C. Kimlik numarasını giriniz.";
+                // Temaya uygun Sarı (Uyarı) Mesajı
+                sonucDiv.className = "mt-4 text-sm font-medium p-3.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 block shadow-[0_0_10px_rgba(245,158,11,0.1)]";
+                sonucDiv.innerHTML = "<i class='fa-solid fa-circle-exclamation mr-2 text-lg'></i> Lütfen T.C. Kimlik numarasını giriniz.";
                 kilitleForm();
                 return;
             }
 
             const btnText = this.innerHTML;
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Aranıyor...';
+            this.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Aranıyor...';
             this.disabled = true;
 
             const formData = new FormData();
@@ -114,26 +188,37 @@
             })
             .then(res => res.json())
             .then(data => {
-                this.innerHTML = 'Sorgula';
+                this.innerHTML = '<i class="fa-solid fa-magnifying-glass mr-1"></i> Sorgula';
                 this.disabled = false;
 
                 if (data.success) {
-                    sonucDiv.className = "mt-4 text-sm font-medium p-3 rounded-sm bg-emerald-100 text-emerald-700 border border-emerald-200 block";
-                    sonucDiv.innerHTML = `<i class="fa-solid fa-check-circle mr-2"></i><strong>Hasta Bulundu:</strong> ${data.ad} ${data.soyad} (${data.tcKimlik})`;
+                    // Temaya uygun Yeşil (Başarılı) Mesajı
+                    sonucDiv.className = "mt-4 text-sm font-medium p-3.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 block shadow-[0_0_10px_rgba(16,185,129,0.1)]";
+                    sonucDiv.innerHTML = `<div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30 shrink-0">
+                                                <i class="fa-solid fa-check text-emerald-400"></i>
+                                            </div>
+                                            <div>
+                                                <div class="font-bold text-white">Hasta Bulundu</div>
+                                                <div class="opacity-80">${data.ad} ${data.soyad} <span class="opacity-60 ml-1">(${data.tcKimlik})</span></div>
+                                            </div>
+                                          </div>`;
 
                     hastaIdInput.value = data.id;
                     formAc();
                 } else {
-                    sonucDiv.className = "mt-4 text-sm font-medium p-3 rounded-sm bg-rose-100 text-rose-700 border border-rose-200 block";
-                    sonucDiv.innerHTML = `<i class="fa-solid fa-times-circle mr-2"></i>${data.message}`;
+                    // Temaya uygun Kırmızı (Hata) Mesajı
+                    sonucDiv.className = "mt-4 text-sm font-medium p-3.5 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 block shadow-[0_0_10px_rgba(244,63,94,0.1)]";
+                    sonucDiv.innerHTML = `<i class="fa-solid fa-times-circle mr-2 text-lg"></i> ${data.message}`;
                     kilitleForm();
                 }
             })
             .catch(err => {
-                this.innerHTML = 'Sorgula';
+                this.innerHTML = '<i class="fa-solid fa-magnifying-glass mr-1"></i> Sorgula';
                 this.disabled = false;
-                sonucDiv.className = "mt-4 text-sm font-medium p-3 rounded-sm bg-rose-100 text-rose-700 block";
-                sonucDiv.innerHTML = "Bir hata oluştu.";
+
+                sonucDiv.className = "mt-4 text-sm font-medium p-3.5 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 block shadow-[0_0_10px_rgba(244,63,94,0.1)]";
+                sonucDiv.innerHTML = "<i class='fa-solid fa-link-slash mr-2 text-lg'></i> Sunucu ile bağlantı kurulamadı. Bir hata oluştu.";
                 kilitleForm();
             });
 
