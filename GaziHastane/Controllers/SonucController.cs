@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GaziHastane.Data;
 using System.Linq;
+using QRCoder;
 
 namespace GaziHastane.Controllers
 {
@@ -107,6 +108,71 @@ namespace GaziHastane.Controllers
             ViewBag.PatolojiSayisi = patolojiSayisi;
 
             return View(sonuclar);
+        }
+
+        [HttpGet]
+        public JsonResult GetSonucFisi(int sonucId, int? userId)
+        {
+            try
+            {
+                var sonuc = _context.TahlilSonuclari
+                    .AsNoTracking()
+                    .Include(x => x.Hasta)
+                    .Include(x => x.Doktor)
+                    .FirstOrDefault(x => x.Id == sonucId);
+
+                if (sonuc == null)
+                {
+                    return Json(new { success = false, message = "Sonuç kaydý bulunamadý." });
+                }
+
+                if (userId.HasValue && sonuc.HastaId != userId.Value)
+                {
+                    return Json(new { success = false, message = "Bu sonuca eriþim yetkiniz yok." });
+                }
+
+                var hedef = string.IsNullOrWhiteSpace(sonuc.TestKategorisi) ? "Laboratuvar" : sonuc.TestKategorisi;
+                var krokiUrl = Url.Action("Kroki", "Home", new { hedef }, Request.Scheme) ?? $"/Home/Kroki?hedef={hedef}";
+
+                var qrGenerator = new QRCodeGenerator();
+                var qrCodeData = qrGenerator.CreateQrCode(krokiUrl, QRCodeGenerator.ECCLevel.Q);
+                var qrCode = new Base64QRCode(qrCodeData);
+                var qrCodeImageAsBase64 = qrCode.GetGraphic(20);
+
+                var hastaAd = sonuc.Hasta != null
+                    ? $"{sonuc.Hasta.Ad} {sonuc.Hasta.Soyad}"
+                    : "Hasta";
+
+                var doktorAd = sonuc.Doktor != null
+                    ? $"{(string.IsNullOrWhiteSpace(sonuc.Doktor.Unvan) ? "Dr." : sonuc.Doktor.Unvan)} {sonuc.Doktor.Ad} {sonuc.Doktor.Soyad}"
+                    : "Doktor";
+
+                var durum = string.IsNullOrWhiteSpace(sonuc.SonucDegeri) ? "Onay Bekliyor" : "Tamamlandý";
+
+                return Json(new
+                {
+                    success = true,
+                    data = new
+                    {
+                        sonucNo = sonuc.Id,
+                        hastaAd,
+                        testAdi = sonuc.TestAdi,
+                        kategori = sonuc.TestKategorisi ?? "Genel",
+                        tarih = sonuc.Tarih.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR")),
+                        doktorAd,
+                        sonucDegeri = string.IsNullOrWhiteSpace(sonuc.SonucDegeri) ? "Sonuç henüz çýkmadý" : sonuc.SonucDegeri,
+                        referansAraligi = string.IsNullOrWhiteSpace(sonuc.ReferansAraligi) ? "-" : sonuc.ReferansAraligi,
+                        durum,
+                        qrCode = "data:image/png;base64," + qrCodeImageAsBase64,
+                        krokiUrl,
+                        raporDosyaUrl = sonuc.RaporDosyaUrl
+                    }
+                });
+            }
+            catch
+            {
+                return Json(new { success = false, message = "Sonuç fiþi hazýrlanýrken bir hata oluþtu." });
+            }
         }
     }
 }

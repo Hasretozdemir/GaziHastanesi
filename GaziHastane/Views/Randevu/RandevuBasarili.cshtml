@@ -1,0 +1,63 @@
+@{
+    ViewData["Title"] = "Randevunuz Onaylandý";
+}
+
+<div class="container mt-5 text-center mb-5">
+    <h2 class="text-success mb-4"><i class="fas fa-check-circle"></i> Randevunuz Baþarýyla Oluþturuldu</h2>
+
+    <div id="pdf-randevu-fisi" class="card mx-auto shadow-sm" style="max-width: 420px; border: 2px dashed #0056b3;">
+        <div class="card-body p-4">
+            <div class="text-center mb-3">
+                <img src="~/assets/gazilogo.jpg" style="height: 60px;" alt="Gazi Hastanesi Logo" />
+                <h5 class="mt-2 text-primary">Gazi Üniversitesi Hastanesi</h5>
+                <p class="text-muted mb-1" style="font-size: 12px;">Randevu Bilgi Fiþi</p>
+                <p class="text-muted" style="font-size: 11px;">Fiþ No: #@ViewBag.RandevuNo</p>
+                <hr />
+            </div>
+
+            <div class="text-start">
+                <p><strong>Sayýn:</strong> @ViewBag.HastaAd</p>
+                <p><strong>Poliklinik:</strong> @ViewBag.BolumAd</p>
+                <p><strong>Tarih & Saat:</strong> @ViewBag.TarihSaat</p>
+            </div>
+
+            <div class="text-center mt-4">
+                <p style="font-size: 11px; color: gray;">Polikliniðe gitmek için telefonunuzun kamerasýndan QR kodu okutarak navigasyonu baþlatabilirsiniz.</p>
+                <img src="@ViewBag.QrCode" alt="Kroki QR Kod" class="img-fluid" style="width: 150px; height: 150px; border: 1px solid #ddd; padding: 5px; border-radius: 8px;" />
+                <div class="mt-3">
+                    <a href="@ViewBag.KrokiUrl" class="btn btn-outline-primary btn-sm" target="_blank">
+                        <i class="fas fa-location-dot"></i> Krokiyi Aç
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="fisiIndir()" class="btn btn-primary mt-4">
+        <i class="fas fa-file-pdf"></i> Randevu Fiþini PDF Ýndir
+    </button>
+
+    <div class="mt-3">
+        <a href="/Randevu/Secim?userId=@ViewBag.HastaId" class="btn btn-link">Randevu sayfasýna dön</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        function fisiIndir() {
+            var element = document.getElementById('pdf-randevu-fisi');
+            if (!element) return;
+
+            var opt = {
+                margin: 0.5,
+                filename: 'GaziHastanesi_RandevuFisi.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a5', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+}

@@ -501,6 +501,8 @@
 </head>
 <body>
 
+    <input type="hidden" id="aktifHastaId" value="@hastaId" />
+
     <div class="app-container">
 
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -650,6 +652,53 @@
         </main>
     </div>
 
+    <div id="sonucFisiModal" class="position-fixed top-0 start-0 w-100 h-100 d-none align-items-center justify-content-center p-3" style="background: rgba(15,23,42,0.65); z-index: 1200; backdrop-filter: blur(2px);">
+        <div class="bg-white rounded-4 shadow-lg w-100" style="max-width: 520px;">
+            <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
+                <h5 class="m-0 fw-bold text-primary"><i class="fa-solid fa-file-waveform me-2"></i>Sonuç Bilgi Fiþi</h5>
+                <button class="btn btn-light btn-sm border-0" onclick="sonucFisiKapat()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="p-4">
+                <div id="pdf-sonuc-fisi" class="mx-auto rounded-4 p-3" style="max-width: 420px; border: 2px dashed #2563eb; background: linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);">
+                    <div class="text-center mb-3">
+                        <img src="~/assets/gazilogo.jpg" alt="Gazi Logo" style="height:56px; width:auto;" />
+                        <h6 class="mt-2 mb-1 fw-bold text-primary">Gazi Üniversitesi Hastanesi</h6>
+                        <p class="text-muted mb-0" style="font-size: 12px;">Tahlil Sonuç Bilgi Fiþi</p>
+                        <p class="text-muted mb-2" style="font-size: 11px;">Fiþ No: <span id="sonucFisNoText">-</span></p>
+                        <hr class="my-2" />
+                    </div>
+
+                    <div class="text-start" style="font-size: 14px;">
+                        <p class="mb-1"><strong>Sayýn:</strong> <span id="sonucHastaAdText">-</span></p>
+                        <p class="mb-1"><strong>Test:</strong> <span id="sonucTestAdiText">-</span></p>
+                        <p class="mb-1"><strong>Kategori:</strong> <span id="sonucKategoriText">-</span></p>
+                        <p class="mb-1"><strong>Tarih:</strong> <span id="sonucTarihText">-</span></p>
+                        <p class="mb-1"><strong>Doktor:</strong> <span id="sonucDoktorAdText">-</span></p>
+                        <p class="mb-1"><strong>Deðer:</strong> <span id="sonucDegerText">-</span></p>
+                        <p class="mb-1"><strong>Referans:</strong> <span id="sonucReferansText">-</span></p>
+                        <p class="mb-0"><strong>Durum:</strong> <span id="sonucDurumText">-</span></p>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <p class="text-muted mb-2" style="font-size: 11px;">Ýlgili birim kroki eriþimi için QR kodu okutabilirsiniz.</p>
+                        <img id="sonucFisQrImage" src="" alt="Kroki QR Kod" class="img-fluid bg-white" style="width: 150px; height: 150px; border: 1px solid #dbe4f0; padding: 6px; border-radius: 10px;" />
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column flex-sm-row gap-2 mt-3">
+                    <a id="sonucKrokiAcLink" href="#" target="_blank" class="btn btn-outline-primary w-100">
+                        <i class="fa-solid fa-location-dot me-1"></i>Krokiyi Aç
+                    </a>
+                    <button onclick="sonucFisiIndir()" class="btn btn-primary w-100">
+                        <i class="fa-solid fa-file-pdf me-1"></i>PDF Ýndir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // --- MOBÝL SÝDEBAR MANTIÐI ---
@@ -707,6 +756,120 @@
                     title: 'custom-swal-title',
                     confirmButton: 'custom-swal-confirm-btn'
                 }
+            });
+        }
+
+        function sonucFisiAc(sonucId) {
+            const hastaId = document.getElementById('aktifHastaId')?.value || '';
+            fetch(`/Sonuc/GetSonucFisi?sonucId=${sonucId}&userId=${hastaId}`)
+                .then(res => res.json())
+                .then(resp => {
+                    if (!resp || !resp.success || !resp.data) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata',
+                            text: resp?.message || 'Sonuç fiþi getirilemedi.',
+                            buttonsStyling: false,
+                            customClass: {
+                                popup: 'custom-swal-popup',
+                                title: 'custom-swal-title',
+                                confirmButton: 'custom-swal-confirm-btn'
+                            }
+                        });
+                        return;
+                    }
+
+                    const d = resp.data;
+                    document.getElementById('sonucFisNoText').innerText = `#${d.sonucNo}`;
+                    document.getElementById('sonucHastaAdText').innerText = d.hastaAd;
+                    document.getElementById('sonucTestAdiText').innerText = d.testAdi;
+                    document.getElementById('sonucKategoriText').innerText = d.kategori;
+                    document.getElementById('sonucTarihText').innerText = d.tarih;
+                    document.getElementById('sonucDoktorAdText').innerText = d.doktorAd;
+                    document.getElementById('sonucDegerText').innerText = d.sonucDegeri;
+                    document.getElementById('sonucReferansText').innerText = d.referansAraligi;
+                    document.getElementById('sonucDurumText').innerText = d.durum;
+                    document.getElementById('sonucFisQrImage').src = d.qrCode;
+                    document.getElementById('sonucKrokiAcLink').href = d.krokiUrl;
+
+                    const modal = document.getElementById('sonucFisiModal');
+                    modal.classList.remove('d-none');
+                    modal.classList.add('d-flex');
+                    document.body.style.overflow = 'hidden';
+                })
+                .catch(() => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata',
+                        text: 'Sonuç fiþi yüklenirken bir hata oluþtu.',
+                        buttonsStyling: false,
+                        customClass: {
+                            popup: 'custom-swal-popup',
+                            title: 'custom-swal-title',
+                            confirmButton: 'custom-swal-confirm-btn'
+                        }
+                    });
+                });
+        }
+
+        function sonucFisiKapat() {
+            const modal = document.getElementById('sonucFisiModal');
+            modal.classList.remove('d-flex');
+            modal.classList.add('d-none');
+            document.body.style.overflow = '';
+        }
+
+        async function sonucFisiIndir() {
+            const element = document.getElementById('pdf-sonuc-fisi');
+            if (!element) return;
+
+            const fisNo = document.getElementById('sonucFisNoText')?.innerText?.replace('#', '') || 'SonucFisi';
+
+            try {
+                if (typeof html2pdf === 'undefined') {
+                    await yeniHtml2PdfYukle();
+                }
+
+                const opt = {
+                    margin: 0.4,
+                    filename: `GaziHastanesi_SonucFisi_${fisNo}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true, allowTaint: true },
+                    jsPDF: { unit: 'in', format: 'a5', orientation: 'portrait' }
+                };
+
+                await html2pdf().set(opt).from(element).save();
+            } catch {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'PDF Hatasý',
+                    text: 'PDF oluþturulamadý. Lütfen tekrar deneyin.',
+                    buttonsStyling: false,
+                    customClass: {
+                        popup: 'custom-swal-popup',
+                        title: 'custom-swal-title',
+                        confirmButton: 'custom-swal-confirm-btn'
+                    }
+                });
+            }
+        }
+
+        function yeniHtml2PdfYukle() {
+            return new Promise((resolve, reject) => {
+                const mevcut = document.querySelector('script[data-html2pdf="1"]');
+                if (mevcut) {
+                    mevcut.addEventListener('load', () => resolve());
+                    mevcut.addEventListener('error', () => reject());
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+                script.async = true;
+                script.dataset.html2pdf = '1';
+                script.onload = () => resolve();
+                script.onerror = () => reject();
+                document.head.appendChild(script);
             });
         }
     </script>

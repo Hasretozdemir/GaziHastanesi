@@ -1041,7 +1041,12 @@
                                             </td>
                                             <td><span class="soft-badge badge-success-soft"><i class="fas fa-circle" style="font-size:6px;"></i> Onaylandı</span></td>
                                             <td class="text-end">
-                                                <button class="btn-action-outline" onclick="iptalEt(@randevu.Id)">İptal Et</button>
+                                                <div class="d-flex justify-content-end gap-2">
+                                                    <button class="btn btn-light btn-sm border" onclick="randevuFisiAc(@randevu.Id)" title="Randevu Fişi / QR">
+                                                        <i class="fa-solid fa-qrcode"></i>
+                                                    </button>
+                                                    <button class="btn-action-outline" onclick="iptalEt(@randevu.Id)">İptal Et</button>
+                                                </div>
                                             </td>
                                         </tr>
                                     }
@@ -1072,6 +1077,7 @@
                                         <th>Uzman Hekim</th>
                                         <th>Randevu Türü</th>
                                         <th>Durum</th>
+                                        <th class="text-end">Fiş</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1115,6 +1121,11 @@
                                                     <span class="soft-badge badge-secondary-soft">Tamamlandı</span>
                                                 }
                                             </td>
+                                            <td class="text-end">
+                                                <button class="btn btn-light btn-sm border" onclick="randevuFisiAc(@randevu.Id)" title="Randevu Fişi / QR">
+                                                    <i class="fa-solid fa-qrcode"></i>
+                                                </button>
+                                            </td>
                                         </tr>
                                     }
                                 </tbody>
@@ -1144,6 +1155,53 @@
         </main>
     </div>
 
+    <div id="randevuFisiModal" class="position-fixed top-0 start-0 w-100 h-100 d-none align-items-center justify-content-center p-3" style="background: rgba(15,23,42,0.65); z-index: 1200; backdrop-filter: blur(2px);">
+        <div class="bg-white rounded-4 shadow-lg w-100" style="max-width: 520px;">
+            <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
+                <h5 class="m-0 fw-bold text-primary"><i class="fa-solid fa-receipt me-2"></i>Randevu Bilgi Fişi</h5>
+                <button class="btn btn-light btn-sm border-0" onclick="randevuFisiKapat()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="p-4">
+                <div id="pdf-randevu-fisi" class="mx-auto rounded-4 p-3" style="max-width: 420px; border: 2px dashed #2563eb; background: linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);">
+                    <div class="text-center mb-3">
+                        <img src="~/assets/gazilogo.jpg" alt="Gazi Logo" style="height:56px; width:auto;" />
+                        <h6 class="mt-2 mb-1 fw-bold text-primary">Gazi Üniversitesi Hastanesi</h6>
+                        <p class="text-muted mb-0" style="font-size: 12px;">Randevu Bilgi Fişi</p>
+                        <p class="text-muted mb-2" style="font-size: 11px;">Fiş No: <span id="fisNoText">-</span></p>
+                        <hr class="my-2" />
+                    </div>
+
+                    <div class="text-start" style="font-size: 14px;">
+                        <p class="mb-1"><strong>TC Kimlik No:</strong> <span id="tcKimlikText">-</span></p>
+                        <p class="mb-1"><strong>Sayın:</strong> <span id="hastaAdText">-</span></p>
+                        <p class="mb-1"><strong>Poliklinik:</strong> <span id="bolumAdText">-</span></p>
+                        <p class="mb-1"><strong>Doktor:</strong> <span id="doktorAdText">-</span></p>
+                        <p class="mb-1"><strong>Tarih & Saat:</strong> <span id="tarihSaatText">-</span></p>
+                        <p class="mb-1"><strong>Randevu Tipi:</strong> <span id="randevuTipiText">-</span></p>
+                        <p class="mb-1"><strong>Durum:</strong> <span id="durumText">-</span></p>
+                        <p class="mb-0"><strong>Nerede:</strong> <span id="konumText">-</span></p>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <p class="text-muted mb-2" style="font-size: 11px;">Polikliniğe ulaşım için QR kodu okutabilirsiniz.</p>
+                        <img id="fisQrImage" src="" alt="Kroki QR Kod" class="img-fluid bg-white" style="width: 150px; height: 150px; border: 1px solid #dbe4f0; padding: 6px; border-radius: 10px;" />
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column flex-sm-row gap-2 mt-3">
+                    <a id="krokiAcLink" href="#" target="_blank" class="btn btn-outline-primary w-100">
+                        <i class="fa-solid fa-location-dot me-1"></i>Krokiyi Aç
+                    </a>
+                    <button onclick="fisiIndir()" class="btn btn-primary w-100">
+                        <i class="fa-solid fa-file-pdf me-1"></i>PDF İndir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // --- MOBİL SİDEBAR MANTIĞI ---
@@ -1414,7 +1472,11 @@
                         text: data.message,
                         buttonsStyling: false,
                         customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', htmlContainer: 'custom-swal-text', confirmButton: 'custom-swal-confirm-btn' }
-                    }).then(() => window.location.reload());
+                    }).then(() => {
+                        if (data.randevuId) {
+                            randevuFisiAc(data.randevuId);
+                        }
+                    });
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -1456,6 +1518,74 @@
                         }
                     });
             });
+        }
+
+        function randevuFisiAc(randevuId) {
+            const hastaId = document.getElementById('aktifHastaId')?.value || '';
+            fetch(`/Randevu/GetRandevuFisi?randevuId=${randevuId}&hastaId=${hastaId}`)
+                .then(res => res.json())
+                .then(resp => {
+                    if (!resp || !resp.success || !resp.data) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata',
+                            text: resp?.message || 'Randevu fişi getirilemedi.',
+                            buttonsStyling: false,
+                            customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', htmlContainer: 'custom-swal-text', confirmButton: 'custom-swal-confirm-btn' }
+                        });
+                        return;
+                    }
+
+                    const d = resp.data;
+                    document.getElementById('fisNoText').innerText = `#${d.randevuNo}`;
+                    document.getElementById('tcKimlikText').innerText = d.tcKimlikNo;
+                    document.getElementById('hastaAdText').innerText = d.hastaAd;
+                    document.getElementById('bolumAdText').innerText = d.bolumAd;
+                    document.getElementById('doktorAdText').innerText = d.doktorAd;
+                    document.getElementById('tarihSaatText').innerText = d.tarihSaat;
+                    document.getElementById('randevuTipiText').innerText = d.randevuTipi;
+                    document.getElementById('durumText').innerText = d.durum;
+                    document.getElementById('konumText').innerText = d.konum || '-';
+                    document.getElementById('fisQrImage').src = d.qrCode;
+                    document.getElementById('krokiAcLink').href = d.krokiUrl;
+
+                    const modal = document.getElementById('randevuFisiModal');
+                    modal.classList.remove('d-none');
+                    modal.classList.add('d-flex');
+                    document.body.style.overflow = 'hidden';
+                })
+                .catch(() => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata',
+                        text: 'Randevu fişi yüklenirken bir hata oluştu.',
+                        buttonsStyling: false,
+                        customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', htmlContainer: 'custom-swal-text', confirmButton: 'custom-swal-confirm-btn' }
+                    });
+                });
+        }
+
+        function randevuFisiKapat() {
+            const modal = document.getElementById('randevuFisiModal');
+            modal.classList.remove('d-flex');
+            modal.classList.add('d-none');
+            document.body.style.overflow = '';
+        }
+
+        function fisiIndir() {
+            const element = document.getElementById('pdf-randevu-fisi');
+            if (!element) return;
+
+            const fisNo = document.getElementById('fisNoText')?.innerText?.replace('#', '') || 'Randevu';
+            const opt = {
+                margin: 0.4,
+                filename: `GaziHastanesi_RandevuFisi_${fisNo}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a5', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save();
         }
     </script>
 </body>

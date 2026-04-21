@@ -1,10 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using GaziHastane.Data;
 using GaziHastane.Models;
-using System;
-using System.Linq;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using QRCoder;
 
 namespace GaziHastane.Controllers
 {
@@ -245,12 +246,113 @@ namespace GaziHastane.Controllers
                 _context.Randevular.Add(yeniRandevu);
                 _context.SaveChanges();
 
-                return Json(new { success = true, message = "Randevunuz baþarýyla oluþturulmuþtur. Saðlýklý günler dileriz!" });
+                return Json(new
+                {
+                    success = true,
+                    message = "Randevunuz baþarýyla oluþturulmuþtur. Saðlýklý günler dileriz!",
+                    randevuId = yeniRandevu.Id
+                });
             }
             catch (Exception ex)
             {
                 string hataMesaji = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 return Json(new { success = false, message = "Sistemsel Hata: " + hataMesaji });
+            }
+
+        }
+
+        [HttpGet]
+        public JsonResult GetRandevuFisi(int randevuId, int? hastaId)
+        {
+            try
+            {
+                var randevu = _context.Randevular
+                    .Include(x => x.Hasta)
+                    .Include(x => x.Bolum)
+                    .Include(x => x.Doktor)
+                    .FirstOrDefault(x => x.Id == randevuId);
+
+                if (randevu == null)
+                {
+                    return Json(new { success = false, message = "Randevu bulunamadý." });
+                }
+
+                if (hastaId.HasValue && randevu.HastaId != hastaId.Value)
+                {
+                    return Json(new { success = false, message = "Bu randevu fiþine eriþim yetkiniz yok." });
+                }
+
+                var bolumAd = randevu.Bolum?.Ad ?? "Poliklinik";
+                var blok = randevu.Bolum?.Blok?.Trim();
+                var kat = randevu.Bolum?.Kat?.Trim();
+                
+                // Konumu veritabanýndan çek
+                var iletisimBilgisi = _context.IletisimBilgileri.FirstOrDefault(x => x.IsActive);
+                
+                string konumBilgisi;
+
+                if (!string.IsNullOrWhiteSpace(blok) && !string.IsNullOrWhiteSpace(kat))
+                {
+                    konumBilgisi = $"{blok} Blok, {kat}. Kat";
+                }
+                else if (!string.IsNullOrWhiteSpace(blok))
+                {
+                    konumBilgisi = $"{blok} Blok";
+                }
+                else if (!string.IsNullOrWhiteSpace(kat))
+                {
+                    konumBilgisi = $"{kat}. Kat";
+                }
+                else if (iletisimBilgisi != null && !string.IsNullOrWhiteSpace(iletisimBilgisi.Adres))
+                {
+                    // Fallback: Ýletiþim tablosundan adres bilgisini çek
+                    konumBilgisi = iletisimBilgisi.KisaAdres ?? iletisimBilgisi.Adres;
+                }
+                else
+                {
+                    konumBilgisi = "E Blok, Zemin Kat"; // Varsayýlan
+                }
+
+                var krokiUrl = Url.Action("Kroki", "Home", new { hedef = bolumAd }, Request.Scheme) ?? $"/Home/Kroki?hedef={bolumAd}";
+
+                QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(krokiUrl, QRCodeGenerator.ECCLevel.Q);
+                Base64QRCode qrCode = new Base64QRCode(qrCodeData);
+                string qrCodeImageAsBase64 = qrCode.GetGraphic(20);
+
+                var tcKimlikNo = randevu.Hasta?.TCKimlikNo ?? "-";
+                var hastaAd = randevu.Hasta != null
+                    ? $"{randevu.Hasta.Ad} {randevu.Hasta.Soyad}"
+                    : "Hasta";
+
+                var doktorAd = randevu.Doktor != null
+                    ? $"{(string.IsNullOrWhiteSpace(randevu.Doktor.Unvan) ? "Dr." : randevu.Doktor.Unvan)} {randevu.Doktor.Ad} {randevu.Doktor.Soyad}"
+                    : "Doktor";
+
+                var durumText = randevu.Durum == 1 ? "Onaylandý" : (randevu.Durum == 2 ? "Ýptal Edildi" : (randevu.Durum == 3 ? "Gelmedi" : "Tamamlandý"));
+
+                return Json(new
+                {
+                    success = true,
+                    data = new
+                    {
+                        randevuNo = randevu.Id,
+                        tcKimlikNo,
+                        hastaAd,
+                        bolumAd,
+                        doktorAd,
+                        tarihSaat = randevu.RandevuTarihi.ToString("dd MMMM yyyy - HH:mm", new System.Globalization.CultureInfo("tr-TR")),
+                        randevuTipi = randevu.RandevuTipi == 2 ? "Sonuç" : "Muayene",
+                        durum = durumText,
+                        konum = konumBilgisi,
+                        qrCode = "data:image/png;base64," + qrCodeImageAsBase64,
+                        krokiUrl
+                    }
+                });
+            }
+            catch
+            {
+                return Json(new { success = false, message = "Randevu fiþi hazýrlanýrken bir hata oluþtu." });
             }
         }
 
@@ -351,6 +453,47 @@ namespace GaziHastane.Controllers
             {
                 return Json(new { success = false, message = "Ýptal iþlemi sýrasýnda bir hata oluþtu." });
             }
+        }
+
+        public IActionResult RandevuBasarili(int randevuId)
+        {
+            var randevu = _context.Randevular
+                .Include(x => x.Hasta)
+                .Include(x => x.Bolum)
+                .FirstOrDefault(x => x.Id == randevuId);
+
+            if (randevu == null)
+            {
+                TempData["Error"] = "Randevu bilgisi bulunamadý.";
+                return RedirectToAction("Giris");
+            }
+
+            var hastaAd = randevu.Hasta != null
+                ? $"{randevu.Hasta.Ad} {randevu.Hasta.Soyad}"
+                : "Hasta";
+            var bolumAd = randevu.Bolum?.Ad ?? "Poliklinik";
+            var tarihSaat = randevu.RandevuTarihi.ToString("dd MMMM yyyy - HH:mm", new System.Globalization.CultureInfo("tr-TR"));
+
+            // 2. QR Kodun yönlendireceði URL'yi oluþtur. 
+            // Hastanenin Kroki sayfasýna poliklinik adýný parametre olarak atýyoruz!
+            string krokiUrl = Url.Action("Kroki", "Home", new { hedef = bolumAd }, Request.Scheme) ?? $"/Home/Kroki?hedef={bolumAd}";
+
+            // 3. QR Kodu Oluþtur
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(krokiUrl, QRCodeGenerator.ECCLevel.Q);
+            Base64QRCode qrCode = new Base64QRCode(qrCodeData);
+            string qrCodeImageAsBase64 = qrCode.GetGraphic(20);
+
+            // 4. View'a verileri gönder
+            ViewBag.QrCode = "data:image/png;base64," + qrCodeImageAsBase64;
+            ViewBag.HastaAd = hastaAd;
+            ViewBag.BolumAd = bolumAd;
+            ViewBag.TarihSaat = tarihSaat;
+            ViewBag.RandevuNo = randevu.Id;
+            ViewBag.KrokiUrl = krokiUrl;
+            ViewBag.HastaId = randevu.HastaId;
+
+            return View();
         }
     }
 }
