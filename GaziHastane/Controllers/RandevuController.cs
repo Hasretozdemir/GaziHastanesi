@@ -1,11 +1,11 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using GaziHastane.Data;
 using GaziHastane.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using QRCoder;
+using Microsoft.EntityFrameworkCore;
 
 namespace GaziHastane.Controllers
 {
@@ -13,7 +13,7 @@ namespace GaziHastane.Controllers
     {
         private readonly GaziHastaneContext _context;
 
-        // Dependency Injection ile DbContext'i alýyoruz
+        // Dependency Injection ile DbContext'i alï¿½yoruz
         public RandevuController(GaziHastaneContext context)
         {
             _context = context;
@@ -65,50 +65,50 @@ namespace GaziHastane.Controllers
             }
         }
 
-        // Giriþ Ekraný
+        // Giriï¿½ Ekranï¿½
         [HttpGet]
         public IActionResult Giris()
         {
             return View();
         }
 
-        // Login Ýþlemi (POST)
+        // Login ï¿½ï¿½lemi (POST)
         [HttpPost]
         public IActionResult Login(string loginType, string IdentityNumber, int Day, string Month, int Year)
         {
-            // Formdan gelen Türkçe ay metnini sayýya (1-12) çevirmek için dizi oluþturuyoruz
-            string[] aylar = { "Ocak", "Þubat", "Mart", "Nisan", "Mayýs", "Haziran", "Temmuz", "Aðustos", "Eylül", "Ekim", "Kasým", "Aralýk" };
+            // Formdan gelen Tï¿½rkï¿½e ay metnini sayï¿½ya (1-12) ï¿½evirmek iï¿½in dizi oluï¿½turuyoruz
+            string[] aylar = { "Ocak", "ï¿½ubat", "Mart", "Nisan", "Mayï¿½s", "Haziran", "Temmuz", "Aï¿½ustos", "Eylï¿½l", "Ekim", "Kasï¿½m", "Aralï¿½k" };
             int monthNumber = Array.IndexOf(aylar, Month) + 1;
 
-            // Gelen verilerde boþ veya eksik var mý diye kontrol et
+            // Gelen verilerde boï¿½ veya eksik var mï¿½ diye kontrol et
             if (string.IsNullOrEmpty(IdentityNumber) || monthNumber == 0 || Day == 0 || Year == 0)
             {
-                TempData["Error"] = "Lütfen kimlik bilgilerinizi ve doðum tarihinizi eksiksiz giriniz.";
+                TempData["Error"] = "Lï¿½tfen kimlik bilgilerinizi ve doï¿½um tarihinizi eksiksiz giriniz.";
                 return RedirectToAction("Giris");
             }
 
-            // Veritabanýnda kullanýcýyý TCKimlikNo'ya göre ara
+            // Veritabanï¿½nda kullanï¿½cï¿½yï¿½ TCKimlikNo'ya gï¿½re ara
             var user = _context.Users.FirstOrDefault(u => u.TCKimlikNo == IdentityNumber);
 
-            // Kullanýcý varsa ve seçilen doðum tarihi eþleþiyorsa giriþ yap
+            // Kullanï¿½cï¿½ varsa ve seï¿½ilen doï¿½um tarihi eï¿½leï¿½iyorsa giriï¿½ yap
             if (user != null && user.DogumTarihi.Day == Day && user.DogumTarihi.Month == monthNumber && user.DogumTarihi.Year == Year)
             {
-                // Doðrulama BAÞARILI. Kullanýcýnýn ID'sini Secim ekranýna parametre olarak yolluyoruz.
+                // Doï¿½rulama BAï¿½ARILI. Kullanï¿½cï¿½nï¿½n ID'sini Secim ekranï¿½na parametre olarak yolluyoruz.
                 return RedirectToAction("Secim", new { userId = user.Id });
             }
 
-            // Doðrulama BAÞARISIZ
-            TempData["Error"] = "Kimlik numarasý veya doðum tarihi hatalý. Lütfen kontrol edip tekrar deneyin.";
+            // Doï¿½rulama BAï¿½ARISIZ
+            TempData["Error"] = "Kimlik numarasï¿½ veya doï¿½um tarihi hatalï¿½. Lï¿½tfen kontrol edip tekrar deneyin.";
             return RedirectToAction("Giris");
         }
 
-        // Seçim Ekraný ve Randevularým Sekmesi Ýçin Veriler
+        // Seï¿½im Ekranï¿½ ve Randevularï¿½m Sekmesi ï¿½ï¿½in Veriler
         [HttpGet]
         public IActionResult Secim(int? userId)
         {
             if (userId == null)
             {
-                TempData["Error"] = "Lütfen önce kimlik doðrulamasý yapýnýz.";
+                TempData["Error"] = "Lï¿½tfen ï¿½nce kimlik doï¿½rulamasï¿½ yapï¿½nï¿½z.";
                 return RedirectToAction("Giris");
             }
 
@@ -118,15 +118,15 @@ namespace GaziHastane.Controllers
                 return RedirectToAction("Giris");
             }
 
-            // Kullanýcý Profili Bilgileri
+            // Kullanï¿½cï¿½ Profili Bilgileri
             ViewBag.KullaniciAdSoyad = aktifKullanici.Ad + " " + aktifKullanici.Soyad;
             ViewBag.KullaniciBasHarfler = aktifKullanici.Ad.Substring(0, 1) + aktifKullanici.Soyad.Substring(0, 1);
             ViewBag.KullaniciId = aktifKullanici.Id;
 
-            // Aktif Bölümler Listesi
+            // Aktif Bï¿½lï¿½mler Listesi
             ViewBag.Bolumler = _context.Bolumler.Where(b => b.IsActive).ToList();
 
-            // KULLANICININ RANDEVU GEÇMÝÞÝNÝ GETÝR (Tablo Ýçin)
+            // KULLANICININ RANDEVU GEï¿½Mï¿½ï¿½ï¿½Nï¿½ GETï¿½R (Tablo ï¿½ï¿½in)
             var tumRandevular = _context.Randevular
                 .Include(r => r.Doktor)
                 .Include(r => r.Bolum)
@@ -134,18 +134,18 @@ namespace GaziHastane.Controllers
                 .OrderByDescending(r => r.RandevuTarihi)
                 .ToList();
 
-            // Yaklaþan Randevular: Tarihi bugünden büyük ve Durumu 1 (Aktif) olanlar
+            // Yaklaï¿½an Randevular: Tarihi bugï¿½nden bï¿½yï¿½k ve Durumu 1 (Aktif) olanlar
             ViewBag.YaklasanRandevular = tumRandevular
                 .Where(r => r.RandevuTarihi > DateTime.Now && r.Durum == 1).ToList();
 
-            // Geçmiþ veya Ýptal Edilmiþ Randevular: Tarihi bugünden küçük veya Durumu 1'den farklý olanlar
+            // Geï¿½miï¿½ veya ï¿½ptal Edilmiï¿½ Randevular: Tarihi bugï¿½nden kï¿½ï¿½ï¿½k veya Durumu 1'den farklï¿½ olanlar
             ViewBag.GecmisRandevular = tumRandevular
                 .Where(r => r.RandevuTarihi <= DateTime.Now || r.Durum != 1).ToList();
 
             return View();
         }
 
-        // Bölüm seçildiðinde o bölümün doktorlarýný getiren AJAX Endpoint'i
+        // Bï¿½lï¿½m seï¿½ildiï¿½inde o bï¿½lï¿½mï¿½n doktorlarï¿½nï¿½ getiren AJAX Endpoint'i
         [HttpGet]
         public JsonResult GetDoktorlar(int bolumId)
         {
@@ -161,7 +161,7 @@ namespace GaziHastane.Controllers
             return Json(doktorlar);
         }
 
-        // Doktor ve Tarih seçildiðinde planlanan tüm saatleri (müsait/dolu) getiren Endpoint
+        // Doktor ve Tarih seï¿½ildiï¿½inde planlanan tï¿½m saatleri (mï¿½sait/dolu) getiren Endpoint
         [HttpGet]
         public JsonResult GetUygunSaatler(int doktorId, string tarih)
         {
@@ -171,7 +171,7 @@ namespace GaziHastane.Controllers
 
                 var slotlar = HesaplaGunSlotDurumlari(doktorId, secilenTarih);
 
-                // Bugün için geçmiþ saatleri de dolu/pasif iþaretle
+                // Bugï¿½n iï¿½in geï¿½miï¿½ saatleri de dolu/pasif iï¿½aretle
                 if (secilenTarih.Date == DateTime.Today)
                 {
                     var simdi = DateTime.Now.TimeOfDay;
@@ -188,11 +188,11 @@ namespace GaziHastane.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = "Saatler hesaplanýrken sunucu hatasý oluþtu." });
+                return Json(new { success = false, message = "Saatler hesaplanï¿½rken sunucu hatasï¿½ oluï¿½tu." });
             }
         }
 
-        // RANDEVU KAYDETME ÝÞLEMÝ (POST)
+        // RANDEVU KAYDETME ï¿½ï¿½LEMï¿½ (POST)
         [HttpPost]
         public JsonResult RandevuKaydet(int BolumId, int DoktorId, string Tarih, string Saat, int HastaId, short RandevuTipi = 1)
         {
@@ -200,12 +200,12 @@ namespace GaziHastane.Controllers
             {
                 if (BolumId <= 0 || DoktorId <= 0 || string.IsNullOrEmpty(Tarih) || string.IsNullOrEmpty(Saat) || HastaId <= 0)
                 {
-                    return Json(new { success = false, message = "Lütfen seçimleri eksiksiz yapýnýz." });
+                    return Json(new { success = false, message = "Lï¿½tfen seï¿½imleri eksiksiz yapï¿½nï¿½z." });
                 }
 
                 if (RandevuTipi != 1 && RandevuTipi != 2)
                 {
-                    return Json(new { success = false, message = "Geçersiz randevu tipi seçildi." });
+                    return Json(new { success = false, message = "Geï¿½ersiz randevu tipi seï¿½ildi." });
                 }
 
                 DateTime randevuZamani = DateTime.Parse($"{Tarih} {Saat}");
@@ -217,10 +217,10 @@ namespace GaziHastane.Controllers
 
                 if (!musaitSaatler.Contains(randevuZamani.ToString("HH:mm")))
                 {
-                    return Json(new { success = false, message = "Seçilen saat doktor planýna uygun deðil veya dolu." });
+                    return Json(new { success = false, message = "Seï¿½ilen saat doktor planï¿½na uygun deï¿½il veya dolu." });
                 }
 
-                // GÜVENLÝK KONTROLÜ: Ayný doktora, ayný saate baþka bir aktif randevu var mý?
+                // Gï¿½VENLï¿½K KONTROLï¿½: Aynï¿½ doktora, aynï¿½ saate baï¿½ka bir aktif randevu var mï¿½?
                 bool saatDoluMu = _context.Randevular.Any(r =>
                     r.DoktorId == DoktorId &&
                     r.RandevuTarihi == randevuZamani &&
@@ -228,7 +228,7 @@ namespace GaziHastane.Controllers
 
                 if (saatDoluMu)
                 {
-                    return Json(new { success = false, message = "Üzgünüz, bu saat dilimi az önce baþka bir hasta tarafýndan alýndý. Lütfen baþka bir saat seçiniz." });
+                    return Json(new { success = false, message = "ï¿½zgï¿½nï¿½z, bu saat dilimi az ï¿½nce baï¿½ka bir hasta tarafï¿½ndan alï¿½ndï¿½. Lï¿½tfen baï¿½ka bir saat seï¿½iniz." });
                 }
 
                 var yeniRandevu = new Randevu
@@ -239,7 +239,7 @@ namespace GaziHastane.Controllers
                     Durum = 1, // 1: Aktif
                     RandevuTipi = RandevuTipi,
                     OlusturulmaTarihi = DateTime.UtcNow,
-                    Sikayet = RandevuTipi == 2 ? "Sonuç randevusu" : "Muayene randevusu",
+                    Sikayet = RandevuTipi == 2 ? "Sonuï¿½ randevusu" : "Muayene randevusu",
                     HastaId = HastaId
                 };
 
@@ -249,7 +249,7 @@ namespace GaziHastane.Controllers
                 return Json(new
                 {
                     success = true,
-                    message = "Randevunuz baþarýyla oluþturulmuþtur. Saðlýklý günler dileriz!",
+                    message = "Randevunuz baï¿½arï¿½yla oluï¿½turulmuï¿½tur. Saï¿½lï¿½klï¿½ gï¿½nler dileriz!",
                     randevuId = yeniRandevu.Id
                 });
             }
@@ -274,19 +274,19 @@ namespace GaziHastane.Controllers
 
                 if (randevu == null)
                 {
-                    return Json(new { success = false, message = "Randevu bulunamadý." });
+                    return Json(new { success = false, message = "Randevu bulunamadï¿½." });
                 }
 
                 if (hastaId.HasValue && randevu.HastaId != hastaId.Value)
                 {
-                    return Json(new { success = false, message = "Bu randevu fiþine eriþim yetkiniz yok." });
+                    return Json(new { success = false, message = "Bu randevu fiï¿½ine eriï¿½im yetkiniz yok." });
                 }
 
                 var bolumAd = randevu.Bolum?.Ad ?? "Poliklinik";
                 var blok = randevu.Bolum?.Blok?.Trim();
                 var kat = randevu.Bolum?.Kat?.Trim();
                 
-                // Konumu veritabanýndan çek
+                // Konumu veritabanï¿½ndan ï¿½ek
                 var iletisimBilgisi = _context.IletisimBilgileri.FirstOrDefault(x => x.IsActive);
                 
                 string konumBilgisi;
@@ -305,12 +305,12 @@ namespace GaziHastane.Controllers
                 }
                 else if (iletisimBilgisi != null && !string.IsNullOrWhiteSpace(iletisimBilgisi.Adres))
                 {
-                    // Fallback: Ýletiþim tablosundan adres bilgisini çek
+                    // Fallback: ï¿½letiï¿½im tablosundan adres bilgisini ï¿½ek
                     konumBilgisi = iletisimBilgisi.KisaAdres ?? iletisimBilgisi.Adres;
                 }
                 else
                 {
-                    konumBilgisi = "E Blok, Zemin Kat"; // Varsayýlan
+                    konumBilgisi = "E Blok, Zemin Kat"; // Varsayï¿½lan
                 }
 
                 var krokiUrl = Url.Action("Kroki", "Home", new { hedef = bolumAd }, Request.Scheme) ?? $"/Home/Kroki?hedef={bolumAd}";
@@ -329,7 +329,7 @@ namespace GaziHastane.Controllers
                     ? $"{(string.IsNullOrWhiteSpace(randevu.Doktor.Unvan) ? "Dr." : randevu.Doktor.Unvan)} {randevu.Doktor.Ad} {randevu.Doktor.Soyad}"
                     : "Doktor";
 
-                var durumText = randevu.Durum == 1 ? "Onaylandý" : (randevu.Durum == 2 ? "Ýptal Edildi" : (randevu.Durum == 3 ? "Gelmedi" : "Tamamlandý"));
+                var durumText = randevu.Durum == 1 ? "Onaylandï¿½" : (randevu.Durum == 2 ? "ï¿½ptal Edildi" : (randevu.Durum == 3 ? "Gelmedi" : "Tamamlandï¿½"));
 
                 return Json(new
                 {
@@ -342,7 +342,7 @@ namespace GaziHastane.Controllers
                         bolumAd,
                         doktorAd,
                         tarihSaat = randevu.RandevuTarihi.ToString("dd MMMM yyyy - HH:mm", new System.Globalization.CultureInfo("tr-TR")),
-                        randevuTipi = randevu.RandevuTipi == 2 ? "Sonuç" : "Muayene",
+                        randevuTipi = randevu.RandevuTipi == 2 ? "Sonuï¿½" : "Muayene",
                         durum = durumText,
                         konum = konumBilgisi,
                         qrCode = "data:image/png;base64," + qrCodeImageAsBase64,
@@ -352,7 +352,7 @@ namespace GaziHastane.Controllers
             }
             catch
             {
-                return Json(new { success = false, message = "Randevu fiþi hazýrlanýrken bir hata oluþtu." });
+                return Json(new { success = false, message = "Randevu fiï¿½i hazï¿½rlanï¿½rken bir hata oluï¿½tu." });
             }
         }
 
@@ -434,7 +434,7 @@ namespace GaziHastane.Controllers
             public bool OgleMolasi { get; set; }
         }
 
-        // RANDEVU ÝPTAL ÝÞLEMÝ (POST)
+        // RANDEVU ï¿½PTAL ï¿½ï¿½LEMï¿½ (POST)
         [HttpPost]
         public JsonResult RandevuIptal(int id)
         {
@@ -443,15 +443,15 @@ namespace GaziHastane.Controllers
                 var randevu = _context.Randevular.Find(id);
                 if (randevu != null)
                 {
-                    randevu.Durum = 2; // 2: Ýptal Edildi
+                    randevu.Durum = 2; // 2: ï¿½ptal Edildi
                     _context.SaveChanges();
                     return Json(new { success = true });
                 }
-                return Json(new { success = false, message = "Randevu bulunamadý." });
+                return Json(new { success = false, message = "Randevu bulunamadï¿½." });
             }
             catch (Exception)
             {
-                return Json(new { success = false, message = "Ýptal iþlemi sýrasýnda bir hata oluþtu." });
+                return Json(new { success = false, message = "ï¿½ptal iï¿½lemi sï¿½rasï¿½nda bir hata oluï¿½tu." });
             }
         }
 
@@ -464,7 +464,7 @@ namespace GaziHastane.Controllers
 
             if (randevu == null)
             {
-                TempData["Error"] = "Randevu bilgisi bulunamadý.";
+                TempData["Error"] = "Randevu bilgisi bulunamadï¿½.";
                 return RedirectToAction("Giris");
             }
 
@@ -473,18 +473,15 @@ namespace GaziHastane.Controllers
                 : "Hasta";
             var bolumAd = randevu.Bolum?.Ad ?? "Poliklinik";
             var tarihSaat = randevu.RandevuTarihi.ToString("dd MMMM yyyy - HH:mm", new System.Globalization.CultureInfo("tr-TR"));
-
-            // 2. QR Kodun yönlendireceði URL'yi oluþtur. 
-            // Hastanenin Kroki sayfasýna poliklinik adýný parametre olarak atýyoruz!
             string krokiUrl = Url.Action("Kroki", "Home", new { hedef = bolumAd }, Request.Scheme) ?? $"/Home/Kroki?hedef={bolumAd}";
 
-            // 3. QR Kodu Oluþtur
-            QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(krokiUrl, QRCodeGenerator.ECCLevel.Q);
-            Base64QRCode qrCode = new Base64QRCode(qrCodeData);
-            string qrCodeImageAsBase64 = qrCode.GetGraphic(20);
+            // 3. QR Kodu Olustur
+            QRCodeGenerator qrGenerator2 = new QRCodeGenerator();
+            QRCodeData qrCodeData2 = qrGenerator2.CreateQrCode(krokiUrl, QRCodeGenerator.ECCLevel.Q);
+            Base64QRCode qrCode2 = new Base64QRCode(qrCodeData2);
+            string qrCodeImageAsBase64 = qrCode2.GetGraphic(20);
 
-            // 4. View'a verileri gönder
+            // 4. View'a verileri gï¿½nder
             ViewBag.QrCode = "data:image/png;base64," + qrCodeImageAsBase64;
             ViewBag.HastaAd = hastaAd;
             ViewBag.BolumAd = bolumAd;

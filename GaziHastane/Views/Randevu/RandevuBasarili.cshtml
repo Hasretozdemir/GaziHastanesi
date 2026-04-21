@@ -1,32 +1,32 @@
-@{
-    ViewData["Title"] = "Randevunuz Onaylandý";
+ï»¿@{
+    ViewData["Title"] = "Randevunuz Onaylandi";
 }
 
 <div class="container mt-5 text-center mb-5">
-    <h2 class="text-success mb-4"><i class="fas fa-check-circle"></i> Randevunuz Baþarýyla Oluþturuldu</h2>
+    <h2 class="text-success mb-4"><i class="fas fa-check-circle"></i> Randevunuz Basariyla Olusturuldu</h2>
 
     <div id="pdf-randevu-fisi" class="card mx-auto shadow-sm" style="max-width: 420px; border: 2px dashed #0056b3;">
         <div class="card-body p-4">
             <div class="text-center mb-3">
                 <img src="~/assets/gazilogo.jpg" style="height: 60px;" alt="Gazi Hastanesi Logo" />
-                <h5 class="mt-2 text-primary">Gazi Üniversitesi Hastanesi</h5>
-                <p class="text-muted mb-1" style="font-size: 12px;">Randevu Bilgi Fiþi</p>
-                <p class="text-muted" style="font-size: 11px;">Fiþ No: #@ViewBag.RandevuNo</p>
+                <h5 class="mt-2 text-primary">Gazi Universitesi Hastanesi</h5>
+                <p class="text-muted mb-1" style="font-size: 12px;">Randevu Bilgi Fisi</p>
+                <p class="text-muted" style="font-size: 11px;">Fis No: #@ViewBag.RandevuNo</p>
                 <hr />
             </div>
 
             <div class="text-start">
-                <p><strong>Sayýn:</strong> @ViewBag.HastaAd</p>
+                <p><strong>Sayin:</strong> @ViewBag.HastaAd</p>
                 <p><strong>Poliklinik:</strong> @ViewBag.BolumAd</p>
-                <p><strong>Tarih & Saat:</strong> @ViewBag.TarihSaat</p>
+                <p><strong>Tarih &amp; Saat:</strong> @ViewBag.TarihSaat</p>
             </div>
 
             <div class="text-center mt-4">
-                <p style="font-size: 11px; color: gray;">Polikliniðe gitmek için telefonunuzun kamerasýndan QR kodu okutarak navigasyonu baþlatabilirsiniz.</p>
+                <p style="font-size: 11px; color: gray;">PolikliniÄŸe gitmek iÃ§in telefonunuzun kamerasÄ±ndan QR kodu okutarak navigasyonu baÅŸlatabilirsiniz.</p>
                 <img src="@ViewBag.QrCode" alt="Kroki QR Kod" class="img-fluid" style="width: 150px; height: 150px; border: 1px solid #ddd; padding: 5px; border-radius: 8px;" />
                 <div class="mt-3">
                     <a href="@ViewBag.KrokiUrl" class="btn btn-outline-primary btn-sm" target="_blank">
-                        <i class="fas fa-location-dot"></i> Krokiyi Aç
+                        <i class="fas fa-location-dot"></i> Krokiyi Ac
                     </a>
                 </div>
             </div>
@@ -34,11 +34,11 @@
     </div>
 
     <button onclick="fisiIndir()" class="btn btn-primary mt-4">
-        <i class="fas fa-file-pdf"></i> Randevu Fiþini PDF Ýndir
+        <i class="fas fa-file-pdf"></i> Randevu Fisini PDF Indir
     </button>
 
     <div class="mt-3">
-        <a href="/Randevu/Secim?userId=@ViewBag.HastaId" class="btn btn-link">Randevu sayfasýna dön</a>
+        <a href="/Randevu/Secim?userId=@ViewBag.HastaId" class="btn btn-link">Randevu sayfasina don</a>
     </div>
 </div>
 

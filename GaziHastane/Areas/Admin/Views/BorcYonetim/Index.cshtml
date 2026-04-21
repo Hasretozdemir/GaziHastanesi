@@ -1,0 +1,154 @@
+@model IEnumerable<GaziHastane.Models.BorcOdeme>
+@{
+    ViewData["Title"] = "Borç Yönetimi - Tüm Borçlar";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+<div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+
+    <div class="sm:flex sm:justify-between sm:items-center mb-8">
+        <div class="mb-4 sm:mb-0">
+            <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">Borç Yönetimi <span class="text-slate-400 font-medium">Listesi</span></h1>
+        </div>
+
+        <div class="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
+            <a href="@Url.Action("BorcEkle", "BorcYonetim")" class="btn bg-indigo-500 hover:bg-indigo-600 text-white">
+                <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
+                    <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
+                </svg>
+                <span class="hidden xs:block ml-2">Yeni Borç Ekle</span>
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="bg-emerald-100 border border-emerald-200 text-emerald-600 px-4 py-3 rounded-sm relative mb-4 font-medium" role="alert">
+            <span class="block sm:inline"><i class="fa-solid fa-circle-check mr-2"></i>@TempData["Success"]</span>
+        </div>
+    }
+
+    <div class="bg-white shadow-lg rounded-sm border border-slate-200 relative">
+        <header class="px-5 py-4 border-b border-slate-100">
+            <h2 class="font-semibold text-slate-800">Tüm Hasta Borçları <span class="text-slate-400 font-medium">(@Model.Count())</span></h2>
+        </header>
+
+        <div class="p-3">
+            <div class="overflow-x-auto">
+                <table class="table-auto w-full">
+                    <thead class="text-xs font-semibold uppercase text-slate-500 bg-slate-50 border-t border-b border-slate-200">
+                        <tr>
+                            <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                <div class="font-semibold text-left">T.C. & Hasta Adı</div>
+                            </th>
+                            <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                <div class="font-semibold text-left">Protokol No</div>
+                            </th>
+                            <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                <div class="font-semibold text-left">İşlem Tipi</div>
+                            </th>
+                            <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                <div class="font-semibold text-right">Tutar</div>
+                            </th>
+                            <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                <div class="font-semibold text-center">Tarihler</div>
+                            </th>
+                            <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                <div class="font-semibold text-center">Durum</div>
+                            </th>
+                            <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                <span class="sr-only">Aksiyon</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-slate-200">
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                        <div class="font-medium text-slate-800">@(item.Hasta?.Ad) @(item.Hasta?.Soyad)</div>
+                                        <div class="text-slate-500 text-xs">@item.Hasta?.TCKimlikNo</div>
+                                    </td>
+                                    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                        <div class="text-slate-800 font-semibold">@item.ProtakolNo</div>
+                                    </td>
+                                    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                        <div class="text-slate-800">@item.IslemTipi</div>
+                                    </td>
+                                    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap text-right">
+                                        <div class="text-slate-800 font-semibold">@item.Tutar.ToString("N2") ₺</div>
+                                    </td>
+                                    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap text-center">
+                                        <div class="text-xs text-slate-500">Eklenme: @(item.EklenmeTarihi?.ToString("dd.MM.yyyy") ?? "-")</div>
+                                        <div class="text-xs text-rose-500 font-medium mt-0.5">Son Ödeme: @(item.SonOdemeTarihi?.ToString("dd.MM.yyyy") ?? "-")</div>
+                                    </td>
+                                    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                        <div class="text-center">
+                                            @if (item.OdendiMi)
+                                            {
+                                                <div class="text-xs inline-flex font-medium bg-emerald-100 text-emerald-600 rounded-full text-center px-2.5 py-0.5">Ödendi</div>
+                                            }
+                                            else
+                                            {
+                                                <div class="text-xs inline-flex font-medium bg-amber-100 text-amber-600 rounded-full text-center px-2.5 py-0.5">Ödenmedi</div>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
+                                        @if (!item.OdendiMi)
+                                        {
+                                            <form asp-action="BorcSil" asp-route-id="@item.Id" method="post">
+                                                <button type="button" onclick="confirmDelete(this.form)" class="text-rose-500 hover:text-rose-600 rounded-full bg-slate-50 hover:bg-rose-50 p-1.5 transition-colors">
+                                                    <span class="sr-only">Sil</span>
+                                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 16 16">
+                                                        <path d="M5 7h2v6H5V7zm4 0h2v6H9V7zm3-6v2h4v2h-1v10c0 .6-.4 1-1 1H2c-.6 0-1-.4-1-1V5H0V3h4V1c0-.6.4-1 1-1h6c.6 0 1 .4 1 1zM6 2v1h4V2H6zm7 3H3v9h10V5z" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7" class="px-2 first:pl-5 last:pr-5 py-6 whitespace-nowrap text-center text-slate-500 font-medium">
+                                    <i class="fa-solid fa-folder-open text-3xl mb-2 text-slate-300 block"></i>
+                                    Henüz hiç borç kaydı girilmemiş.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function confirmDelete(form) {
+            Swal.fire({
+                title: 'Emin misiniz?',
+                text: "Bu borç kaydını silmek üzeresiniz. Bu işlem geri alınamaz!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#f43f5e', // Temana uygun Kırmızı (Rose 500)
+                cancelButtonColor: '#64748b', // Temana uygun Gri (Slate 500)
+                confirmButtonText: 'Evet, Sil',
+                cancelButtonText: 'İptal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            })
+        }
+    </script>
+}

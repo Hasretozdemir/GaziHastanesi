@@ -1,6 +1,6 @@
 @model IEnumerable<GaziHastane.Models.TahlilSonuc>
 @{
-    ViewData["Title"] = "Gazi Hastanesi | Tahlil Sonuçlarý";
+    ViewData["Title"] = "Gazi Hastanesi | Tahlil Sonuclarý";
     var seciliKategori = ((string?)ViewBag.SeciliKategori ?? "laboratuvar").ToLowerInvariant();
     var laboratuvarSayisi = (int?)ViewBag.LaboratuvarSayisi ?? 0;
     var radyolojiSayisi = (int?)ViewBag.RadyolojiSayisi ?? 0;
@@ -49,7 +49,6 @@
             width: 100vw;
         }
 
-        /* ================= SOL SÝDEBAR ================= */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--surface);
@@ -87,14 +86,14 @@
             padding: 25px;
         }
 
-            .sidebar-scroll-area::-webkit-scrollbar {
-                width: 4px;
-            }
+        .sidebar-scroll-area::-webkit-scrollbar {
+            width: 4px;
+        }
 
-            .sidebar-scroll-area::-webkit-scrollbar-thumb {
-                background: #cbd5e1;
-                border-radius: 10px;
-            }
+        .sidebar-scroll-area::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
 
         .user-card {
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
@@ -136,16 +135,16 @@
             text-decoration: none;
         }
 
-            .btn-menu:hover {
-                background: #f8fafc;
-                color: var(--navy);
-            }
+        .btn-menu:hover {
+            background: #f8fafc;
+            color: var(--navy);
+        }
 
-            .btn-menu.active {
-                background: #eff6ff;
-                color: var(--primary);
-                font-weight: 700;
-            }
+        .btn-menu.active {
+            background: #eff6ff;
+            color: var(--primary);
+            font-weight: 700;
+        }
 
         .count-badge {
             margin-left: auto;
@@ -162,7 +161,6 @@
             color: white;
         }
 
-        /* ================= SAÐ ÝÇERÝK ================= */
         .main-content {
             flex-grow: 1;
             display: flex;
@@ -190,47 +188,45 @@
             position: relative;
         }
 
-            .content-area::-webkit-scrollbar {
-                width: 6px;
-            }
+        .content-area::-webkit-scrollbar {
+            width: 6px;
+        }
 
-            .content-area::-webkit-scrollbar-thumb {
-                background: #cbd5e1;
-                border-radius: 10px;
-            }
+        .content-area::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
 
-        /* ARAMA KUTUSU */
         .search-wrapper {
             position: relative;
             width: 100%;
             max-width: 300px;
         }
 
-            .search-wrapper i {
-                position: absolute;
-                left: 15px;
-                top: 50%;
-                transform: translateY(-50%);
-                color: #94a3b8;
-            }
+        .search-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
 
-            .search-wrapper input {
-                width: 100%;
-                padding: 10px 15px 10px 45px;
-                border-radius: 12px;
-                border: 1px solid var(--border-soft);
-                background: var(--surface);
-                font-size: 14px;
-                transition: 0.3s;
-                outline: none;
-            }
+        .search-wrapper input {
+            width: 100%;
+            padding: 10px 15px 10px 45px;
+            border-radius: 12px;
+            border: 1px solid var(--border-soft);
+            background: var(--surface);
+            font-size: 14px;
+            transition: 0.3s;
+            outline: none;
+        }
 
-                .search-wrapper input:focus {
-                    border-color: var(--primary);
-                    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-                }
+        .search-wrapper input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
 
-        /* ================= LÝSTE TASARIMI ================= */
         .table-responsive {
             -webkit-overflow-scrolling: touch;
             overflow-x: auto;
@@ -244,46 +240,46 @@
             min-width: 700px;
         }
 
-            .modern-list-table th {
-                font-size: 12px;
-                font-weight: 700;
-                color: var(--text-muted);
-                text-transform: uppercase;
-                padding: 0 20px 5px 20px;
-                border: none;
-                letter-spacing: 0.5px;
-                white-space: nowrap;
-            }
+        .modern-list-table th {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            padding: 0 20px 5px 20px;
+            border: none;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
 
-            .modern-list-table td {
-                background: var(--surface);
-                padding: 18px 20px;
-                vertical-align: middle;
-                border-top: 1px solid var(--border-soft);
-                border-bottom: 1px solid var(--border-soft);
-            }
+        .modern-list-table td {
+            background: var(--surface);
+            padding: 18px 20px;
+            vertical-align: middle;
+            border-top: 1px solid var(--border-soft);
+            border-bottom: 1px solid var(--border-soft);
+        }
 
-                .modern-list-table td:first-child {
-                    border-left: 1px solid var(--border-soft);
-                    border-top-left-radius: 16px;
-                    border-bottom-left-radius: 16px;
-                }
+        .modern-list-table td:first-child {
+            border-left: 1px solid var(--border-soft);
+            border-top-left-radius: 16px;
+            border-bottom-left-radius: 16px;
+        }
 
-                .modern-list-table td:last-child {
-                    border-right: 1px solid var(--border-soft);
-                    border-top-right-radius: 16px;
-                    border-bottom-right-radius: 16px;
-                }
+        .modern-list-table td:last-child {
+            border-right: 1px solid var(--border-soft);
+            border-top-right-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
 
-            .modern-list-table tbody tr {
-                transition: 0.2s;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.01);
-            }
+        .modern-list-table tbody tr {
+            transition: 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+        }
 
-                .modern-list-table tbody tr:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 15px rgba(0,0,0,0.04);
-                }
+        .modern-list-table tbody tr:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.04);
+        }
 
         .list-icon-box {
             width: 40px;
@@ -343,25 +339,24 @@
             flex-shrink: 0;
         }
 
-            .btn-action-square.view:hover {
-                background: #eff6ff;
-                border-color: #93c5fd;
-                color: var(--primary);
-            }
+        .btn-action-square.view:hover {
+            background: #eff6ff;
+            border-color: #93c5fd;
+            color: var(--primary);
+        }
 
-            .btn-action-square.download:hover {
-                background: #fee2e2;
-                border-color: #fca5a5;
-                color: #ef4444;
-            }
+        .btn-action-square.download:hover {
+            background: #fee2e2;
+            border-color: #fca5a5;
+            color: #ef4444;
+        }
 
-            .btn-action-square.disabled {
-                opacity: 0.5;
-                cursor: not-allowed;
-                background: #f8fafc;
-            }
+        .btn-action-square.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f8fafc;
+        }
 
-        /* ================= SWEETALERT 2 ================= */
         .custom-swal-popup {
             border-radius: 20px !important;
             padding: 2em !important;
@@ -388,12 +383,11 @@
             max-width: 200px;
         }
 
-            .custom-swal-confirm-btn:hover {
-                background: var(--primary-dark) !important;
-                transform: translateY(-2px) !important;
-            }
+        .custom-swal-confirm-btn:hover {
+            background: var(--primary-dark) !important;
+            transform: translateY(-2px) !important;
+        }
 
-        /* ================= MOBÝL (RESPONSIVE) TASARIM ================= */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -408,10 +402,103 @@
             opacity: 0;
         }
 
-            .sidebar-overlay.show {
-                display: block;
-                opacity: 1;
-            }
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        #raporAlani {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .rapor-baslik {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 4px solid #2563eb;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .rapor-hasta-bilgi {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .rapor-bilgi-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rapor-bilgi-label {
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .rapor-bilgi-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #1e293b;
+        }
+
+        .rapor-tablo {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .rapor-tablo thead {
+            background: #f1f5f9;
+        }
+
+        .rapor-tablo th {
+            padding: 12px;
+            border-bottom: 2px solid #e2e8f0;
+            text-align: left;
+            font-weight: bold;
+            color: #64748b;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        .rapor-tablo td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .rapor-tablo tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rapor-footer {
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .rapor-footer-text {
+            font-size: 10px;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
 
         @@media (max-width: 991.98px) {
             .app-container {
@@ -433,9 +520,9 @@
                 max-width: 85vw;
             }
 
-                .sidebar.open {
-                    left: 0;
-                }
+            .sidebar.open {
+                left: 0;
+            }
 
             .topbar {
                 padding: 0 20px;
@@ -458,6 +545,15 @@
 
             .modern-list-table th, .modern-list-table td {
                 padding: 12px 15px;
+            }
+
+            #raporAlani {
+                padding: 20px;
+            }
+
+            .rapor-hasta-bilgi {
+                grid-template-columns: 1fr;
+                gap: 12px;
             }
         }
 
@@ -483,10 +579,6 @@
                 width: 90% !important;
             }
 
-            .custom-swal-title {
-                font-size: 18px !important;
-            }
-
             .list-icon-box {
                 width: 32px;
                 height: 32px;
@@ -504,14 +596,13 @@
     <input type="hidden" id="aktifHastaId" value="@hastaId" />
 
     <div class="app-container">
-
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-hospital-symbol brand-logo"></i>
-                    <h1 class="brand-title">GAZÝ HASTANESÝ</h1>
+                    <h1 class="brand-title">GAZI HASTANESI</h1>
                 </div>
                 <button class="btn btn-light btn-sm d-lg-none border-0" id="closeSidebarBtn"><i class="fas fa-times fa-lg"></i></button>
             </div>
@@ -524,7 +615,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <h6 class="fw-700 text-muted mb-3 ms-2" style="font-size: 12px; letter-spacing: 1px;">TIBBÝ ARÞÝV</h6>
+                    <h6 class="fw-700 text-muted mb-3 ms-2" style="font-size: 12px; letter-spacing: 1px;">TIBBI ARSIV</h6>
 
                     <a href="@Url.Action("Panel", "Sonuc", new { userId = hastaId, kategori = "laboratuvar" })" class="btn-menu @(seciliKategori == "laboratuvar" ? "active" : "")">
                         <i class="fas fa-vial" style="width:20px; color:var(--primary); margin-right: 8px;"></i> Laboratuvar
@@ -554,21 +645,20 @@
             <header class="topbar">
                 <div class="d-flex align-items-center gap-3">
                     <button class="btn btn-light d-lg-none border" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
-                    <h4 class="fw-700 text-navy mb-0" id="pageTitle" style="font-size: 18px;">Sonuç Paneli</h4>
+                    <h4 class="fw-700 text-navy mb-0" id="pageTitle" style="font-size: 18px;">Sonuc Paneli</h4>
                 </div>
                 <div>
-                    <a href="/Home/Cikis" class="btn btn-light btn-sm fw-600 text-danger rounded-pill px-3 border"><i class="fas fa-sign-out-alt"></i> <span class="d-none d-sm-inline ms-1">Çýkýþ</span></a>
+                    <a href="/Home/Cikis" class="btn btn-light btn-sm fw-600 text-danger rounded-pill px-3 border"><i class="fas fa-sign-out-alt"></i> <span class="d-none d-sm-inline ms-1">Cikis</span></a>
                 </div>
             </header>
 
             <div class="content-area animate__animated animate__fadeIn">
-
                 <div class="d-flex justify-content-between align-items-center mb-4 header-flex">
                     <div>
                         <h4 class="fw-800 text-navy mb-1" style="font-size: 20px;">
-                            @(seciliKategori == "radyoloji" ? "Radyoloji Sonuçlarý" : seciliKategori == "patoloji" ? "Patoloji Sonuçlarý" : "Laboratuvar Sonuçlarý")
+                            @(seciliKategori == "radyoloji" ? "Radyoloji Sonuclari" : seciliKategori == "patoloji" ? "Patoloji Sonuclari" : "Laboratuvar Sonuclari")
                         </h4>
-                        <p class="text-muted small mb-0">Tüm týbbi tetkikleriniz listelenmektedir.</p>
+                        <p class="text-muted small mb-0">Tum tibbi tetkikleriniz listelenmektedir.</p>
                     </div>
                     <div class="search-wrapper">
                         <i class="fas fa-search"></i>
@@ -582,7 +672,7 @@
                         <table class="modern-list-table" id="sonucTable">
                             <thead>
                                 <tr>
-                                    <th>Tetkik Adý</th>
+                                    <th>Tetkik Adi</th>
                                     <th>Kategori</th>
                                     <th>Tarih</th>
                                     <th>Durum</th>
@@ -597,7 +687,7 @@
                                     string iconFa = isCompleted ? "fa-tint" : "fa-sun";
                                     string badgeClass = isCompleted ? "badge-success-soft" : "badge-warning-soft";
                                     string badgeIcon = isCompleted ? "fa-check-circle" : "fa-clock";
-                                    string badgeText = isCompleted ? "Tamamlandý" : "Onay Bekliyor";
+                                    string badgeText = isCompleted ? "Tamamlandi" : "Onay Bekliyor";
 
                                     <tr>
                                         <td>
@@ -616,13 +706,13 @@
                                         </td>
                                         <td class="text-end">
                                             <div class="d-flex justify-content-end align-items-center">
-                                                <button class="btn-action-square view" title="Görüntüle" onclick="gosterSonuc('@sonuc.TestAdi', '@(isCompleted? sonuc.SonucDegeri: "Sonuç henüz çýkmadý")')">
+                                                <button class="btn-action-square view" title="Gorus" onclick="gosterSonuc('@sonuc.TestAdi', '@(isCompleted? sonuc.SonucDegeri: "Sonuc henuz cikmadi")')">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
 
                                                 @if (!string.IsNullOrEmpty(sonuc.RaporDosyaUrl))
                                                 {
-                                                    <a href="@sonuc.RaporDosyaUrl" target="_blank" class="btn-action-square download" title="PDF Ýndir">
+                                                    <a href="@sonuc.RaporDosyaUrl" target="_blank" class="btn-action-square download" title="PDF Indir">
                                                         <i class="fas fa-file-pdf"></i>
                                                     </a>
                                                 }
@@ -644,54 +734,114 @@
                 {
                     <div class="text-center py-5 mt-4" style="background: var(--surface); border-radius: 20px; border: 1px dashed var(--border-soft);">
                         <i class="fas fa-folder-open fa-3x text-muted opacity-25 mb-3"></i>
-                        <h5 class="text-muted fw-600">Seçili kategori için kayýt bulunmamaktadýr.</h5>
+                        <h5 class="text-muted fw-600">Secili kategori icin kayit bulunmamaktadir.</h5>
                     </div>
                 }
-
             </div>
         </main>
     </div>
 
-    <div id="sonucFisiModal" class="position-fixed top-0 start-0 w-100 h-100 d-none align-items-center justify-content-center p-3" style="background: rgba(15,23,42,0.65); z-index: 1200; backdrop-filter: blur(2px);">
-        <div class="bg-white rounded-4 shadow-lg w-100" style="max-width: 520px;">
-            <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
-                <h5 class="m-0 fw-bold text-primary"><i class="fa-solid fa-file-waveform me-2"></i>Sonuç Bilgi Fiþi</h5>
-                <button class="btn btn-light btn-sm border-0" onclick="sonucFisiKapat()"><i class="fa-solid fa-xmark"></i></button>
+    <!-- PROFESYONEL PDF RAPOR MODAL -->
+    <div id="raporModal" class="position-fixed top-0 start-0 w-100 h-100 d-none align-items-center justify-content-center p-3" style="background: rgba(15,23,42,0.65); z-index: 1200; backdrop-filter: blur(2px); overflow-y: auto;">
+        <div class="bg-white rounded-4 shadow-lg w-100" style="max-width: 700px; margin-top: 20px; margin-bottom: 20px;">
+            <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom sticky-top bg-white rounded-top-4">
+                <h5 class="m-0 fw-bold text-primary"><i class="fa-solid fa-file-waveform me-2"></i>Tahlil Sonuc Raporu</h5>
+                <button class="btn btn-light btn-sm border-0" onclick="raporKapat()"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
             <div class="p-4">
-                <div id="pdf-sonuc-fisi" class="mx-auto rounded-4 p-3" style="max-width: 420px; border: 2px dashed #2563eb; background: linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);">
-                    <div class="text-center mb-3">
-                        <img src="~/assets/gazilogo.jpg" alt="Gazi Logo" style="height:56px; width:auto;" />
-                        <h6 class="mt-2 mb-1 fw-bold text-primary">Gazi Üniversitesi Hastanesi</h6>
-                        <p class="text-muted mb-0" style="font-size: 12px;">Tahlil Sonuç Bilgi Fiþi</p>
-                        <p class="text-muted mb-2" style="font-size: 11px;">Fiþ No: <span id="sonucFisNoText">-</span></p>
-                        <hr class="my-2" />
+                <div id="raporAlani" style="border: 1px solid #e2e8f0;">
+                    <!-- LOGO VE BASLIK -->
+                    <div class="rapor-baslik">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <img src="~/assets/gazilogo.jpg" alt="Gazi Logo" style="width: 50px; height: auto; object-fit: contain;">
+                            <div>
+                                <h4 style="margin: 0; font-size: 16px; font-weight: bold; color: #1e293b; letter-spacing: -0.5px;">Gazi Universitesi Hastanesi</h4>
+                                <p style="margin: 0; font-size: 11px; color: #94a3b8; font-weight: bold;">Merkez Laboratuvari Sonuc Raporu</p>
+                            </div>
+                        </div>
+                        <div style="text-align: right; font-size: 11px;">
+                            <p style="margin: 0; color: #475569;"><strong>Tarih:</strong> <span id="raporTarihi">-</span></p>
+                            <p style="margin: 0; color: #475569;"><strong>Rapor No:</strong> <span id="raporNo">-</span></p>
+                        </div>
                     </div>
 
-                    <div class="text-start" style="font-size: 14px;">
-                        <p class="mb-1"><strong>Sayýn:</strong> <span id="sonucHastaAdText">-</span></p>
-                        <p class="mb-1"><strong>Test:</strong> <span id="sonucTestAdiText">-</span></p>
-                        <p class="mb-1"><strong>Kategori:</strong> <span id="sonucKategoriText">-</span></p>
-                        <p class="mb-1"><strong>Tarih:</strong> <span id="sonucTarihText">-</span></p>
-                        <p class="mb-1"><strong>Doktor:</strong> <span id="sonucDoktorAdText">-</span></p>
-                        <p class="mb-1"><strong>Deðer:</strong> <span id="sonucDegerText">-</span></p>
-                        <p class="mb-1"><strong>Referans:</strong> <span id="sonucReferansText">-</span></p>
-                        <p class="mb-0"><strong>Durum:</strong> <span id="sonucDurumText">-</span></p>
+                    <!-- HASTA BILGILERI -->
+                    <div class="rapor-hasta-bilgi">
+                        <div class="rapor-bilgi-item">
+                            <span class="rapor-bilgi-label">Hasta Adi Soyadi</span>
+                            <span class="rapor-bilgi-value" id="raporHastaAdi">-</span>
+                        </div>
+                        <div class="rapor-bilgi-item">
+                            <span class="rapor-bilgi-label">T.C. Kimlik No</span>
+                            <span class="rapor-bilgi-value" id="raporTcNo">-</span>
+                        </div>
+                        <div class="rapor-bilgi-item">
+                            <span class="rapor-bilgi-label">Test Adi</span>
+                            <span class="rapor-bilgi-value" id="raporTestAdi">-</span>
+                        </div>
+                        <div class="rapor-bilgi-item">
+                            <span class="rapor-bilgi-label">Kategori</span>
+                            <span class="rapor-bilgi-value" id="raporKategori">-</span>
+                        </div>
+                        <div class="rapor-bilgi-item">
+                            <span class="rapor-bilgi-label">Doktor</span>
+                            <span class="rapor-bilgi-value" id="raporDoktor">-</span>
+                        </div>
+                        <div class="rapor-bilgi-item">
+                            <span class="rapor-bilgi-label">Test Tarihi</span>
+                            <span class="rapor-bilgi-value" id="raporTestTarihi">-</span>
+                        </div>
                     </div>
 
-                    <div class="text-center mt-3">
-                        <p class="text-muted mb-2" style="font-size: 11px;">Ýlgili birim kroki eriþimi için QR kodu okutabilirsiniz.</p>
-                        <img id="sonucFisQrImage" src="" alt="Kroki QR Kod" class="img-fluid bg-white" style="width: 150px; height: 150px; border: 1px solid #dbe4f0; padding: 6px; border-radius: 10px;" />
+                    <!-- SONUC TABLOSU -->
+                    <table class="rapor-tablo">
+                        <thead>
+                            <tr>
+                                <th>Parametre</th>
+                                <th>Sonuc</th>
+                                <th>Birim</th>
+                                <th>Referans Araligi</th>
+                                <th style="text-align: center;">Durum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: bold; color: #1e293b;" id="raporParameter">-</td>
+                                <td style="font-weight: bold; font-size: 15px; color: #1e293b;" id="raporSonucValue">-</td>
+                                <td style="color: #475569;">-</td>
+                                <td style="color: #475569;" id="raporReferans">-</td>
+                                <td style="text-align: center;">
+                                    <span id="raporDurumBadge" style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; background: #dcfce7; color: #16a34a;">
+                                        <i class="fa-solid fa-check-circle"></i> Normal
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- QR KOD -->
+                    <div style="text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px; margin-top: 20px;">
+                        <p style="font-size: 11px; color: #94a3b8; margin: 0 0 12px 0;">Polikliniðe ulaþim icin QR kodu okutabilirsiniz</p>
+                        <img id="raporQrCode" src="" alt="Kroki QR Kod" style="width: 120px; height: 120px; border: 1px solid #dbe4f0; padding: 6px; border-radius: 10px; background: white;">
+                    </div>
+
+                    <!-- ALT METIN -->
+                    <div class="rapor-footer">
+                        <p class="rapor-footer-text">
+                            Bu rapor elektronik olarak onaylanmistir, islak imzaya gerek yoktur.<br>
+                            Laboratuvar Uzmani: <span id="raporLabUzmani">-</span><br>
+                            <span style="margin-top: 8px; font-weight: bold; color: #cbd5e1; display: block;">Gazi Hastanesi Laboratuvar Bilgi Sistemi</span>
+                        </p>
                     </div>
                 </div>
 
-                <div class="d-flex flex-column flex-sm-row gap-2 mt-3">
-                    <a id="sonucKrokiAcLink" href="#" target="_blank" class="btn btn-outline-primary w-100">
-                        <i class="fa-solid fa-location-dot me-1"></i>Krokiyi Aç
+                <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
+                    <a id="raporKrokiUrl" href="#" target="_blank" class="btn btn-outline-primary w-100">
+                        <i class="fa-solid fa-location-dot me-1"></i> Krokiyi Ac
                     </a>
-                    <button onclick="sonucFisiIndir()" class="btn btn-primary w-100">
-                        <i class="fa-solid fa-file-pdf me-1"></i>PDF Ýndir
+                    <button onclick="raporPdfIndir()" class="btn btn-primary w-100">
+                        <i class="fa-solid fa-file-pdf me-1"></i> PDF Indir
                     </button>
                 </div>
             </div>
@@ -701,7 +851,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // --- MOBÝL SÝDEBAR MANTIÐI ---
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
         const mobileBtn = document.getElementById('mobileMenuBtn');
@@ -716,7 +865,6 @@
         closeSidebarBtn.addEventListener('click', toggleSidebar);
         overlay.addEventListener('click', toggleSidebar);
 
-        // --- TABLO ARAMA FÝLTRESÝ ---
         function filterTable() {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("searchInput");
@@ -740,12 +888,11 @@
             }
         }
 
-        // --- SWEETALERT ÝLE SONUÇ GÖSTERÝMÝ ---
         function gosterSonuc(testAdi, deger) {
             Swal.fire({
                 title: testAdi,
                 html: `<div class="mt-2 mb-2 p-3 rounded-3" style="background: #f8fafc; border: 1px solid #e2e8f0;">
-                          <span class="text-muted fw-600 d-block mb-1" style="font-size:12px;">Ölçülen Deðer</span>
+                          <span class="text-muted fw-600 d-block mb-1" style="font-size:12px;">Olculen Deger</span>
                           <span class="fw-800 text-primary" style="font-size:24px;">${deger}</span>
                        </div>`,
                 icon: 'info',
@@ -759,7 +906,7 @@
             });
         }
 
-        function sonucFisiAc(sonucId) {
+        function raporAc(sonucId) {
             const hastaId = document.getElementById('aktifHastaId')?.value || '';
             fetch(`/Sonuc/GetSonucFisi?sonucId=${sonucId}&userId=${hastaId}`)
                 .then(res => res.json())
@@ -768,7 +915,7 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Hata',
-                            text: resp?.message || 'Sonuç fiþi getirilemedi.',
+                            text: resp?.message || 'Sonuc fisi getirilemedi.',
                             buttonsStyling: false,
                             customClass: {
                                 popup: 'custom-swal-popup',
@@ -780,19 +927,39 @@
                     }
 
                     const d = resp.data;
-                    document.getElementById('sonucFisNoText').innerText = `#${d.sonucNo}`;
-                    document.getElementById('sonucHastaAdText').innerText = d.hastaAd;
-                    document.getElementById('sonucTestAdiText').innerText = d.testAdi;
-                    document.getElementById('sonucKategoriText').innerText = d.kategori;
-                    document.getElementById('sonucTarihText').innerText = d.tarih;
-                    document.getElementById('sonucDoktorAdText').innerText = d.doktorAd;
-                    document.getElementById('sonucDegerText').innerText = d.sonucDegeri;
-                    document.getElementById('sonucReferansText').innerText = d.referansAraligi;
-                    document.getElementById('sonucDurumText').innerText = d.durum;
-                    document.getElementById('sonucFisQrImage').src = d.qrCode;
-                    document.getElementById('sonucKrokiAcLink').href = d.krokiUrl;
+                    document.getElementById('raporNo').innerText = `#${d.sonucNo}`;
+                    document.getElementById('raporTarihi').innerText = new Date().toLocaleDateString('tr-TR');
+                    document.getElementById('raporHastaAdi').innerText = d.hastaAd;
+                    document.getElementById('raporTcNo').innerText = '-';
+                    document.getElementById('raporTestAdi').innerText = d.testAdi;
+                    document.getElementById('raporKategori').innerText = d.kategori;
+                    document.getElementById('raporDoktor').innerText = d.doktorAd;
+                    document.getElementById('raporTestTarihi').innerText = d.tarih;
+                    document.getElementById('raporParameter').innerText = d.testAdi;
 
-                    const modal = document.getElementById('sonucFisiModal');
+                    const sonucDegeri = d.sonucDegeri || '-';
+                    const isAnormal = sonucDegeri.includes('Yuksek') || sonucDegeri.includes('Dusuk') || sonucDegeri.includes('Anormal');
+
+                    document.getElementById('raporSonucValue').innerText = sonucDegeri;
+                    document.getElementById('raporSonucValue').style.color = isAnormal ? '#dc2626' : '#1e293b';
+                    document.getElementById('raporReferans').innerText = d.referansAraligi;
+
+                    const durumBadge = document.getElementById('raporDurumBadge');
+                    if (isAnormal) {
+                        durumBadge.style.background = '#fee2e2';
+                        durumBadge.style.color = '#dc2626';
+                        durumBadge.innerHTML = '<i class="fa-solid fa-exclamation-circle"></i> Anormal';
+                    } else {
+                        durumBadge.style.background = '#dcfce7';
+                        durumBadge.style.color = '#16a34a';
+                        durumBadge.innerHTML = '<i class="fa-solid fa-check-circle"></i> Normal';
+                    }
+
+                    document.getElementById('raporLabUzmani').innerText = d.doktorAd;
+                    document.getElementById('raporQrCode').src = d.qrCode;
+                    document.getElementById('raporKrokiUrl').href = d.krokiUrl;
+
+                    const modal = document.getElementById('raporModal');
                     modal.classList.remove('d-none');
                     modal.classList.add('d-flex');
                     document.body.style.overflow = 'hidden';
@@ -801,7 +968,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Hata',
-                        text: 'Sonuç fiþi yüklenirken bir hata oluþtu.',
+                        text: 'Rapor yuklenirken bir hata olustu.',
                         buttonsStyling: false,
                         customClass: {
                             popup: 'custom-swal-popup',
@@ -812,65 +979,28 @@
                 });
         }
 
-        function sonucFisiKapat() {
-            const modal = document.getElementById('sonucFisiModal');
+        function raporKapat() {
+            const modal = document.getElementById('raporModal');
             modal.classList.remove('d-flex');
             modal.classList.add('d-none');
             document.body.style.overflow = '';
         }
 
-        async function sonucFisiIndir() {
-            const element = document.getElementById('pdf-sonuc-fisi');
+        function raporPdfIndir() {
+            const element = document.getElementById('raporAlani');
             if (!element) return;
 
-            const fisNo = document.getElementById('sonucFisNoText')?.innerText?.replace('#', '') || 'SonucFisi';
+            const fisNo = document.getElementById('raporNo')?.innerText?.replace('#', '') || 'RaporFisi';
 
-            try {
-                if (typeof html2pdf === 'undefined') {
-                    await yeniHtml2PdfYukle();
-                }
+            const opt = {
+                margin: 10,
+                filename: `GaziHastanesi_TahlilRaporu_${fisNo}.pdf`,
+                image: { type: 'jpeg', quality: 1.0 },
+                html2canvas: { scale: 2, useCORS: true, allowTaint: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
 
-                const opt = {
-                    margin: 0.4,
-                    filename: `GaziHastanesi_SonucFisi_${fisNo}.pdf`,
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2, useCORS: true, allowTaint: true },
-                    jsPDF: { unit: 'in', format: 'a5', orientation: 'portrait' }
-                };
-
-                await html2pdf().set(opt).from(element).save();
-            } catch {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'PDF Hatasý',
-                    text: 'PDF oluþturulamadý. Lütfen tekrar deneyin.',
-                    buttonsStyling: false,
-                    customClass: {
-                        popup: 'custom-swal-popup',
-                        title: 'custom-swal-title',
-                        confirmButton: 'custom-swal-confirm-btn'
-                    }
-                });
-            }
-        }
-
-        function yeniHtml2PdfYukle() {
-            return new Promise((resolve, reject) => {
-                const mevcut = document.querySelector('script[data-html2pdf="1"]');
-                if (mevcut) {
-                    mevcut.addEventListener('load', () => resolve());
-                    mevcut.addEventListener('error', () => reject());
-                    return;
-                }
-
-                const script = document.createElement('script');
-                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-                script.async = true;
-                script.dataset.html2pdf = '1';
-                script.onload = () => resolve();
-                script.onerror = () => reject();
-                document.head.appendChild(script);
-            });
+            html2pdf().set(opt).from(element).save();
         }
     </script>
 </body>

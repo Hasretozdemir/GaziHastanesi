@@ -1,0 +1,153 @@
+@{
+    ViewData["Title"] = "Yeni Borç Ekle";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+    <div class="sm:flex sm:justify-between sm:items-center mb-8">
+        <div class="mb-4 sm:mb-0">
+            <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">Yeni Borç Ekle</h1>
+        </div>
+        <div class="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
+            <a href="@Url.Action("Index")" class="btn bg-white border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-600">
+                Geri Dön
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="bg-rose-100 text-rose-600 border border-rose-200 px-4 py-3 rounded-sm relative mb-4 font-medium">
+            <span class="block sm:inline"><i class="fa-solid fa-triangle-exclamation mr-2"></i>@TempData["Error"]</span>
+        </div>
+    }
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <div class="bg-white shadow-lg rounded-sm border border-slate-200 p-6 glass-card h-fit">
+            <h2 class="text-lg font-bold text-slate-800 mb-4">1. Hasta Bul (T.C. Kimlik Sorgula)</h2>
+            <div class="flex gap-2">
+                <input type="text" id="tcKimlikInput" class="form-input w-full" placeholder="Hastanın T.C. Kimlik numarasını girin" maxlength="11" />
+                <button type="button" id="btnSorgula" class="btn bg-indigo-500 hover:bg-indigo-600 text-white">Sorgula</button>
+            </div>
+            <div id="sorguSonuc" class="mt-4 text-sm font-medium hidden p-3 rounded-sm border"></div>
+        </div>
+
+        <div class="bg-white shadow-lg rounded-sm border border-slate-200 p-6 glass-card">
+            <h2 class="text-lg font-bold text-slate-800 mb-4 border-b border-slate-100 pb-2">2. İşlem ve Borç Bilgileri</h2>
+
+            <div id="borcFormAlani" class="relative mt-2">
+                <div id="formOverlay" class="absolute inset-0 bg-white/70 backdrop-blur-[1px] z-10 flex items-center justify-center transition-all duration-300">
+                    <div class="bg-slate-800 text-white px-4 py-2 rounded-sm text-sm font-medium shadow-lg flex items-center gap-2">
+                        <i class="fa-solid fa-lock text-slate-300"></i> Önce hasta sorgulayın
+                    </div>
+                </div>
+
+                <form asp-action="BorcEkle" method="post" id="mainForm">
+                    <input type="hidden" id="HastaId" name="HastaId" value="0" required />
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1 text-slate-700" for="IslemTipi">İşlem Tipi <span class="text-rose-500">*</span></label>
+                            <select id="IslemTipi" name="IslemTipi" class="form-select w-full" required>
+                                <option value="">İşlem Seçiniz...</option>
+                                <option value="Uzman Doktor Muayenesi">Uzman Doktor Muayenesi</option>
+                                <option value="Kardiyoloji Muayenesi">Kardiyoloji Muayenesi</option>
+                                <option value="Göz Muayenesi">Göz Muayenesi</option>
+                                <option value="Kan Tahlilleri (Tam Kan Sayımı)">Kan Tahlilleri (Tam Kan Sayımı)</option>
+                                <option value="Röntgen/MR çekimi">Röntgen/MR çekimi</option>
+                                <option value="EKG (Elektrokardiyografi)">EKG (Elektrokardiyografi)</option>
+                                <option value="Genel Cerrahi Girişim">Genel Cerrahi Girişim</option>
+                                <option value="Oda Ücreti (Gecelik)">Oda Ücreti (Gecelik)</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1 text-slate-700" for="Tutar">Borç Tutarı (TL) <span class="text-rose-500">*</span></label>
+                                <input id="Tutar" name="Tutar" type="number" step="0.01" class="form-input w-full font-semibold text-slate-900" placeholder="Örn: 1500.00" required />
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-1 text-slate-700" for="SonOdemeTarihi">Son Ödeme Tarihi <span class="text-rose-500">*</span></label>
+                                <input id="SonOdemeTarihi" name="SonOdemeTarihi" type="date" class="form-input w-full" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex justify-end border-t border-slate-100 pt-4">
+                        <button type="submit" class="btn bg-indigo-500 hover:bg-indigo-600 text-white">
+                            <i class="fa-solid fa-check mr-2"></i> İşlemi Kaydet
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('btnSorgula').addEventListener('click', function () {
+            const tc = document.getElementById('tcKimlikInput').value;
+            const sonucDiv = document.getElementById('sorguSonuc');
+            const formOverlay = document.getElementById('formOverlay');
+            const hastaIdInput = document.getElementById('HastaId');
+
+            if (!tc) {
+                sonucDiv.className = "mt-4 text-sm font-medium p-3 rounded-sm bg-amber-100 text-amber-600 border border-amber-200 block";
+                sonucDiv.innerHTML = "<i class='fa-solid fa-circle-exclamation mr-2'></i>Lütfen T.C. Kimlik numarasını giriniz.";
+                kilitleForm();
+                return;
+            }
+
+            const btnText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Aranıyor...';
+            this.disabled = true;
+
+            const formData = new FormData();
+            formData.append('tcKimlik', tc);
+
+            fetch('/Admin/BorcYonetim/TcSorgu', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                this.innerHTML = 'Sorgula';
+                this.disabled = false;
+
+                if (data.success) {
+                    sonucDiv.className = "mt-4 text-sm font-medium p-3 rounded-sm bg-emerald-100 text-emerald-700 border border-emerald-200 block";
+                    sonucDiv.innerHTML = `<i class="fa-solid fa-check-circle mr-2"></i><strong>Hasta Bulundu:</strong> ${data.ad} ${data.soyad} (${data.tcKimlik})`;
+
+                    hastaIdInput.value = data.id;
+                    formAc();
+                } else {
+                    sonucDiv.className = "mt-4 text-sm font-medium p-3 rounded-sm bg-rose-100 text-rose-700 border border-rose-200 block";
+                    sonucDiv.innerHTML = `<i class="fa-solid fa-times-circle mr-2"></i>${data.message}`;
+                    kilitleForm();
+                }
+            })
+            .catch(err => {
+                this.innerHTML = 'Sorgula';
+                this.disabled = false;
+                sonucDiv.className = "mt-4 text-sm font-medium p-3 rounded-sm bg-rose-100 text-rose-700 block";
+                sonucDiv.innerHTML = "Bir hata oluştu.";
+                kilitleForm();
+            });
+
+            function formAc() {
+                formOverlay.style.opacity = "0";
+                setTimeout(() => { formOverlay.style.display = "none"; }, 300);
+            }
+
+            function kilitleForm() {
+                formOverlay.style.display = "flex";
+                setTimeout(() => { formOverlay.style.opacity = "1"; }, 10);
+                hastaIdInput.value = "0";
+                document.getElementById('mainForm').reset();
+            }
+        });
+    </script>
+}

@@ -1,0 +1,699 @@
+@model GaziHastane.Models.OdemeMakbuzViewModel
+@{
+    ViewData["Title"] = "Ödeme Makbuzu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+    /* =============================================
+       MAKBUZ SAYFASI - ÖZEL STİLLER
+       ============================================= */
+
+    .makbuz-page-wrapper {
+        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        min-height: 100vh;
+        padding: 2.5rem 1rem;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    .makbuz-container {
+        max-width: 860px;
+        margin: 0 auto;
+    }
+
+    /* ---------- Üst Aksiyon Çubuğu ---------- */
+    .makbuz-action-bar {
+        background: #ffffff;
+        padding: 1.1rem 1.5rem;
+        border-radius: 14px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+        border: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .makbuz-action-bar h2 {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #1e293b;
+        margin: 0 0 2px 0;
+    }
+
+    .makbuz-action-bar p {
+        font-size: 0.78rem;
+        color: #64748b;
+        margin: 0;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.6rem;
+    }
+
+    .btn-pdf-indir {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.6rem 1.3rem;
+        background: #0f172a;
+        color: #eab308;
+        font-weight: 800;
+        font-size: 0.8rem;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        box-shadow: 0 4px 14px rgba(15,23,42,0.3);
+        transition: background 0.2s ease, transform 0.15s ease;
+    }
+
+    .btn-pdf-indir:hover {
+        background: #1e293b;
+        transform: translateY(-1px);
+        color: #eab308;
+        text-decoration: none;
+    }
+
+    .btn-geri {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.6rem 1.1rem;
+        background: #f1f5f9;
+        color: #475569;
+        font-weight: 700;
+        font-size: 0.8rem;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.2s ease;
+    }
+
+    .btn-geri:hover {
+        background: #e2e8f0;
+        color: #334155;
+        text-decoration: none;
+    }
+
+    /* ---------- Fatura Alanı ---------- */
+    #faturaAlani {
+        background: #ffffff;
+        padding: 3rem;
+        border-radius: 16px;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.1);
+        border: 1px solid #e2e8f0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Filigran */
+    .fatura-filigran {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.025;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .fatura-filigran i {
+        font-size: 28rem;
+        color: #0f172a;
+    }
+
+    /* ---------- Başlık Bölümü ---------- */
+    .fatura-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-bottom: 2.5px solid #0f172a;
+        padding-bottom: 1.5rem;
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .fatura-logo-grup {
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+    }
+
+    .fatura-logo {
+        width: 76px;
+        height: 76px;
+        object-fit: contain;
+        border-radius: 12px;
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .fatura-hastane-adi h1 {
+        font-size: 1.4rem;
+        font-weight: 900;
+        color: #0f172a;
+        text-transform: uppercase;
+        letter-spacing: -0.5px;
+        margin-bottom: 2px;
+    }
+
+    .fatura-hastane-adi h2 {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+    }
+
+    .fatura-hastane-adi p {
+        font-size: 0.72rem;
+        color: #94a3b8;
+        margin: 1px 0;
+    }
+
+    .fatura-no-blok {
+        text-align: right;
+    }
+
+    .fatura-no-blok h3 {
+        font-size: 1.4rem;
+        font-weight: 900;
+        color: #0f172a;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+    }
+
+    .fatura-no-blok .makbuz-no {
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #dc2626;
+    }
+
+    .fatura-no-blok .makbuz-no span {
+        color: #475569;
+    }
+
+    .fatura-no-blok .fatura-tarih {
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-top: 12px;
+    }
+
+    .fatura-no-blok .fatura-tarih span {
+        font-weight: 500;
+        color: #64748b;
+    }
+
+    /* ---------- Hasta Bilgileri Bandı ---------- */
+    .hasta-bilgi-bant {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 1.2rem 1.5rem;
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hasta-bilgi-bant .hasta-ad-grup .label {
+        font-size: 0.67rem;
+        font-weight: 800;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+    }
+
+    .hasta-bilgi-bant .hasta-ad-grup .adsoyad {
+        font-size: 1.1rem;
+        font-weight: 900;
+        color: #0f172a;
+        text-transform: uppercase;
+    }
+
+    .hasta-bilgi-bant .hasta-ad-grup .tckimlik {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: #64748b;
+        margin-top: 4px;
+    }
+
+    .hasta-bilgi-bant .hasta-ad-grup .tckimlik strong {
+        color: #1e293b;
+        font-weight: 800;
+    }
+
+    .odeme-yontemi-blok {
+        text-align: right;
+    }
+
+    .odeme-yontemi-blok .label {
+        font-size: 0.67rem;
+        font-weight: 800;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+    }
+
+    .odeme-yontemi-badge {
+        display: inline-block;
+        background: #dbeafe;
+        color: #1d4ed8;
+        font-size: 0.78rem;
+        font-weight: 800;
+        padding: 0.35rem 0.9rem;
+        border-radius: 20px;
+    }
+
+    .odeme-ref {
+        font-size: 0.72rem;
+        color: #94a3b8;
+        margin-top: 6px;
+    }
+
+    /* ---------- İşlem Tablosu ---------- */
+    .islem-tablo-wrapper {
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+        margin-bottom: 2rem;
+    }
+
+    .islem-tablo-wrapper table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.83rem;
+        text-align: left;
+    }
+
+    .islem-tablo-wrapper thead tr {
+        background: #0f172a;
+    }
+
+    .islem-tablo-wrapper thead th {
+        color: #eab308;
+        font-weight: 800;
+        padding: 0.95rem 1.2rem;
+        white-space: nowrap;
+    }
+
+    .islem-tablo-wrapper thead th.text-center { text-align: center; }
+    .islem-tablo-wrapper thead th.text-right  { text-align: right; }
+
+    .islem-tablo-wrapper tbody tr {
+        border-bottom: 1px solid #f1f5f9;
+        transition: background 0.15s ease;
+    }
+
+    .islem-tablo-wrapper tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .islem-tablo-wrapper tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .islem-tablo-wrapper tbody td {
+        padding: 0.9rem 1.2rem;
+        color: #475569;
+    }
+
+    .islem-tablo-wrapper tbody td.sira-no {
+        text-align: center;
+        font-weight: 800;
+        color: #cbd5e1;
+        width: 46px;
+    }
+
+    .islem-tablo-wrapper tbody td.islem-adi {
+        font-weight: 700;
+        color: #1e293b;
+    }
+
+    .islem-tablo-wrapper tbody td.adet {
+        text-align: center;
+        font-weight: 600;
+        width: 80px;
+    }
+
+    .islem-tablo-wrapper tbody td.birim-fiyat {
+        text-align: right;
+        font-weight: 500;
+        width: 120px;
+    }
+
+    .islem-tablo-wrapper tbody td.tutar {
+        text-align: right;
+        font-weight: 800;
+        color: #0f172a;
+        width: 120px;
+    }
+
+    /* Boş tablo mesajı */
+    .bos-tablo-mesaj td {
+        text-align: center;
+        padding: 2rem !important;
+        color: #94a3b8;
+        font-style: italic;
+    }
+
+    /* ---------- Toplamlar Bölümü ---------- */
+    .toplamlar-wrapper {
+        display: flex;
+        justify-content: flex-end;
+        position: relative;
+        z-index: 1;
+        margin-bottom: 3rem;
+    }
+
+    .toplam-kutu {
+        width: 290px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 1.2rem 1.5rem;
+    }
+
+    .toplam-satir {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.82rem;
+        margin-bottom: 0.65rem;
+    }
+
+    .toplam-satir .etiket {
+        font-weight: 700;
+        color: #64748b;
+    }
+
+    .toplam-satir .deger {
+        font-weight: 700;
+        color: #1e293b;
+    }
+
+    .toplam-ayrac {
+        border: none;
+        border-top: 1px solid #cbd5e1;
+        margin: 0.75rem 0;
+    }
+
+    .toplam-genel-satir {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .toplam-genel-satir .etiket {
+        font-size: 1rem;
+        font-weight: 900;
+        color: #0f172a;
+        text-transform: uppercase;
+    }
+
+    .toplam-genel-satir .deger {
+        font-size: 1.15rem;
+        font-weight: 900;
+        color: #dc2626;
+    }
+
+    /* ---------- Alt Bilgi / İmza ---------- */
+    .fatura-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        position: relative;
+        z-index: 1;
+        padding-top: 1.5rem;
+        border-top: 1px dashed #e2e8f0;
+    }
+
+    .fatura-footer .bilgi-notu {
+        max-width: 420px;
+        font-size: 0.72rem;
+        color: #94a3b8;
+        line-height: 1.6;
+    }
+
+    .fatura-footer .bilgi-notu p {
+        margin-bottom: 4px;
+    }
+
+    .fatura-footer .imza-blok {
+        text-align: center;
+    }
+
+    .imza-alani {
+        width: 160px;
+        height: 50px;
+        border-bottom: 1.5px solid #94a3b8;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    .fatura-footer .imza-blok .kasiyer-adi {
+        font-size: 0.82rem;
+        font-weight: 800;
+        color: #1e293b;
+    }
+
+    .fatura-footer .imza-blok .kasiyer-birim {
+        font-size: 0.7rem;
+        color: #94a3b8;
+        margin-top: 2px;
+    }
+
+    /* ---------- Basarili Odeme Rozeti ---------- */
+    .odeme-basari-rozeti {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: #dcfce7;
+        color: #166534;
+        font-size: 0.7rem;
+        font-weight: 800;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        border: 1px solid #bbf7d0;
+        margin-bottom: 0.5rem;
+    }
+
+    /* ---------- Print Media ---------- */
+    @@media print {
+        .makbuz-action-bar { display: none !important; }
+        .makbuz-page-wrapper { background: white; padding: 0; }
+        #faturaAlani { box-shadow: none; border: none; padding: 1.5cm; }
+    }
+
+    @@media (max-width: 640px) {
+        #faturaAlani { padding: 1.2rem; }
+        .fatura-header { flex-direction: column; gap: 1rem; }
+        .fatura-no-blok { text-align: left; }
+        .hasta-bilgi-bant { flex-direction: column; gap: 1rem; align-items: flex-start; }
+        .odeme-yontemi-blok { text-align: left; }
+        .toplamlar-wrapper { justify-content: stretch; }
+        .toplam-kutu { width: 100%; }
+        .fatura-footer { flex-direction: column; gap: 1.5rem; }
+    }
+</style>
+
+<div class="makbuz-page-wrapper">
+    <div class="makbuz-container">
+
+        {{-- ========== ÜST AKSİYON ÇUBUĞU ========== --}}
+        <div class="makbuz-action-bar">
+            <div>
+                <h2><i class="fa-solid fa-receipt me-2" style="color:#eab308;"></i>Tahsilat Makbuzu Görüntüleme</h2>
+                <p>İşleminiz başarıyla tamamlandı. Makbuzunuzu indirebilirsiniz.</p>
+            </div>
+            <div class="action-buttons">
+                @if (ViewBag.KullaniciId != null)
+                {
+                    <a href="@Url.Action("Icerik", "Odeme", new { userId = ViewBag.KullaniciId })" class="btn-geri">
+                        <i class="fa-solid fa-arrow-left"></i> Geri Dön
+                    </a>
+                }
+                <button onclick="downloadInvoicePDF()" id="btnPdfIndir" class="btn-pdf-indir">
+                    <i class="fa-solid fa-file-invoice-dollar"></i> Makbuzu PDF İndir
+                </button>
+            </div>
+        </div>
+
+        {{-- ========== FATURA ALANI ========== --}}
+        <div id="faturaAlani">
+
+            {{-- Filigran --}}
+            <div class="fatura-filigran">
+                <i class="fa-solid fa-hospital"></i>
+            </div>
+
+            {{-- ---- BAŞLIK ---- --}}
+            <div class="fatura-header">
+                <div class="fatura-logo-grup">
+                    <img src="~/assets/gazilogo.jpg" alt="Gazi Logo" class="fatura-logo" onerror="this.style.display='none'">
+                    <div class="fatura-hastane-adi">
+                        <h1>Gazi Üniversitesi</h1>
+                        <h2>Sağlık Uygulama ve Araştırma Hastanesi</h2>
+                        <p>Emniyet Mah. Mevlana Bulvarı No:29 Yenimahalle / ANKARA</p>
+                        <p>Tel: 0312 202 40 00 &nbsp;|&nbsp; V.D: Yenimahalle &nbsp;|&nbsp; V.No: 1234567890</p>
+                    </div>
+                </div>
+
+                <div class="fatura-no-blok">
+                    <div class="odeme-basari-rozeti">
+                        <i class="fa-solid fa-circle-check"></i> Ödeme Onaylandı
+                    </div>
+                    <h3>Tahsilat Makbuzu</h3>
+                    <p class="makbuz-no">
+                        Makbuz No: <span>@Model.MakbuzNo</span>
+                    </p>
+                    <p class="fatura-tarih">
+                        Tarih: <span>@Model.IslemTarihi.ToString("dd.MM.yyyy HH:mm")</span>
+                    </p>
+                </div>
+            </div>
+
+            {{-- ---- HASTA BİLGİLERİ ---- --}}
+            <div class="hasta-bilgi-bant">
+                <div class="hasta-ad-grup">
+                    <p class="label">Sayın (Hasta Adı Soyadı)</p>
+                    <p class="adsoyad">@Model.HastaAdSoyad.ToUpper()</p>
+                    <p class="tckimlik">T.C. Kimlik No: <strong>@Model.TcKimlik</strong></p>
+                </div>
+
+                <div class="odeme-yontemi-blok">
+                    <p class="label">Ödeme Yöntemi</p>
+                    <span class="odeme-yontemi-badge">
+                        <i class="fa-solid fa-credit-card me-1"></i>@Model.OdemeYontemi
+                    </span>
+                    <p class="odeme-ref">İşlem Ref: @Model.IslemRef</p>
+                </div>
+            </div>
+
+            {{-- ---- İŞLEM TABLOSU ---- --}}
+            <div class="islem-tablo-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>İşlem Açıklaması</th>
+                            <th class="text-center">Miktar</th>
+                            <th class="text-right">Birim Fiyat</th>
+                            <th class="text-right">Tutar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Kalemler != null && Model.Kalemler.Any())
+                        {
+                            foreach (var kalem in Model.Kalemler)
+                            {
+                                <tr>
+                                    <td class="sira-no">@kalem.Id</td>
+                                    <td class="islem-adi">@kalem.IslemAdi</td>
+                                    <td class="adet">@kalem.Adet</td>
+                                    <td class="birim-fiyat">@kalem.BirimFiyat.ToString("N2") ₺</td>
+                                    <td class="tutar">@kalem.Tutar.ToString("N2") ₺</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr class="bos-tablo-mesaj">
+                                <td colspan="5">Kayıtlı işlem kalemi bulunamadı.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- ---- TOPLAMLAR ---- --}}
+            <div class="toplamlar-wrapper">
+                <div class="toplam-kutu">
+                    <div class="toplam-satir">
+                        <span class="etiket">Ara Toplam:</span>
+                        <span class="deger">@Model.ToplamTutar.ToString("N2") ₺</span>
+                    </div>
+                    <div class="toplam-satir">
+                        <span class="etiket">Sağlık KDV (%10):</span>
+                        <span class="deger">@Model.KdvTutar.ToString("N2") ₺</span>
+                    </div>
+                    <hr class="toplam-ayrac" />
+                    <div class="toplam-genel-satir">
+                        <span class="etiket">Genel Toplam:</span>
+                        <span class="deger">@Model.GenelToplam.ToString("N2") ₺</span>
+                    </div>
+                </div>
+            </div>
+
+            {{-- ---- FOOTER / İMZA ---- --}}
+            <div class="fatura-footer">
+                <div class="bilgi-notu">
+                    <p><i class="fa-solid fa-circle-info" style="color:#3b82f6;"></i>&nbsp; Bu makbuz e-Fatura yerine geçmez, sadece bilgilendirme ve tahsilat kanıtı amaçlıdır.</p>
+                    <p>Geçmiş olsun dileklerimizle. Bizi tercih ettiğiniz için teşekkür ederiz.</p>
+                </div>
+
+                <div class="imza-blok">
+                    <p style="font-size:0.75rem; font-weight:700; color:#64748b; margin-bottom:0.5rem;">Kasiyer / Vezne Onayı</p>
+                    <div class="imza-alani"></div>
+                    <p class="kasiyer-adi">@Model.KasiyerAdi</p>
+                    <p class="kasiyer-birim">@Model.KasiyerBirim</p>
+                </div>
+            </div>
+
+        </div>
+        {{-- /faturaAlani --}}
+
+    </div>
+</div>
+
+{{-- ========== PDF İNDİRME SCRİPT ========== --}}
+<script>
+    function downloadInvoicePDF() {
+        const btn = document.getElementById('btnPdfIndir');
+        const originalHtml = btn.innerHTML;
+
+        // Butonu yükleniyor moduna al
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Lütfen Bekleyin...';
+        btn.disabled = true;
+
+        const element = document.getElementById('faturaAlani');
+
+        const opt = {
+            margin:      [10, 0, 10, 0],
+            filename:    'Gazi_Hastanesi_Tahsilat_Makbuzu.pdf',
+            image:       { type: 'jpeg', quality: 1.0 },
+            html2canvas: { scale: 3, useCORS: true, letterRendering: true },
+            jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save()
+            .then(() => {
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            })
+            .catch(err => {
+                console.error("PDF oluşturulurken hata:", err);
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+                alert("PDF oluşturulurken bir hata meydana geldi.");
+            });
+    }
+</script>
