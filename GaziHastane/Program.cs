@@ -2,6 +2,7 @@ using GaziHastane.Data;
 using GaziHastane.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Serilog;
 
 namespace GaziHastane
 {

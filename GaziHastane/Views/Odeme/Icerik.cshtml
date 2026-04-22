@@ -1,380 +1,476 @@
-@model IEnumerable<GaziHastane.Models.BorcOdeme>
+ï»¿@model IEnumerable<GaziHastane.Models.BorcOdeme>
 @{
-    ViewData["Title"] = "Gazi Saðlýk | Güvenli Ödeme";
+    ViewData["Title"] = "Gazi SaÄŸlÄ±k | GÃ¼venli Ã–deme ve Makbuz";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="payment-master-wrapper">
-    <div class="payment-bg-overlay"></div>
-    <div class="payment-center-container">
-        <div class="payment-card-container animate__animated animate__zoomIn">
-            <div class="row g-0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-                <div class="col-lg-7 p-4 p-md-5 bg-white">
-                    <div class="d-flex justify-content-between align-items-start mb-4">
-                        <div>
-                            <img src="/assets/gazilogo.jpg" alt="Logo" style="height: 40px;" class="mb-3">
-                            <h4 class="fw-800 color-navy mb-1">Ödeme Detaylarý</h4>
-                            <p class="text-muted small">Lütfen ödemek istediðiniz kalemleri seçiniz.</p>
-                        </div>
-                        <div class="text-end">
-                            <span class="badge bg-soft-gold text-gold p-2 rounded-pill px-3">Protokol: @ViewBag.Protokol</span>
-                        </div>
-                    </div>
+<div class="master-viewport">
+    <div class="split-layout">
 
-                    <div class="transaction-list mb-4">
-                        @if (Model != null && Model.Any())
-                        {
-                            foreach (var borc in Model)
-                            {
-                                <div class="transaction-item active">
-                                    <div class="d-flex align-items-center">
-                                        <div class="custom-check-wrapper">
-                                            <input type="checkbox" checked id="item_@borc.Id" class="debt-checkbox" data-id="@borc.Id" data-price="@borc.Tutar.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)">
-                                            <label for="item_@borc.Id"></label>
-                                        </div>
-                                        <div class="ms-3">
-                                            <h6 class="mb-0 fw-bold">@borc.IslemTipi</h6>
-                                            <small class="text-muted">Tarih: @(borc.SonOdemeTarihi?.ToString("dd.MM.yyyy") ?? "Belirtilmemiþ")</small>
-                                        </div>
-                                    </div>
-                                    <span class="fw-800 color-navy">@borc.Tutar.ToString("N2") TL</span>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <div class="alert alert-success rounded-4" style="background: #f0fdf4; border: 1px dashed #22c55e; color: #166534; font-weight: 600;">
-                                <i class="fas fa-check-circle me-2"></i> Size ait ödenmemiþ herhangi bir borç kaydý bulunmamaktadýr. Saðlýklý günler dileriz!
-                            </div>
-                        }
-                    </div>
-
-                    <div class="total-section p-3 rounded-4 bg-light d-flex justify-content-between align-items-center">
-                        <span class="fw-600 text-muted">Toplam Ödenecek</span>
-                        <h3 class="fw-900 color-navy mb-0" id="totalAmountDisplay">0,00 <small class="fs-6">TL</small></h3>
-                    </div>
+        <div class="side-left">
+            <div class="panel-inner">
+                <div class="d-flex justify-content-between align-items-center mb-5">
+                    <img src="/assets/gazilogo.jpg" alt="Logo" class="main-logo">
+                    <div class="badge-protocol">PROTOKOL: @ViewBag.Protokol</div>
                 </div>
 
-                <div class="col-lg-5 p-4 p-md-5 bg-navy text-white d-flex flex-column justify-content-center">
-                    <h5 class="fw-bold mb-4 d-flex align-items-center">
-                        <i class="fas fa-shield-check text-gold me-2"></i> Güvenli Ödeme
-                    </h5>
+                <h2 class="title-main">BorÃ§ Bilgileri</h2>
+                <p class="text-muted mb-4">Ã–demek istediÄŸiniz kalemleri seÃ§ip saÄŸ panelden iÅŸleminizi tamamlayÄ±n.</p>
 
-                    <div class="visual-card mb-4 animate__animated animate__flipInX">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <i class="fas fa-chip-card fs-1 text-gold"></i>
-                            <i class="fab fa-cc-visa fs-2 opacity-50"></i>
-                        </div>
-                        <div class="mt-4">
-                            <div class="card-number-display small opacity-75">KART NUMARASI</div>
-                            <div class="fs-5 fw-bold letter-spacing-2">**** **** **** ****</div>
-                        </div>
-                        <div class="d-flex justify-content-between mt-3">
-                            <div>
-                                <div class="small opacity-50">AD SOYAD</div>
-                                <div class="small fw-bold">@(ViewBag.KullaniciAdSoyad ?? "ÝSÝM SOYÝSÝM")</div>
+                <div class="debt-scroll-area">
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var borc in Model)
+                        {
+                            <div class="debt-item active" id="row_@borc.Id">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="ui-checkbox">
+                                        <input type="checkbox" checked id="chk_@borc.Id" class="debt-check"
+                                               data-id="@borc.Id"
+                                               data-name="@borc.IslemTipi"
+                                               data-price="@borc.Tutar.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)">
+                                        <label for="chk_@borc.Id"></label>
+                                    </div>
+                                    <div>
+                                        <div class="debt-name">@borc.IslemTipi</div>
+                                        <div class="debt-sub">Tarih: @borc.SonOdemeTarihi?.ToString("dd.MM.yyyy")</div>
+                                    </div>
+                                </div>
+                                <div class="debt-price">@borc.Tutar.ToString("N2") â‚º</div>
                             </div>
-                            <div>
-                                <div class="small opacity-50">SKT</div>
-                                <div class="small fw-bold">08/29</div>
-                            </div>
-                        </div>
-                    </div>
+                        }
+                    }
+                </div>
 
-                    <form id="paymentForm">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" id="paymentUserId" value="@ViewBag.KullaniciId" />
-                        <input type="hidden" id="paymentProtokol" value="@ViewBag.Protokol" />
-                        <div class="mb-3">
-                            <label class="premium-label">KART ÜZERÝNDEKÝ ÝSÝM</label>
-                            <input type="text" class="premium-input" placeholder="AD SOYAD">
-                        </div>
-                        <div class="mb-3">
-                            <label class="premium-label">KART NUMARASI</label>
-                            <input type="text" class="premium-input" placeholder="0000 0000 0000 0000">
-                        </div>
-                        <div class="row g-3 mb-4">
-                            <div class="col-7">
-                                <label class="premium-label">SON KULLANMA</label>
-                                <input type="text" class="premium-input" placeholder="AA / YY">
-                            </div>
-                            <div class="col-5">
-                                <label class="premium-label">CVV</label>
-                                <input type="password" class="premium-input" placeholder="***">
-                            </div>
-                        </div>
-
-                        <button type="button" id="btnPayNow" class="btn-pay-now">
-                            <span>ÖDEMEYÝ ONAYLA</span>
-                            <i class="fas fa-lock"></i>
-                        </button>
-                    </form>
-
-                    <p class="text-center mt-4 small opacity-50">
-                        <i class="fas fa-lock-alt me-1"></i> 256-bit SSL ile korunmaktadýr.
-                    </p>
+                <div class="summary-box mt-auto">
+                    <span class="summary-label">TOPLAM TUTAR</span>
+                    <span class="summary-amount" id="displayTotal">0,00 â‚º</span>
                 </div>
             </div>
+        </div>
+
+        <div class="side-right">
+
+            <div id="step-payment" class="panel-inner animate__animated animate__fadeIn">
+                <h4 class="right-title"><i class="fas fa-shield-alt text-gold me-2"></i> GÃ¼venli Kart Ã–demesi</h4>
+
+                <div class="card-ui mb-5">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <i class="fas fa-microchip fs-1 text-gold"></i>
+                        <i class="fab fa-cc-visa fs-2 opacity-50"></i>
+                    </div>
+                    <div class="mt-4 fs-4 fw-bold letter-spacing-2" id="v-card-num">**** **** **** ****</div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <div>
+                            <div class="v-small">AD SOYAD</div>
+                            <div class="v-bold" id="v-card-name">@ViewBag.KullaniciAdSoyad</div>
+                        </div>
+                        <div>
+                            <div class="v-small">SKT</div>
+                            <div class="v-bold" id="v-card-date">08/29</div>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="ui-form">
+                    <div class="ui-input-group">
+                        <label>KART ÃœZERÄ°NDEKÄ° Ä°SÄ°M</label>
+                        <input type="text" id="in-name" placeholder="AD SOYAD" value="@ViewBag.KullaniciAdSoyad">
+                    </div>
+                    <div class="ui-input-group">
+                        <label>KART NUMARASI</label>
+                        <input type="text" id="in-num" placeholder="0000 0000 0000 0000" maxlength="19">
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="ui-input-group">
+                                <label>SON KULLANMA</label>
+                                <input type="text" id="in-date" placeholder="AA/YY" maxlength="5">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="ui-input-group">
+                                <label>CVV</label>
+                                <input type="password" placeholder="***" maxlength="3">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" id="btnConfirm" class="btn-pay-action mt-4">
+                        Ã–DEMEYÄ° ONAYLA <i class="fas fa-lock ms-2"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div id="step-receipt" class="panel-inner" style="display:none;">
+                <div id="success-notif" class="text-center mb-4 animate__animated animate__zoomIn">
+                    <div class="success-ring"><i class="fas fa-check"></i></div>
+                    <h3 class="text-white mt-3 fw-bold">Ã–deme TamamlandÄ±!</h3>
+                </div>
+
+                <div id="faturaAlani" class="fatura-kagit animate__animated animate__fadeInUp animate__delay-1s">
+                    <div class="fatura-filigran"><i class="fa-solid fa-hospital-user"></i></div>
+                    <div class="fatura-icerik">
+                        <div class="fatura-header d-flex justify-content-between align-items-start mb-4">
+                            <div class="kurum-bilgi d-flex gap-3 align-items-center">
+                                <img src="/assets/gazilogo.jpg" alt="Gazi Logo" style="height: 60px;">
+                                <div class="kurum-detay">
+                                    <h5 class="m-0 fw-bold color-navy">GAZÄ° ÃœNÄ°VERSÄ°TESÄ°</h5>
+                                    <p class="m-0 small text-muted">SaÄŸlÄ±k Uygulama ve AraÅŸtÄ±rma Hastanesi</p>
+                                </div>
+                            </div>
+                            <div class="belge-tipi text-end">
+                                <h4 class="m-0 fw-black opacity-25">TAHSÄ°LAT</h4>
+                                <div class="badge bg-success small p-1 px-2 mt-1">Ã–deme OnaylandÄ±</div>
+                            </div>
+                        </div>
+
+                        <div class="bilgi-grid-bg p-3 mb-4 rounded-3">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <small class="text-muted d-block">FATURA EDÄ°LEN</small>
+                                    <strong class="color-navy">@ViewBag.KullaniciAdSoyad</strong>
+                                    <div class="small text-muted">TC: @ViewBag.TcKimlik</div>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <small class="text-muted d-block">MAKBUZ NO</small>
+                                    <strong id="m-no">GZ-@DateTime.Now.Ticks.ToString().Substring(10)</strong>
+                                    <div class="small text-muted" id="m-tarih">@DateTime.Now.ToString("dd.MM.yyyy HH:mm")</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="islem-tablosu w-100 mb-4">
+                            <thead>
+                                <tr>
+                                    <th class="text-start">Ä°ÅŸlem AÃ§Ä±klamasÄ±</th>
+                                    <th class="text-end">Tutar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="receipt-rows">
+                            </tbody>
+                        </table>
+
+                        <div class="toplamlar-bolumu ms-auto" style="max-width: 250px;">
+                            <div class="d-flex justify-content-between py-1 border-bottom border-dashed">
+                                <span class="small">Ara Toplam</span>
+                                <span id="r-sub" class="fw-bold">0,00 â‚º</span>
+                            </div>
+                            <div class="d-flex justify-content-between py-1 border-bottom border-dashed">
+                                <span class="small">KDV (%10)</span>
+                                <span id="r-kdv" class="fw-bold">0,00 â‚º</span>
+                            </div>
+                            <div class="d-flex justify-content-between py-2 bg-navy text-white px-2 mt-2 rounded">
+                                <span class="fw-bold">GENEL TOPLAM</span>
+                                <span id="r-total" class="fw-bold">0,00 â‚º</span>
+                            </div>
+                        </div>
+
+                        <div class="imza-not-bolumu d-flex justify-content-between align-items-end mt-5 pt-3 border-top">
+                            <div class="yasal-not small text-muted" style="max-width: 60%;">
+                                <i class="fa-solid fa-circle-info me-1"></i> Bu belge bilgilendirme amaÃ§lÄ±dÄ±r.
+                            </div>
+                            <div class="imza-yeri text-center">
+                                <div class="imza-line mb-1"></div>
+                                <div class="small fw-bold">Vezne OnayÄ±</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button onclick="downloadPDF()" class="btn btn-outline-light rounded-pill px-4">
+                        <i class="fas fa-file-pdf me-2"></i> MAKBUZU Ä°NDÄ°R
+                    </button>
+                    <button onclick="location.reload()" class="btn btn-link text-white-50 small ms-3">Yeni Ã–deme Yap</button>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
-@section Scripts {
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Seçili borçlarýn tutarýný hesaplayýp ekrana yazan fonksiyon
-            function calculateTotal() {
-                let total = 0;
-                document.querySelectorAll('.debt-checkbox:checked').forEach(function (cb) {
-                    var priceString = cb.getAttribute('data-price');
-                    total += parseFloat(priceString);
-                });
-                document.getElementById('totalAmountDisplay').innerHTML = total.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' <small class="fs-6">TL</small>';
-            }
-
-            // Sayfa ilk yüklendiðinde hesapla
-            calculateTotal();
-
-            // Checkbox durumlarý deðiþtiðinde (týklandýðýnda) çalýþacak olaylar
-            document.querySelectorAll('.debt-checkbox').forEach(function (cb) {
-                cb.addEventListener('change', function () {
-                    var transactionItem = this.closest('.transaction-item');
-                    if (this.checked) {
-                        transactionItem.classList.add('active');
-                    } else {
-                        transactionItem.classList.remove('active');
-                    }
-                    calculateTotal();
-                });
-            });
-
-            const btnPayNow = document.getElementById('btnPayNow');
-            if (btnPayNow) {
-                btnPayNow.addEventListener('click', function () {
-                    const seciliBorclar = Array.from(document.querySelectorAll('.debt-checkbox:checked'));
-                    if (!seciliBorclar.length) {
-                        alert('Lütfen ödeme için en az bir borç seçiniz.');
-                        return;
-                    }
-
-                    const userId = document.getElementById('paymentUserId')?.value;
-                    const protokol = document.getElementById('paymentProtokol')?.value;
-                    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
-
-                    const formData = new FormData();
-                    formData.append('userId', userId);
-                    formData.append('protokol', protokol || '');
-                    seciliBorclar.forEach(x => formData.append('borcIds', x.getAttribute('data-id')));
-                    if (token) {
-                        formData.append('__RequestVerificationToken', token);
-                    }
-
-                    btnPayNow.disabled = true;
-                    btnPayNow.innerHTML = '<span>ÝÞLENÝYOR...</span><i class="fas fa-spinner fa-spin"></i>';
-
-                    fetch('/Odeme/OdemeTamamla', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(r => r.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message || 'Ödeme tamamlandý.');
-                            window.location.href = data.redirectUrl || window.location.href;
-                        } else {
-                            alert(data.message || 'Ödeme sýrasýnda bir hata oluþtu.');
-                        }
-                    })
-                    .catch(() => {
-                        alert('Ödeme isteði sýrasýnda baðlantý hatasý oluþtu.');
-                    })
-                    .finally(() => {
-                        btnPayNow.disabled = false;
-                        btnPayNow.innerHTML = '<span>ÖDEMEYÝ ONAYLA</span><i class="fas fa-lock"></i>';
-                    });
-                });
-            }
-        });
-    </script>
-}
-
 @section Styles {
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
-        :root {
-            --gazi-navy: #0f172a;
-            --gazi-gold: #c5a059;
-            --soft-gold: rgba(197, 160, 89, 0.15);
-            --navbar-height: 80px;
+        /* FULL SCREEN OVERRIDE */
+        .master-viewport {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #fff;
+            z-index: 1050;
         }
 
-        body, html {
-            height: 100%;
-            margin: 0;
-            overflow-x: hidden;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+        .split-layout {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
         }
 
-        .payment-master-wrapper {
+        /* LEFT PANEL */
+        .side-left {
+            width: 50%;
             background: #f1f5f9;
-            min-height: 100vh;
-            position: relative;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
         }
 
-        .payment-center-container {
+        .side-right {
+            width: 50%;
+            background: #0f172a;
+            color: #fff;
+            overflow-y: auto;
             display: flex;
             align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: calc(var(--navbar-height) + 20px) 20px 40px 20px;
         }
 
-        .bg-navy {
-            background: var(--gazi-navy);
-        }
-
-        .color-navy {
-            color: var(--gazi-navy);
-        }
-
-        .text-gold {
-            color: var(--gazi-gold);
-        }
-
-        .bg-soft-gold {
-            background: var(--soft-gold);
-        }
-
-        .fw-800 {
-            font-weight: 800;
-        }
-
-        .fw-900 {
-            font-weight: 900;
-        }
-
-        .payment-card-container {
+        .panel-inner {
+            padding: 8% 12%;
             width: 100%;
-            max-width: 1000px;
-            background: white;
-            border-radius: 40px;
-            overflow: hidden;
-            box-shadow: 0 40px 100px rgba(15, 23, 42, 0.15);
-            z-index: 10;
         }
 
-        .transaction-item {
+        /* DEBT ITEMS */
+        .main-logo {
+            height: 50px;
+        }
+
+        .badge-protocol {
+            background: #cbd5e1;
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 12px;
+            color: #334155;
+        }
+
+        .title-main {
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .debt-item {
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #e2e8f0;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
-            border-radius: 20px;
-            border: 2px solid #f1f5f9;
-            margin-bottom: 15px;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-            .transaction-item.active {
-                border-color: var(--gazi-gold);
-                background: var(--soft-gold);
-            }
-
-            .transaction-item:hover {
-                transform: scale(1.02);
-                border-color: var(--gazi-gold);
-            }
-
-        .visual-card {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            border-radius: 24px;
-            padding: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-            .visual-card::before {
-                content: '';
-                position: absolute;
-                top: -50%;
-                left: -50%;
-                width: 200%;
-                height: 200%;
-                background: radial-gradient(circle, rgba(197, 160, 89, 0.1) 0%, transparent 70%);
-            }
-
-        .premium-label {
-            font-size: 10px;
-            font-weight: 800;
-            color: rgba(255,255,255,0.4);
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .premium-input {
-            width: 100%;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 0 15px;
-            color: white;
-            font-weight: 600;
             transition: 0.3s;
         }
 
-            .premium-input:focus {
-                background: rgba(255, 255, 255, 0.1);
-                border-color: var(--gazi-gold);
-                outline: none;
+            .debt-item.active {
+                border-color: #c5a059;
+                background: #fffdf5;
+                box-shadow: 0 5px 15px rgba(197, 160, 89, 0.1);
             }
 
-        .btn-pay-now {
-            width: 100%;
-            height: 60px;
-            background: var(--gazi-gold);
-            color: var(--gazi-navy);
-            border: none;
-            border-radius: 15px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 25px;
-            transition: 0.4s;
+        .debt-name {
+            font-weight: 700;
+            color: #0f172a;
         }
 
-            .btn-pay-now:hover {
-                background: #fff;
-                transform: translateY(-5px);
-                box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        .debt-sub {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .debt-price {
+            font-weight: 800;
+            font-size: 18px;
+            color: #c5a059;
+        }
+
+        .summary-box {
+            background: #0f172a;
+            padding: 25px;
+            border-radius: 15px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary-amount {
+            font-weight: 900;
+            font-size: 22px;
+        }
+
+        /* CARD UI */
+        .card-ui {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        }
+
+        .text-gold {
+            color: #c5a059;
+        }
+
+        .v-small {
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 1px;
+        }
+
+        .v-bold {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        /* FORM */
+        .ui-input-group {
+            margin-bottom: 18px;
+        }
+
+            .ui-input-group label {
+                display: block;
+                font-size: 10px;
+                font-weight: 800;
+                color: #94a3b8;
+                margin-bottom: 6px;
             }
 
-        .custom-check-wrapper input {
+            .ui-input-group input {
+                width: 100%;
+                background: rgba(255,255,255,0.05);
+                border: 1px solid rgba(255,255,255,0.1);
+                padding: 15px;
+                border-radius: 12px;
+                color: #fff;
+                font-weight: 600;
+                outline: none;
+                transition: 0.3s;
+            }
+
+                .ui-input-group input:focus {
+                    border-color: #c5a059;
+                    background: rgba(255,255,255,0.1);
+                }
+
+        .btn-pay-action {
+            width: 100%;
+            background: #c5a059;
+            color: #0f172a;
+            font-weight: 900;
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+
+            .btn-pay-action:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 20px rgba(197,160,89,0.3);
+            }
+
+        /* BAÅžARI VE MAKBUZ */
+        .success-ring {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #22c55e;
+            margin: 0 auto;
+        }
+
+        .fatura-kagit {
+            background: #fff;
+            color: #000;
+            padding: 30px;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+        }
+
+        .fatura-filigran {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 15rem;
+            color: #000;
+            opacity: 0.03;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .fatura-icerik {
+            position: relative;
+            z-index: 1;
+        }
+
+        .bilgi-grid-bg {
+            background: #f8fafc;
+            border-left: 4px solid #0f172a;
+        }
+
+        .islem-tablosu thead th {
+            border-bottom: 2px solid #0f172a;
+            padding: 10px 0;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .islem-tablosu td {
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13px;
+        }
+
+        .bg-navy {
+            background: #0f172a;
+        }
+
+        .imza-line {
+            border-bottom: 1px solid #000;
+            width: 120px;
+            height: 50px;
+        }
+
+        .color-navy {
+            color: #0f172a;
+        }
+
+        /* CHECKBOX */
+        .ui-checkbox input {
             display: none;
         }
 
-        .custom-check-wrapper label {
+        .ui-checkbox label {
             width: 24px;
             height: 24px;
             border: 2px solid #cbd5e1;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
-            position: relative;
             display: block;
+            position: relative;
         }
 
-        .custom-check-wrapper input:checked + label {
-            background: var(--gazi-gold);
-            border-color: var(--gazi-gold);
+        .ui-checkbox input:checked + label {
+            background: #c5a059;
+            border-color: #c5a059;
         }
 
-            .custom-check-wrapper input:checked + label::after {
+            .ui-checkbox input:checked + label::after {
                 content: '\f00c';
-                font-family: 'Font Awesome 5 Free';
+                font-family: 'Font Awesome 6 Free';
                 font-weight: 900;
-                color: white;
+                color: #fff;
                 font-size: 12px;
                 position: absolute;
                 left: 4px;
@@ -382,13 +478,121 @@
             }
 
         @@media (max-width: 991px) {
-            .payment-card-container {
-                border-radius: 20px;
-            }
+            .split-layout
 
-            .payment-center-container {
-                padding-top: calc(var(--navbar-height) + 30px);
-            }
+        {
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .side-left, .side-right {
+            width: 100%;
+            height: auto;
+        }
+
+        .master-viewport {
+            position: relative;
+        }
+
         }
     </style>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const totalDisplay = document.getElementById('displayTotal');
+
+            function calculate() {
+                let total = 0;
+                document.querySelectorAll('.debt-check:checked').forEach(cb => {
+                    total += parseFloat(cb.dataset.price);
+                });
+                totalDisplay.innerText = total.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' â‚º';
+                return total;
+            }
+            calculate();
+
+            // Checkbox DeÄŸiÅŸimi
+            document.querySelectorAll('.debt-check').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const parent = this.closest('.debt-item');
+                    if(this.checked) parent.classList.add('active');
+                    else parent.classList.remove('active');
+                    calculate();
+                });
+            });
+
+            // Kart Sync
+            const inNum = document.getElementById('in-num');
+            const inName = document.getElementById('in-name');
+            const inDate = document.getElementById('in-date');
+
+            inNum.oninput = (e) => {
+                let v = e.target.value.replace(/\D/g, '').match(/.{1,4}/g);
+                e.target.value = v ? v.join(' ') : '';
+                document.getElementById('v-card-num').innerText = e.target.value || '**** **** **** ****';
+            };
+            inName.oninput = () => document.getElementById('v-card-name').innerText = inName.value.toUpperCase() || 'AD SOYAD';
+            inDate.oninput = (e) => {
+                let v = e.target.value.replace(/\D/g, '');
+                if(v.length > 2) v = v.substring(0,2) + '/' + v.substring(2,4);
+                e.target.value = v;
+                document.getElementById('v-card-date').innerText = v || 'AA/YY';
+            };
+
+            // Ã–deme OnayÄ± ve Makbuz Entegrasyonu
+            document.getElementById('btnConfirm').onclick = function() {
+                const btn = this;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Ä°ÅžLENÄ°YOR...';
+
+                setTimeout(() => {
+                    // 1. Makbuz SatÄ±rlarÄ±nÄ± Doldur
+                    let rowsHtml = '';
+                    let subTotal = calculate();
+                    let kdv = subTotal * 0.10;
+                    let grandTotal = subTotal + kdv;
+
+                    document.querySelectorAll('.debt-check:checked').forEach(cb => {
+                        rowsHtml += `<tr>
+                                        <td class="text-start fw-bold">${cb.dataset.name}</td>
+                                        <td class="text-end">${parseFloat(cb.dataset.price).toLocaleString('tr-TR', {minimumFractionDigits:2})} â‚º</td>
+                                     </tr>`;
+                    });
+
+                    document.getElementById('receipt-rows').innerHTML = rowsHtml;
+                    document.getElementById('r-sub').innerText = subTotal.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' â‚º';
+                    document.getElementById('r-kdv').innerText = kdv.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' â‚º';
+                    document.getElementById('r-total').innerText = grandTotal.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' â‚º';
+
+                    // 2. Ekran DeÄŸiÅŸtirme
+                    const stepPay = document.getElementById('step-payment');
+                    const stepRec = document.getElementById('step-receipt');
+
+                    stepPay.classList.add('animate__fadeOut');
+                    setTimeout(() => {
+                        stepPay.style.display = 'none';
+                        stepRec.style.display = 'block';
+                        // CheckboxlarÄ± kilitle
+                        document.querySelectorAll('.debt-check').forEach(cb => cb.disabled = true);
+                    }, 500);
+                      
+                }, 2000);
+            };
+        });
+
+        function downloadPDF() {
+            const element = document.getElementById('faturaAlani');
+            const opt = {
+                margin: 10,
+                filename: 'Gazi_Hastanesi_Makbuz.pdf',
+                image: { type: 'jpeg', quality: 1.0 },
+                html2canvas: { scale: 3 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().from(element).set(opt).save();
+        }
+    </script>
 }

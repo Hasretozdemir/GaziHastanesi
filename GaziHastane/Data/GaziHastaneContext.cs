@@ -44,5 +44,6 @@ namespace GaziHastane.Data
         public DbSet<PanelAyar> PanelAyarlari { get; set; }
         public DbSet<DoktorRandevuPlani> DoktorRandevuPlanlari { get; set; }
         public DbSet<DoktorRandevuPlanGunu> DoktorRandevuPlanGunleri { get; set; }
+        public DbSet<AdminLog> AdminLoglari { get; set; }
     }
 }

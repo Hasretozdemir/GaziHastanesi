@@ -1,0 +1,65 @@
+@model IEnumerable<GaziHastane.Models.AdminLog>
+@{
+    ViewData["Title"] = "Sistem Hareketleri";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-2xl md:text-3xl text-white font-bold">Sistem <span class="text-slate-400 font-medium">Hareketleri</span></h1>
+        <p class="text-slate-400 text-sm mt-1">Admin panelindeki son 500 iþlem kaydý</p>
+    </div>
+
+    <div class="bg-white/5 backdrop-blur-xl shadow-lg rounded-2xl border border-white/10 relative overflow-hidden">
+        <header class="px-5 py-4 border-b border-white/10">
+            <h2 class="font-semibold text-slate-100">Log Kayýtlarý <span class="text-slate-400 font-medium">(@Model.Count())</span></h2>
+        </header>
+
+        <div class="p-3">
+            <div class="overflow-x-auto">
+                <table class="table-auto w-full">
+                    <thead class="text-xs font-semibold uppercase text-slate-300 bg-white/5 border-t border-b border-white/10">
+                        <tr>
+                            <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap text-left">Tarih</th>
+                            <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap text-left">Kullanýcý</th>
+                            <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap text-left">Ýþlem</th>
+                            <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap text-left">Modül</th>
+                            <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap text-left">Açýklama</th>
+                            <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap text-left">IP Adresi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-white/10 text-slate-200">
+                        @if (Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                var badgeClass = item.IslemTipi == "SÝLME"
+                                    ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                                    : "bg-cyan-500/20 text-cyan-200 border border-cyan-500/30";
+
+                                <tr>
+                                    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap text-slate-300">@item.Tarih.ToString("dd.MM.yyyy HH:mm")</td>
+                                    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap font-medium text-white">@(item.KullaniciAdi ?? "-")</td>
+                                    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                        <span class="text-xs inline-flex font-semibold rounded-full px-2.5 py-0.5 @badgeClass">@item.IslemTipi</span>
+                                    </td>
+                                    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap text-slate-300">@item.Modul</td>
+                                    <td class="px-2 first:pl-5 last:pr-5 py-3 text-slate-200">@item.Aciklama</td>
+                                    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap text-slate-400">@(item.IpAdresi ?? "-")</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="px-2 first:pl-5 last:pr-5 py-6 whitespace-nowrap text-center text-slate-400 font-medium">
+                                    Henüz log kaydý bulunmuyor.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

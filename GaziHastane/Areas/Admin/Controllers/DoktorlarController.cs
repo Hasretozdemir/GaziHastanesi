@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace GaziHastane.Areas.Admin.Controllers
 {
@@ -13,10 +14,12 @@ namespace GaziHastane.Areas.Admin.Controllers
     public class DoktorlarController : Controller
     {
         private readonly GaziHastaneContext _context;
+        private readonly ILogger<DoktorlarController> _logger;
 
-        public DoktorlarController(GaziHastaneContext context)
+        public DoktorlarController(GaziHastaneContext context, ILogger<DoktorlarController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // DOKTORLARI LİSTELEME
@@ -118,13 +121,39 @@ namespace GaziHastane.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var doktor = await _context.Doktorlar.FindAsync(id);
-            if (doktor != null)
+            try
             {
-                _context.Doktorlar.Remove(doktor);
-                await _context.SaveChangesAsync();
+                var doktor = await _context.Doktorlar.FindAsync(id);
+                if (doktor != null)
+                {
+                    var kullaniciAdi = User.Identity?.Name ?? "Bilinmiyor";
+                    var ipAdresi = HttpContext.Connection.RemoteIpAddress?.ToString();
+                    var doktorAdi = $"{doktor.Ad} {doktor.Soyad}".Trim();
+
+                    _context.Doktorlar.Remove(doktor);
+
+                    _context.AdminLoglari.Add(new AdminLog
+                    {
+                        KullaniciAdi = kullaniciAdi,
+                        IslemTipi = "SİLME",
+                        Modul = "Doktorlar",
+                        Aciklama = $"{doktorAdi} isimli doktor kaydı silindi.",
+                        IpAdresi = ipAdresi
+                    });
+
+                    await _context.SaveChangesAsync();
+
+                    _logger.LogInformation("{Kullanici} kullanıcısı {Id} nolu doktoru sildi. IP: {Ip}", kullaniciAdi, id, ipAdresi);
+                }
+
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Doktor silinirken hata oluştu. ID: {Id}", id);
+                TempData["Error"] = "Doktor kaydı silinirken bir hata oluştu.";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         private void PopulateBolumlerViewBag(string? seciliKategori = null)
