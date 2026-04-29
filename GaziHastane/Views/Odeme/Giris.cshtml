@@ -43,7 +43,7 @@
                             <i class="fas fa-fingerprint text-navy"></i>
                         </div>
                         <h3 class="fw-800 text-navy">Hasta Giriþi</h3>
-                        <p class="text-muted small">Borç sorgulamak için bilgileri doldurun</p>
+                        <p class="text-muted small">Borç sorgulamak için sadece T.C. Kimlik numaranýzý girin</p>
                     </div>
 
                     <form id="paymentForm" action="/Odeme/Login" method="post" class="modern-form">
@@ -52,14 +52,6 @@
                             <div class="input-box">
                                 <i class="far fa-id-card"></i>
                                 <input type="text" name="tcKimlik" placeholder="Giriþ yapýnýz..." required maxlength="11">
-                            </div>
-                        </div>
-
-                        <div class="floating-input mb-4">
-                            <label>Protokol No</label>
-                            <div class="input-box">
-                                <i class="far fa-file-alt"></i>
-                                <input type="text" name="protokolNo" placeholder="Örn: 2024-550..." required>
                             </div>
                         </div>
 
@@ -100,17 +92,21 @@
             --input-border: #e2e8f0;
         }
 
+        html, body { margin: 0; padding: 0; overflow: hidden; height: 100%; }
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background: #eef2f6;
         }
 
         .payment-viewport {
-            min-height: 100vh;
+            position: fixed;
+            inset: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            overflow-y: auto;
+            background: #eef2f6;
         }
 
         .payment-container {
@@ -284,21 +280,24 @@
                 height: auto;
                 min-height: unset;
                 border-radius: 30px;
+                max-width: 460px;
+                box-shadow: 0 0 0 4px rgba(212,175,55,0.15), 0 30px 60px rgba(0,0,0,0.13);
+                border: 2px solid rgba(212,175,55,0.2);
+                transition: box-shadow 0.3s, border-color 0.3s;
             }
-
+            .payment-container:hover {
+                box-shadow: 0 0 0 6px rgba(212,175,55,0.3), 0 40px 80px rgba(0,0,0,0.18);
+                border-color: rgba(212,175,55,0.45);
+            }
             .side-info-panel {
-                padding: 40px 30px;
-                flex: none;
+                display: none;
             }
-
             .side-form-panel {
                 flex: 1;
             }
-
             .form-scroll-area {
                 padding: 40px 25px;
             }
-
             .display-6 {
                 font-size: 1.8rem;
             }

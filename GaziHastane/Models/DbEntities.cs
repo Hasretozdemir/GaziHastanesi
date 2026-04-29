@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -112,6 +112,13 @@ namespace GaziHastane.Models
 
         [ForeignKey("BolumId")]
         public virtual Bolum? Bolum { get; set; } // Doktorun ba�l� oldu�u b�l�m
+
+        [Column("hekimtipi")]
+        public short HekimTipi { get; set; }
+
+        [Column("oda_konumu")]
+        [StringLength(100)]
+        public string? OdaKonumu { get; set; }
 
         [StringLength(50)]
         [Column("unvan")]

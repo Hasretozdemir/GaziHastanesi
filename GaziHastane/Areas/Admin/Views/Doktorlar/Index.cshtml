@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GaziHastane.Models.Doktor>
+@model IEnumerable<GaziHastane.Models.Doktor>
 @{
     ViewData["Title"] = "Doktor Yönetimi";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
@@ -21,6 +21,7 @@
                 <tr>
                     <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-white/5">Hekim</th>
                     <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-white/5">Birim (Poliklinik)</th>
+                    <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-white/5">Hekim Tipi</th>
                     <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-white/5">Uzmanlık Alanı</th>
                     <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-white/5">Durum</th>
                     <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-white/5 text-right">İşlemler</th>
@@ -59,6 +60,20 @@
                                 <span class="text-sm font-bold text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-3 py-1.5 rounded-lg">
                                     @(item.Bolum != null ? item.Bolum.Ad : "Atanmadı")
                                 </span>
+                            </td>
+                            <td class="px-8 py-5">
+                                @if (item.HekimTipi == 2)
+                                {
+                                    <span class="flex items-center gap-2 text-xs font-bold text-purple-400 bg-purple-500/10 border border-purple-500/20 px-3 py-1.5 rounded-lg w-max">
+                                        <i class="fa-solid fa-user-doctor"></i> Asistan
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="flex items-center gap-2 text-xs font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-3 py-1.5 rounded-lg w-max">
+                                        <i class="fa-solid fa-user-tie"></i> Uzman
+                                    </span>
+                                }
                             </td>
                             <td class="px-8 py-5 text-slate-300 text-sm">
                                 @(string.IsNullOrEmpty(item.UzmanlikAlani) ? "-" : item.UzmanlikAlani)

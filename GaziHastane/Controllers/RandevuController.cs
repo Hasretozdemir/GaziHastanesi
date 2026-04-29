@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using GaziHastane.Data;
@@ -139,18 +139,87 @@ namespace GaziHastane.Controllers
                 .Where(r => r.RandevuTarihi > DateTime.Now && r.Durum == 1).ToList();
 
             // Ge�mi� veya �ptal Edilmi� Randevular: Tarihi bug�nden k���k veya Durumu 1'den farkl� olanlar
+            // Gemi veya ptal Edilmi Randevular: Tarihi bugnden kk veya Durumu 1'den farkl olanlar
             ViewBag.GecmisRandevular = tumRandevular
                 .Where(r => r.RandevuTarihi <= DateTime.Now || r.Durum != 1).ToList();
 
             return View();
         }
 
-        // B�l�m se�ildi�inde o b�l�m�n doktorlar�n� getiren AJAX Endpoint'i
+        // Blm seildiinde o blmn doktorlarn getiren AJAX Endpoint'i
         [HttpGet]
-        public JsonResult GetDoktorlar(int bolumId)
+        public JsonResult GetBolumlerByHekimTipi(short? hekimTipi)
+        {
+            List<int> bolumIdler;
+
+            if (hekimTipi.HasValue && hekimTipi.Value == 2) // Sadece Asistan
+            {
+                bolumIdler = _context.Doktorlar
+                    .Where(d => d.IsActive && d.HekimTipi == 2 && d.BolumId != null)
+                    .Select(d => d.BolumId!.Value)
+                    .Distinct()
+                    .ToList();
+            }
+            else if (hekimTipi.HasValue && hekimTipi.Value == 1) // Uzman: 1 veya 0 (tanimsiz) olanlar
+            {
+                bolumIdler = _context.Doktorlar
+                    .Where(d => d.IsActive && (d.HekimTipi == 1 || d.HekimTipi == 0) && d.BolumId != null)
+                    .Select(d => d.BolumId!.Value)
+                    .Distinct()
+                    .ToList();
+            }
+            else // Tumu
+            {
+                bolumIdler = _context.Doktorlar
+                    .Where(d => d.IsActive && d.BolumId != null)
+                    .Select(d => d.BolumId!.Value)
+                    .Distinct()
+                    .ToList();
+            }
+
+            var bolumler = _context.Bolumler
+                .Where(b => b.IsActive && bolumIdler.Contains(b.Id))
+                .OrderBy(b => b.Ad)
+                .Select(b => new
+                {
+                    id = b.Id,
+                    ad = b.Ad,
+                    blok = b.Blok ?? "",
+                    kat = b.Kat ?? ""
+                })
+                .ToList();
+
+            return Json(bolumler);
+        }
+
+        // DEBUG: Doktorlarin HekimTipi degerlerini gormek icin
+        [HttpGet]
+        public JsonResult GetDoktorHekimTipleri()
         {
             var doktorlar = _context.Doktorlar
-                .Where(d => d.BolumId == bolumId && d.IsActive)
+                .Select(d => new { d.Id, d.Ad, d.Soyad, d.HekimTipi, d.IsActive, d.BolumId })
+                .ToList();
+            return Json(doktorlar);
+        }
+
+        // Blm seildiinde o blmn doktorlarn getiren AJAX Endpoint'i
+        [HttpGet]
+        public JsonResult GetDoktorlar(int bolumId, short? hekimTipi)
+        {
+            var doktorlarQuery = _context.Doktorlar
+                .Where(d => d.BolumId == bolumId && d.IsActive);
+
+            if (hekimTipi.HasValue && hekimTipi.Value == 2) // Sadece Asistan
+            {
+                doktorlarQuery = doktorlarQuery.Where(d => d.HekimTipi == 2);
+            }
+            else if (hekimTipi.HasValue && hekimTipi.Value == 1) // Uzman: 1 veya 0 (tanimsiz)
+            {
+                doktorlarQuery = doktorlarQuery.Where(d => d.HekimTipi == 1 || d.HekimTipi == 0);
+            }
+            // hekimTipi=0 (Tumu) ise filtre yok, tum doktorlar gelir
+
+            var doktorlar = doktorlarQuery
                 .Select(d => new
                 {
                     id = d.Id,

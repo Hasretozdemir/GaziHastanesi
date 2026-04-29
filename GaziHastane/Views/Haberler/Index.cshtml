@@ -1,38 +1,53 @@
-﻿@model IEnumerable<GaziHastane.Models.Haber>
+@model IEnumerable<GaziHastane.Models.Haber>
 @{
-    ViewData["Title"] = "Kurumsal Haberler";
+    ViewData["Title"] = "Haberler";
+    Layout = "_EmptyLayout";
 }
 
-<div class="bg-white border-b border-slate-200 py-12 lg:py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center gap-5">
-        <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 border border-blue-100">
-            <i class="fa-regular fa-newspaper"></i>
-        </div>
-        <div>
-            <h1 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-2">Kurumsal Haberler</h1>
-            <p class="text-slate-500 text-sm sm:text-base font-medium">
-                Hastanemizdeki en güncel gelişmeleri, tıbbi başarıları ve duyuruları buradan takip edebilirsiniz.
-            </p>
+<div class="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 py-16 sm:py-20 relative overflow-hidden mb-[-2rem] z-0">
+    <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-blue-500/20 blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-indigo-500/20 blur-3xl pointer-events-none"></div>
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-20"></div>
+
+    <div class="max-w-[96%] 2xl:max-w-[1600px] mx-auto px-4 sm:px-8 relative z-10 pb-8">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div class="flex items-center gap-6">
+                <div class="w-20 h-20 sm:w-24 sm:h-24 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-[2rem] flex items-center justify-center text-4xl sm:text-5xl shadow-[0_0_40px_rgba(59,130,246,0.3)]">
+                    <i class="fa-regular fa-newspaper"></i>
+                </div>
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-blue-200 text-[10px] font-black tracking-widest uppercase mb-3 backdrop-blur-sm">
+                        <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                        Gazi Hastanesi
+                    </div>
+                    <h1 class="text-white text-4xl sm:text-6xl font-black leading-tight tracking-tight mb-2 drop-shadow-md">Haberler</h1>
+                    <p class="text-blue-100/80 text-sm sm:text-base font-medium max-w-xl leading-relaxed">
+                        Hastanemizdeki en güncel gelişmeleri, tıbbi başarıları ve önemli duyuruları buradan takip edebilirsiniz.
+                    </p>
+                </div>
+            </div>
+
+
         </div>
     </div>
 </div>
 
-<section class="py-12 bg-slate-50 min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+<section class="py-16 bg-slate-50 min-h-screen relative z-10 rounded-t-[3rem] shadow-[0_-20px_40px_rgba(0,0,0,0.1)]">
+    <div class="max-w-[96%] 2xl:max-w-[1600px] mx-auto px-4 sm:px-8">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
             @if (Model != null && Model.Any())
             {
                 foreach (var haber in Model)
                 {
-                    <button type="button" onclick="openHaberModal(@haber.Id)" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-slate-200 group flex flex-col h-full text-left w-full">
-                        <div class="h-56 overflow-hidden relative border-b border-slate-100">
+                    <button type="button" onclick="openHaberModal(@haber.Id)" class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-2 border-blue-200 hover:border-blue-400 group flex flex-col h-full text-left w-full">
+                        <div class="h-72 overflow-hidden relative border-b-2 border-blue-100">
                             <img src="@haber.GorselUrl" alt="@haber.Baslik" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
 
-                            <div class="absolute top-4 left-4 bg-white/95 backdrop-blur px-3 py-1.5 rounded-md text-[11px] uppercase tracking-wide font-black text-blue-700 shadow-sm border border-white/50">
-                                <i class="fa-solid fa-tag text-blue-400 mr-1"></i> @haber.Kategori
+                            <div class="absolute top-5 left-5 bg-white/95 backdrop-blur px-4 py-2 rounded-lg text-xs uppercase tracking-wide font-black text-blue-800 shadow-md border border-white/50">
+                                <i class="fa-solid fa-tag text-blue-500 mr-1"></i> @haber.Kategori
                             </div>
                         </div>
-                        <div class="p-6 flex flex-col flex-1 justify-between">
+                        <div class="p-8 flex flex-col flex-1 justify-between">
                             <div>
                                 <p class="text-xs text-slate-500 font-semibold mb-3 flex items-center">
                                     <i class="fa-regular fa-calendar-days mr-2 text-slate-400"></i> @haber.YayinTarihi.ToString("dd MMMM yyyy")
@@ -86,6 +101,18 @@
 </div>
 
 @section Scripts {
+    <style>
+        html {
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+        body {
+            overflow-x: hidden;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const haberModal = document.getElementById('haberModal');

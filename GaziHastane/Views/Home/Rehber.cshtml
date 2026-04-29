@@ -16,6 +16,18 @@
 }
 
 @section Scripts {
+    <style>
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+        body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+        }
+    </style>
     <script>
         const rehberData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
             (Model ?? Enumerable.Empty<GaziHastane.Models.HastaRehberi>()).Select(x => new
@@ -67,7 +79,7 @@
     </script>
 }
 
-<main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-12 mt-24 min-h-screen">
+<main class="w-full px-6 sm:px-10 lg:px-16 py-10 space-y-12 min-h-screen">
 
     <div class="bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900 rounded-[2rem] p-8 sm:p-12 relative overflow-hidden shadow-[0_20px_50px_rgba(15,23,42,0.2)]">
         <div class="absolute top-0 right-0 -mr-20 -mt-20 w-72 h-72 rounded-full bg-emerald-500/10 blur-3xl"></div>
@@ -103,7 +115,7 @@
         <div class="flex-1 h-[2px] bg-gradient-to-r from-slate-200 to-transparent rounded-full"></div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-6 w-full">
         @if (Model != null && Model.Any())
         {
             @foreach (var item in Model)
@@ -112,22 +124,22 @@
                 var tema = renkTemalari[kartIndeks % renkTemalari.Count];
                 kartIndeks++;
 
-                <button type="button" onclick="openRehberDetay(@item.Id)" class="group bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full relative overflow-hidden cursor-pointer text-left w-full">
+                <button type="button" onclick="openRehberDetay(@item.Id)" class="group bg-white rounded-2xl p-4 lg:p-5 border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full relative overflow-hidden cursor-pointer text-left w-full">
 
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r @tema.UstCizgi opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-                    <div class="w-14 h-14 rounded-2xl @tema.AcikArkaplan @tema.YaziRengi flex items-center justify-center text-2xl mb-5 @tema.HoverArkaplan group-hover:text-white transition-colors duration-300 group-hover:shadow-lg @tema.HoverGolge">
+                    <div class="w-12 h-12 rounded-2xl @tema.AcikArkaplan @tema.YaziRengi flex items-center justify-center text-xl mb-4 @tema.HoverArkaplan group-hover:text-white transition-colors duration-300 group-hover:shadow-lg @tema.HoverGolge">
                         <i class="@item.Ikon"></i>
                     </div>
 
-                    <h4 class="text-lg font-bold text-slate-800 mb-3 leading-snug @tema.HoverYaziRengi transition-colors">@item.Baslik</h4>
+                    <h4 class="text-base font-bold text-slate-800 mb-2 leading-snug @tema.HoverYaziRengi transition-colors">@item.Baslik</h4>
 
-                    <p class="text-slate-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-1">@item.Icerik</p>
+                    <p class="text-slate-500 text-xs leading-relaxed mb-4 line-clamp-3 flex-1">@item.Icerik</p>
 
-                    <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
-                        <span class="text-sm font-bold @tema.YaziRengi">Detayları İncele</span>
-                        <div class="w-8 h-8 rounded-full @tema.AcikArkaplan flex items-center justify-center @tema.YaziRengi @tema.HoverArkaplan group-hover:text-white transition-all duration-300 group-hover:translate-x-1">
-                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                    <div class="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-xs font-bold @tema.YaziRengi">Detayları İncele</span>
+                        <div class="w-7 h-7 rounded-full @tema.AcikArkaplan flex items-center justify-center @tema.YaziRengi @tema.HoverArkaplan group-hover:text-white transition-all duration-300 group-hover:translate-x-1">
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
                         </div>
                     </div>
 

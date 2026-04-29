@@ -194,21 +194,24 @@
 
         /* Tüm Sayfa ve Arka Plan (BEYAZ/AÇIK GRÝ YAPILDI) */
         .randevu-page-wrapper {
-            position: relative;
+            position: fixed;
+            inset: 0;
             width: 100%;
-            min-height: 100vh;
-            background: #f1f5f9; /* Temiz ve modern arka plan rengi */
+            height: 100%;
+            background: #f1f5f9;
+            overflow: hidden;
         }
 
-        /* Ortalamayý Saðlayan Güvenli Alan (Navbar payý) */
+                /* Ortalamayi Saglayan Güvenli Alan */
         .randevu-center-container {
-            position: relative;
+            position: absolute;
+            inset: 0;
             z-index: 10;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            padding: 100px 20px 40px 20px; /* Üstten 100px boþluk býrakarak navbarýn altýna ittik */
+            padding: 20px;
+            overflow-y: auto;
         }
 
         /* KESÝN YAN YANA DURACAK KART YAPISI */
@@ -443,21 +446,24 @@
         /* Mobil Cihazlar Ýçin Uyumluluk */
         @@media (max-width: 991px) {
             .randevu-main-card {
-                flex-direction: column; /* Dikey yap */
-                max-width: 500px;
+                flex-direction: column;
+                max-width: 460px;
+                box-shadow: 0 0 0 4px rgba(37,99,235,0.12), 0 30px 60px rgba(0,0,0,0.13);
+                border: 2px solid rgba(37,99,235,0.18);
+                transition: box-shadow 0.3s, border-color 0.3s;
+            }
+            .randevu-main-card:hover {
+                box-shadow: 0 0 0 6px rgba(37,99,235,0.22), 0 40px 80px rgba(0,0,0,0.18);
+                border-color: rgba(37,99,235,0.4);
             }
 
             .randevu-left-panel {
-                display: none; /* Sol paneli gizle */
+                display: none;
             }
 
             .randevu-right-panel {
                 width: 100%;
                 padding: 40px 30px;
-            }
-
-            .randevu-center-container {
-                padding-top: 120px;
             }
         }
     </style>

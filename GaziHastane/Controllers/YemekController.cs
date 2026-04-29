@@ -21,7 +21,7 @@ namespace GaziHastane.Controllers
             var bugun = DateTime.UtcNow.Date;
 
             var gunlukListe = _context.YemekListesi
-                                      .Where(x => x.Tarih.Date == bugun)
+                                      .Where(x => x.Tarih >= bugun && x.Tarih < bugun.AddDays(1))
                                       .OrderBy(x => x.Ogun)
                                       .ToList();
 

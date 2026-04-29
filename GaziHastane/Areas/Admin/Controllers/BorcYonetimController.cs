@@ -60,7 +60,7 @@ namespace GaziHastane.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult BorcEkle(int HastaId, string IslemTipi, decimal Tutar, DateTime? SonOdemeTarihi)
+        public IActionResult BorcEkle(int HastaId, string IslemTipi, decimal Tutar)
         {
             if (HastaId <= 0 || string.IsNullOrWhiteSpace(IslemTipi) || Tutar <= 0)
             {
@@ -77,7 +77,7 @@ namespace GaziHastane.Areas.Admin.Controllers
                 IslemTipi = IslemTipi,
                 Tutar = Tutar,
                 OdendiMi = false,
-                SonOdemeTarihi = SonOdemeTarihi,
+                SonOdemeTarihi = null,
                 EklenmeTarihi = DateTime.Now,
                 ProtakolNo = protakolNo
             };

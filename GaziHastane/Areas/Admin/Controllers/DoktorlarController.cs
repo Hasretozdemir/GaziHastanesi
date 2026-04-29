@@ -128,18 +128,8 @@ namespace GaziHastane.Areas.Admin.Controllers
                 {
                     var kullaniciAdi = User.Identity?.Name ?? "Bilinmiyor";
                     var ipAdresi = HttpContext.Connection.RemoteIpAddress?.ToString();
-                    var doktorAdi = $"{doktor.Ad} {doktor.Soyad}".Trim();
 
                     _context.Doktorlar.Remove(doktor);
-
-                    _context.AdminLoglari.Add(new AdminLog
-                    {
-                        KullaniciAdi = kullaniciAdi,
-                        IslemTipi = "SİLME",
-                        Modul = "Doktorlar",
-                        Aciklama = $"{doktorAdi} isimli doktor kaydı silindi.",
-                        IpAdresi = ipAdresi
-                    });
 
                     await _context.SaveChangesAsync();
 

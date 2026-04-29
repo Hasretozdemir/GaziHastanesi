@@ -52,7 +52,6 @@ namespace GaziHastane.Controllers
             TempData["Error"] = "Girdiginiz T.C. Kimlik numarasina ait hasta kaydi bulunmamadi.";
             return RedirectToAction("Giris");
         }
-
         [HttpGet]
         public IActionResult Icerik(int? userId, string protokol)
         {

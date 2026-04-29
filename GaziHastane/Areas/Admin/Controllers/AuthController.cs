@@ -76,6 +76,7 @@ namespace GaziHastane.Areas.Admin.Controllers
                 // Son giriş tarihini güncelle
                 yetkili.SonGirisTarihi = DateTime.UtcNow;
                 _context.Update(yetkili);
+
                 await _context.SaveChangesAsync();
 
                 // Admin Ana Sayfasına (Dashboard) yönlendir

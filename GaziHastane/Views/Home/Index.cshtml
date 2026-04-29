@@ -1,4 +1,4 @@
-﻿@using GaziHastane.Models
+@using GaziHastane.Models
 @model HomeViewModel
 @{
     ViewData["Title"] = "Gazi Sağlık | Ana Sayfa";
@@ -6,6 +6,14 @@
 
 @section Scripts {
     <style>
+        /* --- GENEL SAYFA AYARLARI (Yatay Kaymayı Engeller) --- */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
         .hero-bg {
             background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 40%, #1d4ed8 75%, #3b82f6 100%);
             position: relative;
@@ -41,11 +49,18 @@
             height: 400px;
         }
 
-            .slide img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
+        /* Büyük ekranlarda slider boyutu artırıldı */
+        @@media (min-width: 1024px) {
+            .slide {
+                height: 550px;
             }
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
         /* Alt Görsel Grubu */
         .slider-bottom-grid {
@@ -101,67 +116,99 @@
                 transform: scale(1.1);
             }
 
-        /* --- DİJİTAL İŞLEMLER (TEK SIRA DÜZENİ) --- */
+        /* --- DİJİTAL İŞLEMLER --- */
         .digital-ops-wrapper {
             position: relative;
             width: 100%;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 1.5rem;
-            padding: 2rem 1.5rem;
+            padding: 1.5rem 0.5rem;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(226, 232, 240, 0.8);
             z-index: 20;
             margin-top: -3.5rem;
         }
 
-        /* Grid yerine Flex kullanarak hepsini yan yana zorladık */
         .digital-ops-grid {
             display: flex;
             flex-wrap: nowrap;
-            overflow-x: auto;
-            gap: 1rem;
-            padding-bottom: 1rem;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 0.5rem;
+            width: 100%;
+            overflow: hidden;
         }
 
         .d-card {
             background-color: #f8fafc;
             border: 1px solid #f1f5f9;
-            border-radius: 1rem;
-            padding: 1.5rem 0.5rem;
+            border-radius: 0.75rem;
+            padding: 1rem 0.25rem;
+            min-height: 175px; 
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             text-align: center;
             text-decoration: none;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            flex-shrink: 0; /* Kartların daralmasını engeller */
-            width: 120px; /* Kart genişliği sabitlendi */
+            flex: 1 1 0;
+            min-width: 0;
         }
 
             .d-card:hover {
-                transform: translateY(-8px);
-                box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.15);
+                transform: translateY(-5px);
+                box-shadow: 0 15px 20px -5px rgba(37, 99, 235, 0.15);
                 background-color: #ffffff;
             }
 
         .d-icon {
-            width: 3.5rem;
-            height: 3.5rem;
-            border-radius: 1rem;
+            width: 2.6rem; /* İkon kutusu kartın yeni boyutuna göre büyütüldü */
+            height: 2.6rem;
+            border-radius: 0.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+            font-size: 1.2rem; /* İkon boyutu büyütüldü */
+            margin-bottom: 0.75rem;
         }
 
         .d-label {
             color: #475569;
             font-weight: 700;
-            font-size: 11px;
+            font-size: 11px; /* Yazı boyutu bir tık büyütüldü */
+            line-height: 1.2;
+            width: 100%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
+        @@media (max-width: 768px) {
+            .digital-ops-wrapper {
+                padding: 1rem 0.25rem;
+            }
+
+            .d-card {
+                padding: 0.75rem 0.1rem;
+                min-height: 110px;
+                height: 100%;
+            }
+
+        .d-icon {
+            width: 2rem;
+            height: 2rem;
+            font-size: 1rem;
+        }
+
+        .d-label {
+            font-size: 9px;
+        }
+
+        }
+
+        /* Diğer Kart Tasarımları */
         .hospital-news-card {
             background: white;
             border-radius: 1.25rem;
@@ -286,7 +333,6 @@
             }
         }
 
-        /* --- DUYURU SCROLL TASARIMI --- */
         .announcement-scroll-area {
             max-height: 480px;
             overflow-y: auto;
@@ -365,6 +411,7 @@
             const haberModalBaslik = document.getElementById('haberModalBaslik');
             const haberModalOzet = document.getElementById('haberModalOzet');
             const haberModalIcerik = document.getElementById('haberModalIcerik');
+
             const etkinlikModal = document.getElementById('etkinlikModal');
             const etkinlikModalContent = document.getElementById('etkinlikModalContent');
             const etkinlikModalImage = document.getElementById('etkinlikModalImage');
@@ -377,36 +424,36 @@
             const etkinlikModalIcerik = document.getElementById('etkinlikModalIcerik');
 
             const haberData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
-                (Model.Haberler ?? Enumerable.Empty<GaziHastane.Models.Haber>()).Select(h => new
-                {
-                    h.Id,
-                    h.Baslik,
-                    h.Ozet,
-                    Icerik = h.Icerik ?? string.Empty,
-                    h.GorselUrl,
-                    h.Kategori,
-                    Tarih = h.YayinTarihi.ToString("dd MMMM yyyy")
-                })
-            ));
+                                                    (Model.Haberler ?? Enumerable.Empty<GaziHastane.Models.Haber>()).Select(h => new
+                                                    {
+                                                                h.Id,
+                                                                h.Baslik,
+                                                                h.Ozet,
+                                                                Icerik = h.Icerik ?? string.Empty,
+                                                                h.GorselUrl,
+                                                                h.Kategori,
+                                                                Tarih = h.YayinTarihi.ToString("dd MMMM yyyy")
+                                                    })
+                                    ));
 
-            const haberMap = new Map(haberData.map(x => [x.Id ?? x.id, x]));
+        const haberMap = new Map(haberData.map(x => [x.Id ?? x.id, x]));
 
             const etkinlikData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
-                (Model.Etkinlikler ?? Enumerable.Empty<GaziHastane.Models.Etkinlik>()).Select(e => new
-                {
-                    e.Id,
-                    e.Baslik,
-                    e.EtkinlikTipi,
-                    e.Konum,
-                    e.SaatAraligi,
-                    e.Aciklama,
-                    e.ModalIcerik,
-                    e.GorselUrl,
-                    Tarih = e.Tarih.ToString("dd MMMM yyyy")
-                })
-            ));
+                                        (Model.Etkinlikler ?? Enumerable.Empty<GaziHastane.Models.Etkinlik>()).Select(e => new
+                                        {
+                                                    e.Id,
+                                                    e.Baslik,
+                                                    e.EtkinlikTipi,
+                                                    e.Konum,
+                                                    e.SaatAraligi,
+                                                    e.Aciklama,
+                                                    e.ModalIcerik,
+                                                    e.GorselUrl,
+                                                    Tarih = e.Tarih.ToString("dd MMMM yyyy")
+                                        })
+                        ));
 
-            const etkinlikMap = new Map(etkinlikData.map(x => [x.Id ?? x.id, x]));
+        const etkinlikMap = new Map(etkinlikData.map(x => [x.Id ?? x.id, x]));
 
             function openHaberModal(id) {
                 const haber = haberMap.get(id);
@@ -498,9 +545,9 @@
     <div class="hero-orb w-[600px] h-[600px] -top-40 -right-32"></div>
     <div class="hero-orb w-[400px] h-[400px] bottom-0 -left-20"></div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 relative z-10">
-        <div class="flex flex-col lg:flex-row items-center gap-12">
-            <div class="flex-1 text-white space-y-7 text-center lg:text-left">
+    <div class="max-w-[96%] 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 py-16 sm:py-24 relative z-10">
+        <div class="flex flex-col lg:flex-row items-center gap-10">
+            <div class="w-full lg:w-5/12 text-white space-y-7 text-center lg:text-left">
                 <div class="inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full border border-white/20 backdrop-blur">
                     <span class="w-2 h-2 bg-blue-300 rounded-full animate-pulse"></span>
                     <span class="text-[10px] font-black uppercase tracking-[0.15em]">Gazi Üniversitesi · 100 Yıllık Miras</span>
@@ -543,8 +590,7 @@
                 </div>
             </div>
 
-            <div class="flex-1 w-full max-w-lg lg:max-w-none relative">
-
+            <div class="w-full lg:w-7/12 relative">
                 <div class="slider-main-container">
                     <div class="slider-wrapper">
                         @if (Model.SliderGorselleri != null && Model.SliderGorselleri.Any())
@@ -601,7 +647,7 @@
     </div>
 </header>
 
-<section class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10" style="background: #f8fafc;">
+<section class="max-w-[96%] 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 relative z-10" style="background: #f8fafc;">
     <div class="digital-ops-wrapper">
         <div class="digital-ops-header mb-6 text-center lg:text-left border-b border-slate-100 pb-4">
             <h3 class="text-sm font-black uppercase tracking-widest text-slate-800 flex items-center justify-center lg:justify-start gap-2">
@@ -609,8 +655,7 @@
             </h3>
         </div>
 
-        <div class="digital-ops-grid no-scrollbar" style="scrollbar-width: none; -ms-overflow-style: none;">
-
+        <div class="digital-ops-grid">
             @if (Model.HizliIslemler != null && Model.HizliIslemler.Any())
             {
                 @foreach (var islem in Model.HizliIslemler)
@@ -625,19 +670,11 @@
                     </a>
                 }
             }
-
         </div>
     </div>
 </section>
 
-<style>
-    /* Kaydırma çubuğunu gizlemek için (Chrome, Safari ve Opera) */
-    .no-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
-</style>
-
-<section class="max-w-7xl mx-auto px-4 sm:px-6 py-12" style="background: #f8fafc;">
+<section class="max-w-[96%] 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 py-12" style="background: #f8fafc;">
     <div class="grid lg:grid-cols-3 gap-10">
         <div class="lg:col-span-2">
             <div class="flex justify-between items-end mb-6">
@@ -658,7 +695,7 @@
                         <button type="button" onclick="openHaberModal(@haber.Id)" class="hospital-news-card text-decoration-none group text-left w-full">
                             <div class="hospital-news-img-box">
                                 <img src="@haber.GorselUrl" alt="@haber.Baslik" class="hospital-news-img">
-                                <span class="news-category-badge"><i class="fa-solid fa-tag mr-1"></i> @haber.Kategori</span>
+                                <span class="news-category-badge absolute top-3 left-3 bg-white/90 px-2 py-1 text-xs font-bold rounded shadow-sm text-blue-700 backdrop-blur"><i class="fa-solid fa-tag mr-1"></i> @haber.Kategori</span>
                             </div>
                             <div class="p-5 flex-1 flex flex-col justify-between">
                                 <div>
@@ -754,7 +791,7 @@
     </div>
 </div>
 
-<section class="max-w-7xl mx-auto px-4 sm:px-6 py-12" style="background: #f8fafc;">
+<section class="max-w-[96%] 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 py-12" style="background: #f8fafc;">
     <div class="flex justify-between items-end mb-8">
         <div>
             <p class="sec-label mb-1" style="color: #ea580c;">KONGRE & SEMPOZYUM</p>
@@ -786,7 +823,7 @@
     </div>
 </section>
 
-<section class="max-w-7xl mx-auto px-4 sm:px-6 py-12" style="background: #f8fafc;">
+<section class="max-w-[96%] 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 py-12" style="background: #f8fafc;">
     <div class="flex justify-between items-end mb-8">
         <div>
             <p class="sec-label mb-1">TIBBİ BİRİMLERİMİZ</p>
@@ -832,7 +869,7 @@
     </div>
 </section>
 
-<section class="max-w-7xl mx-auto px-4 sm:px-6 pb-20" style="background: #f8fafc;">
+<section class="max-w-[96%] 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 pb-20" style="background: #f8fafc;">
     <div class="bg-white rounded-3xl border border-slate-100 p-8 flex flex-col md:flex-row items-center justify-between gap-8 shadow-lg">
         <div class="flex items-center gap-6">
             <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg animate-pulse">

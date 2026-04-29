@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GaziHastane.Models.Doktor>
+@model IEnumerable<GaziHastane.Models.Doktor>
 @* RAZOR KOD BLOĞU: Sunucu tarafında sayfa ayarları *@
 @{
     ViewData["Title"] = "Doktorlarımız";
@@ -14,6 +14,18 @@
 @section Scripts {
     <style>
         @@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+        }
 
         /* ── YAPIŞKAN YAN MENÜ (SIDEBAR) - SADECE MASAÜSTÜNDE ── */
         @@media (min-width: 1024px) {
@@ -298,6 +310,14 @@
             #empty-state.show {
                 display: flex;
             }
+
+        /* ── DİNAMİK IZGARA (AUTO FIT GRID) ── */
+        .auto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+        }
     </style>
 
     <script>
@@ -337,6 +357,17 @@
             document.querySelectorAll('.nav-btn').forEach(b => b.className = 'nav-btn');
             const activeBtn = document.getElementById('btn-' + type);
             if (activeBtn) activeBtn.classList.add(typeConfig[type].color);
+
+            // İnline filtre butonları için aktiflik durumu
+            document.querySelectorAll('.inline-nav-btn').forEach(b => {
+                b.classList.remove('bg-white/30', 'border-white/40');
+                b.classList.add('bg-white/10', 'border-white/20');
+            });
+            const activeInline = document.getElementById('inline-btn-' + type);
+            if (activeInline) {
+                activeInline.classList.remove('bg-white/10', 'border-white/20');
+                activeInline.classList.add('bg-white/30', 'border-white/40');
+            }
 
             // Aramayı sıfırla
             document.getElementById('mainSearch').value = '';
@@ -380,11 +411,54 @@
         }
 
         // Arama kutusunu dinle
-        document.getElementById('mainSearch')?.addEventListener('input', e => runSearch(e.target.value.toLowerCase().trim()));
+        document.getElementById('mainSearch')?.addEventListener('input', e => {
+            const val = e.target.value.toLowerCase().trim();
+            runSearch(val);
+            const inline = document.getElementById('inlineSearch');
+            if(inline && inline.value !== e.target.value) inline.value = e.target.value;
+        });
+
+        document.getElementById('inlineSearch')?.addEventListener('input', e => {
+            const val = e.target.value.toLowerCase().trim();
+            runSearch(val);
+            const main = document.getElementById('mainSearch');
+            if(main && main.value !== e.target.value) main.value = e.target.value;
+        });
+
+        function toggleDesktopSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const icon = document.getElementById('sidebar-toggle-icon');
+            const inlineFilters = document.getElementById('inline-filters');
+            
+            if (sidebar.classList.contains('lg:w-[300px]')) {
+                sidebar.classList.remove('lg:w-[300px]', 'lg:mr-8');
+                sidebar.classList.add('lg:w-0', 'lg:mr-0');
+                if(icon) {
+                    icon.classList.remove('fa-angles-left');
+                    icon.classList.add('fa-angles-right');
+                }
+                if(inlineFilters) {
+                    inlineFilters.classList.remove('hidden');
+                    // Gecikmeli opacity ekliyoruz ki transition çalışsın
+                    setTimeout(() => inlineFilters.classList.remove('opacity-0'), 50);
+                }
+            } else {
+                sidebar.classList.remove('lg:w-0', 'lg:mr-0');
+                sidebar.classList.add('lg:w-[300px]', 'lg:mr-8');
+                if(icon) {
+                    icon.classList.remove('fa-angles-right');
+                    icon.classList.add('fa-angles-left');
+                }
+                if(inlineFilters) {
+                    inlineFilters.classList.add('opacity-0');
+                    setTimeout(() => inlineFilters.classList.add('hidden'), 300);
+                }
+            }
+        }
     </script>
 }
 
-<div class="max-w-[1400px] mx-auto px-4 sm:px-6 py-8 flex flex-col lg:flex-row gap-8 mt-24 relative">
+<div class="w-full px-4 sm:px-6 py-10 flex flex-col lg:flex-row relative">
 
     <div class="lg:hidden flex items-center justify-between mb-2 bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
         <h1 class="text-lg font-black text-slate-800">Akademik Kadro</h1>
@@ -395,8 +469,8 @@
 
     <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300 lg:hidden"></div>
 
-    <aside id="main-sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-white transform -translate-x-full transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:block lg:z-auto lg:bg-transparent lg:w-72 flex-shrink-0 shadow-2xl lg:shadow-none overflow-y-auto lg:overflow-visible">
-
+    <aside id="main-sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-white transform -translate-x-full transition-all duration-300 ease-in-out lg:relative lg:translate-x-0 lg:block lg:z-auto lg:bg-transparent lg:w-[300px] lg:overflow-hidden lg:mr-8 flex-shrink-0 shadow-2xl lg:shadow-none overflow-y-auto">
+        <div class="w-full lg:w-[300px]">
         <div class="sidebar-sticky lg:bg-white lg:rounded-[2rem] p-6 lg:p-5 lg:border lg:border-slate-100 min-h-screen lg:min-h-0" style="box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05);">
 
             <div class="flex items-center justify-between lg:hidden mb-8 pb-4 border-b border-slate-100">
@@ -441,18 +515,43 @@
                 </button>
             </div>
         </div>
+        </div>
     </aside>
 
-    <main class="flex-1 min-w-0">
+    <main class="flex-1 min-w-0 relative">
+        <button onclick="toggleDesktopSidebar()" class="hidden lg:flex absolute -left-5 top-10 w-10 h-10 bg-white border border-slate-200 shadow-xl rounded-full items-center justify-center text-slate-500 hover:text-blue-600 hover:scale-110 z-20 cursor-pointer transition-all">
+            <i class="fa-solid fa-angles-left" id="sidebar-toggle-icon"></i>
+        </button>
 
         <div class="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 rounded-[2rem] p-8 sm:p-10 mb-8 relative overflow-hidden" style="box-shadow: 0 20px 50px -10px rgba(37,99,235,0.3);">
             <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full translate-x-20 -translate-y-20 blur-2xl"></div>
             <div class="absolute bottom-0 right-20 w-32 h-32 bg-white/10 rounded-full translate-y-10 blur-xl"></div>
             <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                <div>
+                <div class="w-full lg:w-auto transition-all duration-300">
                     <p class="text-blue-200 text-xs font-black tracking-[0.25em] uppercase mb-2">Gazi Üniversitesi Hastanesi</p>
                     <h2 class="text-white text-3xl sm:text-4xl font-black leading-tight tracking-tight">Akademik Kadromuz</h2>
                     <p class="text-blue-100 text-sm font-medium mt-2 max-w-md">Türkiye'nin sağlık hafızası olarak en yetkin akademik ve klinik kadro ile hizmetinizdeyiz.</p>
+                    
+                    <div id="inline-filters" class="hidden opacity-0 mt-6 w-full max-w-xl transition-all duration-300">
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <div class="relative flex-1">
+                                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-white/50 text-sm"></i>
+                                <input type="text" id="inlineSearch" placeholder="Doktor veya uzmanlık ara..."
+                                       class="w-full pl-10 pr-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-sm font-medium text-white placeholder-white/50 focus:bg-white/20 focus:outline-none transition shadow-inner">
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="filterType('dahili')" id="inline-btn-dahili" class="inline-nav-btn px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold transition flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-blue-400"></span> Dahili
+                                </button>
+                                <button onclick="filterType('cerrahi')" id="inline-btn-cerrahi" class="inline-nav-btn px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold transition flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-red-400"></span> Cerrahi
+                                </button>
+                                <button onclick="filterType('temel')" id="inline-btn-temel" class="inline-nav-btn px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold transition flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-green-400"></span> Temel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="flex gap-6 flex-shrink-0 bg-black/10 p-4 rounded-2xl backdrop-blur-sm border border-white/10">
                     <div class="text-center">
@@ -486,7 +585,7 @@
                 <span class="text-xs font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full flex-shrink-0">@dahiliCount Uzman</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6 xl:gap-8">
+            <div class="auto-grid">
                 @foreach (var doktor in Model.Where(d => d.Bolum != null && d.Bolum.Kategori == "Dahili" && d.IsActive))
                 {
                     <div class="doctor-card type-dahili" data-name="@doktor.Ad @doktor.Soyad" data-dept="@(doktor.Bolum?.Ad ?? doktor.UzmanlikAlani)">
@@ -500,6 +599,10 @@
                             </div>
                             <h3 class="text-base font-black text-slate-800 mt-1 leading-snug">@doktor.Ad @doktor.Soyad</h3>
                             <p class="text-slate-500 text-sm font-semibold mt-1.5 flex-1">@(doktor.Bolum?.Ad ?? doktor.UzmanlikAlani)</p>
+                            @if (!string.IsNullOrEmpty(doktor.OdaKonumu))
+                            {
+                                <p class="text-slate-500 text-xs font-bold mt-1 bg-slate-50 py-1 px-3 rounded-lg inline-block self-center"><i class="fa-solid fa-door-open mr-1"></i> @doktor.OdaKonumu</p>
+                            }
 
                             <div class="mt-5 w-full">
                                 @if (!string.IsNullOrEmpty(doktor.Ozgecmis))
@@ -531,7 +634,7 @@
                 <span class="text-xs font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full flex-shrink-0">@cerrahiCount Uzman</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6 xl:gap-8">
+            <div class="auto-grid">
                 @foreach (var doktor in Model.Where(d => d.Bolum != null && d.Bolum.Kategori == "Cerrahi" && d.IsActive))
                 {
                     <div class="doctor-card type-cerrahi" data-name="@doktor.Ad @doktor.Soyad" data-dept="@(doktor.Bolum?.Ad ?? doktor.UzmanlikAlani)">
@@ -545,6 +648,10 @@
                             </div>
                             <h3 class="text-base font-black text-slate-800 mt-1 leading-snug">@doktor.Ad @doktor.Soyad</h3>
                             <p class="text-slate-500 text-sm font-semibold mt-1.5 flex-1">@(doktor.Bolum?.Ad ?? doktor.UzmanlikAlani)</p>
+                            @if (!string.IsNullOrEmpty(doktor.OdaKonumu))
+                            {
+                                <p class="text-slate-500 text-xs font-bold mt-1 bg-slate-50 py-1 px-3 rounded-lg inline-block self-center"><i class="fa-solid fa-door-open mr-1"></i> @doktor.OdaKonumu</p>
+                            }
 
                             <div class="mt-5 w-full">
                                 @if (!string.IsNullOrEmpty(doktor.Ozgecmis))
@@ -576,7 +683,7 @@
                 <span class="text-xs font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full flex-shrink-0">@temelCount Uzman</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6 xl:gap-8">
+            <div class="auto-grid">
                 @foreach (var doktor in Model.Where(d => d.Bolum != null && d.Bolum.Kategori == "Temel" && d.IsActive))
                 {
                     <div class="doctor-card type-temel" data-name="@doktor.Ad @doktor.Soyad" data-dept="@(doktor.Bolum?.Ad ?? doktor.UzmanlikAlani)">
@@ -590,6 +697,10 @@
                             </div>
                             <h3 class="text-base font-black text-slate-800 mt-1 leading-snug">@doktor.Ad @doktor.Soyad</h3>
                             <p class="text-slate-500 text-sm font-semibold mt-1.5 flex-1">@(doktor.Bolum?.Ad ?? doktor.UzmanlikAlani)</p>
+                            @if (!string.IsNullOrEmpty(doktor.OdaKonumu))
+                            {
+                                <p class="text-slate-500 text-xs font-bold mt-1 bg-slate-50 py-1 px-3 rounded-lg inline-block self-center"><i class="fa-solid fa-door-open mr-1"></i> @doktor.OdaKonumu</p>
+                            }
 
                             <div class="mt-5 w-full">
                                 @if (!string.IsNullOrEmpty(doktor.Ozgecmis))

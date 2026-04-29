@@ -15,7 +15,7 @@
             <div class="panel-inner">
                 <div class="d-flex justify-content-between align-items-center mb-5">
                     <img src="/assets/gazilogo.jpg" alt="Logo" class="main-logo">
-                    <div class="badge-protocol">PROTOKOL: @ViewBag.Protokol</div>
+                    <div class="badge-protocol">ÖDENMEMİŞ BORÇLAR</div>
                 </div>
 
                 <h2 class="title-main">Borç Bilgileri</h2>
@@ -37,7 +37,7 @@
                                     </div>
                                     <div>
                                         <div class="debt-name">@borc.IslemTipi</div>
-                                        <div class="debt-sub">Tarih: @borc.SonOdemeTarihi?.ToString("dd.MM.yyyy")</div>
+                                        <div class="debt-sub">İşlem No: #@borc.Id</div>
                                     </div>
                                 </div>
                                 <div class="debt-price">@borc.Tutar.ToString("N2") ₺</div>

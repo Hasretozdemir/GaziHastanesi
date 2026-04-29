@@ -21,7 +21,8 @@
         body {
             background-color: #f0f4f8;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden;
+            overflow: hidden;
+            height: 100%;
         }
 
         .color-navy {
@@ -30,15 +31,19 @@
 
         .portal-master-card {
             background: rgba(255, 255, 255, 0.98);
-            border: 1px solid #e2e8f0;
+            border: 2px solid #cbd5e1;
             border-radius: 24px;
             padding: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.12), 0 0 0 2px rgba(37,99,235,0.08);
             max-width: 1100px;
             width: 100%;
             margin: 0 auto;
             position: relative;
             z-index: 2;
+        }
+        .portal-master-card:hover {
+            box-shadow: 0 35px 80px rgba(0,0,0,0.18), 0 0 0 3px rgba(37,99,235,0.12);
+            transform: translateY(-3px);
         }
 
         .bg-visuals {
@@ -75,7 +80,7 @@
 
         .committee-action-card {
             background: white;
-            border: 1px solid #f1f5f9;
+            border: 2px solid #e2e8f0;
             border-radius: 16px;
             padding: 16px;
             display: flex;
@@ -89,9 +94,10 @@
         }
 
             .committee-action-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 12px 25px rgba(0,0,0,0.05);
-                border-color: #cbd5e1;
+                transform: translateY(-6px);
+                box-shadow: 0 20px 40px rgba(37,99,235,0.14);
+                border-color: #2563eb !important;
+                background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
             }
 
                 .committee-action-card:hover .arrow-icon {
@@ -111,15 +117,15 @@
         }
 
         .card-info h5 {
-            font-size: 0.9rem;
-            font-weight: 800;
+            font-size: 0.95rem;
+            font-weight: 900;
             color: #0f172a;
             margin-bottom: 2px;
         }
 
         .card-info p {
-            font-size: 0.75rem;
-            color: #64748b;
+            font-size: 0.78rem;
+            color: #475569; font-weight: 600;
             margin: 0;
         }
 
@@ -184,7 +190,7 @@
     </style>
 </head>
 
-<body class="pt-20 pb-10 min-vh-100 d-flex flex-column align-items-center justify-content-center">
+<body style="overflow:hidden;" class="pt-20 pb-10 min-vh-100 d-flex flex-column align-items-center justify-content-center">
 
     <div class="bg-visuals">
         <div class="blob blob-1"></div>

@@ -1,121 +1,102 @@
 @{
-    // Sayfanýn baþlýðýný (title) belirliyoruz, bu "ViewData" koleksiyonu üzerinden Layout'a taþýnýr.
-    ViewData["Title"] = "Gazi Saðlýk | Profesyonel Sonuç Portalý";
+    ViewData["Title"] = "Gazi Saglik | Tahlil Sonuclari";
 }
 
-<div class="results-viewport">
-    <div class="bg-blob"></div>
-    <div class="bg-blob-2"></div>
+<div class="payment-viewport">
+    <div class="payment-container shadow-2xl animate__animated animate__fadeIn">
 
-    <div class="results-container animate__animated animate__zoomIn">
-
-        <div class="info-side-panel">
+        <div class="side-info-panel">
             <div class="info-inner">
-                <div class="brand-group-premium mb-4 mb-md-5">
-                    <div class="logo-wrapper">
-                        <img src="/assets/gazilogo.jpg" alt="Gazi Logo">
-                    </div>
-                    <div class="brand-info">
-                        <h4 class="fw-900 m-0">GAZÝ ÜNÝVERSÝTESÝ</h4>
-                        <span class="badge-online"><span class="pulse-dot"></span> LABORATUVAR AÐI</span>
+                <div class="brand-header mb-5">
+                    <img src="/assets/gazilogo.jpg" alt="Gazi Logo" class="brand-logo">
+                    <div class="brand-text">
+                        <h5 class="fw-800 m-0">GAZI UNIVERSITESI</h5>
+                        <p class="m-0 extra-small text-gold">LABORATUVAR PORTALI</p>
                     </div>
                 </div>
 
-                <div class="hero-section mt-2 mt-md-4">
-                    <h1 class="display-5 fw-900 text-white">Analiz <br><span class="text-gradient-gold">Merkezi.</span></h1>
-                    <p class="text-white-50 lead-custom mt-3">Raporlarýnýz hazýr. Dijital arþivinize eriþerek tüm týbbi süreçlerinizi anlýk olarak takip edebilirsiniz.</p>
+                <div class="hero-content mt-4">
+                    <h1 class="display-6 fw-800 text-white">Analiz <br><span class="text-gold">Merkezi.</span></h1>
+                    <p class="text-white-50 small mt-3">Raporlariniz hazir. Dijital arsivinize eriserek tum tibbi sureclerinizi anlik olarak takip edebilirsiniz.</p>
                 </div>
 
-                <div class="feature-stack mt-4 mt-md-5">
-                    <div class="feature-card-mini">
-                        <div class="f-icon"><i class="fas fa-file-pdf"></i></div>
-                        <div class="f-text"><h6>Akýllý PDF</h6><p>HD Çözünürlük</p></div>
-                    </div>
-                    <div class="feature-card-mini active d-none d-sm-flex">
-                        <div class="f-icon"><i class="fas fa-shield-alt"></i></div>
-                        <div class="f-text"><h6>Uçtan Uca</h6><p>Þifreli Veri</p></div>
-                    </div>
+                <div class="feature-list mt-5">
+                    <div class="f-item"><i class="fas fa-check-circle"></i> <span>Akilli PDF - HD Cozunurluk</span></div>
+                    <div class="f-item"><i class="fas fa-check-circle"></i> <span>Uctan Uca Sifreli Veri</span></div>
+                    <div class="f-item"><i class="fas fa-check-circle"></i> <span>E-Nabiz Entegrasyonu</span></div>
                 </div>
 
-                <div class="mt-auto pt-4 border-top border-white-10 d-none d-md-block">
-                    <div class="system-health d-flex align-items-center">
-                        <i class="fas fa-server text-success me-3"></i>
-                        <span class="small fw-bold text-white-50">Merkezi Sunucu Baðlantýsý Aktif</span>
+                <div class="mt-auto pt-5">
+                    <div class="security-card p-3 rounded-4">
+                        <i class="fas fa-server text-gold me-2"></i>
+                        <span class="small fw-bold">Merkezi Sunucu Baglantisi Aktif.</span>
                     </div>
                 </div>
             </div>
-            <div class="panel-overlay-glass"></div>
+            <div class="panel-bg-overlay"></div>
         </div>
 
-        <div class="form-side-panel">
-            <div class="form-scroll-wrapper">
-                <div class="form-main-box">
-
-                    <div class="header-minimal text-center mb-4 mb-md-5">
-                        <div class="g-symbol">G</div>
-                        <h2 class="fw-900 text-navy mt-4">Sonuç Sorgula</h2>
-                        <p class="text-muted small">Güvenli protokol ile sonuçlarýnýza eriþin</p>
-                    </div>
-
-                    <div class="toggle-wrapper-premium mb-4 mb-md-5">
-                        <input type="radio" name="loginType" id="tcMethod" checked onchange="updateUI('TC')">
-                        <label for="tcMethod" class="toggle-btn">T.C. KÝMLÝK</label>
-
-                        <input type="radio" name="loginType" id="passportMethod" onchange="updateUI('PASSPORT')">
-                        <label for="passportMethod" class="toggle-btn">PASAPORT</label>
-
-                        <div class="glider-premium"></div>
-                    </div>
-
-                    @if (TempData["Error"] != null)
-                    {
-                        <div class="alert alert-danger mb-4 p-3 text-center" style="border-radius: 15px; font-size: 12px; font-weight: 700; background-color: #fef2f2; color: #ef4444; border: 1px dashed #f87171;">
-                            <i class="fas fa-exclamation-circle me-1"></i> @TempData["Error"]
+        <div class="side-form-panel">
+            <div class="form-scroll-area">
+                <div class="form-inner">
+                    <div class="form-header text-center mb-5">
+                        <div class="icon-circle-main mb-3">
+                            <i class="fas fa-flask text-navy"></i>
                         </div>
-                    }
+                        <h3 class="fw-800 text-navy">Sonuc Sorgula</h3>
+                        <p class="text-muted small">Guvenli protokol ile sonuclariniza erisin</p>
+                    </div>
 
-                    <form id="sonucForm" action="/Sonuc/Login" method="post" class="auth-form-premium">
-                        <div class="floating-group mb-4">
-                            <label id="idLabel" class="label-premium">KÝMLÝK NUMARASI</label>
-                            <div class="input-field">
-                                <i id="idIcon" class="far fa-id-card"></i>
-                                <input type="text" name="identityNumber" placeholder="11 Haneli T.C. Kimlik" required maxlength="11" class="w-100">
-                                <div class="input-line"></div>
+                    <div class="toggle-box mb-4">
+                        <input type="radio" name="loginType" value="TC" id="tcType" checked onchange="changeLoginType('TC')">
+                        <label for="tcType" class="toggle-btn"><i class="fas fa-id-card me-1"></i> T.C. Kimlik</label>
+                        <input type="radio" name="loginType" value="PASS" id="passType" onchange="changeLoginType('PASS')">
+                        <label for="passType" class="toggle-btn"><i class="fas fa-passport me-1"></i> Pasaport</label>
+                        <div class="toggle-slider"></div>
+                    </div>
+
+                    <form id="sonucForm" action="/Sonuc/Login" method="post" class="modern-form">
+                        <div class="floating-input mb-4">
+                            <label id="lblIdentity">KIMLIK NUMARASI</label>
+                            <div class="input-box">
+                                <i id="icoIdentity" class="far fa-id-card"></i>
+                                <input type="text" id="inpIdentity" name="identityNumber" placeholder="11 Haneli T.C. Kimlik" required maxlength="11">
                             </div>
                         </div>
 
-                        <div class="floating-group mb-4 mb-md-5">
-                            <label class="label-premium">SONUÇ ÞÝFRESÝ</label>
-                            <div class="input-field">
+                        <div class="floating-input mb-4">
+                            <label>SONUC SIFRESI</label>
+                            <div class="input-box">
                                 <i class="fas fa-unlock-alt"></i>
-                                <input type="password" name="password" placeholder="Þifrenizi giriniz" required class="w-100">
-                                <div class="input-line"></div>
+                                <input type="password" name="password" placeholder="Sifrenizi giriniz" required>
                             </div>
                         </div>
 
-                        <button type="submit" class="btn-glow-premium">
-                            <span class="b-text">SONUÇLARI LÝSTELE</span>
-                            <div class="b-icon"><i class="fas fa-chevron-right"></i></div>
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger p-3 mb-4" style="border-radius: 15px; font-size: 13px; font-weight: 700; background-color: #fef2f2; color: #ef4444; border: 1px dashed #f87171; text-align: center;">
+                                <i class="fas fa-exclamation-circle me-1"></i> @TempData["Error"]
+                            </div>
+                        }
+
+                        <button type="submit" class="btn-main-payment mt-2">
+                            <span class="btn-label">SONUCLARI LISTELE</span>
+                            <span class="btn-icon"><i class="fas fa-chevron-right"></i></span>
                         </button>
                     </form>
 
                     <a href="https://enabiz.gov.tr" target="_blank" class="btn-enabiz mt-3">
-                        <span class="b-text d-flex align-items-center">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/E-Nab%C4%B1z_logo.png/640px-E-Nab%C4%B1z_logo.png" style="height: 18px; margin-right: 10px;" alt="E-Nabýz Logo">
-                            ÝLE GÝRÝÞ YAP
+                        <span class="btn-label d-flex align-items-center">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/E-Nab%C4%B1z_logo.png/640px-E-Nab%C4%B1z_logo.png" style="height: 18px; margin-right: 10px;" alt="E-Nabiz Logo">
+                            ILE GIRIS YAP
                         </span>
-                        <div class="b-icon"><i class="fas fa-external-link-alt"></i></div>
+                        <span class="btn-icon"><i class="fas fa-external-link-alt"></i></span>
                     </a>
 
-                    <div class="extra-actions mt-4 text-center">
-                        <a href="#" class="link-luxury me-3 me-md-4">Þifremi Unuttum</a>
-                        <a href="#" class="link-luxury">Kayýt Ol</a>
-                    </div>
-
-                    <div class="partner-footer mt-5">
-                        <div class="divider-text">GÜVENLÝ ENTEGRASYON</div>
-                        <div class="d-flex justify-content-center align-items-center gap-3 gap-md-4 mt-3">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/E-Nab%C4%B1z_logo.png/640px-E-Nab%C4%B1z_logo.png" class="partner-img grayscale">
+                    <div class="text-center mt-5">
+                        <div class="divider"><span>GUVENLI ENTEGRASYON</span></div>
+                        <div class="d-flex justify-content-center align-items-center gap-4 mt-3">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/E-Nab%C4%B1z_logo.png/640px-E-Nab%C4%B1z_logo.png" class="partner-img grayscale" style="height:22px; opacity:0.4;">
                         </div>
                     </div>
                 </div>
@@ -128,360 +109,186 @@
 @section Styles {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
-        /* CSS Deðiþken tanýmlarý (renkler) */
         :root {
-            --navy: #0f172a; /* Koyu lacivert */
-            --primary: #2563eb; /* Ana mavi */
-            --gold: #c5a059; /* Altýn rengi */
-            --soft-white: rgba(255,255,255,0.9); /* Yumuþak beyaz */
+            --navy: #0f172a;
+            --gold: #d4af37;
+            --soft-bg: #f8fafc;
+            --input-border: #e2e8f0;
         }
 
-        /* Sayfa geneli gövde ayarlarý */
         body {
-            background: #f1f5f9; /* Arka plan rengi */
-            font-family: 'Plus Jakarta Sans', sans-serif; /* Yazý tipi */
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden; /* Yatay taþmayý engelle */
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #eef2f6;
         }
 
-        /* Sonuç ekranýný ortalayan dýþ kapsayýcý */
-        .results-viewport {
-            min-height: 100vh;
+        .payment-viewport {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            bottom: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            position: relative;
+            overflow-y: auto;
+            background: #eef2f6;
         }
 
-        /* Ýçerik kartýnýn kendisi */
-        .results-container {
+        .payment-container {
             width: 100%;
-            max-width: 1150px;
+            max-width: 1100px;
             background: white;
-            border-radius: 45px;
+            border-radius: 40px;
             display: flex;
-            flex-direction: row;
-            box-shadow: 0 40px 100px rgba(15,23,42,0.12);
-            overflow: hidden;
             min-height: 700px;
+            overflow: hidden;
         }
 
-        /* Sol taraftaki bilgi paneli */
-        .info-side-panel {
-            flex: 1.1; /* Geniþlik oraný */
+        .side-info-panel {
+            flex: 1;
             background: var(--navy);
-            padding: 50px;
             position: relative;
+            padding: 50px;
             color: white;
             display: flex;
             flex-direction: column;
+            z-index: 1;
         }
 
-        /* Sað taraftaki form paneli */
-        .form-side-panel {
-            flex: 1; /* Geniþlik oraný */
-            background: white;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-        }
-
-        /* Mobil uyumluluk (Tablet ve altý) */
-        @@media (max-width: 991px) {
-            .results-container {
-                flex-direction: column; /* Dikey yerleþim */
-                height: auto;
-                border-radius: 30px;
-                margin-top: 20px;
-                margin-bottom: 20px;
-            }
-
-            .info-side-panel {
-                padding: 40px 30px;
-                order: 1; /* Önce bilgi paneli */
-            }
-
-            .form-side-panel {
-                padding: 10px;
-                order: 2; /* Sonra form paneli */
-            }
-
-            .results-viewport {
-                padding: 10px;
-                align-items: flex-start;
-            }
-
-            .hero-section h1 {
-                font-size: 2rem; /* Baþlýk boyutunu küçült */
-            }
-        }
-
-        /* Arka plan bulanýk daire 1 */
-        .bg-blob {
+        .panel-bg-overlay {
             position: absolute;
-            top: -10%;
-            right: -5%;
-            width: 500px;
-            height: 500px;
-            background: rgba(37,99,235,0.05);
-            border-radius: 50%;
-            filter: blur(80px); /* Bulanýklýk */
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: url('https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&q=80&w=1000');
+            background-size: cover;
+            opacity: 0.08;
             z-index: -1;
         }
 
-        /* Arka plan bulanýk daire 2 */
-        .bg-blob-2 {
-            position: absolute;
-            bottom: -10%;
-            left: -5%;
-            width: 400px;
-            height: 400px;
-            background: rgba(197,160,89,0.05);
-            border-radius: 50%;
-            filter: blur(80px); /* Bulanýklýk */
-            z-index: -1;
-        }
-
-        /* Panelin üzerindeki cam efekti */
-        .panel-overlay-glass {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(145deg, rgba(15,23,42,0.8) 0%, rgba(37,99,235,0.1) 100%);
-            z-index: 0;
-        }
-
-        /* Bilgi panelinin içeriði */
-        .info-inner {
-            position: relative;
-            z-index: 1; /* Cam efektinin üzerinde kalmasý için */
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Logo kapsayýcýsý */
-        .logo-wrapper {
-            width: 60px;
-            height: 60px;
-            background: white;
-            border-radius: 18px;
-            padding: 7px;
-        }
-            /* Logo resmi */
-            .logo-wrapper img {
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-            }
-
-        /* Marka grup kapsayýcýsý */
-        .brand-group-premium {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        /* Online rozeti */
-        .badge-online {
-            font-size: 10px;
-            font-weight: 800;
-            color: var(--gold);
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* Yanýp sönen nokta animasyonu için element */
-        .pulse-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--gold);
-            border-radius: 50%;
-            animation: pulse-gold 2s infinite; /* Animasyon tanýmý */
-        }
-
-        /* Altýn rengi gradient metin */
-        .text-gradient-gold {
-            background: linear-gradient(to right, #e2c27d, #c5a059);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Özellik kartlarý yýðýný */
-        .feature-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        /* Küçük özellik kartý */
-        .feature-card-mini {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            padding: 15px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-            /* Aktif kart görünümü */
-            .feature-card-mini.active {
-                background: rgba(255,255,255,0.08); /* Biraz daha açýk */
-            }
-
-        /* Ýkon kutusu */
-        .f-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--primary);
+        .brand-logo {
+            width: 55px; height: 55px;
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: white;
+            padding: 5px;
+            margin-right: 15px;
+            float: left;
         }
 
-        /* Yazý alanlarý */
-        .f-text h6 {
-            margin: 0;
-            font-weight: 800;
-            font-size: 0.85rem;
-            color: #fff;
-        }
+        .text-gold { color: var(--gold); }
+        .fw-800 { font-weight: 800; }
+        .text-navy { color: var(--navy); }
 
-        .f-text p {
-            margin: 0;
-            font-size: 0.7rem;
-            opacity: 0.5;
+        .f-item {
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
+        .f-item i { color: var(--gold); margin-right: 10px; }
 
-        /* Form kaydýrma alaný */
-        .form-scroll-wrapper {
+        .side-form-panel {
             flex: 1;
-            padding: 40px;
+            background: white;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* G sembolü kutusu */
-        .g-symbol {
-            width: 65px;
-            height: 65px;
-            background: #f8fafc;
-            border-radius: 22px;
+        .form-scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 60px;
+            scrollbar-width: none;
+        }
+        .form-scroll-area::-webkit-scrollbar { display: none; }
+
+        .icon-circle-main {
+            width: 75px; height: 75px;
+            background: var(--soft-bg);
+            border-radius: 25px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--navy);
             margin: 0 auto;
-            border: 1px solid #e2e8f0;
+            font-size: 2rem;
         }
 
-        /* Radio buton kapsayýcýsý (Toggle) */
-        .toggle-wrapper-premium {
-            background: #f1f5f9;
+        .floating-input label {
+            display: block;
+            font-size: 11px;
+            font-weight: 800;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .input-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-box i {
+            position: absolute;
+            left: 20px;
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+        .input-box input {
+            width: 100%;
+            height: 60px;
+            background: var(--soft-bg);
+            border: 2px solid transparent;
+            border-radius: 18px;
+            padding: 0 20px 0 55px;
+            font-weight: 700;
+            color: var(--navy);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+        }
+        .input-box input:focus {
+            background: #fff;
+            border-color: var(--gold);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.1);
+        }
+
+        /* Toggle */
+        .toggle-box {
+            background: var(--soft-bg);
             padding: 6px;
             border-radius: 20px;
             display: flex;
             position: relative;
             border: 1px solid #e2e8f0;
         }
-            /* Radio inputlarýný gizle */
-            .toggle-wrapper-premium input {
-                display: none;
-            }
-
-        /* Seçenek butonlarý */
+        .toggle-box input { display: none; }
         .toggle-btn {
             flex: 1;
             text-align: center;
             padding: 12px;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 800;
-            cursor: pointer;
-            z-index: 2; /* Kaydýrýcýnýn üstünde */
             color: #64748b;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
             transition: 0.3s;
+            margin: 0;
         }
-
-        /* Kayan beyaz arka plan (Glider) */
-        .glider-premium {
+        #tcType:checked ~ label[for="tcType"],
+        #passType:checked ~ label[for="passType"] { color: var(--navy); }
+        .toggle-slider {
             position: absolute;
             height: calc(100% - 12px);
             width: calc(50% - 6px);
             background: white;
-            border-radius: 16px;
-            top: 6px;
-            left: 6px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
-            transition: 0.3s;
+            border-radius: 15px;
+            top: 6px; left: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: 0.3s ease;
         }
+        #passType:checked ~ .toggle-slider { transform: translateX(100%); }
 
-        /* Seçime göre kaydýrýcýnýn yerini deðiþtir */
-        #passportMethod:checked ~ .glider-premium {
-            transform: translateX(100%);
-        }
-
-        /* Seçili elemanýn rengini koyulaþtýr */
-        #tcMethod:checked ~ label[for="tcMethod"], #passportMethod:checked ~ label[for="passportMethod"] {
-            color: var(--navy);
-        }
-
-        /* Input etiketleri */
-        .label-premium {
-            font-size: 11px;
-            font-weight: 800;
-            color: #94a3b8;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        /* Input alaný kapsayýcýsý */
-        .input-field {
-            position: relative;
-        }
-            /* Input ikonu */
-            .input-field i {
-                position: absolute;
-                left: 0;
-                top: 12px;
-                color: #cbd5e1;
-                font-size: 1rem;
-            }
-            /* Input stil */
-            .input-field input {
-                width: 100%;
-                border: none;
-                padding: 12px 0 12px 30px;
-                font-weight: 700;
-                color: var(--navy);
-                background: transparent;
-                outline: none;
-            }
-
-        /* Alt çizgi animasyonu için element */
-        .input-line {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: #f1f5f9;
-            transition: 0.3s;
-        }
-
-        /* Focus olunca çizgi rengi deðiþsin */
-        .input-field input:focus ~ .input-line {
-            background: var(--primary);
-        }
-
-        /* Ana Giriþ Butonu Stili */
-        .btn-glow-premium {
+        .btn-main-payment {
             width: 100%;
             height: 65px;
             background: var(--navy);
@@ -494,135 +301,102 @@
             justify-content: space-between;
             padding: 0 25px;
             transition: 0.4s;
+            cursor: pointer;
+        }
+        .btn-main-payment:hover {
+            background: var(--gold);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
         }
 
-            .btn-glow-premium:hover {
-                background: var(--primary);
-                transform: translateY(-3px);
-                box-shadow: 0 15px 30px rgba(37,99,235,0.25);
-            }
+        .btn-enabiz {
+            width: 100%;
+            height: 55px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 18px;
+            color: var(--navy);
+            font-weight: 800;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+        .btn-enabiz:hover {
+            border-color: var(--gold);
+            color: var(--navy);
+            box-shadow: 0 8px 20px rgba(212,175,55,0.1);
+        }
 
-        .b-icon {
-            width: 35px;
-            height: 35px;
+        .btn-icon {
+            width: 35px; height: 35px;
             background: rgba(255,255,255,0.1);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.4s;
         }
+        .btn-enabiz .btn-icon { background: var(--soft-bg); color: var(--navy); }
 
-        /* YENÝ EKLENEN E-NABIZ BUTON STÝLÝ */
-        .btn-enabiz {
-            width: 100%;
-            height: 65px;
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 22px;
-            color: var(--navy);
-            font-weight: 800;
+        .divider {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 0 25px;
-            transition: 0.4s;
-            text-decoration: none;
-        }
-
-            .btn-enabiz:hover {
-                border-color: #ef4444; /* E-nabiz kýrmýzýsý hover'da belli olur */
-                background: #fffafa;
-                transform: translateY(-3px);
-                box-shadow: 0 15px 30px rgba(239, 68, 68, 0.1);
-                color: #ef4444;
-            }
-
-            .btn-enabiz .b-icon {
-                background: #f1f5f9;
-            }
-
-                .btn-enabiz .b-icon i {
-                    color: #94a3b8;
-                    transition: 0.4s;
-                }
-
-            .btn-enabiz:hover .b-icon {
-                background: #fee2e2;
-            }
-
-                .btn-enabiz:hover .b-icon i {
-                    color: #ef4444;
-                }
-
-        /* Alt linkler */
-        .link-luxury {
-            font-size: 11px;
-            font-weight: 700;
-            color: #94a3b8;
-            text-decoration: none;
-        }
-
-        /* Ayýrýcý metin */
-        .divider-text {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #cbd5e1;
             font-size: 10px;
             font-weight: 800;
+            color: #cbd5e1;
+            text-transform: uppercase;
         }
-            /* Çizgiler */
-            .divider-text::before, .divider-text::after {
-                content: '';
-                flex: 1;
-                border-bottom: 1px solid #f1f5f9;
-            }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #f1f5f9; }
+        .divider span { padding: 0 10px; }
 
-        /* Partner görseli */
-        .partner-img {
-            height: 25px;
-            filter: grayscale(1);
-            opacity: 0.5;
+        .security-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Nokta animasyonu (keyframe) */
-        @@keyframes pulse-gold {
-            0% {
-                box-shadow: 0 0 0 0 rgba(197,160,89,0.5);
+        @@media (max-width: 991px) {
+            .payment-container {
+                flex-direction: column;
+                height: auto;
+                min-height: unset;
+                border-radius: 30px;
+                max-width: 460px;
+                box-shadow: 0 0 0 4px rgba(212,175,55,0.15), 0 30px 60px rgba(0,0,0,0.13);
+                border: 2px solid rgba(212,175,55,0.2);
+                transition: box-shadow 0.3s, border-color 0.3s;
             }
-
-            70% {
-                box-shadow: 0 0 0 10px rgba(197,160,89,0);
+            .payment-container:hover {
+                box-shadow: 0 0 0 6px rgba(212,175,55,0.3), 0 40px 80px rgba(0,0,0,0.18);
+                border-color: rgba(212,175,55,0.45);
             }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(197,160,89,0);
-            }
+            .side-info-panel { display: none; }
+            .side-form-panel { flex: 1; }
+            .form-scroll-area { padding: 40px 25px; }
         }
     </style>
 }
 
 @section Scripts {
     <script>
-        // UI güncelleme fonksiyonu (TC/Pasaport geçiþi için)
-        function updateUI(type) {
-            // Ýlgili elementleri seç
-            const label = document.getElementById('idLabel');
-            const input = document.querySelector('.input-field input');
-            const icon = document.getElementById('idIcon');
-
-            // Eðer Pasaport seçildiyse:
-            if (type === 'PASSPORT') {
-                label.innerText = 'PASAPORT NUMARASI';
-                input.placeholder = 'Pasaport numaranýzý giriniz';
-                icon.className = 'fas fa-passport';
+        function changeLoginType(type) {
+            const lbl = document.getElementById('lblIdentity');
+            const ico = document.getElementById('icoIdentity');
+            const inp = document.getElementById('inpIdentity');
+            if (type === 'TC') {
+                lbl.textContent = 'KIMLIK NUMARASI';
+                ico.className = 'far fa-id-card';
+                inp.placeholder = '11 Haneli T.C. Kimlik';
+                inp.maxLength = 11;
             } else {
-                // TC Kimlik seçildiyse:
-                label.innerText = 'KÝMLÝK NUMARASI';
-                input.placeholder = '11 Haneli T.C. Kimlik';
-                icon.className = 'far fa-id-card';
+                lbl.textContent = 'PASAPORT NUMARASI';
+                ico.className = 'fas fa-passport';
+                inp.placeholder = 'Pasaport numaranizi girin';
+                inp.maxLength = 20;
             }
         }
     </script>
 }
+

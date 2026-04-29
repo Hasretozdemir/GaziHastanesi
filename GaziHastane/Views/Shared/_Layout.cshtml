@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>@ViewData["Title"] | Gazi Sağlık</title>
+    <title>@ViewData["Title"] | Gazi Hastanesi</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -26,7 +26,10 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background: #f0f4f8;
-            padding-top: 64px; /* DÜZELTME 1: Menünün altındaki içeriklerin menüyle üst üste binmesini engeller */
+            padding-top: 64px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .glass-nav {
@@ -36,7 +39,6 @@
             box-shadow: 0 2px 24px rgba(0,0,0,0.07);
         }
 
-        /* DÜZELTME 2: nav-link ismi Bootstrap ile çakışmasın diye gazi-nav-link yapıldı */
         .gazi-nav-link {
             font-size: 0.65rem;
             font-weight: 800;
@@ -46,7 +48,7 @@
             padding: 6px 0;
             position: relative;
             transition: color 0.2s;
-            text-decoration: none !important; /* Bootstrap'in altını çizmesini engeller */
+            text-decoration: none !important;
         }
 
             .gazi-nav-link::after {
@@ -103,24 +105,26 @@
             }
 
         @@keyframes pulse-ring {
-            0% {
-                box-shadow: 0 0 0 0 rgba(239,68,68,0.4);
-            }
+            0%
 
-            70% {
-                box-shadow: 0 0 0 10px rgba(239,68,68,0);
-            }
+        {
+            box-shadow: 0 0 0 0 rgba(239,68,68,0.4);
+        }
 
-            100% {
-                box-shadow: 0 0 0 0 rgba(239,68,68,0);
-            }
+        70% {
+            box-shadow: 0 0 0 10px rgba(239,68,68,0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(239,68,68,0);
+        }
+
         }
 
         .pulse-icon {
             animation: pulse-ring 2s ease infinite;
         }
 
-        /* Chat Scrollbar Stili */
         #chatBody::-webkit-scrollbar {
             width: 6px;
         }
@@ -157,8 +161,6 @@
                 <a href="/Kurumsal/Index" class="gazi-nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Kurumsal" ? "active" : "")">Hastanemiz</a>
                 <a href="/Home/Bolumler" class="gazi-nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Bolumler" ? "active" : "")">Bölümlerimiz</a>
                 <a href="/Home/Doktorlar" class="gazi-nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Doktorlar" ? "active" : "")">Doktorlarımız</a>
-
-
                 <a href="/Home/Rehber" class="gazi-nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Rehber" ? "active" : "")">Hasta Rehberi</a>
                 <a href="/Home/Iletisim" class="gazi-nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Iletisim" ? "active" : "")">İletişim</a>
             </div>
@@ -199,8 +201,6 @@
             <a href="/Kurumsal/Index" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-black transition" style="text-decoration: none;"><i class="fa-solid fa-hospital w-4 text-slate-400"></i> Hastanemiz</a>
             <a href="/Home/Bolumler" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-black transition" style="text-decoration: none;"><i class="fa-solid fa-grip w-4 text-slate-400"></i> Bölümlerimiz</a>
             <a href="/Home/Doktorlar" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-black transition" style="text-decoration: none;"><i class="fa-solid fa-user-doctor w-4 text-slate-400"></i> Doktorlarımız</a>
-
-
             <a href="/Home/Rehber" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-black transition" style="text-decoration: none;"><i class="fa-solid fa-book-open w-4 text-slate-400"></i> Hasta Rehberi</a>
             <a href="/Home/Iletisim" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-black transition" style="text-decoration: none;"><i class="fa-solid fa-phone w-4 text-slate-400"></i> İletişim</a>
         </div>
@@ -219,7 +219,6 @@
     </button>
 
     <div id="aiChatWindow" class="fixed bottom-24 right-6 w-[340px] sm:w-[380px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50 hidden border border-slate-100 transition-all">
-
         <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-4 flex items-center justify-between text-white">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
@@ -249,6 +248,91 @@
         </div>
     </div>
 
+    <footer class="bg-white border-t border-slate-200 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200">
+                            <i class="fa-solid fa-hospital text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <p class="text-base font-extrabold text-slate-900 leading-none mb-1 uppercase tracking-tight">Gazi <span class="text-blue-600">Hastanesi</span></p>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none">Gazi Üniversitesi</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6 border-l-2 border-blue-600 pl-3">Navigasyon</h4>
+                    <ul class="space-y-3" style="list-style: none; padding-left: 0;">
+                        <li><a href="/Kurumsal/Index" class="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-2 group" style="text-decoration:none;"><i class="fa-solid fa-chevron-right text-[10px] text-slate-300 group-hover:text-blue-600"></i> Hastanemiz</a></li>
+                        <li><a href="/Home/Bolumler" class="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-2 group" style="text-decoration:none;"><i class="fa-solid fa-chevron-right text-[10px] text-slate-300 group-hover:text-blue-600"></i> Bölümlerimiz</a></li>
+                        <li><a href="/Home/Doktorlar" class="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-2 group" style="text-decoration:none;"><i class="fa-solid fa-chevron-right text-[10px] text-slate-300 group-hover:text-blue-600"></i> Doktorlarımız</a></li>
+                        <li><a href="/Home/Rehber" class="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-2 group" style="text-decoration:none;"><i class="fa-solid fa-chevron-right text-[10px] text-slate-300 group-hover:text-blue-600"></i> Hasta Rehberi</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6 border-l-2 border-blue-600 pl-3">Hızlı İşlemler</h4>
+                    <ul class="space-y-3" style="list-style: none; padding-left: 0;">
+                        <li><a href="/Randevu/Giris" class="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-2 group" style="text-decoration:none;"><i class="fa-solid fa-calendar-check text-[10px] text-slate-300 group-hover:text-blue-600"></i> Randevu Al</a></li>
+                        <li><a href="/TahlilSonuclari/Giris" class="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-2 group" style="text-decoration:none;"><i class="fa-solid fa-microscope text-[10px] text-slate-300 group-hover:text-blue-600"></i> Laboratuvar Sonuçları</a></li>
+                        <li><a href="/Odeme/Giris" class="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-2 group" style="text-decoration:none;"><i class="fa-solid fa-credit-card text-[10px] text-slate-300 group-hover:text-blue-600"></i> Ödeme İşlemleri</a></li>
+                        <li><a href="/Home/Iletisim" class="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-2 group" style="text-decoration:none;"><i class="fa-solid fa-map-location-dot text-[10px] text-slate-300 group-hover:text-blue-600"></i> Ulaşım</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6 border-l-2 border-blue-600 pl-3">İletişim Bilgileri</h4>
+                    <div class="space-y-4">
+                        <div class="flex gap-3">
+                            <i class="fa-solid fa-location-dot text-blue-600 mt-1"></i>
+                            <p class="text-sm text-slate-600 leading-relaxed font-medium mb-0">
+                                Emniyet Mah., Mevlana Bulvarı No:29,<br />06560 Yenimahalle / ANKARA
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-phone text-blue-600"></i>
+                            <a href="tel:03122024000" class="text-sm font-bold text-slate-700 hover:text-blue-600 transition-colors" style="text-decoration:none;">0312 202 40 00</a>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-envelope text-blue-600"></i>
+                            <a href="mailto:iletisim@gazi.edu.tr" class="text-sm font-bold text-slate-700 hover:text-blue-600 transition-colors" style="text-decoration:none;">iletisim@gazi.edu.tr</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">© @DateTime.Now.Year GAZİ ÜNİVERSİTESİ HASTANESİ</p>
+                    <p class="text-[9px] text-slate-300 font-bold uppercase tracking-widest italic mb-0">Özdemir Yazılım Tarafından Geliştirilmiştir</p>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <a href="#" class="w-10 h-10 bg-slate-50 hover:bg-blue-600 group rounded-xl flex items-center justify-center transition-all duration-300 border border-slate-100" style="text-decoration:none;">
+                        <i class="fa-brands fa-facebook-f text-slate-400 group-hover:text-white transition-colors"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-slate-50 hover:bg-blue-400 group rounded-xl flex items-center justify-center transition-all duration-300 border border-slate-100" style="text-decoration:none;">
+                        <i class="fa-brands fa-twitter text-slate-400 group-hover:text-white transition-colors"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-slate-50 hover:bg-pink-600 group rounded-xl flex items-center justify-center transition-all duration-300 border border-slate-100" style="text-decoration:none;">
+                        <i class="fa-brands fa-instagram text-slate-400 group-hover:text-white transition-colors"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-slate-50 hover:bg-blue-700 group rounded-xl flex items-center justify-center transition-all duration-300 border border-slate-100" style="text-decoration:none;">
+                        <i class="fa-brands fa-linkedin-in text-slate-400 group-hover:text-white transition-colors"></i>
+                    </a>
+                </div>
+
+                <div class="flex items-center gap-6">
+                    <a href="#" class="text-[10px] font-black text-slate-400 hover:text-slate-600 uppercase tracking-widest transition-colors" style="text-decoration:none;">KVKK</a>
+                    <a href="#" class="text-[10px] font-black text-slate-400 hover:text-slate-600 uppercase tracking-widest transition-colors" style="text-decoration:none;">Gizlilik</a>
+                </div>
+            </div>
+        </div>
+    </footer>
     <script>
         // Chat Açma / Kapama Animasyonları
         const chatBtn = document.getElementById('aiChatBtn');
@@ -323,7 +407,6 @@
 
                 // Yapay Zeka Cevabını Ekle
                 if (data.success) {
-                    // Kalın yazıları (**) HTML bold etiketine çevir
                     const formattedReply = data.reply.replace(/\*\*(.*?)\*\*/g, '<b class="text-slate-900">$1</b>');
                     const actionButtons = renderChatActions(data.actions);
                     chatBody.innerHTML += `
@@ -347,64 +430,8 @@
 
             chatBody.scrollTop = chatBody.scrollHeight;
         }
-    </script>
-    <footer class="bg-white border-t border-slate-100" style="box-shadow: 0 -2px 20px rgba(0,0,0,0.03);">
-        <div class="max-w-7xl mx-auto px-6 py-8">
-            <div class="flex flex-col sm:flex-row justify-between items-start gap-8 mb-8">
 
-                <div class="space-y-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
-                            <i class="fa-solid fa-hospital text-white text-xs"></i>
-                        </div>
-                        <span class="text-sm font-black text-slate-800 uppercase">Gazi <span class="text-blue-600">Hastanesi</span></span>
-                    </div>
-                    <p class="text-xs text-slate-400 font-medium max-w-xs leading-relaxed">Emniyet Mah., Mevlana Bulvarı No:29,<br>06560 Yenimahalle / ANKARA</p>
-                    <p class="text-xs font-black text-slate-600">0312 202 40 00</p>
-                </div>
-
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-6">
-                    <div>
-                        <p class="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 mb-3">Kurumsal</p>
-                        <ul class="space-y-2" style="padding-left:0; list-style:none;">
-                            <li><a href="/Kurumsal/Index" class="text-xs font-semibold text-slate-600 hover:text-blue-600 transition" style="text-decoration: none;">Hastanemiz</a></li>
-                            <li><a href="#" class="text-xs font-semibold text-slate-600 hover:text-blue-600 transition" style="text-decoration: none;">Kalite Politikası</a></li>
-
-                        </ul>
-                    </div>
-                    <div>
-                        <p class="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 mb-3">Hizmetler</p>
-                        <ul class="space-y-2" style="padding-left:0; list-style:none;">
-                            <li><a href="/Home/Bolumler" class="text-xs font-semibold text-slate-600 hover:text-blue-600 transition" style="text-decoration: none;">Bölümlerimiz</a></li>
-                            <li><a href="/Home/Doktorlar" class="text-xs font-semibold text-slate-600 hover:text-blue-600 transition" style="text-decoration: none;">Doktorlarımız</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <p class="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 mb-3">Destek</p>
-                        <ul class="space-y-2" style="padding-left:0; list-style:none;">
-                            <li><a href="/Home/Rehber" class="text-xs font-semibold text-slate-600 hover:text-blue-600 transition" style="text-decoration: none;">Hasta Rehberi</a></li>
-                            <li><a href="/Home/Iletisim" class="text-xs font-semibold text-slate-600 hover:text-blue-600 transition" style="text-decoration: none;">İletişim</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="border-t border-slate-100 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <p class="text-slate-400 font-bold text-[10px] uppercase tracking-[0.25em] mb-0">© 2026 Gazi Üniversitesi Hastanesi · Tüm Hakları Saklıdır</p>
-                <div class="flex items-center gap-3">
-                    <a href="#" class="w-8 h-8 bg-slate-100 hover:bg-blue-100 rounded-xl flex items-center justify-center transition text-slate-500 hover:text-blue-600" style="text-decoration: none;">
-                        <i class="fa-brands fa-twitter text-xs"></i> 
-                    </a> 
-                    <a href="#" class="w-8 h-8 bg-slate-100 hover:bg-blue-100 rounded-xl flex items-center justify-center transition text-slate-500 hover:text-blue-600" style="text-decoration: none;">
-                        <i class="fa-brands fa-instagram text-xs"></i> 
-                    </a>
-                </div>
-            </div>
-        </div>
-    </footer>  
-      
-    <script>
-        function openMob()  {
+        function openMob() {
             document.getElementById('mob-sidebar').classList.add('open');
             document.getElementById('mob-overlay').classList.add('open');
             document.body.style.overflow='hidden';
@@ -421,4 +448,4 @@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-</html> 
+</html>

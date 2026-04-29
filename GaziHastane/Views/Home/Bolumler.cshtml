@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GaziHastane.Models.Bolum>
+@model IEnumerable<GaziHastane.Models.Bolum>
 
 @* RAZOR KOD BLOĞU: Sunucu (C#) tarafında sayfa ayarları *@
 @{
@@ -18,12 +18,17 @@
         @@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@300;400;500;600;700;800&display=swap');
 
         html {
-            scroll-behavior: smooth; /* Menüden tıklanınca yumuşak kaydırma */
+            scroll-behavior: smooth;
+            overflow-x: hidden;
         }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc; /* Daha yumuşak, kurumsal bir arka plan */
+            background-color: #f8fafc;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
         }
 
         /* ── YAPIŞKAN YAN MENÜ (STICKY SIDEBAR) ── */
@@ -457,6 +462,14 @@
             background: #e2e8f0;
             color: #475569;
         }
+
+        /* ── DİNAMİK IZGARA (AUTO FIT GRID) ── */
+        .auto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+        }
     </style>
 
     <script>
@@ -507,8 +520,21 @@
                 }
             }
 
-            document.getElementById('deptSearch')?.addEventListener('input', e => runSearch(e.target.value.toLowerCase().trim()));
-            document.getElementById('deptSearchMob')?.addEventListener('input', e => runSearch(e.target.value.toLowerCase().trim()));
+            document.getElementById('deptSearch')?.addEventListener('input', e => {
+                const val = e.target.value.toLowerCase().trim();
+                runSearch(val);
+                const inlineSearch = document.getElementById('inlineSearch');
+                if(inlineSearch && inlineSearch.value !== e.target.value) inlineSearch.value = e.target.value;
+            });
+            document.getElementById('inlineSearch')?.addEventListener('input', e => {
+                const val = e.target.value.toLowerCase().trim();
+                runSearch(val);
+                const deptSearch = document.getElementById('deptSearch');
+                if(deptSearch && deptSearch.value !== e.target.value) deptSearch.value = e.target.value;
+            });
+            document.getElementById('deptSearchMob')?.addEventListener('input', e => {
+                runSearch(e.target.value.toLowerCase().trim());
+            });
 
             // Mobil menüdeki linklere tıklanınca menüyü kapat
             document.querySelectorAll('#mob-sidebar .cat-link').forEach(link => {
@@ -598,6 +624,36 @@
                 setTimeout(() => infoModal.classList.add('hidden'), 200);
             };
 
+            window.toggleDesktopSidebar = function() {
+                const sidebar = document.getElementById('desktop-sidebar');
+                const icon = document.getElementById('sidebar-toggle-icon');
+                const inlineFilters = document.getElementById('inline-filters');
+                
+                if (sidebar.classList.contains('w-[300px]')) {
+                    // Kapat
+                    sidebar.classList.remove('w-[300px]', 'lg:mr-6');
+                    sidebar.classList.add('w-0', 'lg:mr-0');
+                    icon.classList.remove('fa-angles-left');
+                    icon.classList.add('fa-angles-right');
+                    
+                    if(inlineFilters) {
+                        inlineFilters.classList.remove('hidden');
+                        setTimeout(() => inlineFilters.classList.remove('opacity-0'), 50);
+                    }
+                } else {
+                    // Aç
+                    sidebar.classList.remove('w-0', 'lg:mr-0');
+                    sidebar.classList.add('w-[300px]', 'lg:mr-6');
+                    icon.classList.remove('fa-angles-right');
+                    icon.classList.add('fa-angles-left');
+                    
+                    if(inlineFilters) {
+                        inlineFilters.classList.add('opacity-0');
+                        setTimeout(() => inlineFilters.classList.add('hidden'), 300);
+                    }
+                }
+            };
+
             document.addEventListener('click', () => {
                 document.querySelectorAll('.card-menu-panel').forEach(m => m.classList.remove('open'));
             });
@@ -658,11 +714,11 @@
     <div class="h-px bg-slate-100 mb-8 mx-1"></div>
 
     <div class="p-6 bg-[#fff5f5] rounded-3xl border border-red-50 mb-6">
-        <div class="flex items-center gap-3 mb-4">
+        <div class="flex items-center gap-3 mb-3">
             <div class="w-8 h-8 bg-[#ef4444] rounded-full flex items-center justify-center shadow-md shadow-red-200/50">
                 <i class="fa-solid fa-headset text-white text-xs"></i>
             </div>
-            <p class="text-[12px] font-bold text-[#b91c1c] uppercase tracking-wider">Acil Çağrı Merkezi</p>
+            <p class="text-[12px] font-bold text-[#b91c1c] uppercase tracking-wider">İletiim Numarası</p>
         </div>
         <p class="text-[32px] font-extrabold text-[#dc2626] tracking-tight leading-none mb-2">444 0 911</p>
         <p class="text-[13px] text-[#f87171] font-medium">7/24 kesintisiz hizmet</p>
@@ -674,9 +730,10 @@
     </a>
 </div>
 
-<div class="max-w-[1400px] mx-auto px-4 sm:px-6 py-10 flex flex-col lg:flex-row gap-8">
+<div class="w-full px-4 sm:px-6 py-10 flex flex-col lg:flex-row relative">
 
-    <aside class="hidden lg:block w-[300px] flex-shrink-0">
+    <aside id="desktop-sidebar" class="hidden lg:block w-[300px] flex-shrink-0 transition-all duration-300 overflow-hidden lg:mr-6">
+        <div class="w-[300px]">
         <div class="sidebar-sticky bg-white p-6 rounded-[24px]" style="box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); border: 1px solid #f1f5f9;">
 
             <div class="flex items-center gap-4 mb-8">
@@ -721,11 +778,11 @@
             <div class="h-px bg-slate-100 mb-8 mx-1"></div>
 
             <div class="p-6 bg-[#fff5f5] rounded-3xl border border-red-50 mb-6">
-                <div class="flex items-center gap-3 mb-4">
+                <div class="flex items-center gap-3 mb-3">
                     <div class="w-8 h-8 bg-[#ef4444] rounded-full flex items-center justify-center shadow-md shadow-red-200/50">
                         <i class="fa-solid fa-headset text-white text-xs"></i>
                     </div>
-                    <p class="text-[12px] font-bold text-[#b91c1c] uppercase tracking-wider">Acil Çağrı Merkezi</p>
+                    <p class="text-[12px] font-bold text-[#b91c1c] uppercase tracking-wider">İletiim Numarası</p>
                 </div>
                 <p class="text-[32px] font-extrabold text-[#dc2626] tracking-tight leading-none mb-2">444 0 911</p>
                 <p class="text-[13px] text-[#f87171] font-medium">7/24 kesintisiz hizmet</p>
@@ -736,15 +793,19 @@
                 E-Randevu Al
             </a>
         </div>
+        </div>
     </aside>
 
-    <main class="flex-1 min-w-0">
+    <main class="flex-1 min-w-0 relative">
+        <button onclick="toggleDesktopSidebar()" class="hidden lg:flex absolute -left-5 top-10 w-10 h-10 bg-white border border-slate-200 shadow-xl rounded-full items-center justify-center text-slate-500 hover:text-blue-600 hover:scale-110 z-20 cursor-pointer transition-all">
+            <i class="fa-solid fa-angles-left" id="sidebar-toggle-icon"></i>
+        </button>
         <div class="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-3xl p-8 sm:p-10 mb-10 relative overflow-hidden shadow-2xl shadow-blue-900/20">
             <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-2xl translate-x-1/2 -translate-y-1/2"></div>
             <div class="absolute bottom-0 right-1/4 w-32 h-32 bg-indigo-400/20 rounded-full blur-xl translate-y-1/2"></div>
 
             <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                <div>
+                <div class="w-full lg:w-auto transition-all duration-300">
                     <span class="inline-block px-3 py-1 bg-blue-500/30 border border-blue-400/30 rounded-full text-blue-100 text-[10px] font-bold tracking-widest uppercase mb-4 backdrop-blur-sm">
                         Gazi Üniversitesi Hastanesi
                     </span>
@@ -754,6 +815,27 @@
                     <p class="text-blue-100/80 text-sm font-medium max-w-lg">
                         Modern tıbbın sunduğu en güncel teşhis ve tedavi yöntemleriyle, @totalCount farklı anabilim dalında akademik düzeyde sağlık hizmeti sunuyoruz.
                     </p>
+
+                    <div id="inline-filters" class="hidden opacity-0 mt-6 w-full max-w-xl transition-all duration-300">
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <div class="relative flex-1">
+                                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-white/50 text-sm"></i>
+                                <input type="text" id="inlineSearch" placeholder="Hızlı ara..."
+                                       class="w-full pl-10 pr-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-sm font-medium text-white placeholder-white/50 focus:bg-white/20 focus:outline-none transition shadow-inner">
+                            </div>
+                            <div class="flex gap-2">
+                                <a href="#dahili" class="inline-nav-btn px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold transition flex items-center gap-2 text-decoration-none">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-blue-400"></span> Dahili
+                                </a>
+                                <a href="#cerrahi" class="inline-nav-btn px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold transition flex items-center gap-2 text-decoration-none">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-red-400"></span> Cerrahi
+                                </a>
+                                <a href="#temel" class="inline-nav-btn px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold transition flex items-center gap-2 text-decoration-none">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-[#10b981]"></span> Temel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="flex gap-6 flex-shrink-0 bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
                     <div class="text-center px-2">
@@ -787,7 +869,7 @@
                 <span class="text-xs font-bold text-slate-400 uppercase tracking-widest flex-shrink-0">@dahiliCount Birim</span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5" id="dahiliGrid">
+            <div class="auto-grid" id="dahiliGrid">
                 @foreach (var bolum in Model.Where(b => b.Kategori == "Dahili" && b.IsActive))
                 {
                     <div class="dept-card type-dahili" data-bolum-id="@bolum.Id" data-bolum-ad="@bolum.Ad" data-bolum-aciklama="@bolum.Aciklama">
@@ -822,7 +904,7 @@
                 <span class="text-xs font-bold text-slate-400 uppercase tracking-widest flex-shrink-0">@cerrahiCount Birim</span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5" id="cerrahiGrid">
+            <div class="auto-grid" id="cerrahiGrid">
                 @foreach (var bolum in Model.Where(b => b.Kategori == "Cerrahi" && b.IsActive))
                 {
                     <div class="dept-card type-cerrahi" data-bolum-id="@bolum.Id" data-bolum-ad="@bolum.Ad" data-bolum-aciklama="@bolum.Aciklama">
@@ -857,7 +939,7 @@
                 <span class="text-xs font-bold text-slate-400 uppercase tracking-widest flex-shrink-0">@temelCount Birim</span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5" id="temelGrid">
+            <div class="auto-grid" id="temelGrid">
                 @foreach (var bolum in Model.Where(b => b.Kategori == "Temel" && b.IsActive))
                 {
                     <div class="dept-card type-temel" data-bolum-id="@bolum.Id" data-bolum-ad="@bolum.Ad" data-bolum-aciklama="@bolum.Aciklama">
