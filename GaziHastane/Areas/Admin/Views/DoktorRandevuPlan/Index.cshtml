@@ -1,6 +1,6 @@
 @model GaziHastane.Models.DoktorRandevuPlanViewModel
 @{
-    ViewData["Title"] = "Doktor Randevu Planý";
+    ViewData["Title"] = "Doktor Randevu Planï¿½";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     var doktorlar = ViewBag.Doktorlar as List<GaziHastane.Models.Doktor> ?? new List<GaziHastane.Models.Doktor>();
     var bolumler = ViewBag.Bolumler as List<GaziHastane.Models.Bolum> ?? new List<GaziHastane.Models.Bolum>();
@@ -10,7 +10,7 @@
 <div class="max-w-7xl mx-auto p-4 space-y-6">
     <div class="glass-card rounded-[2rem] p-6">
         <h2 class="text-2xl font-black text-white mb-2">Doktor Randevu Planlama</h2>
-        <p class="text-slate-400 text-sm">Doktor seçip aylýk takvimde randevu açýlacak günleri, mola ve kapasite kurallarýný toplu veya gün bazýnda belirleyin.</p>
+        <p class="text-slate-400 text-sm">Doktor seï¿½ip aylï¿½k takvimde randevu aï¿½ï¿½lacak gï¿½nleri, mola ve kapasite kurallarï¿½nï¿½ toplu veya gï¿½n bazï¿½nda belirleyin.</p>
     </div>
 
     @if (TempData["Success"] != null)
@@ -22,7 +22,7 @@
         <div class="bg-rose-500/10 border border-rose-500/20 rounded-xl p-4 text-rose-300 text-sm font-semibold">@TempData["Error"]</div>
     }
 
-    <form method="get" class="glass-card rounded-[2rem] p-6 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+    <form method="get" class="glass-card rounded-[2rem] p-6 grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
         <div>
             <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Doktor</label>
             <select name="doktorId" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:bg-slate-800 focus:outline-none">
@@ -34,7 +34,7 @@
             </select>
         </div>
         <div>
-            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Yýl</label>
+            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Yï¿½l</label>
             <input name="yil" type="number" value="@Model.Yil" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:bg-slate-800 focus:outline-none" />
         </div>
         <div>
@@ -42,6 +42,7 @@
             <input name="ay" type="number" min="1" max="12" value="@Model.Ay" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:bg-slate-800 focus:outline-none" />
         </div>
         <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-white font-black rounded-xl py-3 transition-colors">Takvimi Getir</button>
+        <a href="@Url.Action("ExportPDF", "DoktorRandevuPlan", new { doktorId = Model.DoktorId, tarih = DateTime.Today.ToString("yyyy-MM-dd") })" class="bg-amber-600 hover:bg-amber-500 text-white font-black rounded-xl py-3 transition-colors text-center">PDF Indir</a>
     </form>
 
     @if (doktorlar.Any())
@@ -59,50 +60,50 @@
                     <input type="text" readonly value="@(seciliDoktor == null ? "-" : $"{seciliDoktor.Unvan} {seciliDoktor.Ad} {seciliDoktor.Soyad}")" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white opacity-70 cursor-not-allowed" />
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Slot Süresi (dk)</label>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Slot Sï¿½resi (dk)</label>
                     <input asp-for="SlotSureDakika" type="number" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:bg-slate-800 focus:outline-none" />
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Baþlangýç</label>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Baï¿½langï¿½ï¿½</label>
                     <input asp-for="BaslangicSaati" type="time" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:bg-slate-800 focus:outline-none" />
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Bitiþ</label>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Bitiï¿½</label>
                     <input asp-for="BitisSaati" type="time" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:bg-slate-800 focus:outline-none" />
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Öðlen Mola Baþlangýç</label>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">ï¿½ï¿½len Mola Baï¿½langï¿½ï¿½</label>
                     <input asp-for="OgleMolaBaslangicSaati" type="time" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:bg-slate-800 focus:outline-none" />
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Öðlen Mola Bitiþ</label>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">ï¿½ï¿½len Mola Bitiï¿½</label>
                     <input asp-for="OgleMolaBitisSaati" type="time" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:bg-slate-800 focus:outline-none" />
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Günlük Randevu Sayýsý</label>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Gï¿½nlï¿½k Randevu Sayï¿½sï¿½</label>
                     <input asp-for="VarsayilanGunlukMaxRandevu" type="number" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:bg-slate-800 focus:outline-none" />
                 </div>
             </div>
 
             <div class="flex flex-wrap gap-2">
-                <button type="button" onclick="isaretleHaftaIci()" class="px-3 py-2 text-xs font-bold rounded-lg bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/30 transition-colors">Hafta Ýçi Aç</button>
-                <button type="button" onclick="isaretleHaftaSonu()" class="px-3 py-2 text-xs font-bold rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-300 hover:bg-amber-500/30 transition-colors">Hafta Sonu Aç</button>
-                <button type="button" onclick="isaretleTumGunler()" class="px-3 py-2 text-xs font-bold rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/30 transition-colors">Tüm Günleri Aç</button>
-                <button type="button" onclick="kapatTumGunler()" class="px-3 py-2 text-xs font-bold rounded-lg bg-rose-500/20 border border-rose-500/30 text-rose-300 hover:bg-rose-500/30 transition-colors">Tümünü Kapat</button>
+                <button type="button" onclick="isaretleHaftaIci()" class="px-3 py-2 text-xs font-bold rounded-lg bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/30 transition-colors">Hafta ï¿½ï¿½i Aï¿½</button>
+                <button type="button" onclick="isaretleHaftaSonu()" class="px-3 py-2 text-xs font-bold rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-300 hover:bg-amber-500/30 transition-colors">Hafta Sonu Aï¿½</button>
+                <button type="button" onclick="isaretleTumGunler()" class="px-3 py-2 text-xs font-bold rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/30 transition-colors">Tï¿½m Gï¿½nleri Aï¿½</button>
+                <button type="button" onclick="kapatTumGunler()" class="px-3 py-2 text-xs font-bold rounded-lg bg-rose-500/20 border border-rose-500/30 text-rose-300 hover:bg-rose-500/30 transition-colors">Tï¿½mï¿½nï¿½ Kapat</button>
                 <button type="button" onclick="topluKurallariUygula()" class="px-3 py-2 text-xs font-bold rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-500/30 transition-colors">Toplu Kural Uygula</button>
             </div>
 
             <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-                <p class="text-sm text-slate-300 mb-3 font-bold">Gün Gün Plan (Açýk günleri iþaretleyin)</p>
+                <p class="text-sm text-slate-300 mb-3 font-bold">Gï¿½n Gï¿½n Plan (Aï¿½ï¿½k gï¿½nleri iï¿½aretleyin)</p>
                 <div class="overflow-x-auto">
                     <table class="w-full min-w-[900px] text-sm">
                         <thead>
                             <tr class="text-slate-400 border-b border-white/10 text-[11px] uppercase">
-                                <th class="py-2 text-left">Açýk</th>
+                                <th class="py-2 text-left">Aï¿½ï¿½k</th>
                                 <th class="py-2 text-left">Tarih</th>
-                                <th class="py-2 text-left">Günlük Randevu Sayýsý</th>
-                                <th class="py-2 text-left">Baþlangýç</th>
-                                <th class="py-2 text-left">Bitiþ</th>
+                                <th class="py-2 text-left">Gï¿½nlï¿½k Randevu Sayï¿½sï¿½</th>
+                                <th class="py-2 text-left">Baï¿½langï¿½ï¿½</th>
+                                <th class="py-2 text-left">Bitiï¿½</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -128,7 +129,7 @@
             </div>
 
             <div class="flex justify-end">
-                <button type="submit" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white px-6 py-3 rounded-xl font-black transition-all transform hover:scale-105 shadow-lg shadow-cyan-500/25">Aylýk Planý Kaydet</button>
+                <button type="submit" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white px-6 py-3 rounded-xl font-black transition-all transform hover:scale-105 shadow-lg shadow-cyan-500/25">Aylï¿½k Planï¿½ Kaydet</button>
             </div>
         </form>
     }

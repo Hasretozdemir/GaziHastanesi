@@ -9,11 +9,13 @@ namespace GaziHastane.Controllers
     public class SonucController : Controller
     {
         private readonly GaziHastaneContext _context;
+        private readonly IWebHostEnvironment _env;
 
         // Veritabaný baðlamýný alýyoruz
-        public SonucController(GaziHastaneContext context)
+        public SonucController(GaziHastaneContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         // Sonuç Sorgulama Giriþ Ekraný
@@ -115,6 +117,9 @@ namespace GaziHastane.Controllers
         {
             try
             {
+                if (sonucId <= 0)
+                    return Json(new { success = false, message = "Geçersiz sonuç id'si." });
+
                 var sonuc = _context.TahlilSonuclari
                     .AsNoTracking()
                     .Include(x => x.Hasta)
@@ -122,22 +127,10 @@ namespace GaziHastane.Controllers
                     .FirstOrDefault(x => x.Id == sonucId);
 
                 if (sonuc == null)
-                {
                     return Json(new { success = false, message = "Sonuç kaydý bulunamadý." });
-                }
 
                 if (userId.HasValue && sonuc.HastaId != userId.Value)
-                {
                     return Json(new { success = false, message = "Bu sonuca eriþim yetkiniz yok." });
-                }
-
-                var hedef = string.IsNullOrWhiteSpace(sonuc.TestKategorisi) ? "Laboratuvar" : sonuc.TestKategorisi;
-                var krokiUrl = Url.Action("Kroki", "Home", new { hedef }, Request.Scheme) ?? $"/Home/Kroki?hedef={hedef}";
-
-                var qrGenerator = new QRCodeGenerator();
-                var qrCodeData = qrGenerator.CreateQrCode(krokiUrl, QRCodeGenerator.ECCLevel.Q);
-                var qrCode = new Base64QRCode(qrCodeData);
-                var qrCodeImageAsBase64 = qrCode.GetGraphic(20);
 
                 var hastaAd = sonuc.Hasta != null
                     ? $"{sonuc.Hasta.Ad} {sonuc.Hasta.Soyad}"
@@ -148,6 +141,43 @@ namespace GaziHastane.Controllers
                     : "Doktor";
 
                 var durum = string.IsNullOrWhiteSpace(sonuc.SonucDegeri) ? "Onay Bekliyor" : "Tamamlandý";
+
+                var raporDosyaUrl = sonuc.RaporDosyaUrl ?? string.Empty;
+                string raporDownloadUrl = string.Empty;
+                bool raporVar = false;
+
+                if (!string.IsNullOrWhiteSpace(raporDosyaUrl))
+                {
+                    // Eðer absolute URL ise olduðu gibi kullan
+                    if (raporDosyaUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                    {
+                        raporDownloadUrl = raporDosyaUrl;
+                        raporVar = true;
+                    }
+                    else
+                    {
+                        // normalize path and check wwwroot
+                        var relative = raporDosyaUrl.TrimStart('~').TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString());
+                        if (!string.IsNullOrEmpty(_env?.WebRootPath))
+                        {
+                            var physical = Path.Combine(_env.WebRootPath, relative);
+                            if (System.IO.File.Exists(physical))
+                            {
+                                raporVar = true;
+                                raporDownloadUrl = $"{Request.Scheme}://{Request.Host}/{relative.Replace(Path.DirectorySeparatorChar, '/')}";
+                            }
+                            else
+                            {
+                                // fallback: expose relative as URL
+                                raporDownloadUrl = $"{Request.Scheme}://{Request.Host}/{relative.Replace(Path.DirectorySeparatorChar, '/')}";
+                            }
+                        }
+                        else
+                        {
+                            raporDownloadUrl = raporDosyaUrl;
+                        }
+                    }
+                }
 
                 return Json(new
                 {
@@ -163,15 +193,15 @@ namespace GaziHastane.Controllers
                         sonucDegeri = string.IsNullOrWhiteSpace(sonuc.SonucDegeri) ? "Sonuç henüz çýkmadý" : sonuc.SonucDegeri,
                         referansAraligi = string.IsNullOrWhiteSpace(sonuc.ReferansAraligi) ? "-" : sonuc.ReferansAraligi,
                         durum,
-                        qrCode = "data:image/png;base64," + qrCodeImageAsBase64,
-                        krokiUrl,
-                        raporDosyaUrl = sonuc.RaporDosyaUrl
+                        raporDosyaUrl,
+                        raporDownloadUrl,
+                        raporDosyaVar = raporVar
                     }
                 });
             }
-            catch
+            catch (Exception ex)
             {
-                return Json(new { success = false, message = "Sonuç fiþi hazýrlanýrken bir hata oluþtu." });
+                return Json(new { success = false, message = "Sonuç fiþi hazýrlanýrken bir hata oluþtu.", detail = ex.Message });
             }
         }
     }

@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.IO;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace GaziHastane.Areas.Admin.Controllers
 {
@@ -98,7 +101,7 @@ namespace GaziHastane.Areas.Admin.Controllers
 
             if (!doktorlar.Any())
             {
-                TempData["Error"] = "Plan düzenleme yetkinize ait doktor kaydý bulunamadý.";
+                TempData["Error"] = "Plan dï¿½zenleme yetkinize ait doktor kaydï¿½ bulunamadï¿½.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -109,7 +112,7 @@ namespace GaziHastane.Areas.Admin.Controllers
 
             if (!doktorlar.Any(x => x.Id == model.DoktorId))
             {
-                TempData["Error"] = "Bu doktor planýný düzenleme yetkiniz yok.";
+                TempData["Error"] = "Bu doktor planï¿½nï¿½ dï¿½zenleme yetkiniz yok.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -119,25 +122,25 @@ namespace GaziHastane.Areas.Admin.Controllers
 
             if (!TimeSpan.TryParse(model.BaslangicSaati, out var baslangic) || !TimeSpan.TryParse(model.BitisSaati, out var bitis))
             {
-                TempData["Error"] = "Saat formatý geçersiz.";
+                TempData["Error"] = "Saat formatï¿½ geï¿½ersiz.";
                 return RedirectToAction(nameof(Index), new { doktorId = model.DoktorId, yil = model.Yil, ay = model.Ay });
             }
 
             if (!TimeSpan.TryParse(model.OgleMolaBaslangicSaati, out var ogleBaslangic) || !TimeSpan.TryParse(model.OgleMolaBitisSaati, out var ogleBitis))
             {
-                TempData["Error"] = "Öðlen mola saat formatý geçersiz.";
+                TempData["Error"] = "ï¿½ï¿½len mola saat formatï¿½ geï¿½ersiz.";
                 return RedirectToAction(nameof(Index), new { doktorId = model.DoktorId, yil = model.Yil, ay = model.Ay });
             }
 
             if (bitis <= baslangic)
             {
-                TempData["Error"] = "Bitiþ saati baþlangýçtan büyük olmalýdýr.";
+                TempData["Error"] = "Bitiï¿½ saati baï¿½langï¿½ï¿½tan bï¿½yï¿½k olmalï¿½dï¿½r.";
                 return RedirectToAction(nameof(Index), new { doktorId = model.DoktorId, yil = model.Yil, ay = model.Ay });
             }
 
             if (ogleBitis <= ogleBaslangic)
             {
-                TempData["Error"] = "Öðlen mola bitiþ saati baþlangýçtan büyük olmalýdýr.";
+                TempData["Error"] = "ï¿½ï¿½len mola bitiï¿½ saati baï¿½langï¿½ï¿½tan bï¿½yï¿½k olmalï¿½dï¿½r.";
                 return RedirectToAction(nameof(Index), new { doktorId = model.DoktorId, yil = model.Yil, ay = model.Ay });
             }
 
@@ -202,7 +205,7 @@ namespace GaziHastane.Areas.Admin.Controllers
             }
 
             _context.SaveChanges();
-            TempData["Success"] = "Doktor randevu planý güncellendi.";
+            TempData["Success"] = "Doktor randevu planï¿½ gï¿½ncellendi.";
             return RedirectToAction(nameof(Index), new { doktorId = model.DoktorId, yil = model.Yil, ay = model.Ay });
         }
 
@@ -228,6 +231,158 @@ namespace GaziHastane.Areas.Admin.Controllers
         {
             var rol = User.FindFirstValue(ClaimTypes.Role);
             return string.Equals(rol, "Doktor", StringComparison.OrdinalIgnoreCase);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportPDF(int doktorId, DateTime? tarih)
+        {
+            var doktorlar = _context.Doktorlar.Where(x => x.IsActive).OrderBy(x => x.Ad).ThenBy(x => x.Soyad).ToList();
+            doktorlar = FiltrelenmisDoktorlar(doktorlar);
+
+            if (!doktorlar.Any(x => x.Id == doktorId))
+            {
+                return Unauthorized();
+            }
+
+            var doktor = await _context.Doktorlar
+                .Include(x => x.Bolum)
+                .FirstOrDefaultAsync(x => x.Id == doktorId);
+
+            if (doktor == null)
+                return NotFound();
+
+            var hedefTarih = tarih ?? DateTime.Today;
+
+            var randevular = await _context.Randevular
+                .Include(x => x.Hasta)
+                .Include(x => x.Doktor)
+                .Include(x => x.Bolum)
+                .Where(x => x.DoktorId == doktorId 
+                    && x.RandevuTarihi.Date == hedefTarih.Date
+                    && x.Durum != 2) // 2 = Ä°ptal
+                .OrderBy(x => x.RandevuTarihi)
+                .ToListAsync();
+
+            using (var stream = new MemoryStream())
+            {
+                var document = new Document(PageSize.A4, 20, 20, 40, 20);
+                var writer = PdfWriter.GetInstance(document, stream);
+                document.Open();
+
+                // BaÅŸlÄ±k - TÃ¼rkÃ§e karakterler iÃ§in sistem fontunu kullan ve Unicode (Identity-H) ile embed et
+                Font titleFont, headerFont, normalFont, smallFont;
+                try
+                {
+                    var fontsFolder = Environment.GetFolderPath(Environment.SpecialFolder.Fonts);
+                    var arial = Path.Combine(fontsFolder, "arial.ttf");
+                    BaseFont bf;
+                    if (System.IO.File.Exists(arial))
+                    {
+                        bf = BaseFont.CreateFont(arial, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                    }
+                    else
+                    {
+                        // Fallback to Helvetica (may have limited Turkish support)
+                        bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.IDENTITY_H, false);
+                    }
+
+                    titleFont = new Font(bf, 16, Font.BOLD);
+                    headerFont = new Font(bf, 12, Font.BOLD);
+                    normalFont = new Font(bf, 10, Font.NORMAL);
+                    smallFont = new Font(bf, 9, Font.NORMAL);
+                }
+                catch
+                {
+                    // EÄŸer Ã¶zel font yÃ¼klenemezse, eski FontFactory kullanÄ±mÄ±na dÃ¶n
+                    titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+                    headerFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12);
+                    normalFont = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+                    smallFont = FontFactory.GetFont(FontFactory.HELVETICA, 9);
+                }
+
+                var title = new Paragraph("POLÄ°KLÄ°NÄ°K LÄ°STESÄ°", titleFont);
+                title.Alignment = Element.ALIGN_CENTER;
+                document.Add(title);
+
+                document.Add(new Paragraph(" "));
+
+                // Doktor ve Tarih Bilgileri
+                var infoTable = new PdfPTable(2);
+                infoTable.WidthPercentage = 100;
+                infoTable.SetWidths(new float[] { 50, 50 });
+
+                var cell1 = new PdfPCell(new Phrase($"Doktor: {doktor.Ad} {doktor.Soyad}", normalFont));
+                cell1.Border = Rectangle.NO_BORDER;
+                infoTable.AddCell(cell1);
+
+                var cell2 = new PdfPCell(new Phrase($"Tarih: {hedefTarih:dd.MM.yyyy}", normalFont));
+                cell2.Border = Rectangle.NO_BORDER;
+                infoTable.AddCell(cell2);
+
+                var cell3 = new PdfPCell(new Phrase($"BÃ¶lÃ¼m: {doktor.Bolum?.Ad ?? "-"}", normalFont));
+                cell3.Border = Rectangle.NO_BORDER;
+                infoTable.AddCell(cell3);
+
+                var cell4 = new PdfPCell(new Phrase($"Toplam Randevu: {randevular.Count}", normalFont));
+                cell4.Border = Rectangle.NO_BORDER;
+                infoTable.AddCell(cell4);
+
+                document.Add(infoTable);
+                document.Add(new Paragraph(" "));
+
+                // Randevu Tablosu
+                if (randevular.Any())
+                {
+                    var table = new PdfPTable(4);
+                    table.WidthPercentage = 100;
+                    table.SetWidths(new float[] { 15, 30, 30, 25 });
+
+                    // Header
+                    var headers = new[] { "Saat", "Hasta AdÄ±", "Åžikayet", "Durum" };
+                    foreach (var header in headers)
+                    {
+                        var headerCell = new PdfPCell(new Phrase(header, headerFont));
+                        headerCell.BackgroundColor = new BaseColor(200, 200, 200);
+                        headerCell.Padding = 5;
+                        table.AddCell(headerCell);
+                    }
+
+                    // Veriler
+                    foreach (var randevu in randevular)
+                    {
+                        var saat = randevu.RandevuTarihi.ToString("HH:mm");
+                        var hastaAdi = randevu.Hasta != null ? $"{randevu.Hasta.Ad} {randevu.Hasta.Soyad}" : "-";
+                        var sikayet = randevu.Sikayet ?? "-";
+                        var durum = randevu.Durum == 0 ? "Bekleniyor" : randevu.Durum == 1 ? "TamamlandÄ±" : "Ä°ptal";
+
+                        table.AddCell(new PdfPCell(new Phrase(saat, normalFont)) { Padding = 5 });
+                        table.AddCell(new PdfPCell(new Phrase(hastaAdi, normalFont)) { Padding = 5 });
+                        table.AddCell(new PdfPCell(new Phrase(sikayet, smallFont)) { Padding = 5 });
+                        table.AddCell(new PdfPCell(new Phrase(durum, normalFont)) { Padding = 5 });
+                    }
+
+                    document.Add(table);
+                }
+                else
+                {
+                    var noData = new Paragraph("Bu tarihte randevu bulunmamaktadÄ±r.", normalFont);
+                    noData.Alignment = Element.ALIGN_CENTER;
+                    document.Add(noData);
+                }
+
+                document.Add(new Paragraph(" "));
+
+                // Alt Bilgi
+                var footer = new Paragraph($"OluÅŸturulma Tarihi: {DateTime.Now:dd.MM.yyyy HH:mm:ss}", smallFont);
+                footer.Alignment = Element.ALIGN_RIGHT;
+                document.Add(footer);
+
+                document.Close();
+
+                var content = stream.ToArray();
+                string pdfName = $"Poliklinik_Listesi_{doktor.Ad}_{doktor.Soyad}_{hedefTarih:yyyyMMdd}.pdf";
+                return File(content, "application/pdf", pdfName);
+            }
         }
     }
 }

@@ -19,7 +19,7 @@
     }
 
     <div class="glass-card p-8 rounded-[2rem]">
-        <form asp-action="Giris" method="post" enctype="multipart/form-data" class="space-y-5" id="tahlilForm">
+        <form asp-action="Giris" method="post" class="space-y-5" id="tahlilForm">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-rose-400 text-sm font-bold"></div>
 
@@ -91,16 +91,7 @@
                     <input asp-for="ReferansAraligi" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-cyan-500/50" />
                 </div>
 
-                <div class="md:col-span-2">
-                    <label asp-for="RaporDosyaUrl" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Rapor PDF URL (Opsiyonel)</label>
-                    <input asp-for="RaporDosyaUrl" class="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-cyan-500/50" />
-                </div>
-
-                <div class="md:col-span-2">
-                    <label asp-for="RaporDosya" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">PDF Dosya Yükle (Opsiyonel)</label>
-                    <input asp-for="RaporDosya" type="file" accept=".pdf,application/pdf" class="w-full bg-black/20 border border-white/10 rounded-xl py-2.5 px-4 text-sm text-white focus:outline-none focus:border-cyan-500/50" />
-                    <span asp-validation-for="RaporDosya" class="text-rose-400 text-xs"></span>
-                </div>
+                @* Rapor PDF URL ve dosya yükleme alanlarý gereksiz olduðu için kaldýrýldý *@
             </div>
 
             <div class="pt-3 flex justify-end">

@@ -60,31 +60,8 @@ namespace GaziHastane.Areas.Admin.Controllers
                 return View(model);
             }
 
-            string? raporYolu = string.IsNullOrWhiteSpace(model.RaporDosyaUrl) ? null : model.RaporDosyaUrl.Trim();
-            if (model.RaporDosya != null && model.RaporDosya.Length > 0)
-            {
-                var uzanti = Path.GetExtension(model.RaporDosya.FileName)?.ToLowerInvariant();
-                if (uzanti != ".pdf")
-                {
-                    ModelState.AddModelError(nameof(model.RaporDosya), "Sadece PDF dosyasý yüklenebilir.");
-                    return View(model);
-                }
-
-                var klasor = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "tahlilraporlari");
-                if (!Directory.Exists(klasor))
-                {
-                    Directory.CreateDirectory(klasor);
-                }
-
-                var dosyaAdi = $"{DateTime.UtcNow:yyyyMMddHHmmss}_{Guid.NewGuid():N}.pdf";
-                var tamYol = Path.Combine(klasor, dosyaAdi);
-                using (var stream = new FileStream(tamYol, FileMode.Create))
-                {
-                    model.RaporDosya.CopyTo(stream);
-                }
-
-                raporYolu = $"/uploads/tahlilraporlari/{dosyaAdi}";
-            }
+            // Dosya yükleme ve PDF alanlarý gereksiz olduðundan kaldýrýldý
+            string? raporYolu = null;
 
             var yeniKayit = new TahlilSonuc
             {

@@ -715,11 +715,15 @@
                                                     <a href="@sonuc.RaporDosyaUrl" target="_blank" class="btn-action-square download" title="PDF Indir">
                                                         <i class="fas fa-file-pdf"></i>
                                                     </a>
+                                                    <button class="btn-action-square view" title="Detaylý Rapor" onclick="raporAc(@sonuc.Id)">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
                                                 }
                                                 else
                                                 {
-                                                    <button class="btn-action-square disabled" title="Rapor Yok" disabled>
-                                                        <i class="fas fa-lock"></i>
+                                                    // Manuel girilen sonuçlar için kullanýcýya þýk PDF oluþturma imkaný ver
+                                                    <button class="btn-action-square download" title="Rapor Oluþtur" onclick="raporAc(@sonuc.Id)">
+                                                        <i class="fas fa-file-pdf"></i>
                                                     </button>
                                                 }
                                             </div>
@@ -820,11 +824,7 @@
                         </tbody>
                     </table>
 
-                    <!-- QR KOD -->
-                    <div style="text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px; margin-top: 20px;">
-                        <p style="font-size: 11px; color: #94a3b8; margin: 0 0 12px 0;">Polikliniðe ulaþim icin QR kodu okutabilirsiniz</p>
-                        <img id="raporQrCode" src="" alt="Kroki QR Kod" style="width: 120px; height: 120px; border: 1px solid #dbe4f0; padding: 6px; border-radius: 10px; background: white;">
-                    </div>
+                    <!-- QR KOD ve kroki bölümü kaldýrýldý -->
 
                     <!-- ALT METIN -->
                     <div class="rapor-footer">
@@ -836,10 +836,7 @@
                     </div>
                 </div>
 
-                <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
-                    <a id="raporKrokiUrl" href="#" target="_blank" class="btn btn-outline-primary w-100">
-                        <i class="fa-solid fa-location-dot me-1"></i> Krokiyi Ac
-                    </a>
+                <div class="d-flex gap-2 mt-4">
                     <button onclick="raporPdfIndir()" class="btn btn-primary w-100">
                         <i class="fa-solid fa-file-pdf me-1"></i> PDF Indir
                     </button>
@@ -851,6 +848,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        let currentRaporDownloadUrl = null;
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
         const mobileBtn = document.getElementById('mobileMenuBtn');
@@ -956,8 +954,13 @@
                     }
 
                     document.getElementById('raporLabUzmani').innerText = d.doktorAd;
-                    document.getElementById('raporQrCode').src = d.qrCode;
-                    document.getElementById('raporKrokiUrl').href = d.krokiUrl;
+                    // If server returned an existing PDF file, store URL so user can download directly
+                    if (d.raporDosyaVar && d.raporDownloadUrl) {
+                        currentRaporDownloadUrl = d.raporDownloadUrl;
+                    }
+                    else {
+                        currentRaporDownloadUrl = null;
+                    }
 
                     const modal = document.getElementById('raporModal');
                     modal.classList.remove('d-none');
@@ -987,6 +990,13 @@
         }
 
         function raporPdfIndir() {
+            // If server provided a PDF file for this result, open/download it directly
+            if (currentRaporDownloadUrl) {
+                window.open(currentRaporDownloadUrl, '_blank');
+                return;
+            }
+
+            // Otherwise, generate PDF from the visible HTML content
             const element = document.getElementById('raporAlani');
             if (!element) return;
 
