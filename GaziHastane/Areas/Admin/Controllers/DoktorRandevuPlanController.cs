@@ -101,7 +101,7 @@ namespace GaziHastane.Areas.Admin.Controllers
 
             if (!doktorlar.Any())
             {
-                TempData["Error"] = "Plan d�zenleme yetkinize ait doktor kayd� bulunamad�.";
+                TempData["Error"] = "Plan düzenleme yetkinize ait doktor kaydı bulunamadı.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -122,25 +122,25 @@ namespace GaziHastane.Areas.Admin.Controllers
 
             if (!TimeSpan.TryParse(model.BaslangicSaati, out var baslangic) || !TimeSpan.TryParse(model.BitisSaati, out var bitis))
             {
-                TempData["Error"] = "Saat format� ge�ersiz.";
+                TempData["Error"] = "Saat formatı geçersiz.";
                 return RedirectToAction(nameof(Index), new { doktorId = model.DoktorId, yil = model.Yil, ay = model.Ay });
             }
 
             if (!TimeSpan.TryParse(model.OgleMolaBaslangicSaati, out var ogleBaslangic) || !TimeSpan.TryParse(model.OgleMolaBitisSaati, out var ogleBitis))
             {
-                TempData["Error"] = "��len mola saat format� ge�ersiz.";
+                TempData["Error"] = "Öğlen mola saat formatı geçersiz.";
                 return RedirectToAction(nameof(Index), new { doktorId = model.DoktorId, yil = model.Yil, ay = model.Ay });
             }
 
             if (bitis <= baslangic)
             {
-                TempData["Error"] = "Biti� saati ba�lang��tan b�y�k olmal�d�r.";
+                TempData["Error"] = "Bitiş saati başlangıçtan büyük olmalıdır.";
                 return RedirectToAction(nameof(Index), new { doktorId = model.DoktorId, yil = model.Yil, ay = model.Ay });
             }
 
             if (ogleBitis <= ogleBaslangic)
             {
-                TempData["Error"] = "��len mola biti� saati ba�lang��tan b�y�k olmal�d�r.";
+                TempData["Error"] = "Öğlen mola bitiş saati başlangıçtan büyük olmalıdır.";
                 return RedirectToAction(nameof(Index), new { doktorId = model.DoktorId, yil = model.Yil, ay = model.Ay });
             }
 
@@ -205,7 +205,7 @@ namespace GaziHastane.Areas.Admin.Controllers
             }
 
             _context.SaveChanges();
-            TempData["Success"] = "Doktor randevu plan� g�ncellendi.";
+            TempData["Success"] = "Doktor randevu planı güncellendi.";
             return RedirectToAction(nameof(Index), new { doktorId = model.DoktorId, yil = model.Yil, ay = model.Ay });
         }
 

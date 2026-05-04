@@ -1,6 +1,6 @@
 @model GaziHastane.Models.DoktorRandevuPlanViewModel
 @{
-    ViewData["Title"] = "Doktor Randevu Plan�";
+    ViewData["Title"] = "Doktor Randevu Planı";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     var doktorlar = ViewBag.Doktorlar as List<GaziHastane.Models.Doktor> ?? new List<GaziHastane.Models.Doktor>();
     var bolumler = ViewBag.Bolumler as List<GaziHastane.Models.Bolum> ?? new List<GaziHastane.Models.Bolum>();
@@ -10,7 +10,7 @@
 <div class="max-w-7xl mx-auto p-4 space-y-6">
     <div class="glass-card rounded-[2rem] p-6">
         <h2 class="text-2xl font-black text-white mb-2">Doktor Randevu Planlama</h2>
-        <p class="text-slate-400 text-sm">Doktor se�ip ayl�k takvimde randevu a��lacak g�nleri, mola ve kapasite kurallar�n� toplu veya g�n baz�nda belirleyin.</p>
+        <p class="text-slate-400 text-sm">Doktor seçip aylık takvimde randevu açılacak günleri, mola ve kapasite kurallarını toplu veya gün bazında belirleyin.</p>
     </div>
 
     @if (TempData["Success"] != null)
@@ -34,7 +34,7 @@
             </select>
         </div>
         <div>
-            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Y�l</label>
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Yıl</label>
             <input name="yil" type="number" value="@Model.Yil" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:bg-slate-800 focus:outline-none" />
         </div>
         <div>
@@ -56,54 +56,54 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Doktor</label>
-                    <input type="text" readonly value="@(seciliDoktor == null ? "-" : $"{seciliDoktor.Unvan} {seciliDoktor.Ad} {seciliDoktor.Soyad}")" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white opacity-70 cursor-not-allowed" />
+            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Doktor</label>
+            <input type="text" readonly value="@(seciliDoktor == null ? "-" : $"{seciliDoktor.Unvan} {seciliDoktor.Ad} {seciliDoktor.Soyad}")" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white opacity-70 cursor-not-allowed" />
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Slot S�resi (dk)</label>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Slot Süresi (dk)</label>
                     <input asp-for="SlotSureDakika" type="number" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:bg-slate-800 focus:outline-none" />
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Ba�lang��</label>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Başlangıç</label>
                     <input asp-for="BaslangicSaati" type="time" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:bg-slate-800 focus:outline-none" />
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Biti�</label>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Bitiş</label>
                     <input asp-for="BitisSaati" type="time" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:bg-slate-800 focus:outline-none" />
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">��len Mola Ba�lang��</label>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Öğlen Mola Başlangıç</label>
                     <input asp-for="OgleMolaBaslangicSaati" type="time" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:bg-slate-800 focus:outline-none" />
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">��len Mola Biti�</label>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Öğlen Mola Bitiş</label>
                     <input asp-for="OgleMolaBitisSaati" type="time" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:bg-slate-800 focus:outline-none" />
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">G�nl�k Randevu Say�s�</label>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Günlük Randevu Sayısı</label>
                     <input asp-for="VarsayilanGunlukMaxRandevu" type="number" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:bg-slate-800 focus:outline-none" />
                 </div>
             </div>
 
             <div class="flex flex-wrap gap-2">
-                <button type="button" onclick="isaretleHaftaIci()" class="px-3 py-2 text-xs font-bold rounded-lg bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/30 transition-colors">Hafta ��i A�</button>
-                <button type="button" onclick="isaretleHaftaSonu()" class="px-3 py-2 text-xs font-bold rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-300 hover:bg-amber-500/30 transition-colors">Hafta Sonu A�</button>
-                <button type="button" onclick="isaretleTumGunler()" class="px-3 py-2 text-xs font-bold rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/30 transition-colors">T�m G�nleri A�</button>
-                <button type="button" onclick="kapatTumGunler()" class="px-3 py-2 text-xs font-bold rounded-lg bg-rose-500/20 border border-rose-500/30 text-rose-300 hover:bg-rose-500/30 transition-colors">T�m�n� Kapat</button>
+                <button type="button" onclick="isaretleHaftaIci()" class="px-3 py-2 text-xs font-bold rounded-lg bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/30 transition-colors">Hafta İçi Aç</button>
+                <button type="button" onclick="isaretleHaftaSonu()" class="px-3 py-2 text-xs font-bold rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-300 hover:bg-amber-500/30 transition-colors">Hafta Sonu Aç</button>
+                <button type="button" onclick="isaretleTumGunler()" class="px-3 py-2 text-xs font-bold rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/30 transition-colors">Tüm Günleri Aç</button>
+                <button type="button" onclick="kapatTumGunler()" class="px-3 py-2 text-xs font-bold rounded-lg bg-rose-500/20 border border-rose-500/30 text-rose-300 hover:bg-rose-500/30 transition-colors">Tümünü Kapat</button>
                 <button type="button" onclick="topluKurallariUygula()" class="px-3 py-2 text-xs font-bold rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-500/30 transition-colors">Toplu Kural Uygula</button>
             </div>
 
             <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-                <p class="text-sm text-slate-300 mb-3 font-bold">G�n G�n Plan (A��k g�nleri i�aretleyin)</p>
+                <p class="text-sm text-slate-300 mb-3 font-bold">Gün Gün Plan (Açık günleri işaretleyin)</p>
                 <div class="overflow-x-auto">
                     <table class="w-full min-w-[900px] text-sm">
                         <thead>
                             <tr class="text-slate-400 border-b border-white/10 text-[11px] uppercase">
-                                <th class="py-2 text-left">A��k</th>
+                                <th class="py-2 text-left">Açık</th>
                                 <th class="py-2 text-left">Tarih</th>
-                                <th class="py-2 text-left">G�nl�k Randevu Say�s�</th>
+                                <th class="py-2 text-left">Günlük Randevu Sayısı</th>
                                 <th class="py-2 text-left">Ba�lang��</th>
-                                <th class="py-2 text-left">Biti�</th>
+                                <th class="py-2 text-left">Bitiş</th>
                             </tr>
                         </thead>
                         <tbody>
