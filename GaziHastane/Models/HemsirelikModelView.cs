@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace GaziHastane.Models
 {
@@ -12,5 +12,6 @@ namespace GaziHastane.Models
         public List<HemsirelikIcerik> GaleriFotograflari { get; set; }
         public List<HemsirelikIcerik> Etkinlikler { get; set; }
         public List<HemsirelikIcerik> AkisSemalari { get; set; }
+        public List<HemsirelikIcerik> TumIcerikler { get; set; }
     }
 }

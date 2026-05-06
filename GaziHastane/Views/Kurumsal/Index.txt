@@ -1,42 +1,37 @@
-@using Microsoft.EntityFrameworkCore
+ï»¿@using Microsoft.EntityFrameworkCore
 @using GaziHastane.Data
 @inject GaziHastaneContext _context
 @{
     Layout = "_KurumsalLayout";
-    ViewData["Title"] = "Hakkımızda - Kurumsal Bilgi Sistemi";
+    ViewData["Title"] = "HakkÄ±mÄ±zda - Kurumsal Bilgi Sistemi";
 
     var menuGruplari = _context.KurumsalMenuGruplar
         .Where(g => g.AktifMi)
         .OrderBy(g => g.Sira)
         .Include(g => g.Menuler.Where(m => m.AktifMi).OrderBy(m => m.Sira))
         .ToList();
-
-    var sekmeler = _context.KurumsalSekmeler
-        .Where(x => x.SayfaKey.ToLower() == "hakkimizda" && x.AktifMi)
-        .OrderBy(x => x.Sira)
-        .ToList();
 }
 
 @section Scripts {
 <style>
-    /* 2. RESPONSIVE İÇ MENÜ (Mobilde yatay kaydırılabilir menü) */
-    @@media (max-width: 1279px) { /* Tailwind xl breakpoint altı için */
+    /* 2. RESPONSIVE Ä°Ã‡ MENÃœ (Mobilde yatay kaydÄ±rÄ±labilir menÃ¼) */
+    @@media (max-width: 1279px) { /* Tailwind xl breakpoint altÄ± iÃ§in */
             .mobile-tab-menu {
                 display: flex !important;
                 flex-direction: row !important;
                 overflow-x: auto;
                 white-space: nowrap;
                 gap: 0.5rem;
-                padding-bottom: 0.5rem; /* Scrollbar için biraz boşluk */
-                -webkit-overflow-scrolling: touch; /* Mobilde pürüzsüz kaydırma */
+                padding-bottom: 0.5rem; /* Scrollbar iÃ§in biraz boÅŸluk */
+                -webkit-overflow-scrolling: touch; /* Mobilde pÃ¼rÃ¼zsÃ¼z kaydÄ±rma */
             }
 
                 .mobile-tab-menu > * {
-                    margin-top: 0 !important; /* space-y-2 sınıfını mobilde ezer */
+                    margin-top: 0 !important; /* space-y-2 sÄ±nÄ±fÄ±nÄ± mobilde ezer */
                 }
 
                 .mobile-tab-menu::-webkit-scrollbar {
-                    display: none; /* Mobilde çirkin scrollbar'ı gizle */
+                    display: none; /* Mobilde Ã§irkin scrollbar'Ä± gizle */
                 }
 
             .sub-menu-btn {
@@ -46,7 +41,7 @@
             }
 
             .kurumsal-icerik-baslik {
-                display: none; /* Mobilde başlığı gizle, yer kaplamasın */
+                display: none; /* Mobilde baÅŸlÄ±ÄŸÄ± gizle, yer kaplamasÄ±n */
             }
         }
 
@@ -164,7 +159,7 @@
                 box-shadow: none;
             }
 
-        /* 3. TAB İÇERİKLERİ YUMUŞAK GEÇİŞ ANİMASYONU */
+        /* 3. TAB Ä°Ã‡ERÄ°KLERÄ° YUMUÅAK GEÃ‡Ä°Å ANÄ°MASYONU */
         .tab-content {
             display: none;
             opacity: 0;
@@ -209,30 +204,30 @@
 
     <script>
         function openTab(event, tabId) {
-            // Sayfanın yenilenmesini veya yukarı zıplamasını engelle
+            // SayfanÄ±n yenilenmesini veya yukarÄ± zÄ±plamasÄ±nÄ± engelle
             if(event) event.preventDefault();
 
-            // 1. Tüm butonları pasif yap
+            // 1. TÃ¼m butonlarÄ± pasif yap
             document.querySelectorAll('.sub-menu-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.dropdown-item').forEach(item => item.classList.remove('active'));
 
-            // 2. Tıklanan butonu aktif yap
+            // 2. TÄ±klanan butonu aktif yap
             if(event) {
                 event.currentTarget.classList.add('active');
             } else {
-                // Eğer event yoksa (sayfa ilk yüklendiğinde URL'den geliyorsa)
+                // EÄŸer event yoksa (sayfa ilk yÃ¼klendiÄŸinde URL'den geliyorsa)
                 let activeBtn = document.querySelector(`[onclick*="${tabId}"]`);
                 if(activeBtn) activeBtn.classList.add('active');
             }
 
-            // 3. Tüm içerik alanlarını gizle
+            // 3. TÃ¼m iÃ§erik alanlarÄ±nÄ± gizle
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
-            // 4. Sadece seçilen 'tabId'ye sahip içeriği göster
+            // 4. Sadece seÃ§ilen 'tabId'ye sahip iÃ§eriÄŸi gÃ¶ster
             let targetContent = document.getElementById(tabId);
             if(targetContent) targetContent.classList.add('active');
 
-            // 5. URL'yi güncelle (sayfa yenilenmeden geçmişe ekler)
+            // 5. URL'yi gÃ¼ncelle (sayfa yenilenmeden geÃ§miÅŸe ekler)
             if(history.pushState) {
                 history.pushState(null, null, '#' + tabId);
             }
@@ -243,7 +238,7 @@
             }
         }
 
-        // Sayfa ilk yüklendiğinde URL'de #varsa (örn: .../Kurumsal/Index#misyon) o sekmeyi aç
+        // Sayfa ilk yÃ¼klendiÄŸinde URL'de #varsa (Ã¶rn: .../Kurumsal/Index#misyon) o sekmeyi aÃ§
         document.addEventListener('DOMContentLoaded', function() {
             let hash = window.location.hash.substring(1);
             if(hash && document.getElementById(hash)) {
@@ -263,23 +258,16 @@
                 <span>Kurumsal</span>
                 <i class="fa-solid fa-chevron-right text-[8px]"></i>
                 <details class="sub-menu-dropdown">
-                    <summary class="dropdown-trigger">Hakkımızda <i class="fa-solid fa-chevron-down text-[8px]"></i></summary>
+                    <summary class="dropdown-trigger">HakkÄ±mÄ±zda <i class="fa-solid fa-chevron-down text-[8px]"></i></summary>
                     <div class="dropdown-panel">
-                        <button onclick="openTab(event, 'tarihce')" class="dropdown-item active"><i class="fa-solid fa-clock-rotate-left w-4 text-center"></i> Tarihçemiz</button>
+                        <button onclick="openTab(event, 'tarihce')" class="dropdown-item active"><i class="fa-solid fa-clock-rotate-left w-4 text-center"></i> TarihÃ§emiz</button>
                         <button onclick="openTab(event, 'misyon')" class="dropdown-item"><i class="fa-solid fa-bullseye w-4 text-center"></i> Misyon & Vizyon</button>
                         <button onclick="openTab(event, 'stratejik')" class="dropdown-item"><i class="fa-solid fa-chart-line w-4 text-center"></i> Stratejik Plan</button>
-                        <button onclick="openTab(event, 'yonetmelik')" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-4 text-center"></i> Yönetmelik</button>
-                        <button onclick="openTab(event, 'amac')" class="dropdown-item"><i class="fa-solid fa-flag-checkered w-4 text-center"></i> Amaç ve Hedefler</button>
-                        <button onclick="openTab(event, 'rehberler')" class="dropdown-item"><i class="fa-solid fa-book-medical w-4 text-center"></i> Sağlık Rehberleri</button>
+                        <button onclick="openTab(event, 'yonetmelik')" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-4 text-center"></i> YÃ¶netmelik</button>
+                        <button onclick="openTab(event, 'amac')" class="dropdown-item"><i class="fa-solid fa-flag-checkered w-4 text-center"></i> AmaÃ§ ve Hedefler</button>
+                        <button onclick="openTab(event, 'rehberler')" class="dropdown-item"><i class="fa-solid fa-book-medical w-4 text-center"></i> SaÄŸlÄ±k Rehberleri</button>
                         <button onclick="openTab(event, 'uyum')" class="dropdown-item"><i class="fa-solid fa-handshake-angle w-4 text-center"></i> Uyum Rehberi</button>
-                        <button onclick="openTab(event, 'egitim')" class="dropdown-item"><i class="fa-solid fa-graduation-cap w-4 text-center"></i> Eğitim Komitesi</button>
-                        @if (sekmeler != null && sekmeler.Any())
-                        {
-                            foreach (var sekme in sekmeler)
-                            {
-                                <button onclick="openTab(event, '@sekme.SekmeId')" class="dropdown-item"><i class="@(string.IsNullOrWhiteSpace(sekme.IconClass) ? "fa-solid fa-circle-info" : sekme.IconClass) w-4 text-center"></i> @sekme.Baslik</button>
-                            }
-                        }
+                        <button onclick="openTab(event, 'egitim')" class="dropdown-item"><i class="fa-solid fa-graduation-cap w-4 text-center"></i> EÄŸitim Komitesi</button>
                     </div>
                 </details>
             </nav>
@@ -290,9 +278,9 @@
                     <div id="tarihce" class="tab-content active">
                         <div class="flex items-center gap-3 mb-8">
                             <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Tarihçemiz</h2>
+                            <h2 class="text-2xl font-black text-slate-800">TarihÃ§emiz</h2>
                         </div>
-                        <p class="text-slate-600 leading-relaxed font-medium mb-8">Gazi Üniversitesi Hastanesi, 1926 yılında Cumhuriyetimizin kurucusu Gazi Mustafa Kemal Atatürk'ün talimatlarıyla atılan temeller üzerinde yükselmiş, Türkiye'nin en köklü sağlık ve eğitim kurumlarından biridir.</p>
+                        <p class="text-slate-600 leading-relaxed font-medium mb-8">Gazi Ãœniversitesi Hastanesi, 1926 yÄ±lÄ±nda Cumhuriyetimizin kurucusu Gazi Mustafa Kemal AtatÃ¼rk'Ã¼n talimatlarÄ±yla atÄ±lan temeller Ã¼zerinde yÃ¼kselmiÅŸ, TÃ¼rkiye'nin en kÃ¶klÃ¼ saÄŸlÄ±k ve eÄŸitim kurumlarÄ±ndan biridir.</p>
 
                         <div class="space-y-6 pl-2">
                             <div class="flex gap-4">
@@ -302,8 +290,8 @@
                                 </div>
                                 <div class="pb-6">
                                     <span class="inline-block bg-blue-50 text-blue-700 font-black text-[10px] tracking-widest uppercase px-3 py-1 rounded-full mb-1.5">1926</span>
-                                    <p class="font-bold text-slate-800 text-sm">İlk Adımlar</p>
-                                    <p class="text-slate-500 text-xs mt-1 leading-relaxed">Gazi Eğitim Enstitüsü bünyesinde sağlık hizmetlerinin temelleri atıldı.</p>
+                                    <p class="font-bold text-slate-800 text-sm">Ä°lk AdÄ±mlar</p>
+                                    <p class="text-slate-500 text-xs mt-1 leading-relaxed">Gazi EÄŸitim EnstitÃ¼sÃ¼ bÃ¼nyesinde saÄŸlÄ±k hizmetlerinin temelleri atÄ±ldÄ±.</p>
                                 </div>
                             </div>
                             <div class="flex gap-4">
@@ -313,8 +301,8 @@
                                 </div>
                                 <div class="pb-6">
                                     <span class="inline-block bg-purple-50 text-purple-700 font-black text-[10px] tracking-widest uppercase px-3 py-1 rounded-full mb-1.5">1982</span>
-                                    <p class="font-bold text-slate-800 text-sm">Üniversite Hastanesi Statüsü</p>
-                                    <p class="text-slate-500 text-xs mt-1 leading-relaxed">Gazi Üniversitesi Tıp Fakültesi ile entegrasyon sağlanarak eğitim ve araştırma hastanesi kimliği kazanıldı.</p>
+                                    <p class="font-bold text-slate-800 text-sm">Ãœniversite Hastanesi StatÃ¼sÃ¼</p>
+                                    <p class="text-slate-500 text-xs mt-1 leading-relaxed">Gazi Ãœniversitesi TÄ±p FakÃ¼ltesi ile entegrasyon saÄŸlanarak eÄŸitim ve araÅŸtÄ±rma hastanesi kimliÄŸi kazanÄ±ldÄ±.</p>
                                 </div>
                             </div>
                             <div class="flex gap-4">
@@ -324,8 +312,8 @@
                                 </div>
                                 <div class="pb-6">
                                     <span class="inline-block bg-emerald-50 text-emerald-700 font-black text-[10px] tracking-widest uppercase px-3 py-1 rounded-full mb-1.5">2005</span>
-                                    <p class="font-bold text-slate-800 text-sm">Modern Kampüs</p>
-                                    <p class="text-slate-500 text-xs mt-1 leading-relaxed">Mevcut modern hastane bloklarının inşası tamamlanarak yatak kapasitesi artırıldı.</p>
+                                    <p class="font-bold text-slate-800 text-sm">Modern KampÃ¼s</p>
+                                    <p class="text-slate-500 text-xs mt-1 leading-relaxed">Mevcut modern hastane bloklarÄ±nÄ±n inÅŸasÄ± tamamlanarak yatak kapasitesi artÄ±rÄ±ldÄ±.</p>
                                 </div>
                             </div>
                             <div class="flex gap-4">
@@ -334,8 +322,8 @@
                                 </div>
                                 <div>
                                     <span class="inline-block bg-amber-50 text-amber-700 font-black text-[10px] tracking-widest uppercase px-3 py-1 rounded-full mb-1.5">2024</span>
-                                    <p class="font-bold text-slate-800 text-sm">A++ Kalite Standartları</p>
-                                    <p class="text-slate-500 text-xs mt-1 leading-relaxed">Sağlık Bakanlığı tarafından en yüksek kalite segmenti ile ödüllendirildi.</p>
+                                    <p class="font-bold text-slate-800 text-sm">A++ Kalite StandartlarÄ±</p>
+                                    <p class="text-slate-500 text-xs mt-1 leading-relaxed">SaÄŸlÄ±k BakanlÄ±ÄŸÄ± tarafÄ±ndan en yÃ¼ksek kalite segmenti ile Ã¶dÃ¼llendirildi.</p>
                                 </div>
                             </div>
                         </div>
@@ -352,41 +340,41 @@
                                     <i class="fa-solid fa-bullseye"></i>
                                 </div>
                                 <h4 class="font-black text-lg mb-2">Misyonumuz</h4>
-                                <p class="text-blue-100 text-sm leading-relaxed font-medium">Evrensel değerler ışığında, ileri teknoloji ve akademik birikimi birleştirerek hasta odaklı, kaliteli sağlık hizmeti sunmak ve ülkenin gelecekteki hekimlerini yetiştirmek.</p>
+                                <p class="text-blue-100 text-sm leading-relaxed font-medium">Evrensel deÄŸerler Ä±ÅŸÄ±ÄŸÄ±nda, ileri teknoloji ve akademik birikimi birleÅŸtirerek hasta odaklÄ±, kaliteli saÄŸlÄ±k hizmeti sunmak ve Ã¼lkenin gelecekteki hekimlerini yetiÅŸtirmek.</p>
                             </div>
                             <div class="feature-card bg-gradient-to-br from-slate-800 to-slate-900 text-white">
                                 <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center mb-4">
                                     <i class="fa-solid fa-telescope"></i>
                                 </div>
                                 <h4 class="font-black text-lg mb-2">Vizyonumuz</h4>
-                                <p class="text-slate-400 text-sm leading-relaxed font-medium">Sağlık hizmeti sunumunda, tıp eğitiminde ve bilimsel araştırmalarda dünya standartlarını yakalamış, referans gösterilen lider bir sağlık kuruluşu olmak.</p>
+                                <p class="text-slate-400 text-sm leading-relaxed font-medium">SaÄŸlÄ±k hizmeti sunumunda, tÄ±p eÄŸitiminde ve bilimsel araÅŸtÄ±rmalarda dÃ¼nya standartlarÄ±nÄ± yakalamÄ±ÅŸ, referans gÃ¶sterilen lider bir saÄŸlÄ±k kuruluÅŸu olmak.</p>
                             </div>
                         </div>
 
-                        <h3 class="text-lg font-black text-slate-800 mb-4">Temel Değerlerimiz</h3>
+                        <h3 class="text-lg font-black text-slate-800 mb-4">Temel DeÄŸerlerimiz</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100"><i class="fa-solid fa-check text-blue-600"></i><span class="text-sm font-semibold text-slate-700">Hasta ve Çalışan Odaklılık</span></div>
-                            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100"><i class="fa-solid fa-check text-blue-600"></i><span class="text-sm font-semibold text-slate-700">Mükemmeliyetçilik</span></div>
-                            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100"><i class="fa-solid fa-check text-blue-600"></i><span class="text-sm font-semibold text-slate-700">Etik Kurallara Bağlılık</span></div>
-                            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100"><i class="fa-solid fa-check text-blue-600"></i><span class="text-sm font-semibold text-slate-700">Şeffaflık ve Hesap Verebilirlik</span></div>
+                            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100"><i class="fa-solid fa-check text-blue-600"></i><span class="text-sm font-semibold text-slate-700">Hasta ve Ã‡alÄ±ÅŸan OdaklÄ±lÄ±k</span></div>
+                            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100"><i class="fa-solid fa-check text-blue-600"></i><span class="text-sm font-semibold text-slate-700">MÃ¼kemmeliyetÃ§ilik</span></div>
+                            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100"><i class="fa-solid fa-check text-blue-600"></i><span class="text-sm font-semibold text-slate-700">Etik Kurallara BaÄŸlÄ±lÄ±k</span></div>
+                            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100"><i class="fa-solid fa-check text-blue-600"></i><span class="text-sm font-semibold text-slate-700">ÅeffaflÄ±k ve Hesap Verebilirlik</span></div>
                         </div>
                     </div>
 
                     <div id="stratejik" class="tab-content">
                         <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Stratejik Plan & Raporlar</h2></div>
-                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Kurumumuzun kısa, orta ve uzun vadeli hedeflerini içeren stratejik planlamaları ile geçmiş yıllara ait faaliyet raporlarını inceleyebilirsiniz.</p>
+                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Kurumumuzun kÄ±sa, orta ve uzun vadeli hedeflerini iÃ§eren stratejik planlamalarÄ± ile geÃ§miÅŸ yÄ±llara ait faaliyet raporlarÄ±nÄ± inceleyebilirsiniz.</p>
                         <div class="space-y-3">
                             <a href="#" class="flex items-center justify-between p-4 bg-slate-50 hover:bg-blue-50 border border-slate-100 rounded-xl transition group">
                                 <div class="flex items-center gap-4">
                                     <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm text-red-500"><i class="fa-solid fa-file-pdf"></i></div>
-                                    <div><p class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition">2024-2028 Stratejik Planı</p><p class="text-[10px] text-slate-500">PDF Document • 4.2 MB</p></div>
+                                    <div><p class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition">2024-2028 Stratejik PlanÄ±</p><p class="text-[10px] text-slate-500">PDF Document â€¢ 4.2 MB</p></div>
                                 </div>
                                 <i class="fa-solid fa-download text-slate-400 group-hover:text-blue-600"></i>
                             </a>
                             <a href="#" class="flex items-center justify-between p-4 bg-slate-50 hover:bg-blue-50 border border-slate-100 rounded-xl transition group">
                                 <div class="flex items-center gap-4">
                                     <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm text-red-500"><i class="fa-solid fa-file-pdf"></i></div>
-                                    <div><p class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition">2023 Yılı Faaliyet Raporu</p><p class="text-[10px] text-slate-500">PDF Document • 2.8 MB</p></div>
+                                    <div><p class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition">2023 YÄ±lÄ± Faaliyet Raporu</p><p class="text-[10px] text-slate-500">PDF Document â€¢ 2.8 MB</p></div>
                                 </div>
                                 <i class="fa-solid fa-download text-slate-400 group-hover:text-blue-600"></i>
                             </a>
@@ -394,54 +382,42 @@
                     </div>
 
                     <div id="yonetmelik" class="tab-content">
-                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Yönetmelik</h2></div>
-                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Gazi Üniversitesi Hastanesi'nin idari ve tıbbi işleyişini düzenleyen yasal mevzuat ve kurum içi yönetmeliklere buradan erişebilirsiniz.</p>
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">YÃ¶netmelik</h2></div>
+                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Gazi Ãœniversitesi Hastanesi'nin idari ve tÄ±bbi iÅŸleyiÅŸini dÃ¼zenleyen yasal mevzuat ve kurum iÃ§i yÃ¶netmeliklere buradan eriÅŸebilirsiniz.</p>
                         <div class="p-5 bg-blue-50 border border-blue-100 rounded-2xl flex items-start gap-4">
                             <i class="fa-solid fa-scale-balanced text-blue-600 text-xl mt-1"></i>
                             <div>
-                                <h4 class="font-black text-slate-800 text-sm mb-1">Hastane İşleyiş Yönetmeliği</h4>
-                                <p class="text-slate-600 text-xs mb-3 leading-relaxed">Resmi Gazete'de yayımlanan güncel uygulama yönetmeliği uyarınca hastanemiz faaliyetlerini sürdürmektedir.</p>
-                                <button class="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-blue-700 transition">Mevzuatı Oku</button>
+                                <h4 class="font-black text-slate-800 text-sm mb-1">Hastane Ä°ÅŸleyiÅŸ YÃ¶netmeliÄŸi</h4>
+                                <p class="text-slate-600 text-xs mb-3 leading-relaxed">Resmi Gazete'de yayÄ±mlanan gÃ¼ncel uygulama yÃ¶netmeliÄŸi uyarÄ±nca hastanemiz faaliyetlerini sÃ¼rdÃ¼rmektedir.</p>
+                                <button class="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-blue-700 transition">MevzuatÄ± Oku</button>
                             </div>
                         </div>
                     </div>
 
                     <div id="amac" class="tab-content">
-                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Amaç ve Hedeflerimiz</h2></div>
-                        <p class="text-slate-600 leading-relaxed font-medium">Hastanemizin 2024 yılı itibariyle kaliteyi artırmak ve hasta memnuniyetini en üst düzeye çıkarmak için belirlediği hedefler bu alanda yer alır.</p>
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">AmaÃ§ ve Hedeflerimiz</h2></div>
+                        <p class="text-slate-600 leading-relaxed font-medium">Hastanemizin 2024 yÄ±lÄ± itibariyle kaliteyi artÄ±rmak ve hasta memnuniyetini en Ã¼st dÃ¼zeye Ã§Ä±karmak iÃ§in belirlediÄŸi hedefler bu alanda yer alÄ±r.</p>
                     </div>
 
                     <div id="rehberler" class="tab-content">
-                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Sağlık Rehberleri</h2></div>
-                        <p class="text-slate-600 leading-relaxed font-medium">Bölümlerimiz tarafından hazırlanan hasta bilgilendirme broşürleri ve genel sağlık rehberleri arşividir.</p>
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">SaÄŸlÄ±k Rehberleri</h2></div>
+                        <p class="text-slate-600 leading-relaxed font-medium">BÃ¶lÃ¼mlerimiz tarafÄ±ndan hazÄ±rlanan hasta bilgilendirme broÅŸÃ¼rleri ve genel saÄŸlÄ±k rehberleri arÅŸividir.</p>
                     </div>
 
                     <div id="uyum" class="tab-content">
                         <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Hastanemiz Uyum Rehberi</h2></div>
-                        <p class="text-slate-600 leading-relaxed font-medium">Yeni göreve başlayan personelimiz ve stajyer öğrencilerimiz için hazırlanmış oryantasyon programı ve uyum rehberi dokümanlarıdır.</p>
+                        <p class="text-slate-600 leading-relaxed font-medium">Yeni gÃ¶reve baÅŸlayan personelimiz ve stajyer Ã¶ÄŸrencilerimiz iÃ§in hazÄ±rlanmÄ±ÅŸ oryantasyon programÄ± ve uyum rehberi dokÃ¼manlarÄ±dÄ±r.</p>
                     </div>
 
                     <div id="egitim" class="tab-content">
-                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Eğitim Komitesi</h2></div>
-                        <p class="text-slate-600 leading-relaxed font-medium mb-4">Hastanemizdeki hizmet içi eğitimlerin planlanması, uygulanması ve değerlendirilmesinden sorumlu komitemizin faaliyetleri.</p>
-                        <a href="egitim.html" class="inline-flex items-center gap-2 text-blue-600 text-sm font-bold hover:underline">Komite Sayfasına Git <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">EÄŸitim Komitesi</h2></div>
+                        <p class="text-slate-600 leading-relaxed font-medium mb-4">Hastanemizdeki hizmet iÃ§i eÄŸitimlerin planlanmasÄ±, uygulanmasÄ± ve deÄŸerlendirilmesinden sorumlu komitemizin faaliyetleri.</p>
+                        <a href="egitim.html" class="inline-flex items-center gap-2 text-blue-600 text-sm font-bold hover:underline">Komite SayfasÄ±na Git <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
                     </div>
-                    @if (sekmeler != null && sekmeler.Any())
-                    {
-                        foreach (var sekme in sekmeler)
-                        {
-                            <div id="@sekme.SekmeId" class="tab-content">
-                                @if (!string.IsNullOrWhiteSpace(sekme.Icerik))
-                                {
-                                    @Html.Raw(sekme.Icerik)
-                                }
-                            </div>
-                        }
-                    }
+
                 </div>
             </div>
 
         </section>
 
     </div>
-

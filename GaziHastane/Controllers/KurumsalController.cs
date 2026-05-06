@@ -88,7 +88,8 @@ namespace GaziHastane.Controllers
                 Mevzuatlar = tumIcerikler.Where(x => x.Kategori == "Mevzuat").ToList(),
                 GaleriFotograflari = tumIcerikler.Where(x => x.Kategori == "Galeri").ToList(),
                 Etkinlikler = tumIcerikler.Where(x => x.Kategori == "Etkinlik").ToList(),
-                AkisSemalari = tumIcerikler.Where(x => x.Kategori == "Akis").ToList()
+                AkisSemalari = tumIcerikler.Where(x => x.Kategori == "Akis").ToList(),
+                TumIcerikler = tumIcerikler
             };
 
             return View(viewModel);

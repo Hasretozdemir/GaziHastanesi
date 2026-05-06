@@ -148,6 +148,14 @@ namespace GaziHastane.Data
                 // Verileri veritabanı kontekstine ekle
                 context.YemekListesi.AddRange(yemekler);
                 context.SaveChanges();
+            if (!context.KurumsalSekmeler.Any())
+            {
+                context.KurumsalSekmeler.AddRange(
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane Hakkında</h3><p>Gazi Hastanesi, bölgenin en köklü sağlık kuruluşlarından biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli sağlık hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
+                );
+                context.SaveChanges();
+            }
             }
 
             // 2. BÖLÜM VE DOKTOR KONTROLÜ VE EKLEME
@@ -165,6 +173,14 @@ namespace GaziHastane.Data
 
                 // Bölümleri önce kaydet ki ID'leri oluşsun (Doktor eklerken lazım olacak)
                 context.SaveChanges();
+            if (!context.KurumsalSekmeler.Any())
+            {
+                context.KurumsalSekmeler.AddRange(
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane Hakkında</h3><p>Gazi Hastanesi, bölgenin en köklü sağlık kuruluşlarından biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli sağlık hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
+                );
+                context.SaveChanges();
+            }
 
                 // Örnek Doktor Ekle
                 var kardiyoloji = context.Bolumler.FirstOrDefault(b => b.Ad == "Kardiyoloji");
@@ -182,6 +198,14 @@ namespace GaziHastane.Data
                 }
 
                 context.SaveChanges();
+            if (!context.KurumsalSekmeler.Any())
+            {
+                context.KurumsalSekmeler.AddRange(
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane Hakkında</h3><p>Gazi Hastanesi, bölgenin en köklü sağlık kuruluşlarından biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli sağlık hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
+                );
+                context.SaveChanges();
+            }
             }
 
             // 3. YETKİLİLER (ADMIN) - Eğer yoksa bir yönetici ekle
@@ -200,6 +224,14 @@ namespace GaziHastane.Data
                 };
                 context.Yetkililer.Add(admin);
                 context.SaveChanges();
+            if (!context.KurumsalSekmeler.Any())
+            {
+                context.KurumsalSekmeler.AddRange(
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane Hakkında</h3><p>Gazi Hastanesi, bölgenin en köklü sağlık kuruluşlarından biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli sağlık hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
+                );
+                context.SaveChanges();
+            }
             }
             else
             {
@@ -225,6 +257,14 @@ namespace GaziHastane.Data
                 }
 
                 context.SaveChanges();
+            if (!context.KurumsalSekmeler.Any())
+            {
+                context.KurumsalSekmeler.AddRange(
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane Hakkında</h3><p>Gazi Hastanesi, bölgenin en köklü sağlık kuruluşlarından biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli sağlık hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
+                );
+                context.SaveChanges();
+            }
             }
 
             // 4. KURUMSAL SIDEBAR MENÜ TOHUMLAMA
@@ -246,6 +286,14 @@ namespace GaziHastane.Data
 
                 context.KurumsalMenuGruplar.AddRange(grupYonetim, grupKurumsal);
                 context.SaveChanges();
+            if (!context.KurumsalSekmeler.Any())
+            {
+                context.KurumsalSekmeler.AddRange(
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane Hakkında</h3><p>Gazi Hastanesi, bölgenin en köklü sağlık kuruluşlarından biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli sağlık hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
+                );
+                context.SaveChanges();
+            }
 
                 var menuler = new KurumsalMenu[]
                 {
@@ -270,6 +318,14 @@ namespace GaziHastane.Data
 
                 context.KurumsalMenuler.AddRange(menuler);
                 context.SaveChanges();
+            if (!context.KurumsalSekmeler.Any())
+            {
+                context.KurumsalSekmeler.AddRange(
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane Hakkında</h3><p>Gazi Hastanesi, bölgenin en köklü sağlık kuruluşlarından biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli sağlık hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
+                );
+                context.SaveChanges();
+            }
             }
 
             // 5. ADMIN SIDEBAR MENÜ TOHUMLAMA
@@ -319,6 +375,14 @@ namespace GaziHastane.Data
 
                 context.AdminMenuItems.AddRange(menuItems);
                 context.SaveChanges();
+            if (!context.KurumsalSekmeler.Any())
+            {
+                context.KurumsalSekmeler.AddRange(
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane Hakkında</h3><p>Gazi Hastanesi, bölgenin en köklü sağlık kuruluşlarından biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli sağlık hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
+                );
+                context.SaveChanges();
+            }
             }
         }
     }

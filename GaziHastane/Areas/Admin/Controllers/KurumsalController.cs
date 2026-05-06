@@ -53,12 +53,12 @@ namespace GaziHastane.Areas.Admin.Controllers
             else _context.KurumsalMenuGruplar.Update(model);
 
             await _context.SaveChangesAsync();
-            TempData["Success"] = "Menü grubu kaydedildi.";
+            TempData["Success"] = "MenÃ¼ grubu kaydedildi.";
             return RedirectToAction(nameof(Index));
         }
 
         // ==========================================
-        // ARÞÝV BÝRÝMÝ YÖNETÝMÝ
+        // ARÅžÄ°V BÄ°RÄ°MÄ° YÃ–NETÄ°MÄ°
         // ==========================================
 
         [HttpGet]
@@ -84,7 +84,7 @@ namespace GaziHastane.Areas.Admin.Controllers
             {
                 _context.ArsivSekmeler.Add(model);
                 await _context.SaveChangesAsync();
-                TempData["Success"] = "Yeni arþiv sekmesi baþarýyla eklendi.";
+                TempData["Success"] = "Yeni arÅŸiv sekmesi baÅŸarÄ±yla eklendi.";
                 return RedirectToAction(nameof(ArsivBirimi));
             }
             return View("ArsivSekmeForm", model);
@@ -106,7 +106,7 @@ namespace GaziHastane.Areas.Admin.Controllers
             {
                 _context.ArsivSekmeler.Update(model);
                 await _context.SaveChangesAsync();
-                TempData["Success"] = "Arþiv sekmesi baþarýyla güncellendi.";
+                TempData["Success"] = "ArÅŸiv sekmesi baÅŸarÄ±yla gÃ¼ncellendi.";
                 return RedirectToAction(nameof(ArsivBirimi));
             }
             return View("ArsivSekmeForm", model);
@@ -121,32 +121,77 @@ namespace GaziHastane.Areas.Admin.Controllers
             {
                 _context.ArsivSekmeler.Remove(sekme);
                 await _context.SaveChangesAsync();
-                TempData["Success"] = "Arþiv sekmesi baþarýyla silindi.";
+                TempData["Success"] = "ArÅŸiv sekmesi baÅŸarÄ±yla silindi.";
             }
             return RedirectToAction(nameof(ArsivBirimi));
         }
 
         // ==========================================
-        // DÝÐER SABÝT SAYFALAR
+        // DÄ°ÄžER SABÄ°T SAYFALAR
         // ==========================================
 
-        [HttpGet]
-        public IActionResult BasinVeKurumsalIletisim() => View();
+                [HttpGet]
+        public async Task<IActionResult> BasinVeKurumsalIletisim()
+        {
+            var model = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "BasinVeKurumsalIletisim")
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+            ViewBag.SayfaKey = "BasinVeKurumsalIletisim";
+            ViewBag.SayfaBaslik = "BasÄ±n ve Kurumsal Ä°letiÅŸim YÃ¶netimi";
+            return View("GenericSekmeYonetim", model);
+        }
 
-        [HttpGet]
-        public IActionResult BilgiIslemMerkezi() => View();
+                [HttpGet]
+        public async Task<IActionResult> BilgiIslemMerkezi()
+        {
+            var model = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "BilgiIslemMerkezi")
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+            ViewBag.SayfaKey = "BilgiIslemMerkezi";
+            ViewBag.SayfaBaslik = "Bilgi Ä°ÅŸlem Merkezi YÃ¶netimi";
+            return View("GenericSekmeYonetim", model);
+        }
 
-        [HttpGet]
-        public IActionResult EczacilikHizmetleri() => View();
+                [HttpGet]
+        public async Task<IActionResult> EczacilikHizmetleri()
+        {
+            var model = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "EczacilikHizmetleri")
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+            ViewBag.SayfaKey = "EczacilikHizmetleri";
+            ViewBag.SayfaBaslik = "EczacÄ±lÄ±k Hizmetleri YÃ¶netimi";
+            return View("GenericSekmeYonetim", model);
+        }
 
-        [HttpGet]
-        public IActionResult EnfeksiyonKontrol() => View();
+                [HttpGet]
+        public async Task<IActionResult> EnfeksiyonKontrol()
+        {
+            var model = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "EnfeksiyonKontrol")
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+            ViewBag.SayfaKey = "EnfeksiyonKontrol";
+            ViewBag.SayfaBaslik = "Enfeksiyon Kontrol YÃ¶netimi";
+            return View("GenericSekmeYonetim", model);
+        }
 
-        [HttpGet]
-        public IActionResult HastaIletisimBirimi() => View();
+                [HttpGet]
+        public async Task<IActionResult> HastaIletisimBirimi()
+        {
+            var model = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "HastaIletisimBirimi")
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+            ViewBag.SayfaKey = "HastaIletisimBirimi";
+            ViewBag.SayfaBaslik = "Hasta Ä°letiÅŸim Birimi YÃ¶netimi";
+            return View("GenericSekmeYonetim", model);
+        }
 
         // ==========================================
-        // HEMÞÝRELÝK HÝZMETLERÝ YÖNETÝMÝ
+        // HEMÅžÄ°RELÄ°K HÄ°ZMETLERÄ° YÃ–NETÄ°MÄ°
         // ==========================================
 
         [HttpGet]
@@ -178,7 +223,7 @@ namespace GaziHastane.Areas.Admin.Controllers
             }
 
             await _context.SaveChangesAsync();
-            TempData["Success"] = "Ayarlar baþarýyla kaydedildi.";
+            TempData["Success"] = "Ayarlar baÅŸarÄ±yla kaydedildi.";
             return RedirectToAction(nameof(HemsirelikHizmetleri));
         }
 
@@ -194,6 +239,11 @@ namespace GaziHastane.Areas.Admin.Controllers
                 return View("HemsirelikHizmetleri", icerikler);
             }
 
+            model.Baslik ??= "";
+            model.AltBaslik ??= "";
+            model.Aciklama ??= "";
+            model.MedyaYolu ??= "";
+
             if (model.Id == 0)
             {
                 _context.HemsirelikIcerikler.Add(model);
@@ -204,7 +254,7 @@ namespace GaziHastane.Areas.Admin.Controllers
             }
 
             await _context.SaveChangesAsync();
-            TempData["Success"] = "Ýçerik baþarýyla kaydedildi.";
+            TempData["Success"] = "Ä°Ã§erik baÅŸarÄ±yla kaydedildi.";
             return RedirectToAction(nameof(HemsirelikHizmetleri));
         }
 
@@ -218,7 +268,7 @@ namespace GaziHastane.Areas.Admin.Controllers
                 icerik.AktifMi = false;
                 _context.HemsirelikIcerikler.Update(icerik);
                 await _context.SaveChangesAsync();
-                TempData["Success"] = "Ýçerik silindi.";
+                TempData["Success"] = "Ä°Ã§erik silindi.";
             }
 
             return RedirectToAction(nameof(HemsirelikHizmetleri));
@@ -236,6 +286,8 @@ namespace GaziHastane.Areas.Admin.Controllers
                 return View("HemsirelikHizmetleri", icerikler);
             }
 
+            model.IconClass ??= "";
+            
             if (model.Id == 0)
             {
                 _context.HemsirelikSekmeler.Add(model);
@@ -246,7 +298,7 @@ namespace GaziHastane.Areas.Admin.Controllers
             }
 
             await _context.SaveChangesAsync();
-            TempData["Success"] = "Sekme baþarýyla kaydedildi.";
+            TempData["Success"] = "Sekme baÅŸarÄ±yla kaydedildi.";
             return Redirect($"{Url.Action(nameof(HemsirelikHizmetleri))}#tab-sekmeler");
         }
 
@@ -267,29 +319,83 @@ namespace GaziHastane.Areas.Admin.Controllers
         }
 
         // ==========================================
-        // DÝÐER SABÝT SAYFALAR (Devamý)
+        // DÄ°ÄžER SABÄ°T SAYFALAR (DevamÄ±)
         // ==========================================
 
-        [HttpGet]
-        public IActionResult IcKontrol() => View();
+                [HttpGet]
+        public async Task<IActionResult> IcKontrol()
+        {
+            var model = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "IcKontrol")
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+            ViewBag.SayfaKey = "IcKontrol";
+            ViewBag.SayfaBaslik = "Ä°Ã§ Kontrol YÃ¶netimi";
+            return View("GenericSekmeYonetim", model);
+        }
 
-        [HttpGet]
-        public IActionResult IsAkisSemalari() => View();
+                [HttpGet]
+        public async Task<IActionResult> IsAkisSemalari()
+        {
+            var model = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "IsAkisSemalari")
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+            ViewBag.SayfaKey = "IsAkisSemalari";
+            ViewBag.SayfaBaslik = "Ä°ÅŸ AkÄ±ÅŸ ÅžemalarÄ± YÃ¶netimi";
+            return View("GenericSekmeYonetim", model);
+        }
 
-        [HttpGet]
-        public IActionResult IsSagligiVeGuvenligi() => View();
+                [HttpGet]
+        public async Task<IActionResult> IsSagligiVeGuvenligi()
+        {
+            var model = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "IsSagligiVeGuvenligi")
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+            ViewBag.SayfaKey = "IsSagligiVeGuvenligi";
+            ViewBag.SayfaBaslik = "Ä°ÅŸ SaÄŸlÄ±ÄŸÄ± ve GÃ¼venliÄŸi YÃ¶netimi";
+            return View("GenericSekmeYonetim", model);
+        }
 
-        [HttpGet]
-        public IActionResult IstatistikVeRaporlama() => View();
+                [HttpGet]
+        public async Task<IActionResult> IstatistikVeRaporlama()
+        {
+            var model = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "IstatistikVeRaporlama")
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+            ViewBag.SayfaKey = "IstatistikVeRaporlama";
+            ViewBag.SayfaBaslik = "Ä°statistik ve Raporlama YÃ¶netimi";
+            return View("GenericSekmeYonetim", model);
+        }
 
-        [HttpGet]
-        public IActionResult OrganizasyonSemalari() => View();
+                [HttpGet]
+        public async Task<IActionResult> OrganizasyonSemalari()
+        {
+            var model = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "OrganizasyonSemalari")
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+            ViewBag.SayfaKey = "OrganizasyonSemalari";
+            ViewBag.SayfaBaslik = "Organizasyon ÅžemalarÄ± YÃ¶netimi";
+            return View("GenericSekmeYonetim", model);
+        }
 
-        [HttpGet]
-        public IActionResult SatinAlma() => View();
+                [HttpGet]
+        public async Task<IActionResult> SatinAlma()
+        {
+            var model = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "SatinAlma")
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+            ViewBag.SayfaKey = "SatinAlma";
+            ViewBag.SayfaBaslik = "SatÄ±n Alma YÃ¶netimi";
+            return View("GenericSekmeYonetim", model);
+        }
 
         // ==========================================
-        // DÝNAMÝK MENÜ YÖNETÝMÝ
+        // DÄ°NAMÄ°K MENÃœ YÃ–NETÄ°MÄ°
         // ==========================================
 
         [HttpPost]
@@ -330,7 +436,7 @@ namespace GaziHastane.Areas.Admin.Controllers
                 return View(model);
             }
 
-            // URL boþ býrakýlýrsa otomatik dinamik kurumsal sayfa URL'si üret
+            // URL boÅŸ bÄ±rakÄ±lÄ±rsa otomatik dinamik kurumsal sayfa URL'si Ã¼ret
             if (string.IsNullOrWhiteSpace(model.Url))
             {
                 var slugFromTitle = Slugify(model.Baslik);
@@ -342,10 +448,10 @@ namespace GaziHastane.Areas.Admin.Controllers
 
             await _context.SaveChangesAsync();
 
-            // Menü kaydý sonrasý ilgili sayfa kaydý yoksa otomatik oluþtur
+            // MenÃ¼ kaydÄ± sonrasÄ± ilgili sayfa kaydÄ± yoksa otomatik oluÅŸtur
             await EnsureKurumsalSayfaForMenuAsync(model);
 
-            TempData["Success"] = "Menü kaydedildi.";
+            TempData["Success"] = "MenÃ¼ kaydedildi.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -364,7 +470,7 @@ namespace GaziHastane.Areas.Admin.Controllers
                 {
                     Slug = slug,
                     Baslik = menu.Baslik,
-                    Icerik = "<p>Bu sayfa içeriðini buradan düzenleyebilirsiniz.</p>",
+                    Icerik = "<p>Bu sayfa iÃ§eriÄŸini buradan dÃ¼zenleyebilirsiniz.</p>",
                     AktifMi = true,
                     GuncellemeZamani = DateTime.UtcNow
                 };
@@ -395,7 +501,7 @@ namespace GaziHastane.Areas.Admin.Controllers
             sayfa.GuncellemeZamani = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
-            TempData["Success"] = "Sayfa içeriði güncellendi.";
+            TempData["Success"] = "Sayfa iÃ§eriÄŸi gÃ¼ncellendi.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -423,7 +529,7 @@ namespace GaziHastane.Areas.Admin.Controllers
             {
                 Slug = slug,
                 Baslik = menu.Baslik,
-                Icerik = "<p>Bu sayfa içeriðini buradan düzenleyebilirsiniz.</p>",
+                Icerik = "<p>Bu sayfa iÃ§eriÄŸini buradan dÃ¼zenleyebilirsiniz.</p>",
                 AktifMi = true,
                 GuncellemeZamani = DateTime.UtcNow
             };
@@ -454,12 +560,12 @@ namespace GaziHastane.Areas.Admin.Controllers
             if (string.IsNullOrWhiteSpace(text)) return "sayfa";
 
             text = text.Trim().ToLowerInvariant()
-                .Replace('ç', 'c')
-                .Replace('ð', 'g')
-                .Replace('ý', 'i')
-                .Replace('ö', 'o')
-                .Replace('þ', 's')
-                .Replace('ü', 'u');
+                .Replace('Ã§', 'c')
+                .Replace('ÄŸ', 'g')
+                .Replace('Ä±', 'i')
+                .Replace('Ã¶', 'o')
+                .Replace('ÅŸ', 's')
+                .Replace('Ã¼', 'u');
 
             var sb = new StringBuilder();
             var prevDash = false;
@@ -479,6 +585,57 @@ namespace GaziHastane.Areas.Admin.Controllers
             }
 
             return sb.ToString().Trim('-');
+        }
+
+        // ==========================================
+        // GENEL KURUMSAL SEKME YÃ–NETÄ°MÄ°
+        // ==========================================
+
+        [HttpGet]
+        public async Task<IActionResult> Hakkimizda()
+        {
+            var model = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "hakkimizda")
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+            
+            ViewBag.SayfaKey = "hakkimizda";
+            ViewBag.SayfaBaslik = "HakkÄ±mÄ±zda SayfasÄ± YÃ¶netimi";
+            return View("GenericSekmeYonetim", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> KurumsalSekmeKaydet(KurumsalSekme model)
+        {
+            model.Baslik ??= "";
+            model.SekmeId ??= "";
+            model.Icerik ??= "";
+            model.IconClass ??= "";
+            model.SayfaKey ??= "";
+
+            if (model.Id == 0) _context.KurumsalSekmeler.Add(model);
+            else _context.KurumsalSekmeler.Update(model);
+            
+            await _context.SaveChangesAsync();
+            TempData["Success"] = "DeÄŸiÅŸiklikler kaydedildi.";
+            return RedirectToAction(model.SayfaKey);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> KurumsalSekmeSil(int id)
+        {
+            var item = await _context.KurumsalSekmeler.FindAsync(id);
+            if (item != null)
+            {
+                var sayfaKey = item.SayfaKey;
+                _context.KurumsalSekmeler.Remove(item);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "KayÄ±t silindi.";
+                return RedirectToAction(sayfaKey);
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

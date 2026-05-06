@@ -802,6 +802,35 @@ namespace GaziHastane.Models
         public bool IsActive { get; set; } = true;
     }
 
+    [Table("KurumsalSekmeler")]
+    public class KurumsalSekme
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string Baslik { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(100)]
+        public string SekmeId { get; set; } = string.Empty;
+
+        public string? Icerik { get; set; }
+
+        [StringLength(100)]
+        public string? IconClass { get; set; }
+
+        public int Sira { get; set; } = 99;
+
+        public bool AktifMi { get; set; } = true;
+
+        [Required]
+        [StringLength(50)]
+        public string SayfaKey { get; set; } = string.Empty;
+    }
+
     [Table("AdminMenuItems")]
     public class AdminMenuItem
     {

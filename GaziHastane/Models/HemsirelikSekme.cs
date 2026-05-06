@@ -13,7 +13,7 @@ namespace GaziHastane.Models
         [Required]
         public string SekmeId { get; set; }
 
-        public string IconClass { get; set; }
+        public string? IconClass { get; set; }
 
         public int Sira { get; set; }
 

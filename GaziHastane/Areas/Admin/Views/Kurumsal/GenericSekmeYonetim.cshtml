@@ -1,0 +1,7 @@
+﻿@model List<GaziHastane.Models.KurumsalSekme>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = ViewBag.SayfaBaslik;
+}
+
+@await Html.PartialAsync("_SekmeYonetim", Model)
