@@ -29,7 +29,7 @@ namespace GaziHastane.Areas.Admin.Controllers
 
         // --- BLOK ---
         [HttpGet]
-        public async Task<IActionResult> BlokEkle() => View("BlokForm", new KrokiBlok { Renk = "#0ea5e9" });
+        public IActionResult BlokEkle() => View("BlokForm", new KrokiBlok { Renk = "#0ea5e9" });
 
         [HttpGet]
         public async Task<IActionResult> BlokDuzenle(int id)
@@ -66,7 +66,7 @@ namespace GaziHastane.Areas.Admin.Controllers
 
         // --- KAT ---
         [HttpGet]
-        public async Task<IActionResult> KatEkle(int blokId) => View("KatForm", new KrokiKat { BlokId = blokId });
+        public IActionResult KatEkle(int blokId) => View("KatForm", new KrokiKat { BlokId = blokId });
 
         [HttpGet]
         public async Task<IActionResult> KatDuzenle(int id)
@@ -103,7 +103,7 @@ namespace GaziHastane.Areas.Admin.Controllers
 
         // --- BÖLÜM ---
         [HttpGet]
-        public async Task<IActionResult> BolumEkle(int katId) => View("BolumForm", new KrokiBolum { KatId = katId, Ikon = "fa-door-closed" });
+        public IActionResult BolumEkle(int katId) => View("BolumForm", new KrokiBolum { KatId = katId, Ikon = "fa-door-closed" });
 
         [HttpGet]
         public async Task<IActionResult> BolumDuzenle(int id)

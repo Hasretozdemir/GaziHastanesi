@@ -1,6 +1,7 @@
-using GaziHastane.Data;
+﻿﻿using GaziHastane.Data;
 using GaziHastane.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
@@ -12,10 +13,12 @@ namespace GaziHastane.Areas.Admin.Controllers
     public class KurumsalController : Controller
     {
         private readonly GaziHastaneContext _context;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public KurumsalController(GaziHastaneContext context)
+        public KurumsalController(GaziHastaneContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            _hostEnvironment = hostEnvironment;
         }
 
         public async Task<IActionResult> Index()
@@ -64,10 +67,13 @@ namespace GaziHastane.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> ArsivBirimi()
         {
-            var sekmeler = await _context.ArsivSekmeler
-                                         .OrderBy(x => x.SiraNo)
-                                         .ToListAsync();
-            return View(sekmeler);
+            var model = await _context.KurumsalIcerikler
+                .Where(x => x.SayfaKey == "ArsivBirimi")
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+            ViewBag.SayfaKey = "ArsivBirimi";
+            ViewBag.SayfaBaslik = "Arşiv Birimi Yönetimi";
+            return View("OrganizasyonSemalari", model);
         }
 
         [HttpGet]
@@ -130,19 +136,50 @@ namespace GaziHastane.Areas.Admin.Controllers
         // DİĞER SABİT SAYFALAR
         // ==========================================
 
-                [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> BasinVeKurumsalIletisim()
         {
-            var model = await _context.KurumsalSekmeler
-                .Where(x => x.SayfaKey == "BasinVeKurumsalIletisim")
-                .OrderBy(x => x.Sira)
-                .ToListAsync();
-            ViewBag.SayfaKey = "BasinVeKurumsalIletisim";
-            ViewBag.SayfaBaslik = "Basın ve Kurumsal İletişim Yönetimi";
-            return View("GenericSekmeYonetim", model);
+            var model = await _context.BasinKurumsalIletisimler.FirstOrDefaultAsync();
+            if (model == null)
+            {
+                model = new BasinKurumsalIletisim 
+                { 
+                    Baslik = "Basın ve Kurumsal İletişim Birimi",
+                    Aciklama = "",
+                    Telefon = "",
+                    Email = "",
+                    Lokasyon = ""
+                };
+            }
+            return View("BasinKurumsalIletisimForm", model);
         }
 
-                [HttpGet]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BasinVeKurumsalIletisimKaydet(BasinKurumsalIletisim model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("BasinKurumsalIletisimForm", model);
+            }
+
+            model.SonGuncelleme = DateTime.UtcNow;
+
+            if (model.Id == 0)
+            {
+                _context.BasinKurumsalIletisimler.Add(model);
+            }
+            else
+            {
+                _context.BasinKurumsalIletisimler.Update(model);
+            }
+
+            await _context.SaveChangesAsync();
+            TempData["Success"] = "Basın ve Kurumsal İletişim bilgileri başarıyla kaydedildi.";
+            return RedirectToAction(nameof(BasinVeKurumsalIletisim));
+        }
+
+        [HttpGet]
         public async Task<IActionResult> BilgiIslemMerkezi()
         {
             var model = await _context.KurumsalSekmeler
@@ -157,37 +194,43 @@ namespace GaziHastane.Areas.Admin.Controllers
                 [HttpGet]
         public async Task<IActionResult> EczacilikHizmetleri()
         {
-            var model = await _context.KurumsalSekmeler
+            var model = await _context.KurumsalIcerikler
                 .Where(x => x.SayfaKey == "EczacilikHizmetleri")
                 .OrderBy(x => x.Sira)
                 .ToListAsync();
             ViewBag.SayfaKey = "EczacilikHizmetleri";
             ViewBag.SayfaBaslik = "Eczacılık Hizmetleri Yönetimi";
-            return View("GenericSekmeYonetim", model);
+            return View("OrganizasyonSemalari", model);
         }
 
                 [HttpGet]
         public async Task<IActionResult> EnfeksiyonKontrol()
         {
-            var model = await _context.KurumsalSekmeler
+            var icerikler = await _context.KurumsalIcerikler
                 .Where(x => x.SayfaKey == "EnfeksiyonKontrol")
                 .OrderBy(x => x.Sira)
                 .ToListAsync();
+
+            ViewBag.Sekmeler = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "EnfeksiyonKontrol")
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
             ViewBag.SayfaKey = "EnfeksiyonKontrol";
             ViewBag.SayfaBaslik = "Enfeksiyon Kontrol Yönetimi";
-            return View("GenericSekmeYonetim", model);
+            return View("EnfeksiyonKontrol", icerikler);
         }
 
                 [HttpGet]
         public async Task<IActionResult> HastaIletisimBirimi()
         {
-            var model = await _context.KurumsalSekmeler
+            var model = await _context.KurumsalIcerikler
                 .Where(x => x.SayfaKey == "HastaIletisimBirimi")
                 .OrderBy(x => x.Sira)
                 .ToListAsync();
             ViewBag.SayfaKey = "HastaIletisimBirimi";
             ViewBag.SayfaBaslik = "Hasta İletişim Birimi Yönetimi";
-            return View("GenericSekmeYonetim", model);
+            return View("OrganizasyonSemalari", model);
         }
 
         // ==========================================
@@ -337,13 +380,13 @@ namespace GaziHastane.Areas.Admin.Controllers
                 [HttpGet]
         public async Task<IActionResult> IsAkisSemalari()
         {
-            var model = await _context.KurumsalSekmeler
+            var model = await _context.KurumsalIcerikler
                 .Where(x => x.SayfaKey == "IsAkisSemalari")
                 .OrderBy(x => x.Sira)
                 .ToListAsync();
             ViewBag.SayfaKey = "IsAkisSemalari";
             ViewBag.SayfaBaslik = "İş Akış Şemaları Yönetimi";
-            return View("GenericSekmeYonetim", model);
+            return View("OrganizasyonSemalari", model);
         }
 
                 [HttpGet]
@@ -361,37 +404,38 @@ namespace GaziHastane.Areas.Admin.Controllers
                 [HttpGet]
         public async Task<IActionResult> IstatistikVeRaporlama()
         {
-            var model = await _context.KurumsalSekmeler
+            var model = await _context.KurumsalIcerikler
                 .Where(x => x.SayfaKey == "IstatistikVeRaporlama")
                 .OrderBy(x => x.Sira)
                 .ToListAsync();
             ViewBag.SayfaKey = "IstatistikVeRaporlama";
             ViewBag.SayfaBaslik = "İstatistik ve Raporlama Yönetimi";
-            return View("GenericSekmeYonetim", model);
+            return View("OrganizasyonSemalari", model);
         }
 
-                [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> OrganizasyonSemalari()
         {
-            var model = await _context.KurumsalSekmeler
+            var model = await _context.KurumsalIcerikler
                 .Where(x => x.SayfaKey == "OrganizasyonSemalari")
                 .OrderBy(x => x.Sira)
                 .ToListAsync();
+
             ViewBag.SayfaKey = "OrganizasyonSemalari";
             ViewBag.SayfaBaslik = "Organizasyon Şemaları Yönetimi";
-            return View("GenericSekmeYonetim", model);
+            return View(model);
         }
 
                 [HttpGet]
         public async Task<IActionResult> SatinAlma()
         {
-            var model = await _context.KurumsalSekmeler
+            var model = await _context.KurumsalIcerikler
                 .Where(x => x.SayfaKey == "SatinAlma")
                 .OrderBy(x => x.Sira)
                 .ToListAsync();
             ViewBag.SayfaKey = "SatinAlma";
             ViewBag.SayfaBaslik = "Satın Alma Yönetimi";
-            return View("GenericSekmeYonetim", model);
+            return View("OrganizasyonSemalari", model);
         }
 
         // ==========================================
@@ -560,12 +604,18 @@ namespace GaziHastane.Areas.Admin.Controllers
             if (string.IsNullOrWhiteSpace(text)) return "sayfa";
 
             text = text.Trim().ToLowerInvariant()
-                .Replace('ç', 'c')
-                .Replace('ğ', 'g')
-                .Replace('ı', 'i')
-                .Replace('ö', 'o')
-                .Replace('ş', 's')
-                .Replace('ü', 'u');
+                .Replace("c", "c")
+                .Replace("g", "g")
+                .Replace("i", "i")
+                .Replace("o", "o")
+                .Replace("s", "s")
+                .Replace("u", "u")
+                .Replace("C", "c")
+                .Replace("G", "g")
+                .Replace("I", "i")
+                .Replace("O", "o")
+                .Replace("S", "s")
+                .Replace("U", "u");
 
             var sb = new StringBuilder();
             var prevDash = false;
@@ -636,6 +686,117 @@ namespace GaziHastane.Areas.Admin.Controllers
                 return RedirectToAction(sayfaKey);
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> KurumsalIcerikKaydet(KurumsalIcerik model, IFormFile? FormDosyasi, string? ExistingMedya)
+        {
+            model.SayfaKey ??= "";
+            model.Kategori ??= "";
+            model.IcerikTipi = string.IsNullOrWhiteSpace(model.IcerikTipi) ? "Form" : model.IcerikTipi.Trim();
+            model.Baslik ??= "";
+            model.AltBaslik ??= "";
+            model.Aciklama ??= "";
+            model.MedyaYolu ??= ExistingMedya ?? "";
+            model.VideoUrl = string.IsNullOrWhiteSpace(model.VideoUrl) ? "" : model.VideoUrl.Trim();
+
+            if (model.IcerikTipi.Equals("Video", StringComparison.OrdinalIgnoreCase) && string.IsNullOrWhiteSpace(model.VideoUrl))
+            {
+                TempData["Error"] = "Video içerikleri için video URL zorunludur.";
+                return RedirectToAction(model.SayfaKey);
+            }
+
+            if (!model.IcerikTipi.Equals("Video", StringComparison.OrdinalIgnoreCase))
+            {
+                model.VideoUrl = "";
+            }
+
+            // Dosya yüklenmişse işle
+            if (FormDosyasi != null && FormDosyasi.Length > 0)
+            {
+                try
+                {
+                    // Yükleme klasörünü oluştur
+                    string uploadsFolder = Path.Combine(_hostEnvironment.WebRootPath, "uploads", "forms");
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+
+                    // Dosya adını güvenli hale getir (timestamp ekle)
+                    string fileName = Path.GetFileNameWithoutExtension(FormDosyasi.FileName);
+                    string fileExtension = Path.GetExtension(FormDosyasi.FileName);
+                    string uniqueFileName = $"{fileName}_{DateTime.Now:yyyyMMdd_HHmmss}{fileExtension}";
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    // Dosyayı kaydet
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await FormDosyasi.CopyToAsync(fileStream);
+                    }
+
+                    // Veritabanında tutulacak yolu ayarla (web root'tan itibaren)
+                    model.MedyaYolu = $"/uploads/forms/{uniqueFileName}";
+                }
+                catch
+                {
+                    TempData["Error"] = "Dosya yüklenirken hata oluştu.";
+                    return RedirectToAction(model.SayfaKey);
+                }
+            }
+
+            if (model.Id == 0) _context.KurumsalIcerikler.Add(model);
+            else _context.KurumsalIcerikler.Update(model);
+            
+            await _context.SaveChangesAsync();
+            TempData["Success"] = "Değişiklikler kaydedildi.";
+            return RedirectToAction(model.SayfaKey);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> KurumsalIcerikSil(int id)
+        {
+            var item = await _context.KurumsalIcerikler.FindAsync(id);
+            if (item != null)
+            {
+                var sayfaKey = item.SayfaKey;
+                
+                // Dosya varsa sil
+                if (!string.IsNullOrWhiteSpace(item.MedyaYolu) && item.MedyaYolu.StartsWith("/uploads/forms/"))
+                {
+                    try
+                    {
+                        string filePath = Path.Combine(_hostEnvironment.WebRootPath, item.MedyaYolu.TrimStart('/'));
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            System.IO.File.Delete(filePath);
+                        }
+                    }
+                    catch
+                    {
+                        // Dosya silinmezse de kayıt silmeye devam et
+                    }
+                }
+                
+                _context.KurumsalIcerikler.Remove(item);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Kayıt silindi.";
+                return RedirectToAction(sayfaKey);
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetIcerikler(string sayfaKey, string kategori)
+        {
+            var icerikler = await _context.KurumsalIcerikler
+                .Where(x => x.SayfaKey == sayfaKey && x.Kategori == kategori && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            return PartialView("_IcerikListesi", icerikler);
         }
     }
 }

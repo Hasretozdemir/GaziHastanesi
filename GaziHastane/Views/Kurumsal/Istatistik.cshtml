@@ -1,11 +1,11 @@
 @{
-    ViewData["Title"] = "Ýstatistik ve Raporlama Hizmetleri - Kurumsal Bilgi Sistemi";
+    ViewData["Title"] = "ï¿½statistik ve Raporlama Hizmetleri - Kurumsal Bilgi Sistemi";
 }
 
 @section Scripts {
     <style>
         /* ==========================================
-                   1. GENEL ANÝMASYONLAR VE YAPI
+                   1. GENEL ANï¿½MASYONLAR VE YAPI
                    ========================================== */
         .page-fade-in {
             animation: fadeInPage 0.6s ease-out forwards;
@@ -25,7 +25,7 @@
         }
 
         /* ==========================================
-                   2. YAN MENÜ (SIDEBAR) DÜZELTME STÝLLERÝ
+                   2. YAN MENï¿½ (SIDEBAR) Dï¿½ZELTME STï¿½LLERï¿½
                    ========================================== */
         .sidebar-link {
             transition: all 0.2s ease;
@@ -81,7 +81,7 @@
         }
 
         /* ==========================================
-                   3. ÝÇ MENÜ (SEKMELER)
+                   3. ï¿½ï¿½ MENï¿½ (SEKMELER)
                    ========================================== */
         @@media (max-width: 1279px) {
             .mobile-tab-menu {
@@ -143,7 +143,7 @@
             }
 
         /* ==========================================
-                   4. ÝÇERÝK ANÝMASYONLARI VE KARTLAR
+                   4. ï¿½ï¿½ERï¿½K ANï¿½MASYONLARI VE KARTLAR
                    ========================================== */
         .tab-content {
             display: none;
@@ -215,29 +215,29 @@
                 <i class="fa-solid fa-chevron-right text-[8px]"></i>
                 <span>Kurumsal</span>
                 <i class="fa-solid fa-chevron-right text-[8px]"></i>
-                <span class="text-blue-600">Ýstatistik ve Raporlama</span>
+                <span class="text-blue-600">ï¿½statistik ve Raporlama</span>
             </nav>
 
             <div class="flex flex-col xl:flex-row gap-6 items-start">
 
                 <div class="mobile-tab-menu w-full xl:w-72 flex-shrink-0 space-y-2 bg-white p-4 rounded-[1.75rem] border border-slate-100" style="box-shadow: 0 4px 24px rgba(0,0,0,0.03);">
-                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-2">Ýçerik Menüsü</p>
+                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-2">ï¿½ï¿½erik Menï¿½sï¿½</p>
 
                     <button onclick="openTab(event, 'genel-bilgi')" class="sub-menu-btn active">
-                        <i class="fa-solid fa-chart-pie w-5 text-center"></i> Hakkýmýzda
+                        <i class="fa-solid fa-chart-pie w-5 text-center"></i> Hakkï¿½mï¿½zda
                     </button>
 
-                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2 mt-4 ml-2">Akademik & Araþtýrma</p>
+                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2 mt-4 ml-2">Akademik & Araï¿½tï¿½rma</p>
                     <button onclick="openTab(event, 'veri-talep')" class="sub-menu-btn">
                         <i class="fa-solid fa-file-waveform w-5 text-center"></i> Veri Talep Formu
                     </button>
                     <button onclick="openTab(event, 'gizlilik-sozlesmesi')" class="sub-menu-btn">
-                        <i class="fa-solid fa-user-shield w-5 text-center"></i> Gizlilik Sözleþmesi
+                        <i class="fa-solid fa-user-shield w-5 text-center"></i> Gizlilik Sï¿½zleï¿½mesi
                     </button>
 
-                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2 mt-4 ml-2">Süreç Yönetimi</p>
+                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2 mt-4 ml-2">Sï¿½reï¿½ Yï¿½netimi</p>
                     <button onclick="openTab(event, 'akis-semasi')" class="sub-menu-btn">
-                        <i class="fa-solid fa-diagram-project w-5 text-center"></i> Ýþ Akýþ Þemasý
+                        <i class="fa-solid fa-diagram-project w-5 text-center"></i> ï¿½ï¿½ Akï¿½ï¿½ ï¿½emasï¿½
                     </button>
                 </div>
 
@@ -246,41 +246,41 @@
                     <div id="genel-bilgi" class="tab-content active">
                         <div class="flex items-center gap-3 mb-6">
                             <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Ýstatistik ve Raporlama Hizmetleri</h2>
+                            <h2 class="text-2xl font-black text-slate-800">ï¿½statistik ve Raporlama Hizmetleri</h2>
                         </div>
 
                         <div class="bg-gradient-to-r from-violet-50 to-fuchsia-50 p-6 rounded-2xl border border-violet-100 mb-8">
-                            <p class="text-slate-700 leading-relaxed font-medium">Gazi Üniversitesi Hastanesi Ýstatistik ve Raporlama Birimi; hastanemizin týbbi ve idari performans verilerini toplamak, analiz etmek, karar destek sistemleri için raporlar üretmek ve Saðlýk Bakanlýðý'na bildirilmesi zorunlu verilerin (TSÝM vb.) zamanýnda ve eksiksiz olarak aktarýmýný saðlamakla görevlidir.</p>
+                            <p class="text-slate-700 leading-relaxed font-medium">Gazi ï¿½niversitesi Hastanesi ï¿½statistik ve Raporlama Birimi; hastanemizin tï¿½bbi ve idari performans verilerini toplamak, analiz etmek, karar destek sistemleri iï¿½in raporlar ï¿½retmek ve Saï¿½lï¿½k Bakanlï¿½ï¿½ï¿½'na bildirilmesi zorunlu verilerin (TSï¿½M vb.) zamanï¿½nda ve eksiksiz olarak aktarï¿½mï¿½nï¿½ saï¿½lamakla gï¿½revlidir.</p>
                         </div>
 
-                        <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-column text-violet-600"></i> Temel Faaliyet Alanlarýmýz</h3>
+                        <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-column text-violet-600"></i> Temel Faaliyet Alanlarï¿½mï¿½z</h3>
                         <div class="grid sm:grid-cols-2 gap-4">
                             <div class="tech-card flex items-start gap-3">
                                 <i class="fa-solid fa-building-columns text-violet-600 mt-1"></i>
                                 <div>
-                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Bakanlýk Bildirimleri</h4>
-                                    <p class="text-xs text-slate-600">Saðlýk Bakanlýðý Temel Saðlýk Ýstatistikleri Modülü (TSÝM) ile Ýl Saðlýk Müdürlüðüne periyodik olarak yatan/ayaktan hasta, ameliyat ve yatak doluluk verilerinin bildirilmesi.</p>
+                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Bakanlï¿½k Bildirimleri</h4>
+                                    <p class="text-xs text-slate-600">Saï¿½lï¿½k Bakanlï¿½ï¿½ï¿½ Temel Saï¿½lï¿½k ï¿½statistikleri Modï¿½lï¿½ (TSï¿½M) ile ï¿½l Saï¿½lï¿½k Mï¿½dï¿½rlï¿½ï¿½ï¿½ne periyodik olarak yatan/ayaktan hasta, ameliyat ve yatak doluluk verilerinin bildirilmesi.</p>
                                 </div>
                             </div>
                             <div class="tech-card flex items-start gap-3">
                                 <i class="fa-solid fa-magnifying-glass-chart text-violet-600 mt-1"></i>
                                 <div>
                                     <h4 class="font-bold text-slate-800 text-sm mb-1">Performans ve Kalite Verileri</h4>
-                                    <p class="text-xs text-slate-600">Hastanemizin genel týbbi hizmet göstergelerinin (mortalite oranlarý, yatýþ süreleri, ameliyat sayýlarý vb.) analiz edilerek Baþhekimliðe ve Kalite birimine raporlanmasý.</p>
+                                    <p class="text-xs text-slate-600">Hastanemizin genel tï¿½bbi hizmet gï¿½stergelerinin (mortalite oranlarï¿½, yatï¿½ï¿½ sï¿½releri, ameliyat sayï¿½larï¿½ vb.) analiz edilerek Baï¿½hekimliï¿½e ve Kalite birimine raporlanmasï¿½.</p>
                                 </div>
                             </div>
                             <div class="tech-card flex items-start gap-3">
                                 <i class="fa-solid fa-microscope text-violet-600 mt-1"></i>
                                 <div>
-                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Akademik Araþtýrma Desteði</h4>
-                                    <p class="text-xs text-slate-600">Öðretim üyelerimiz ve asistan hekimlerimizin týbbi uzmanlýk tezleri ile geriye dönük (retrospektif) akademik yayýnlarý için HBYS üzerinden etik kurul onaylý veri sorgulamalarýnýn yapýlmasý.</p>
+                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Akademik Araï¿½tï¿½rma Desteï¿½i</h4>
+                                    <p class="text-xs text-slate-600">ï¿½ï¿½retim ï¿½yelerimiz ve asistan hekimlerimizin tï¿½bbi uzmanlï¿½k tezleri ile geriye dï¿½nï¿½k (retrospektif) akademik yayï¿½nlarï¿½ iï¿½in HBYS ï¿½zerinden etik kurul onaylï¿½ veri sorgulamalarï¿½nï¿½n yapï¿½lmasï¿½.</p>
                                 </div>
                             </div>
                             <div class="tech-card flex items-start gap-3">
                                 <i class="fa-solid fa-viruses text-violet-600 mt-1"></i>
                                 <div>
-                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Bulaþýcý Hastalýk Ýstatistikleri</h4>
-                                    <p class="text-xs text-slate-600">Bildirimi zorunlu hastalýk formlarýnýn (Form 014 vb.) günlük takibi ve ilgili birimlerle (Enfeksiyon Kontrol Komitesi) koordineli þekilde resmi kurumlara raporlanmasý.</p>
+                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Bulaï¿½ï¿½cï¿½ Hastalï¿½k ï¿½statistikleri</h4>
+                                    <p class="text-xs text-slate-600">Bildirimi zorunlu hastalï¿½k formlarï¿½nï¿½n (Form 014 vb.) gï¿½nlï¿½k takibi ve ilgili birimlerle (Enfeksiyon Kontrol Komitesi) koordineli ï¿½ekilde resmi kurumlara raporlanmasï¿½.</p>
                                 </div>
                             </div>
                         </div>
@@ -289,75 +289,75 @@
                     <div id="veri-talep" class="tab-content">
                         <div class="flex items-center gap-3 mb-8">
                             <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Retrospektif Araþtýrmalar Ýçin Veri Talep Formu</h2>
+                            <h2 class="text-2xl font-black text-slate-800">Retrospektif Araï¿½tï¿½rmalar ï¿½ï¿½in Veri Talep Formu</h2>
                         </div>
 
                         <div class="bg-blue-50 border border-blue-100 rounded-2xl p-6 mb-6">
                             <div class="flex items-start gap-4">
                                 <i class="fa-solid fa-circle-info text-blue-600 text-2xl mt-1"></i>
                                 <div>
-                                    <h4 class="font-bold text-slate-800 text-sm mb-2">Bilimsel Araþtýrmacýlarýmýzýn Dikkatine</h4>
-                                    <p class="text-slate-600 text-sm leading-relaxed mb-4">Hastanemiz bilgi yönetim sistemi (HBYS) üzerinden geriye dönük hasta ve iþlem verilerinin çekilebilmesi için ilgili araþtýrmanýn <strong>Etik Kurul Onay Belgesi</strong>'nin bulunmasý zorunludur. Formu eksiksiz doldurarak Baþhekimlik onayý ile birimimize baþvurmanýz gerekmektedir.</p>
+                                    <h4 class="font-bold text-slate-800 text-sm mb-2">Bilimsel Araï¿½tï¿½rmacï¿½larï¿½mï¿½zï¿½n Dikkatine</h4>
+                                    <p class="text-slate-600 text-sm leading-relaxed mb-4">Hastanemiz bilgi yï¿½netim sistemi (HBYS) ï¿½zerinden geriye dï¿½nï¿½k hasta ve iï¿½lem verilerinin ï¿½ekilebilmesi iï¿½in ilgili araï¿½tï¿½rmanï¿½n <strong>Etik Kurul Onay Belgesi</strong>'nin bulunmasï¿½ zorunludur. Formu eksiksiz doldurarak Baï¿½hekimlik onayï¿½ ile birimimize baï¿½vurmanï¿½z gerekmektedir.</p>
 
                                     <a href="#" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-bold text-sm transition shadow-sm">
-                                        <i class="fa-solid fa-download"></i> Veri Talep Formunu Ýndir (Word)
+                                        <i class="fa-solid fa-download"></i> Veri Talep Formunu ï¿½ndir (Word)
                                     </a>
                                 </div>
                             </div>
                         </div>
 
-                        <h4 class="font-bold text-slate-800 text-sm mb-3 ml-1">Sürecin Ýþleyiþi</h4>
+                        <h4 class="font-bold text-slate-800 text-sm mb-3 ml-1">Sï¿½recin ï¿½ï¿½leyiï¿½i</h4>
                         <ol class="list-decimal list-inside space-y-2 text-sm text-slate-600 font-medium ml-1">
-                            <li>Etik Kurul Onayýnýn alýnmasý.</li>
-                            <li>Veri Talep Formu ve Personel Gizlilik Sözleþmesi'nin doldurulmasý.</li>
-                            <li>Baþhekimlik evrak kayýttan belgelerin geçirilmesi.</li>
-                            <li>Ýstatistik ve Raporlama Birimine teslim edilmesi.</li>
-                            <li>Talebin yoðunluða göre 7-14 iþ günü içerisinde hazýrlanýp Excel formatýnda araþtýrmacýya teslim edilmesi.</li>
+                            <li>Etik Kurul Onayï¿½nï¿½n alï¿½nmasï¿½.</li>
+                            <li>Veri Talep Formu ve Personel Gizlilik Sï¿½zleï¿½mesi'nin doldurulmasï¿½.</li>
+                            <li>Baï¿½hekimlik evrak kayï¿½ttan belgelerin geï¿½irilmesi.</li>
+                            <li>ï¿½statistik ve Raporlama Birimine teslim edilmesi.</li>
+                            <li>Talebin yoï¿½unluï¿½a gï¿½re 7-14 iï¿½ gï¿½nï¿½ iï¿½erisinde hazï¿½rlanï¿½p Excel formatï¿½nda araï¿½tï¿½rmacï¿½ya teslim edilmesi.</li>
                         </ol>
                     </div>
 
                     <div id="gizlilik-sozlesmesi" class="tab-content">
                         <div class="flex items-center gap-3 mb-8">
                             <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Personel Gizlilik Sözleþmesi</h2>
+                            <h2 class="text-2xl font-black text-slate-800">Personel Gizlilik Sï¿½zleï¿½mesi</h2>
                         </div>
 
-                        <p class="text-slate-600 leading-relaxed font-medium mb-6">6698 Sayýlý Kiþisel Verilerin Korunmasý Kanunu (KVKK) ve Hasta Haklarý Yönetmeliði gereðince; hastalarýmýza ait her türlü týbbi ve kiþisel veri <strong>mahremdir</strong>. Araþtýrma amacýyla veri talep eden tüm personelin bu gizlilik sözleþmesini imzalamasý zorunludur.</p>
+                        <p class="text-slate-600 leading-relaxed font-medium mb-6">6698 Sayï¿½lï¿½ Kiï¿½isel Verilerin Korunmasï¿½ Kanunu (KVKK) ve Hasta Haklarï¿½ Yï¿½netmeliï¿½i gereï¿½ince; hastalarï¿½mï¿½za ait her tï¿½rlï¿½ tï¿½bbi ve kiï¿½isel veri <strong>mahremdir</strong>. Araï¿½tï¿½rma amacï¿½yla veri talep eden tï¿½m personelin bu gizlilik sï¿½zleï¿½mesini imzalamasï¿½ zorunludur.</p>
 
                         <div class="grid sm:grid-cols-2 gap-4">
                             <div class="border border-slate-200 p-5 rounded-xl bg-white shadow-sm flex flex-col items-center text-center">
                                 <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center text-2xl mb-4">
                                     <i class="fa-solid fa-file-pdf"></i>
                                 </div>
-                                <h4 class="font-bold text-slate-800 text-sm mb-2">Gizlilik Sözleþmesi (PDF)</h4>
-                                <p class="text-xs text-slate-500 mb-4">Yazdýrýp ýslak imza ile teslim edilecek versiyon.</p>
-                                <button class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 rounded-lg transition text-sm">PDF Ýndir</button>
+                                <h4 class="font-bold text-slate-800 text-sm mb-2">Gizlilik Sï¿½zleï¿½mesi (PDF)</h4>
+                                <p class="text-xs text-slate-500 mb-4">Yazdï¿½rï¿½p ï¿½slak imza ile teslim edilecek versiyon.</p>
+                                <button class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 rounded-lg transition text-sm">PDF ï¿½ndir</button>
                             </div>
                             <div class="border border-slate-200 p-5 rounded-xl bg-white shadow-sm flex flex-col items-center text-center">
                                 <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl mb-4">
                                     <i class="fa-solid fa-file-word"></i>
                                 </div>
-                                <h4 class="font-bold text-slate-800 text-sm mb-2">Gizlilik Sözleþmesi (Word)</h4>
-                                <p class="text-xs text-slate-500 mb-4">Bilgisayar ortamýnda doldurabilir versiyon.</p>
-                                <button class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 rounded-lg transition text-sm">Word Ýndir</button>
+                                <h4 class="font-bold text-slate-800 text-sm mb-2">Gizlilik Sï¿½zleï¿½mesi (Word)</h4>
+                                <p class="text-xs text-slate-500 mb-4">Bilgisayar ortamï¿½nda doldurabilir versiyon.</p>
+                                <button class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 rounded-lg transition text-sm">Word ï¿½ndir</button>
                             </div>
                         </div>
 
                         <div class="mt-6 p-4 bg-amber-50 border border-amber-100 rounded-xl flex items-start gap-3">
                             <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5"></i>
-                            <p class="text-sm text-amber-800 font-medium">Lütfen dikkat: Etik kurul onayý olmaksýzýn sadece klinik þefinin onayý ile hasta isim, soyisim ve TC Kimlik numaralarýný içeren açýk veri <strong>kesinlikle paylaþýlmamaktadýr.</strong></p>
+                            <p class="text-sm text-amber-800 font-medium">Lï¿½tfen dikkat: Etik kurul onayï¿½ olmaksï¿½zï¿½n sadece klinik ï¿½efinin onayï¿½ ile hasta isim, soyisim ve TC Kimlik numaralarï¿½nï¿½ iï¿½eren aï¿½ï¿½k veri <strong>kesinlikle paylaï¿½ï¿½lmamaktadï¿½r.</strong></p>
                         </div>
                     </div>
 
                     <div id="akis-semasi" class="tab-content">
                         <div class="flex items-center gap-3 mb-8">
                             <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Ýstatistik ve Raporlama Birimi Akýþ Þemasý</h2>
+                            <h2 class="text-2xl font-black text-slate-800">ï¿½statistik ve Raporlama Birimi Akï¿½ï¿½ ï¿½emasï¿½</h2>
                         </div>
-                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Birimimizin Saðlýk Bakanlýðý veri gönderimleri ve akademik veri hazýrlama süreçlerine ait genel iþleyiþ akýþ þemasý aþaðýda yer almaktadýr.</p>
+                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Birimimizin Saï¿½lï¿½k Bakanlï¿½ï¿½ï¿½ veri gï¿½nderimleri ve akademik veri hazï¿½rlama sï¿½reï¿½lerine ait genel iï¿½leyiï¿½ akï¿½ï¿½ ï¿½emasï¿½ aï¿½aï¿½ï¿½da yer almaktadï¿½r.</p>
                         <div class="bg-slate-50 border border-slate-200 rounded-xl p-6 text-center text-slate-400">
                             <i class="fa-solid fa-diagram-project text-4xl mb-3"></i>
-                            <p class="font-semibold text-sm">Ýstatistik ve Raporlama Ýþ Akýþ Þemasý Görseli Buraya Eklenecektir</p>
+                            <p class="font-semibold text-sm">ï¿½statistik ve Raporlama ï¿½ï¿½ Akï¿½ï¿½ ï¿½emasï¿½ Gï¿½rseli Buraya Eklenecektir</p>
                         </div>
                     </div>
 

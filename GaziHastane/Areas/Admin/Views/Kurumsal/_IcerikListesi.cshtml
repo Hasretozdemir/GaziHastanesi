@@ -1,0 +1,102 @@
+@model List<GaziHastane.Models.KurumsalIcerik>
+@using System.IO
+@if (Model.Any())
+{
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="text-slate-400 border-b border-emerald-500/20">
+                    <th class="text-left py-3 px-3 font-semibold">Tür</th>
+                    <th class="text-left py-3 px-3 font-semibold">Başlık</th>
+                    <th class="text-left py-3 px-3 font-semibold">Dosya / Video / Sayfa</th>
+                    <th class="text-center py-3 px-3 font-semibold">Sıra</th>
+                    <th class="text-center py-3 px-3 font-semibold">Durum</th>
+                    <th class="text-right py-3 px-3 font-semibold">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                        <td class="py-3 px-3">
+                            @switch (item.IcerikTipi)
+                            {
+                                case "Video":
+                                    <span class="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-3 py-1 rounded-lg text-xs font-bold">Video</span>
+                                    break;
+                                case "Sayfa":
+                                    <span class="bg-violet-500/20 text-violet-300 border border-violet-500/30 px-3 py-1 rounded-lg text-xs font-bold">Sayfa</span>
+                                    break;
+                                default:
+                                    <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-lg text-xs font-bold">Form</span>
+                                    break;
+                            }
+                        </td>
+                        <td class="py-3 px-3 text-white font-semibold">@item.Baslik</td>
+                        <td class="py-3 px-3 text-slate-300 text-xs">
+                            @if (item.IcerikTipi == "Video" && !string.IsNullOrWhiteSpace(item.VideoUrl))
+                            {
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-play-circle text-cyan-400"></i>
+                                    <a href="@item.VideoUrl" target="_blank" class="text-blue-400 hover:text-blue-300 transition-colors break-all">
+                                        @item.VideoUrl
+                                    </a>
+                                </div>
+                            }
+                            else if (!string.IsNullOrWhiteSpace(item.MedyaYolu))
+                            {
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-file-pdf text-rose-400"></i>
+                                    <span>@System.IO.Path.GetFileName(item.MedyaYolu)</span>
+                                    <a href="@item.MedyaYolu" target="_blank" class="text-blue-400 hover:text-blue-300 transition-colors" title="Dosyayı aç">
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                    </a>
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="text-slate-500">-</span>
+                            }
+                        </td>
+                        <td class="py-3 px-3 text-center"><span class="bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-slate-300 text-xs">@item.Sira</span></td>
+                        <td class="py-3 px-3 text-center">
+                            @if (item.AktifMi)
+                            {
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+                            }
+                            else
+                            {
+                                <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block opacity-50"></span>
+                            }
+                        </td>
+                        <td class="py-3 px-3 text-right">
+                            <div class="inline-flex gap-2">
+                                <button type="button"
+                                    data-id="@item.Id" data-baslik="@item.Baslik" data-iceriktipi="@(item.IcerikTipi ?? "Form")" data-aciklama="@(item.Aciklama ?? "")"
+                                    data-medya="@(item.MedyaYolu ?? "")" data-videourl="@(item.VideoUrl ?? "")" data-sira="@item.Sira" data-aktif="@(item.AktifMi ? "true" : "false")"
+                                    onclick="openFormModal(this)"
+                                        class="inline-flex items-center text-xs px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-all">
+                                    <i class="fa-solid fa-pen-to-square mr-1.5"></i> Düzenle
+                                </button>
+                                <form asp-action="KurumsalIcerikSil" method="post" class="inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="button" onclick="confirmDelete(this.closest('form'))" class="inline-flex items-center text-xs px-3 py-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/30 transition-all">
+                                        <i class="fa-solid fa-trash-can mr-1.5"></i> Sil
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="text-center py-8">
+        <i class="fa-solid fa-inbox text-slate-400 text-3xl mb-2"></i>
+        <p class="text-slate-400 font-medium">Bu sekmeye henüz form eklenmemiştir.</p>
+    </div>
+}

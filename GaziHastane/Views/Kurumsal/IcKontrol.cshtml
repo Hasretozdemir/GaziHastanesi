@@ -1,13 +1,13 @@
 ﻿@* RAZOR KOD BLOĞU *@
+@model List<GaziHastane.Models.KurumsalSekme>
+@using Microsoft.EntityFrameworkCore
+@inject GaziHastane.Data.GaziHastaneContext _context
 @{
     ViewData["Title"] = "İç Kontrol - Kurumsal Bilgi Sistemi";
 }
 
 @section Scripts {
     <style>
-        /* ==========================================
-                   1. GENEL ANİMASYONLAR VE YAPI
-                   ========================================== */
         .page-fade-in {
             animation: fadeInPage 0.6s ease-out forwards;
             opacity: 0;
@@ -18,99 +18,9 @@
                 opacity: 0;
                 transform: translateY(15px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
-            }
-        }
-
-        /* ==========================================
-                   2. YAN MENÜ (SIDEBAR) DÜZELTME STİLLERİ
-                   ========================================== */
-        .sidebar-link {
-            transition: all 0.2s ease;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            padding: 0.65rem 0.9rem !important;
-            border-radius: 12px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: #64748b;
-            text-decoration: none;
-            margin-bottom: 2px;
-        }
-
-            .sidebar-link span.flex {
-                display: flex !important;
-                align-items: center !important;
-                gap: 0.75rem !important;
-            }
-
-            .sidebar-link i.fa-solid {
-                text-align: center;
-                width: 1rem;
-            }
-
-            .sidebar-link:hover {
-                background: #eff6ff;
-                color: #2563eb;
-                transform: translateX(4px);
-            }
-
-        .section-title {
-            font-size: 0.68rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: #94a3b8;
-            margin: 1.4rem 0.9rem 0.4rem;
-        }
-
-        .custom-scroll::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .custom-scroll::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: #e2e8f0;
-            border-radius: 10px;
-        }
-
-        /* ==========================================
-                   3. İÇ MENÜ (SEKMELER)
-                   ========================================== */
-        @@media (max-width: 1279px) {
-            .mobile-tab-menu {
-                display: flex !important;
-                flex-direction: row !important;
-                overflow-x: auto;
-                white-space: nowrap;
-                gap: 0.5rem;
-                padding-bottom: 0.5rem;
-                -webkit-overflow-scrolling: touch;
-            }
-
-                .mobile-tab-menu > * {
-                    margin-top: 0 !important;
-                }
-
-                .mobile-tab-menu::-webkit-scrollbar {
-                    display: none;
-                }
-
-            .sub-menu-btn {
-                width: auto !important;
-                flex-shrink: 0;
-                padding: 0.6rem 1.2rem;
-            }
-
-            .kurumsal-icerik-baslik {
-                display: none;
             }
         }
 
@@ -131,31 +41,28 @@
             text-align: left;
         }
 
-            .sub-menu-btn:hover {
-                background: #f8fafc;
-                transform: translateX(3px);
-            }
+        .sub-menu-btn:hover {
+            background: #f8fafc;
+            transform: translateX(3px);
+        }
 
-            .sub-menu-btn.active {
-                background: #eff6ff;
-                color: #2563eb;
-                border-color: #bfdbfe;
-                box-shadow: 0 4px 12px rgba(37,99,235,0.08);
-            }
+        .sub-menu-btn.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border-color: #bfdbfe;
+            box-shadow: 0 4px 12px rgba(37,99,235,0.08);
+        }
 
-        /* ==========================================
-                   4. İÇERİK ANİMASYONLARI VE KARTLAR
-                   ========================================== */
         .tab-content {
             display: none;
             opacity: 0;
             transform: translateY(10px);
         }
 
-            .tab-content.active {
-                display: block;
-                animation: fadeInTab 0.4s ease forwards;
-            }
+        .tab-content.active {
+            display: block;
+            animation: fadeInTab 0.4s ease forwards;
+        }
 
         @@keyframes fadeInTab {
             to {
@@ -164,39 +71,98 @@
             }
         }
 
-        .tech-card {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 1.25rem;
-            transition: all 0.2s;
-            height: 100%;
+        .form-list {
+            display: grid;
+            gap: 1rem;
         }
 
-            .tech-card:hover {
-                border-color: #cbd5e1;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            }
+        .form-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .form-item:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transform: translateY(-2px);
+        }
+
+        .form-icon {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .form-info h4 {
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+
+        .form-info p {
+            font-size: 0.875rem;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
     </style>
 
     <script>
         function openTab(event, tabId) {
             if(event) event.preventDefault();
-            document.querySelectorAll('.sub-menu-btn').forEach(btn => btn.classList.remove('active'));
-            if(event) { event.currentTarget.classList.add('active'); }
-            else {
-                let activeBtn = document.querySelector(`[onclick*="${tabId}"]`);
-                if(activeBtn) activeBtn.classList.add('active');
-            }
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             let targetContent = document.getElementById(tabId);
             if(targetContent) targetContent.classList.add('active');
+            
+            // Sidebar'daki submenu linki de highlight et
+            document.querySelectorAll('.submenu-link').forEach(link => link.style.opacity = '0.6');
+            let sidebarLink = document.querySelector(`.submenu-link[href="#${tabId}"]`);
+            if(sidebarLink) { 
+                sidebarLink.style.opacity = '1';
+                sidebarLink.style.color = '#2563eb';
+                sidebarLink.style.fontWeight = '800';
+            }
+            
             if(history.pushState) { history.pushState(null, null, '#' + tabId); }
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             let hash = window.location.hash.substring(1);
-            if(hash && document.getElementById(hash)) { openTab(null, hash); }
+            if(hash && document.getElementById(hash)) { 
+                openTab(null, hash); 
+            } else {
+                const firstTab = document.querySelector('.tab-content');
+                if (firstTab) {
+                    openTab(null, firstTab.id);
+                }
+            }
         });
     </script>
 }
@@ -219,82 +185,98 @@
                 <span class="text-blue-600">İç Kontrol</span>
             </nav>
 
-            <div class="flex flex-col xl:flex-row gap-6 items-start">
+            @if (Model != null && Model.Any())
+            {
+                <div class="w-full bg-white rounded-[1.75rem] p-7 sm:p-10 border border-slate-100" style="box-shadow: 0 12px 40px rgba(0,0,0,0.04); min-height: 600px;">
 
-                <div class="mobile-tab-menu w-full xl:w-72 flex-shrink-0 space-y-2 bg-white p-4 rounded-[1.75rem] border border-slate-100" style="box-shadow: 0 4px 24px rgba(0,0,0,0.03);">
-                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-2">Denetim ve Uyum</p>
+                    @foreach (var sekme in Model.OrderBy(x => x.Sira))
+                    {
+                        <div id="@sekme.SekmeId" class="tab-content">
+                            <div class="flex items-center gap-3 mb-8">
+                                <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
+                                <h1 class="text-3xl font-black text-slate-800">@sekme.Baslik</h1>
+                            </div>
 
-                    <button onclick="openTab(event, 'genel-bilgi')" class="sub-menu-btn active">
-                        <i class="fa-solid fa-check-double w-5 text-center"></i> İç Kontrol Birimi
-                    </button>
-                    <button onclick="openTab(event, 'hassas-gorevler')" class="sub-menu-btn">
-                        <i class="fa-solid fa-triangle-exclamation w-5 text-center"></i> Hassas Görevler
-                    </button>
-                </div>
+                            @if (!string.IsNullOrWhiteSpace(sekme.Icerik))
+                            {
+                                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-100 mb-8">
+                                    <div class="text-slate-700 leading-relaxed font-medium prose prose-sm max-w-none">
+                                        @Html.Raw(sekme.Icerik)
+                                    </div>
+                                </div>
+                            }
 
-                <div class="flex-1 w-full bg-white rounded-[1.75rem] p-7 sm:p-10 border border-slate-100" style="box-shadow: 0 12px 40px rgba(0,0,0,0.04); min-height: 600px;">
+                            @{
+                                var formlar = _context.KurumsalIcerikler
+                                    .Where(x => x.SayfaKey == "IcKontrol" && x.Kategori == sekme.SekmeId && x.AktifMi)
+                                    .OrderBy(x => x.Sira)
+                                    .ToList();
+                            }
 
-                    <div id="genel-bilgi" class="tab-content active">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">İç Kontrol Sistemi</h2>
-                        </div>
-
-                        <div class="bg-gradient-to-r from-slate-50 to-indigo-50 p-6 rounded-2xl border border-indigo-100 mb-8">
-                            <p class="text-slate-700 leading-relaxed font-medium">Gazi Üniversitesi Hastanesi İç Kontrol Sistemi; faaliyetlerin mevzuata uygunluğunu denetlemek, varlıkları korumak ve mali/idari bilgilerin güvenirliğini artırmak amacıyla yürütülen bütünleşik bir risk yönetimi sürecidir.</p>
-                        </div>
-
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            <div class="tech-card flex items-start gap-3">
-                                <i class="fa-solid fa-sitemap text-indigo-600 mt-1"></i>
+                            @if (formlar.Any())
+                            {
                                 <div>
-                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Kontrol Ortamı</h4>
-                                    <p class="text-xs text-slate-600">Kurumumuzda etik değerlerin benimsendiği ve yetki/sorumlulukların tanımlandığı yapı.</p>
+                                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                        <i class="fa-solid fa-file-lines text-blue-600"></i>
+                                        Formlar
+                                    </h3>
+                                    <div class="form-list">
+                                        @foreach (var form in formlar)
+                                        {
+                                            @if (!string.IsNullOrWhiteSpace(form.MedyaYolu))
+                                            {
+                                                <a href="@form.MedyaYolu" target="_blank" class="form-item" title="@form.Baslik">
+                                                    <div class="form-icon">
+                                                        <i class="fa-solid fa-file-pdf"></i>
+                                                    </div>
+                                                    <div class="form-info flex-1">
+                                                        <h4>@form.Baslik</h4>
+                                                        @if (!string.IsNullOrWhiteSpace(form.Aciklama))
+                                                        {
+                                                            <p>@form.Aciklama</p>
+                                                        }
+                                                        <p class="text-xs text-blue-600 font-semibold mt-2">
+                                                            <i class="fa-solid fa-download mr-1"></i> İndir
+                                                        </p>
+                                                    </div>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <div class="form-item">
+                                                    <div class="form-icon">
+                                                        <i class="fa-solid fa-file-lines"></i>
+                                                    </div>
+                                                    <div class="form-info flex-1">
+                                                        <h4>@form.Baslik</h4>
+                                                        @if (!string.IsNullOrWhiteSpace(form.Aciklama))
+                                                        {
+                                                            <p>@form.Aciklama</p>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="tech-card flex items-start gap-3">
-                                <i class="fa-solid fa-chart-line text-indigo-600 mt-1"></i>
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Risk Değerlendirme</h4>
-                                    <p class="text-xs text-slate-600">Hastanemizin hedeflerine ulaşmasını engelleyebilecek risklerin analizi.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                            }
 
-                    <div id="hassas-gorevler" class="tab-content">
-                        <div class="flex items-center gap-3 mb-8">
-                            <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Hassas Görevler</h2>
                         </div>
-                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Yürütülmesi sırasında hata veya usulsüzlük riski yüksek olan görevler <strong>"Hassas Görev"</strong> olarak tanımlanır ve özel denetime tabidir.</p>
-
-                        <div class="p-4 bg-amber-50 border border-amber-100 rounded-xl flex items-start gap-3 mb-8">
-                            <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5"></i>
-                            <p class="text-sm text-amber-800 font-medium leading-relaxed">Hassas görev envanterimiz her yıl güncellenmekte ve süreç kontrolleri titizlikle yürütülmektedir.</p>
-                        </div>
-
-                        <div class="grid md:grid-cols-2 gap-5">
-                            <div class="border border-slate-100 p-5 rounded-2xl shadow-sm bg-white">
-                                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl mb-4">
-                                    <i class="fa-solid fa-file-invoice-dollar"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 mb-2">Mali İşler</h4>
-                                <p class="text-xs text-slate-600">Satın alma, hakediş ve ödeme emirlerinin düzenlenmesi süreçleri.</p>
-                            </div>
-                            <div class="border border-slate-100 p-5 rounded-2xl shadow-sm bg-white">
-                                <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl mb-4">
-                                    <i class="fa-solid fa-user-shield"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 mb-2">Bilgi Güvenliği</h4>
-                                <p class="text-xs text-slate-600">Hasta verilerinin mahremiyeti ve yetkisiz erişim kontrolleri.</p>
-                            </div>
-                        </div>
-                    </div>
+                    }
 
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class="bg-white rounded-[1.75rem] p-12 border border-slate-100 text-center">
+                    <i class="fa-solid fa-inbox text-5xl text-slate-300 mb-4"></i>
+                    <p class="text-slate-500 font-medium text-lg">İç Kontrol formları henüz eklenmemiştir.</p>
+                    <p class="text-slate-400 text-sm mt-2">Admin panelinden formlar ekleyerek başlayabilirsiniz.</p>
+                </div>
+            }
 
         </section>
+
     </div>
+
 </main>

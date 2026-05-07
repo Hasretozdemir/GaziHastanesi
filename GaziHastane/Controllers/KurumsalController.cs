@@ -14,13 +14,13 @@ namespace GaziHastane.Controllers
             _context = context;
         }
 
-        // Hakkımızda (Kurumsal Ana Sayfa)
+        // Hakkï¿½mï¿½zda (Kurumsal Ana Sayfa)
         public IActionResult Index() { return View(); }
 
-        // Başhekimlik
+        // Baï¿½hekimlik
         public IActionResult Bashekimlik()
         {
-            // Veritabanından aktif personelleri sırasına göre çekiyoruz
+            // Veritabanï¿½ndan aktif personelleri sï¿½rasï¿½na gï¿½re ï¿½ekiyoruz
             var aktifPersoneller = _context.BashekimlikPersoneller
                                            .Where(x => x.AktifMi)
                                            .OrderBy(x => x.Sira)
@@ -29,21 +29,21 @@ namespace GaziHastane.Controllers
             // Verileri ViewModel'e dolduruyoruz
             var viewModel = new BashekimlikViewModel
             {
-                // IsBashekim = true olan İLK kaydı Başhekim olarak al
+                // IsBashekim = true olan ï¿½LK kaydï¿½ Baï¿½hekim olarak al
                 Bashekim = aktifPersoneller.FirstOrDefault(x => x.IsBashekim),
 
-                // IsBashekim = false olanları Yardımcılar listesine al
+                // IsBashekim = false olanlarï¿½ Yardï¿½mcï¿½lar listesine al
                 Yardimcilar = aktifPersoneller.Where(x => !x.IsBashekim).ToList(),
 
-                // İletişim bilgilerini burada tanımlıyoruz
+                // ï¿½letiï¿½im bilgilerini burada tanï¿½mlï¿½yoruz
                 Telefon = "(0312) 202 40 00",
-                CalismaSaatleri = "Pzt–Cuma · 08:30 – 17:00"
+                CalismaSaatleri = "Pztï¿½Cuma ï¿½ 08:30 ï¿½ 17:00"
             };
 
             return View(viewModel);
         }
 
-        // Başmüdürlük
+        // Baï¿½mï¿½dï¿½rlï¿½k
         public IActionResult Basmudurluk()
         {
             var aktifPersoneller = _context.BasmudurlikPersoneller
@@ -56,16 +56,16 @@ namespace GaziHastane.Controllers
                 Basmudur = aktifPersoneller.FirstOrDefault(x => x.IsBasmudur),
                 Yardimcilar = aktifPersoneller.Where(x => !x.IsBasmudur).ToList(),
                 Telefon = "(0312) 202 40 00",
-                CalismaSaatleri = "Pzt–Cuma · 08:30 – 17:00"
+                CalismaSaatleri = "Pztï¿½Cuma ï¿½ 08:30 ï¿½ 17:00"
             };
 
             return View(viewModel);
         }
 
-        // Hemşirelik Hizmetleri (DİNAMİK HALE GETİRİLDİ)
+        // Hemï¿½irelik Hizmetleri (Dï¿½NAMï¿½K HALE GETï¿½Rï¿½LDï¿½)
         public IActionResult HemsirelikHizmetleri()
         {
-            // Aktif olan tüm içerikleri sırasına göre tek seferde çekiyoruz
+            // Aktif olan tï¿½m iï¿½erikleri sï¿½rasï¿½na gï¿½re tek seferde ï¿½ekiyoruz
             var tumIcerikler = _context.HemsirelikIcerikler
                                        .Where(x => x.AktifMi)
                                        .OrderBy(x => x.Sira)
@@ -78,11 +78,11 @@ namespace GaziHastane.Controllers
 
             var viewModel = new HemsirelikViewModel
             {
-                // Ayarlar tablosundan ilk kaydı al, yoksa boş bir nesne gönder (hata vermemesi için)
+                // Ayarlar tablosundan ilk kaydï¿½ al, yoksa boï¿½ bir nesne gï¿½nder (hata vermemesi iï¿½in)
                 Ayarlar = _context.HemsirelikAyarlar.FirstOrDefault() ?? new HemsirelikAyar(),
                 Sekmeler = sekmeler,
 
-                // Tek tabloyu Kategori sütununa göre View'daki ilgili listelere paylaştırıyoruz
+                // Tek tabloyu Kategori sï¿½tununa gï¿½re View'daki ilgili listelere paylaï¿½tï¿½rï¿½yoruz
                 YonetimKadrosu = tumIcerikler.Where(x => x.Kategori == "Yonetim").ToList(),
                 Gorevler = tumIcerikler.Where(x => x.Kategori == "Gorev").ToList(),
                 Mevzuatlar = tumIcerikler.Where(x => x.Kategori == "Mevzuat").ToList(),
@@ -95,28 +95,28 @@ namespace GaziHastane.Controllers
             return View(viewModel);
         }
 
-        // Bilgi İşlem Merkezi
+        // Bilgi ï¿½ï¿½lem Merkezi
         public IActionResult BilgiIslem() { return View(); }
 
-        // İş Sağlığı ve Güvenliği
+        // ï¿½ï¿½ Saï¿½lï¿½ï¿½ï¿½ ve Gï¿½venliï¿½i
         public IActionResult IsSagligi() { return View(); }
 
         // Enfeksiyon Kontrol
         public IActionResult Enfeksiyon() { return View(); }
 
-        // Eczacılık Hizmetleri
+        // Eczacï¿½lï¿½k Hizmetleri
         public IActionResult Eczacilik() { return View(); }
 
-        // Satın Alma
+        // Satï¿½n Alma
         public IActionResult SatinAlma() { return View(); }
 
-        // İstatistik ve Raporlama
+        // ï¿½statistik ve Raporlama
         public IActionResult Istatistik() { return View(); }
 
-        // Arşiv Birimi
+        // Arï¿½iv Birimi
         public IActionResult Arsiv()
         {
-            // Veritabanından aktif sekmeleri sırasına göre çekiyoruz
+            // Veritabanï¿½ndan aktif sekmeleri sï¿½rasï¿½na gï¿½re ï¿½ekiyoruz
             var sekmeler = _context.ArsivSekmeler
                                    .Where(x => x.IsActive)
                                    .OrderBy(x => x.SiraNo)
@@ -125,23 +125,50 @@ namespace GaziHastane.Controllers
             return View(sekmeler);
         }
 
-        // Hasta İletişim Birimi
+        // Hasta ï¿½letiï¿½im Birimi
         public IActionResult HastaIletisim() { return View(); }
 
-        // İş Akış Şemaları
+        // ï¿½ï¿½ Akï¿½ï¿½ ï¿½emalarï¿½
         public IActionResult IsAkis() { return View(); }
 
-        // Organizasyon Şemaları
-        public IActionResult Organizasyon() { return View(); }
-
-        // İç Kontrol
-        public IActionResult IcKontrol()
+        // Organizasyon ï¿½emalarï¿½
+        public async Task<IActionResult> Organizasyon()
         {
-            // Explicitly return the view by full path to avoid lookup issues
-            return View("~/Views/Kurumsal/IcKontrol.cshtml");
+            var sekmeler = await _context.KurumsalIcerikler
+                .Where(x => x.SayfaKey == "OrganizasyonSemalari" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            return View(sekmeler);
         }
 
-        // Basın ve Kurumsal İletişim
-        public IActionResult BasinIletisim() { return View(); }
+        // ï¿½ï¿½ Kontrol
+        public async Task<IActionResult> IcKontrol()
+        {
+            var sekmeler = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "IcKontrol" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+            return View(sekmeler);
+        }
+
+        // Basï¿½n ve Kurumsal ï¿½letiï¿½im
+        public async Task<IActionResult> BasinIletisim()
+        {
+            var model = await _context.BasinKurumsalIletisimler.FirstOrDefaultAsync();
+            if (model == null)
+            {
+                // VarsayÄ±lan deÄŸerler
+                model = new BasinKurumsalIletisim
+                {
+                    Baslik = "BasÄ±n ve Kurumsal Ä°letiÅŸim Birimi",
+                    Aciklama = "SaÄŸlÄ±k AraÅŸtÄ±rma ve Uygulama Merkezimiz faaliyetleri Ã§erÃ§evesinde; hedef kitlelerle etkili bir iletiÅŸim kurmak ve sunulan saÄŸlÄ±k hizmetinin yanÄ± sÄ±ra hastanemizin gerÃ§ekleÅŸtirdiÄŸi yeniliklerden hem personelimizi ve hem de dÄ±ÅŸ paydaÅŸlarÄ± haberdar etmek amacÄ±yla hastanemiz web sayfasÄ±na ve kurum iÃ§i SMS faaliyetlerine yÃ¶nelik sÃ¼reÃ§lerin takibi ve koordinasyonunun saÄŸlanmasÄ± adÄ±na BaÅŸhekimlik makamÄ±nÄ±n 22.07.2025 tarihli Oluru doÄŸrultusunda \"BasÄ±n ve Kurumsal Ä°letiÅŸim Birimi\"miz kurulmuÅŸtur.",
+                    Telefon = "0312 202 44 39",
+                    Email = "gazihastanesibasin@gazi.edu.tr",
+                    Lokasyon = "E Blok 11. Kat"
+                };
+            }
+            return View(model);
+        }
     }
 }

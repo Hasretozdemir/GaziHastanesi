@@ -1,12 +1,12 @@
-@* RAZOR KOD BLOÐU *@
+@* RAZOR KOD BLOï¿½U *@
 @{
-    ViewData["Title"] = "Eczacýlýk Hizmetleri - Kurumsal Bilgi Sistemi";
+    ViewData["Title"] = "Eczacï¿½lï¿½k Hizmetleri - Kurumsal Bilgi Sistemi";
 }
 
 @section Scripts {
     <style>
         /* ==========================================
-                   1. GENEL ANÝMASYONLAR VE YAPI
+                   1. GENEL ANï¿½MASYONLAR VE YAPI
                    ========================================== */
         .page-fade-in {
             animation: fadeInPage 0.6s ease-out forwards;
@@ -26,7 +26,7 @@
         }
 
         /* ==========================================
-                   2. YAN MENÜ (SIDEBAR) DÜZELTME STÝLLERÝ
+                   2. YAN MENï¿½ (SIDEBAR) Dï¿½ZELTME STï¿½LLERï¿½
                    ========================================== */
         .sidebar-link {
             transition: all 0.2s ease;
@@ -82,7 +82,7 @@
         }
 
         /* ==========================================
-                   3. ÝÇ MENÜ (SEKMELER)
+                   3. ï¿½ï¿½ MENï¿½ (SEKMELER)
                    ========================================== */
         @@media (max-width: 1279px) {
             .mobile-tab-menu {
@@ -144,7 +144,7 @@
             }
 
         /* ==========================================
-                   4. ÝÇERÝK ANÝMASYONLARI VE KARTLAR
+                   4. ï¿½ï¿½ERï¿½K ANï¿½MASYONLARI VE KARTLAR
                    ========================================== */
         .tab-content {
             display: none;
@@ -216,19 +216,19 @@
                 <i class="fa-solid fa-chevron-right text-[8px]"></i>
                 <span>Kurumsal</span>
                 <i class="fa-solid fa-chevron-right text-[8px]"></i>
-                <span class="text-blue-600">Eczacýlýk Hizmetleri</span>
+                <span class="text-blue-600">Eczacï¿½lï¿½k Hizmetleri</span>
             </nav>
 
             <div class="flex flex-col xl:flex-row gap-6 items-start">
 
                 <div class="mobile-tab-menu w-full xl:w-72 flex-shrink-0 space-y-2 bg-white p-4 rounded-[1.75rem] border border-slate-100" style="box-shadow: 0 4px 24px rgba(0,0,0,0.03);">
-                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-2">Ýçerik Menüsü</p>
+                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-2">ï¿½ï¿½erik Menï¿½sï¿½</p>
 
                     <button onclick="openTab(event, 'genel-bilgi')" class="sub-menu-btn active">
-                        <i class="fa-solid fa-pills w-5 text-center"></i> Hakkýmýzda
+                        <i class="fa-solid fa-pills w-5 text-center"></i> Hakkï¿½mï¿½zda
                     </button>
                     <button onclick="openTab(event, 'akis-semasi')" class="sub-menu-btn">
-                        <i class="fa-solid fa-diagram-project w-5 text-center"></i> Eczane Akýþ Þemasý
+                        <i class="fa-solid fa-diagram-project w-5 text-center"></i> Eczane Akï¿½ï¿½ ï¿½emasï¿½
                     </button>
                 </div>
 
@@ -237,41 +237,41 @@
                     <div id="genel-bilgi" class="tab-content active">
                         <div class="flex items-center gap-3 mb-6">
                             <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Eczacýlýk Hizmetleri</h2>
+                            <h2 class="text-2xl font-black text-slate-800">Eczacï¿½lï¿½k Hizmetleri</h2>
                         </div>
 
                         <div class="bg-gradient-to-r from-teal-50 to-blue-50 p-6 rounded-2xl border border-teal-100 mb-8">
-                            <p class="text-slate-700 leading-relaxed font-medium">Gazi Üniversitesi Hastanesi Eczacýlýk Hizmetleri birimi; yatan ve ayaktan tedavi gören hastalarýmýzýn ilaç tedavilerini <strong>en güvenli, etkin ve ekonomik</strong> þekilde yürütmek amacýyla modern eczacýlýk standartlarýnda, 7 gün 24 saat kesintisiz olarak hizmet vermektedir.</p>
+                            <p class="text-slate-700 leading-relaxed font-medium">Gazi ï¿½niversitesi Hastanesi Eczacï¿½lï¿½k Hizmetleri birimi; yatan ve ayaktan tedavi gï¿½ren hastalarï¿½mï¿½zï¿½n ilaï¿½ tedavilerini <strong>en gï¿½venli, etkin ve ekonomik</strong> ï¿½ekilde yï¿½rï¿½tmek amacï¿½yla modern eczacï¿½lï¿½k standartlarï¿½nda, 7 gï¿½n 24 saat kesintisiz olarak hizmet vermektedir.</p>
                         </div>
 
-                        <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-prescription-bottle-medical text-teal-600"></i> Temel Faaliyet Alanlarýmýz</h3>
+                        <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-prescription-bottle-medical text-teal-600"></i> Temel Faaliyet Alanlarï¿½mï¿½z</h3>
                         <div class="grid sm:grid-cols-2 gap-4">
                             <div class="tech-card flex items-start gap-3">
                                 <i class="fa-solid fa-boxes-packing text-teal-600 mt-1"></i>
                                 <div>
-                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Ýlaç Yönetimi ve Temini</h4>
-                                    <p class="text-xs text-slate-600">Hastanemizin ilaç ihtiyaçlarýnýn tespiti, ihale süreçlerinin yönetimi, uygun koþullarda depolanmasý ve kliniklere güvenli bir þekilde daðýtýmýnýn saðlanmasý.</p>
+                                    <h4 class="font-bold text-slate-800 text-sm mb-1">ï¿½laï¿½ Yï¿½netimi ve Temini</h4>
+                                    <p class="text-xs text-slate-600">Hastanemizin ilaï¿½ ihtiyaï¿½larï¿½nï¿½n tespiti, ihale sï¿½reï¿½lerinin yï¿½netimi, uygun koï¿½ullarda depolanmasï¿½ ve kliniklere gï¿½venli bir ï¿½ekilde daï¿½ï¿½tï¿½mï¿½nï¿½n saï¿½lanmasï¿½.</p>
                                 </div>
                             </div>
                             <div class="tech-card flex items-start gap-3">
                                 <i class="fa-solid fa-clipboard-list text-teal-600 mt-1"></i>
                                 <div>
-                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Klinik Eczacýlýk ve Order Kontrolü</h4>
-                                    <p class="text-xs text-slate-600">Hekimler tarafýndan HBYS üzerinden oluþturulan ilaç istemlerinin (order) doz, etkileþim ve hasta güvenliði açýsýndan farmakolojik olarak deðerlendirilmesi.</p>
+                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Klinik Eczacï¿½lï¿½k ve Order Kontrolï¿½</h4>
+                                    <p class="text-xs text-slate-600">Hekimler tarafï¿½ndan HBYS ï¿½zerinden oluï¿½turulan ilaï¿½ istemlerinin (order) doz, etkileï¿½im ve hasta gï¿½venliï¿½i aï¿½ï¿½sï¿½ndan farmakolojik olarak deï¿½erlendirilmesi.</p>
                                 </div>
                             </div>
                             <div class="tech-card flex items-start gap-3">
                                 <i class="fa-solid fa-vial-circle-check text-teal-600 mt-1"></i>
                                 <div>
-                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Kemoterapi ve TPN Hazýrlama</h4>
-                                    <p class="text-xs text-slate-600">Onkoloji hastalarý için antineoplastik ilaçlarýn ve yenidoðan/yoðun bakým hastalarý için Total Parenteral Nütrisyon (TPN) solüsyonlarýnýn steril ortamda hazýrlanmasý.</p>
+                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Kemoterapi ve TPN Hazï¿½rlama</h4>
+                                    <p class="text-xs text-slate-600">Onkoloji hastalarï¿½ iï¿½in antineoplastik ilaï¿½larï¿½n ve yenidoï¿½an/yoï¿½un bakï¿½m hastalarï¿½ iï¿½in Total Parenteral Nï¿½trisyon (TPN) solï¿½syonlarï¿½nï¿½n steril ortamda hazï¿½rlanmasï¿½.</p>
                                 </div>
                             </div>
                             <div class="tech-card flex items-start gap-3">
                                 <i class="fa-solid fa-hand-holding-medical text-teal-600 mt-1"></i>
                                 <div>
-                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Akýlcý Ýlaç Kullanýmý (AÝK)</h4>
-                                    <p class="text-xs text-slate-600">Hastalarýn klinik bulgularýna uygun ilacý, uygun sürede ve uygun dozda kullanmalarýný saðlamak amacýyla hekim ve hemþirelere danýþmanlýk hizmeti verilmesi.</p>
+                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Akï¿½lcï¿½ ï¿½laï¿½ Kullanï¿½mï¿½ (Aï¿½K)</h4>
+                                    <p class="text-xs text-slate-600">Hastalarï¿½n klinik bulgularï¿½na uygun ilacï¿½, uygun sï¿½rede ve uygun dozda kullanmalarï¿½nï¿½ saï¿½lamak amacï¿½yla hekim ve hemï¿½irelere danï¿½ï¿½manlï¿½k hizmeti verilmesi.</p>
                                 </div>
                             </div>
                         </div>
@@ -280,12 +280,12 @@
                     <div id="akis-semasi" class="tab-content">
                         <div class="flex items-center gap-3 mb-8">
                             <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Eczane Akýþ Þemasý</h2>
+                            <h2 class="text-2xl font-black text-slate-800">Eczane Akï¿½ï¿½ ï¿½emasï¿½</h2>
                         </div>
-                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Hastanemiz eczanesinde ilaç kabul, depolama, kliniklere ilaç çýkýþý, iade iþlemleri ve majör farmasötik üretim süreçlerine ait iþ akýþ þemalarý aþaðýda yer almaktadýr.</p>
+                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Hastanemiz eczanesinde ilaï¿½ kabul, depolama, kliniklere ilaï¿½ ï¿½ï¿½kï¿½ï¿½ï¿½, iade iï¿½lemleri ve majï¿½r farmasï¿½tik ï¿½retim sï¿½reï¿½lerine ait iï¿½ akï¿½ï¿½ ï¿½emalarï¿½ aï¿½aï¿½ï¿½da yer almaktadï¿½r.</p>
                         <div class="bg-slate-50 border border-slate-200 rounded-xl p-6 text-center text-slate-400">
                             <i class="fa-solid fa-diagram-project text-4xl mb-3"></i>
-                            <p class="font-semibold text-sm">Ýlaç Temin ve Daðýtým Ýþ Akýþ Þemasý Görseli Buraya Eklenecektir</p>
+                            <p class="font-semibold text-sm">ï¿½laï¿½ Temin ve Daï¿½ï¿½tï¿½m ï¿½ï¿½ Akï¿½ï¿½ ï¿½emasï¿½ Gï¿½rseli Buraya Eklenecektir</p>
                         </div>
                     </div>
 

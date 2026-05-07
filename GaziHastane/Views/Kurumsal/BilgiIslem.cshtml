@@ -1,12 +1,138 @@
-@* RAZOR KOD BLOÐU *@
+@using GaziHastane.Data
+@inject GaziHastaneContext _context
 @{
-    ViewData["Title"] = "Bilgi Ýþlem Merkezi - Kurumsal Bilgi Sistemi";
+    Layout = "_KurumsalLayout";
+    ViewData["Title"] = "Bilgi Islem Merkezi - Kurumsal Bilgi Sistemi";
+
+    var sekmeler = _context.KurumsalSekmeler
+        .Where(x => x.SayfaKey.ToLower() == "bilgiislemmerkezi" && x.AktifMi)
+        .OrderBy(x => x.Sira)
+        .ToList();
+}
+
+@section Scripts {
+<style>
+    .tab-content { display: none; opacity: 0; transform: translateY(10px); }
+    .tab-content.active { display: block; animation: fadeInTab 0.35s ease forwards; }
+    @@keyframes fadeInTab { to { opacity: 1; transform: translateY(0); } }
+
+    .sub-menu-dropdown { position: relative; display: inline-block; }
+    .sub-menu-dropdown::after { content: ""; position: absolute; left: 0; top: 100%; width: 100%; height: 12px; }
+    .dropdown-trigger { display: flex; align-items: center; gap: 0.35rem; color: #2563eb; background: transparent; border: 0; padding: 0; font: inherit; cursor: pointer; }
+    .dropdown-trigger::-webkit-details-marker { display: none; }
+    .dropdown-panel {
+        position: absolute; top: calc(100% + 0.55rem); left: 0; min-width: 260px;
+        background: #fff; border: 1px solid #e2e8f0; border-radius: 0.9rem; padding: 0.6rem;
+        box-shadow: 0 14px 34px rgba(15,23,42,0.12); opacity: 0; visibility: hidden;
+        transform: translateY(8px); transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease; z-index: 60;
+    }
+    .sub-menu-dropdown:hover .dropdown-panel,
+    .sub-menu-dropdown[open] .dropdown-panel,
+    .sub-menu-dropdown:focus-within .dropdown-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+
+    .dropdown-item {
+        width: 100%; border: 0; background: transparent; text-align: left; display: flex; align-items: center; gap: 0.6rem;
+        border-radius: 0.7rem; padding: 0.6rem 0.75rem; color: #475569; font-size: 0.8rem; font-weight: 700;
+        cursor: pointer; transition: all 0.2s ease;
+    }
+    .dropdown-item:hover { background: #f8fafc; color: #2563eb; }
+    .dropdown-item.active { background: #eff6ff; color: #1d4ed8; }
+</style>
+
+<script>
+    function openTab(event, tabId) {
+        if (event) event.preventDefault();
+        document.querySelectorAll('.dropdown-item').forEach(item => item.classList.remove('active'));
+        if (event) {
+            event.currentTarget.classList.add('active');
+        } else {
+            let activeBtn = document.querySelector(`[onclick*="${tabId}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+        }
+
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        const target = document.getElementById(tabId);
+        if (target) target.classList.add('active');
+
+        if (history.pushState) history.pushState(null, null, '#' + tabId);
+
+        const dropdown = document.querySelector('.sub-menu-dropdown');
+        if (dropdown) dropdown.removeAttribute('open');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const hash = window.location.hash.substring(1);
+        if (hash && document.getElementById(hash)) {
+            openTab(null, hash);
+        } else {
+            openTab(null, 'genel-bilgi');
+        }
+    });
+</script>
+}
+
+<div class="flex flex-col w-full h-full">
+    <section class="flex-1 min-w-0">
+        <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
+            <i class="fa-solid fa-house text-[9px]"></i>
+            <i class="fa-solid fa-chevron-right text-[8px]"></i>
+            <span>Kurumsal</span>
+            <i class="fa-solid fa-chevron-right text-[8px]"></i>
+            <details class="sub-menu-dropdown">
+                <summary class="dropdown-trigger">Bilgi Islem Merkezi <i class="fa-solid fa-chevron-down text-[8px]"></i></summary>
+                <div class="dropdown-panel">
+                    <button onclick="openTab(event, 'genel-bilgi')" class="dropdown-item active">
+                        <i class="fa-solid fa-circle-info w-4 text-center"></i> Genel Bilgi
+                    </button>
+                    @if (sekmeler != null && sekmeler.Any())
+                    {
+                        foreach (var sekme in sekmeler)
+                        {
+                            <button onclick="openTab(event, '@sekme.SekmeId')" class="dropdown-item">
+                                <i class="@(string.IsNullOrWhiteSpace(sekme.IconClass) ? "fa-solid fa-circle-info" : sekme.IconClass) w-4 text-center"></i> @sekme.Baslik
+                            </button>
+                        }
+                    }
+                </div>
+            </details>
+        </nav>
+
+        <div class="w-full bg-white rounded-[1.75rem] p-7 sm:p-10 border border-slate-100" style="box-shadow: 0 12px 40px rgba(0,0,0,0.04); min-height: 600px;">
+            <div id="genel-bilgi" class="tab-content active">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
+                    <h2 class="text-2xl font-black text-slate-800">Bilgi Islem Merkezi</h2>
+                </div>
+                <p class="text-slate-600 leading-relaxed font-medium">
+                    Bilgi Islem Merkezi ile ilgili iceriklere bu alandan ulasabilirsiniz. Admin panelinden eklenen sekmeler
+                    otomatik olarak menude gorunur ve tiklandiginda ilgili icerik acilir.
+                </p>
+            </div>
+
+            @if (sekmeler != null && sekmeler.Any())
+            {
+                foreach (var sekme in sekmeler)
+                {
+                    <div id="@sekme.SekmeId" class="tab-content">
+                        @if (!string.IsNullOrWhiteSpace(sekme.Icerik))
+                        {
+                            @Html.Raw(sekme.Icerik)
+                        }
+                    </div>
+                }
+            }
+        </div>
+    </section>
+</div>
+@* RAZOR KOD BLOï¿½U *@
+@{
+    ViewData["Title"] = "Bilgi ï¿½ï¿½lem Merkezi - Kurumsal Bilgi Sistemi";
 }
 
 @section Scripts {
     <style>
         /* ==========================================
-                   1. GENEL ANÝMASYONLAR VE YAPI
+                   1. GENEL ANï¿½MASYONLAR VE YAPI
                    ========================================== */
         .page-fade-in {
             animation: fadeInPage 0.6s ease-out forwards;
@@ -26,8 +152,8 @@
         }
 
         /* ==========================================
-                   2. YAN MENÜ (SIDEBAR) DÜZELTME STÝLLERÝ
-                   (Menüdeki ikon ve yazýlarýn kaymasýný engeller)
+                   2. YAN MENï¿½ (SIDEBAR) Dï¿½ZELTME STï¿½LLERï¿½
+                   (Menï¿½deki ikon ve yazï¿½larï¿½n kaymasï¿½nï¿½ engeller)
                    ========================================== */
         .sidebar-link {
             transition: all 0.2s ease;
@@ -51,7 +177,7 @@
 
             .sidebar-link i.fa-solid {
                 text-align: center;
-                width: 1rem; /* Ýkon geniþliklerini sabitler */
+                width: 1rem; /* ï¿½kon geniï¿½liklerini sabitler */
             }
 
             .sidebar-link:hover {
@@ -83,7 +209,7 @@
         }
 
         /* ==========================================
-                   3. BÝLGÝ ÝÞLEM ÝÇ MENÜ (SEKMELER)
+                   3. Bï¿½LGï¿½ ï¿½ï¿½LEM ï¿½ï¿½ MENï¿½ (SEKMELER)
                    ========================================== */
         @@media (max-width: 1279px) {
             .mobile-tab-menu {
@@ -145,7 +271,7 @@
             }
 
         /* ==========================================
-                   4. ÝÇERÝK ANÝMASYONLARI VE KARTLAR
+                   4. ï¿½ï¿½ERï¿½K ANï¿½MASYONLARI VE KARTLAR
                    ========================================== */
         .tab-content {
             display: none;
@@ -260,7 +386,7 @@
                 <i class="fa-solid fa-chevron-right text-[8px]"></i>
                 <span>Kurumsal</span>
                 <i class="fa-solid fa-chevron-right text-[8px]"></i>
-                <span class="text-blue-600">Bilgi Ýþlem Merkezi</span>
+                <span class="text-blue-600">Bilgi ï¿½ï¿½lem Merkezi</span>
             </nav>
 
             <div class="flex flex-col xl:flex-row gap-6 items-start">
@@ -269,16 +395,16 @@
                     <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-2">Sistem & Destek</p>
 
                     <button onclick="openTab(event, 'genel-bilgi')" class="sub-menu-btn active">
-                        <i class="fa-solid fa-circle-info w-5 text-center"></i> Hakkýmýzda
+                        <i class="fa-solid fa-circle-info w-5 text-center"></i> Hakkï¿½mï¿½zda
                     </button>
                     <button onclick="openTab(event, 'akis-semasi')" class="sub-menu-btn">
-                        <i class="fa-solid fa-diagram-project w-5 text-center"></i> Akýþ Þemasý
+                        <i class="fa-solid fa-diagram-project w-5 text-center"></i> Akï¿½ï¿½ ï¿½emasï¿½
                     </button>
                     <button onclick="openTab(event, 'bulut')" class="sub-menu-btn">
-                        <i class="fa-solid fa-cloud w-5 text-center"></i> Bilgi Ýþlem Bulut
+                        <i class="fa-solid fa-cloud w-5 text-center"></i> Bilgi ï¿½ï¿½lem Bulut
                     </button>
 
-                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2 mt-4 ml-2">Eðitim Videolarý</p>
+                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2 mt-4 ml-2">Eï¿½itim Videolarï¿½</p>
                     <button onclick="openTab(event, 'hbys-doktor')" class="sub-menu-btn">
                         <i class="fa-solid fa-user-doctor w-5 text-center"></i> HBYS Doktor
                     </button>
@@ -286,16 +412,16 @@
                         <i class="fa-solid fa-user-pen w-5 text-center"></i> HBYS Sekreter
                     </button>
                     <button onclick="openTab(event, 'hbys-hemsire')" class="sub-menu-btn">
-                        <i class="fa-solid fa-user-nurse w-5 text-center"></i> HBYS Hemþirelik
+                        <i class="fa-solid fa-user-nurse w-5 text-center"></i> HBYS Hemï¿½irelik
                     </button>
                     <button onclick="openTab(event, 'hbys-genel')" class="sub-menu-btn">
                         <i class="fa-solid fa-desktop w-5 text-center"></i> HBYS Genel
                     </button>
                     <button onclick="openTab(event, 'pacs-egitim')" class="sub-menu-btn">
-                        <i class="fa-solid fa-x-ray w-5 text-center"></i> PACS Eðitim
+                        <i class="fa-solid fa-x-ray w-5 text-center"></i> PACS Eï¿½itim
                     </button>
 
-                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2 mt-4 ml-2">Eriþim & Mevzuat</p>
+                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2 mt-4 ml-2">Eriï¿½im & Mevzuat</p>
                     <button onclick="openTab(event, 'mevzuat')" class="sub-menu-btn">
                         <i class="fa-solid fa-scale-balanced w-5 text-center"></i> Mevzuat
                     </button>
@@ -303,13 +429,13 @@
                         <i class="fa-solid fa-wifi w-5 text-center"></i> Personel Wi-Fi
                     </button>
                     <button onclick="openTab(event, 'hasta-ag')" class="sub-menu-btn">
-                        <i class="fa-solid fa-network-wired w-5 text-center"></i> Hasta/Refakatçi Wi-Fi
+                        <i class="fa-solid fa-network-wired w-5 text-center"></i> Hasta/Refakatï¿½i Wi-Fi
                     </button>
                     <button onclick="openTab(event, 'vpn')" class="sub-menu-btn">
-                        <i class="fa-solid fa-shield-halved w-5 text-center"></i> VPN Kullaným Kýlavuzu
+                        <i class="fa-solid fa-shield-halved w-5 text-center"></i> VPN Kullanï¿½m Kï¿½lavuzu
                     </button>
                     <button onclick="openTab(event, 'e-imza')" class="sub-menu-btn">
-                        <i class="fa-solid fa-file-signature w-5 text-center"></i> E-Ýmza Ýþlemleri
+                        <i class="fa-solid fa-file-signature w-5 text-center"></i> E-ï¿½mza ï¿½ï¿½lemleri
                     </button>
                 </div>
 
@@ -318,38 +444,38 @@
                     <div id="genel-bilgi" class="tab-content active">
                         <div class="flex items-center gap-3 mb-6">
                             <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Bilgi Ýþlem Merkezi Hakkýnda</h2>
+                            <h2 class="text-2xl font-black text-slate-800">Bilgi ï¿½ï¿½lem Merkezi Hakkï¿½nda</h2>
                         </div>
 
                         <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-100 mb-8">
-                            <p class="text-slate-700 leading-relaxed font-medium">Merkezimiz, biliþim teknolojileri alanýndaki yenilikleri doktorlarýmýz, çalýþanlarýmýz ve hastanemizden saðlýk hizmeti alan hasta ve hasta yakýnlarýna hýzlý, güvenli ve kaliteli olarak sunmaktadýr. Bilgi Ýþlem Birimi <strong>yazýlým</strong> ve <strong>donaným</strong> olarak iki alt birimde hizmet vermektedir.</p>
+                            <p class="text-slate-700 leading-relaxed font-medium">Merkezimiz, biliï¿½im teknolojileri alanï¿½ndaki yenilikleri doktorlarï¿½mï¿½z, ï¿½alï¿½ï¿½anlarï¿½mï¿½z ve hastanemizden saï¿½lï¿½k hizmeti alan hasta ve hasta yakï¿½nlarï¿½na hï¿½zlï¿½, gï¿½venli ve kaliteli olarak sunmaktadï¿½r. Bilgi ï¿½ï¿½lem Birimi <strong>yazï¿½lï¿½m</strong> ve <strong>donanï¿½m</strong> olarak iki alt birimde hizmet vermektedir.</p>
                         </div>
 
-                        <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-code text-blue-600"></i> Yazýlým Destek Birimimizin Görevleri</h3>
+                        <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-code text-blue-600"></i> Yazï¿½lï¿½m Destek Birimimizin Gï¿½revleri</h3>
                         <div class="grid sm:grid-cols-2 gap-4">
                             <div class="tech-card flex items-start gap-3">
                                 <i class="fa-solid fa-server text-blue-500 mt-1"></i>
-                                <p class="text-sm text-slate-600 font-medium">Hastane Bilgi Yönetim Sistemini (HBYS), að üzerinden, ihtiyaca cevap verebilecek nitelikte, verimli ve etkili biçimde iþler durumda tutmak.</p>
+                                <p class="text-sm text-slate-600 font-medium">Hastane Bilgi Yï¿½netim Sistemini (HBYS), aï¿½ ï¿½zerinden, ihtiyaca cevap verebilecek nitelikte, verimli ve etkili biï¿½imde iï¿½ler durumda tutmak.</p>
                             </div>
                             <div class="tech-card flex items-start gap-3">
                                 <i class="fa-solid fa-gears text-blue-500 mt-1"></i>
-                                <p class="text-sm text-slate-600 font-medium">HBYS'ni güncel mevzuata uyarlamak üzere yazýlým düzenlemeleri yapmak ve ihtiyaçlara göre geliþtirmek.</p>
+                                <p class="text-sm text-slate-600 font-medium">HBYS'ni gï¿½ncel mevzuata uyarlamak ï¿½zere yazï¿½lï¿½m dï¿½zenlemeleri yapmak ve ihtiyaï¿½lara gï¿½re geliï¿½tirmek.</p>
                             </div>
                             <div class="tech-card flex items-start gap-3">
                                 <i class="fa-solid fa-headset text-blue-500 mt-1"></i>
-                                <p class="text-sm text-slate-600 font-medium">Kullanýcýlarýn HBYS ile ilgili talep ve þikayetlerini deðerlendirerek, çalýþan memnuniyetini en üst seviyeye çýkarmak.</p>
+                                <p class="text-sm text-slate-600 font-medium">Kullanï¿½cï¿½larï¿½n HBYS ile ilgili talep ve ï¿½ikayetlerini deï¿½erlendirerek, ï¿½alï¿½ï¿½an memnuniyetini en ï¿½st seviyeye ï¿½ï¿½karmak.</p>
                             </div>
                             <div class="tech-card flex items-start gap-3">
                                 <i class="fa-solid fa-globe text-blue-500 mt-1"></i>
-                                <p class="text-sm text-slate-600 font-medium">Bilgiye hýzlý ve güvenli eriþim ilkeleri ile uç kullanýcýlarýn ihtiyaçlarýný karþýlayacak þekilde Merkezimiz web sitesinin yönetimini yapmak.</p>
+                                <p class="text-sm text-slate-600 font-medium">Bilgiye hï¿½zlï¿½ ve gï¿½venli eriï¿½im ilkeleri ile uï¿½ kullanï¿½cï¿½larï¿½n ihtiyaï¿½larï¿½nï¿½ karï¿½ï¿½layacak ï¿½ekilde Merkezimiz web sitesinin yï¿½netimini yapmak.</p>
                             </div>
                             <div class="tech-card flex items-start gap-3">
                                 <i class="fa-solid fa-database text-blue-500 mt-1"></i>
-                                <p class="text-sm text-slate-600 font-medium">Saðlýk Bakanlýðý ve Ýl Saðlýk Müdürlüðüne çevrim içi bildirilmesi gerekli rutin veri giriþi iþlemlerini yapmak.</p>
+                                <p class="text-sm text-slate-600 font-medium">Saï¿½lï¿½k Bakanlï¿½ï¿½ï¿½ ve ï¿½l Saï¿½lï¿½k Mï¿½dï¿½rlï¿½ï¿½ï¿½ne ï¿½evrim iï¿½i bildirilmesi gerekli rutin veri giriï¿½i iï¿½lemlerini yapmak.</p>
                             </div>
                             <div class="tech-card flex items-start gap-3">
                                 <i class="fa-solid fa-chart-pie text-blue-500 mt-1"></i>
-                                <p class="text-sm text-slate-600 font-medium">Bilgi sistemi üzerinden veri taramasý gerektiren istatistiki sorgulamalarý ve özel raporlarý hazýrlamak.</p>
+                                <p class="text-sm text-slate-600 font-medium">Bilgi sistemi ï¿½zerinden veri taramasï¿½ gerektiren istatistiki sorgulamalarï¿½ ve ï¿½zel raporlarï¿½ hazï¿½rlamak.</p>
                             </div>
                         </div>
                     </div>
@@ -357,44 +483,44 @@
                     <div id="akis-semasi" class="tab-content">
                         <div class="flex items-center gap-3 mb-8">
                             <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Akýþ Þemasý</h2>
+                            <h2 class="text-2xl font-black text-slate-800">Akï¿½ï¿½ ï¿½emasï¿½</h2>
                         </div>
-                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Bilgi Ýþlem Merkezi donaným ve yazýlým arýza bildirim süreçleri, donaným temini ve að baðlantý süreçlerine ait akýþ þemalarý aþaðýda yer almaktadýr.</p>
+                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Bilgi ï¿½ï¿½lem Merkezi donanï¿½m ve yazï¿½lï¿½m arï¿½za bildirim sï¿½reï¿½leri, donanï¿½m temini ve aï¿½ baï¿½lantï¿½ sï¿½reï¿½lerine ait akï¿½ï¿½ ï¿½emalarï¿½ aï¿½aï¿½ï¿½da yer almaktadï¿½r.</p>
                         <div class="bg-slate-50 border border-slate-200 rounded-xl p-6 text-center text-slate-400">
                             <i class="fa-solid fa-diagram-project text-4xl mb-3"></i>
-                            <p class="font-semibold text-sm">Arýza Takip ve Süreç Akýþ Þemasý Görseli</p>
+                            <p class="font-semibold text-sm">Arï¿½za Takip ve Sï¿½reï¿½ Akï¿½ï¿½ ï¿½emasï¿½ Gï¿½rseli</p>
                         </div>
                     </div>
 
                     <div id="bulut" class="tab-content">
                         <div class="flex items-center gap-3 mb-8">
                             <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Bilgi Ýþlem Merkezi Bulut</h2>
+                            <h2 class="text-2xl font-black text-slate-800">Bilgi ï¿½ï¿½lem Merkezi Bulut</h2>
                         </div>
                         <div class="bg-gradient-to-br from-blue-600 to-indigo-800 rounded-2xl p-8 text-white flex flex-col items-center text-center">
                             <i class="fa-solid fa-cloud-arrow-up text-5xl mb-4 text-blue-200"></i>
                             <h3 class="text-xl font-bold mb-2">Kurumsal Bulut Depolama</h3>
-                            <p class="text-blue-100 text-sm mb-6 max-w-md">Hastane personelimize özel güvenli dosya paylaþým ve depolama alanýna eriþmek için kurumsal bilgilerinizle giriþ yapýnýz.</p>
-                            <a href="#" class="bg-white text-blue-700 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-slate-100 transition shadow-lg">Bulut Sistemine Giriþ Yap</a>
+                            <p class="text-blue-100 text-sm mb-6 max-w-md">Hastane personelimize ï¿½zel gï¿½venli dosya paylaï¿½ï¿½m ve depolama alanï¿½na eriï¿½mek iï¿½in kurumsal bilgilerinizle giriï¿½ yapï¿½nï¿½z.</p>
+                            <a href="#" class="bg-white text-blue-700 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-slate-100 transition shadow-lg">Bulut Sistemine Giriï¿½ Yap</a>
                         </div>
                     </div>
 
                     <div id="hbys-doktor" class="tab-content">
-                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">HBYS Doktor Eðitim Videolarý</h2></div>
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">HBYS Doktor Eï¿½itim Videolarï¿½</h2></div>
                         <div class="grid sm:grid-cols-2 gap-5">
                             <div class="video-card">
-                                <img src="/images/placeholder-video.jpg" alt="Video Kapaðý" class="bg-slate-800">
+                                <img src="/images/placeholder-video.jpg" alt="Video Kapaï¿½ï¿½" class="bg-slate-800">
                                 <div class="play-btn"><i class="fa-solid fa-play ml-1"></i></div>
                                 <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
-                                    <h4 class="text-white font-bold text-sm">Poliklinik Muayene Ekraný Kullanýmý</h4>
+                                    <h4 class="text-white font-bold text-sm">Poliklinik Muayene Ekranï¿½ Kullanï¿½mï¿½</h4>
                                     <p class="text-slate-300 text-xs mt-1">12:45 Dk</p>
                                 </div>
                             </div>
                             <div class="video-card">
-                                <img src="/images/placeholder-video.jpg" alt="Video Kapaðý" class="bg-slate-800">
+                                <img src="/images/placeholder-video.jpg" alt="Video Kapaï¿½ï¿½" class="bg-slate-800">
                                 <div class="play-btn"><i class="fa-solid fa-play ml-1"></i></div>
                                 <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
-                                    <h4 class="text-white font-bold text-sm">E-Reçete ve E-Rapor Düzenleme</h4>
+                                    <h4 class="text-white font-bold text-sm">E-Reï¿½ete ve E-Rapor Dï¿½zenleme</h4>
                                     <p class="text-slate-300 text-xs mt-1">08:20 Dk</p>
                                 </div>
                             </div>
@@ -402,13 +528,13 @@
                     </div>
 
                     <div id="hbys-sekreter" class="tab-content">
-                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">HBYS Sekreter Eðitim Videolarý</h2></div>
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">HBYS Sekreter Eï¿½itim Videolarï¿½</h2></div>
                         <div class="grid sm:grid-cols-2 gap-5">
                             <div class="video-card">
-                                <img src="/images/placeholder-video.jpg" alt="Video Kapaðý" class="bg-slate-800">
+                                <img src="/images/placeholder-video.jpg" alt="Video Kapaï¿½ï¿½" class="bg-slate-800">
                                 <div class="play-btn"><i class="fa-solid fa-play ml-1"></i></div>
                                 <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
-                                    <h4 class="text-white font-bold text-sm">Hasta Kayýt ve Randevu Ýþlemleri</h4>
+                                    <h4 class="text-white font-bold text-sm">Hasta Kayï¿½t ve Randevu ï¿½ï¿½lemleri</h4>
                                     <p class="text-slate-300 text-xs mt-1">15:10 Dk</p>
                                 </div>
                             </div>
@@ -416,13 +542,13 @@
                     </div>
 
                     <div id="hbys-hemsire" class="tab-content">
-                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">HBYS Hemþirelik Eðitim Videolarý</h2></div>
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">HBYS Hemï¿½irelik Eï¿½itim Videolarï¿½</h2></div>
                         <div class="grid sm:grid-cols-2 gap-5">
                             <div class="video-card">
-                                <img src="/images/placeholder-video.jpg" alt="Video Kapaðý" class="bg-slate-800">
+                                <img src="/images/placeholder-video.jpg" alt="Video Kapaï¿½ï¿½" class="bg-slate-800">
                                 <div class="play-btn"><i class="fa-solid fa-play ml-1"></i></div>
                                 <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
-                                    <h4 class="text-white font-bold text-sm">Klinik Order Takibi ve Ýlaç Düþümü</h4>
+                                    <h4 class="text-white font-bold text-sm">Klinik Order Takibi ve ï¿½laï¿½ Dï¿½ï¿½ï¿½mï¿½</h4>
                                     <p class="text-slate-300 text-xs mt-1">10:30 Dk</p>
                                 </div>
                             </div>
@@ -430,13 +556,13 @@
                     </div>
 
                     <div id="hbys-genel" class="tab-content">
-                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">HBYS Genel Eðitim Videolarý</h2></div>
-                        <p class="text-slate-600">Sisteme giriþ, þifre deðiþtirme ve temel menü navigasyonu eðitimleri.</p>
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">HBYS Genel Eï¿½itim Videolarï¿½</h2></div>
+                        <p class="text-slate-600">Sisteme giriï¿½, ï¿½ifre deï¿½iï¿½tirme ve temel menï¿½ navigasyonu eï¿½itimleri.</p>
                     </div>
 
                     <div id="pacs-egitim" class="tab-content">
-                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Pacs Eðitim Videolarý</h2></div>
-                        <p class="text-slate-600">Radyolojik görüntüleme sistemleri (PACS) üzerinden görüntü inceleme ve ölçüm araçlarý kullanýmý.</p>
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Pacs Eï¿½itim Videolarï¿½</h2></div>
+                        <p class="text-slate-600">Radyolojik gï¿½rï¿½ntï¿½leme sistemleri (PACS) ï¿½zerinden gï¿½rï¿½ntï¿½ inceleme ve ï¿½lï¿½ï¿½m araï¿½larï¿½ kullanï¿½mï¿½.</p>
                     </div>
 
                     <div id="mevzuat" class="tab-content">
@@ -445,14 +571,14 @@
                             <a href="#" class="flex items-center justify-between p-4 bg-slate-50 hover:bg-blue-50 border border-slate-100 rounded-xl transition group">
                                 <div class="flex items-center gap-4">
                                     <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm text-red-500"><i class="fa-solid fa-file-pdf"></i></div>
-                                    <div><p class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition">Kiþisel Verilerin Korunmasý Kanunu (KVKK) Bilgilendirme Metni</p></div>
+                                    <div><p class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition">Kiï¿½isel Verilerin Korunmasï¿½ Kanunu (KVKK) Bilgilendirme Metni</p></div>
                                 </div>
                                 <i class="fa-solid fa-download text-slate-400 group-hover:text-blue-600"></i>
                             </a>
                             <a href="#" class="flex items-center justify-between p-4 bg-slate-50 hover:bg-blue-50 border border-slate-100 rounded-xl transition group">
                                 <div class="flex items-center gap-4">
                                     <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm text-red-500"><i class="fa-solid fa-file-pdf"></i></div>
-                                    <div><p class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition">Bilgi Güvenliði Politikasý</p></div>
+                                    <div><p class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition">Bilgi Gï¿½venliï¿½i Politikasï¿½</p></div>
                                 </div>
                                 <i class="fa-solid fa-download text-slate-400 group-hover:text-blue-600"></i>
                             </a>
@@ -460,44 +586,44 @@
                     </div>
 
                     <div id="personel-ag" class="tab-content">
-                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Personel Kablosuz Að Baðlantýsý</h2></div>
-                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Hastane personelimiz <strong>Gazi_Personel</strong> aðýna kurumsal e-posta adresleri ve þifreleri ile güvenli bir þekilde baðlanabilirler.</p>
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Personel Kablosuz Aï¿½ Baï¿½lantï¿½sï¿½</h2></div>
+                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Hastane personelimiz <strong>Gazi_Personel</strong> aï¿½ï¿½na kurumsal e-posta adresleri ve ï¿½ifreleri ile gï¿½venli bir ï¿½ekilde baï¿½lanabilirler.</p>
                         <div class="p-5 bg-amber-50 border border-amber-100 rounded-xl flex items-start gap-3">
                             <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5"></i>
-                            <p class="text-sm text-amber-800 font-medium">Ýlk baðlantý kurulumunda cihazýnýza sertifika yüklenmesi gerekebilir. Adým adým kurulum rehberini indirmek için <a href="#" class="font-bold underline">týklayýnýz.</a></p>
+                            <p class="text-sm text-amber-800 font-medium">ï¿½lk baï¿½lantï¿½ kurulumunda cihazï¿½nï¿½za sertifika yï¿½klenmesi gerekebilir. Adï¿½m adï¿½m kurulum rehberini indirmek iï¿½in <a href="#" class="font-bold underline">tï¿½klayï¿½nï¿½z.</a></p>
                         </div>
                     </div>
 
                     <div id="hasta-ag" class="tab-content">
-                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Yatan Hasta ve Refakatçi Wi-Fi</h2></div>
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">Yatan Hasta ve Refakatï¿½i Wi-Fi</h2></div>
                         <div class="tech-card border-blue-100 bg-blue-50/50">
-                            <h4 class="font-bold text-slate-800 mb-2">Nasýl Baðlanýlýr?</h4>
+                            <h4 class="font-bold text-slate-800 mb-2">Nasï¿½l Baï¿½lanï¿½lï¿½r?</h4>
                             <ol class="list-decimal list-inside space-y-2 text-sm text-slate-600 font-medium">
-                                <li>Cihazýnýzýn Wi-Fi ayarlarýndan <strong>Gazi_Misafir</strong> aðýný seçin.</li>
-                                <li>Açýlan giriþ ekranýnda TC Kimlik Numaranýzý ve cep telefonu numaranýzý girin.</li>
-                                <li>Telefonunuza SMS ile gelen doðrulama kodunu ekrana girerek internet eriþiminizi baþlatýn.</li>
+                                <li>Cihazï¿½nï¿½zï¿½n Wi-Fi ayarlarï¿½ndan <strong>Gazi_Misafir</strong> aï¿½ï¿½nï¿½ seï¿½in.</li>
+                                <li>Aï¿½ï¿½lan giriï¿½ ekranï¿½nda TC Kimlik Numaranï¿½zï¿½ ve cep telefonu numaranï¿½zï¿½ girin.</li>
+                                <li>Telefonunuza SMS ile gelen doï¿½rulama kodunu ekrana girerek internet eriï¿½iminizi baï¿½latï¿½n.</li>
                             </ol>
                         </div>
                     </div>
 
                     <div id="vpn" class="tab-content">
-                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">VPN Kullaným Kýlavuzu</h2></div>
-                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Hastane aðý dýþýndan (evden veya uzaktan) kurumsal sistemlere ve elektronik kaynaklara eriþim için VPN kurulumu gereklidir.</p>
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">VPN Kullanï¿½m Kï¿½lavuzu</h2></div>
+                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Hastane aï¿½ï¿½ dï¿½ï¿½ï¿½ndan (evden veya uzaktan) kurumsal sistemlere ve elektronik kaynaklara eriï¿½im iï¿½in VPN kurulumu gereklidir.</p>
                         <button class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-lg font-bold text-sm transition">
-                            <i class="fa-solid fa-book"></i> PDF Kýlavuzu Ýndir
+                            <i class="fa-solid fa-book"></i> PDF Kï¿½lavuzu ï¿½ndir
                         </button>
                     </div>
 
                     <div id="e-imza" class="tab-content">
-                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">E-Ýmza Temin Ýþlemleri</h2></div>
-                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Yeni baþlayan hekimlerimizin ve e-imza süresi dolan personelimizin TUBÝTAK Kamu SM üzerinden yapmasý gereken baþvuru adýmlarý.</p>
+                        <div class="flex items-center gap-3 mb-8"><div class="w-1.5 h-8 bg-blue-600 rounded-full"></div><h2 class="text-2xl font-black text-slate-800">E-ï¿½mza Temin ï¿½ï¿½lemleri</h2></div>
+                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Yeni baï¿½layan hekimlerimizin ve e-imza sï¿½resi dolan personelimizin TUBï¿½TAK Kamu SM ï¿½zerinden yapmasï¿½ gereken baï¿½vuru adï¿½mlarï¿½.</p>
                         <div class="grid sm:grid-cols-2 gap-4">
                             <a href="#" class="tech-card flex items-center justify-between group cursor-pointer hover:bg-blue-50">
-                                <span class="font-bold text-slate-700 text-sm group-hover:text-blue-700">Ýlk Defa Baþvuru Yapacaklar</span>
+                                <span class="font-bold text-slate-700 text-sm group-hover:text-blue-700">ï¿½lk Defa Baï¿½vuru Yapacaklar</span>
                                 <i class="fa-solid fa-arrow-right text-slate-300 group-hover:text-blue-500"></i>
                             </a>
                             <a href="#" class="tech-card flex items-center justify-between group cursor-pointer hover:bg-blue-50">
-                                <span class="font-bold text-slate-700 text-sm group-hover:text-blue-700">Süresi Dolan E-Ýmza Yenileme</span>
+                                <span class="font-bold text-slate-700 text-sm group-hover:text-blue-700">Sï¿½resi Dolan E-ï¿½mza Yenileme</span>
                                 <i class="fa-solid fa-arrow-right text-slate-300 group-hover:text-blue-500"></i>
                             </a>
                         </div>

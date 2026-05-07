@@ -1,0 +1,199 @@
+@model GaziHastane.Models.BasinKurumsalIletisim
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Basın ve Kurumsal İletişim Yönetimi";
+}
+
+<style>
+    /* Container and card */
+    .form-container { max-width: 920px; margin: 0 auto; }
+
+    .card-header {
+        background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 100%);
+        color: #ffffff;
+        padding: 1.8rem 2rem;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .card-body {
+        padding: 1.6rem 1.8rem;
+        background: #ffffff; /* force light background for contrast on dark admin layout */
+        color: #0f172a; /* dark text for readability */
+    }
+
+    .form-group { margin-bottom: 1.25rem; }
+
+    /* Labels and headings */
+    .form-label { font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; display: block; }
+    .form-section h3 { color: #0f172a; margin-bottom: 1rem; font-size: 1.05rem; border-bottom: 2px solid #7c3aed; padding-bottom: 0.5rem; }
+
+    /* Inputs / textarea - force white background and dark text to ensure visibility inside dark admin shell */
+    .form-control {
+        border: 1px solid #e6e7eb;
+        background: #ffffff;
+        color: #0f172a;
+        border-radius: 8px;
+        padding: 0.7rem 0.95rem;
+        font-size: 1rem;
+        transition: box-shadow .15s ease, border-color .15s ease;
+    }
+
+    .form-control::placeholder { color: #94a3b8; opacity: 1; }
+    .form-control:focus { border-color: #7c3aed; box-shadow: 0 6px 18px rgba(124,58,237,0.10); outline: none; }
+
+    textarea.form-control { min-height: 160px; resize: vertical; font-family: inherit; }
+
+    /* Buttons */
+    .btn-primary { background: linear-gradient(135deg,#7c3aed 0%,#5b21b6 100%); color:#fff; padding:.65rem 1.6rem; border-radius:8px; border:none; font-weight:700; }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(92,51,179,0.22); }
+    .btn-secondary { background: #6b7280; color:#fff; padding:.65rem 1.6rem; border-radius:8px; border:none; font-weight:700; margin-left:.5rem; }
+
+    /* Info / success boxes */
+    .info-box { background: #f1f5f9; border-left: 4px solid #7c3aed; padding: 0.9rem 1rem; border-radius:6px; margin-bottom:1rem; color:#0f172a; }
+    .info-box strong { color: #5b21b6; }
+    .success-message { background:#ecfdf5; border:1px solid #bbf7d0; color:#064e3b; padding:1rem; border-radius:8px; margin-bottom:1rem; }
+
+    /* Card sections */
+    .form-section { background: #ffffff; padding: 1.2rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #eef2ff; }
+
+    .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @@media (max-width: 768px) { .two-column { grid-template-columns: 1fr; } .card-header { padding:1.2rem; } .card-body { padding:1rem; } }
+
+    .required::after { content: " *"; color: #e11d48; }
+
+    /* Ensure form text overrides dark admin theme styles */
+    .form-container, .card-header, .card-body, .form-section, .info-box { color: inherit !important; }
+</style>
+
+<div class="form-container mt-6">
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="success-message">
+            <strong>✓ Başarılı!</strong> @TempData["Success"]
+        </div>
+    }
+
+    <div class="card border-0 shadow-md">
+        <div class="card-header">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-bullhorn text-2xl"></i>
+                <div>
+                    <h1 class="text-3xl font-black">Basın ve Kurumsal İletişim Birimi</h1>
+                    <p class="text-white/80 mt-1">Birim bilgilerini buradan güncelleyebilirsiniz</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="info-box">
+                <strong>ℹ️ Bilgi:</strong> Bu sayfada girdiğiniz bilgiler anasayfasında "Hastanemizde" menüsü altında "Basın ve Kurumsal İletişim" seçeneğinde görüntülenecektir.
+            </div>
+
+            <form asp-action="BasinVeKurumsalIletisimKaydet" method="post" class="needs-validation">
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" asp-for="Id" />
+
+                <!-- GENEL BİLGİLER BÖLÜMÜ -->
+                <div class="form-section">
+                    <h3><i class="fa-solid fa-info-circle mr-2"></i>Genel Bilgiler</h3>
+
+                    <div class="form-group">
+                        <label asp-for="Baslik" class="form-label required">Başlık</label>
+                        <input type="text" asp-for="Baslik" class="form-control" maxlength="255" placeholder="Birim adı">
+                        <span asp-validation-for="Baslik" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Aciklama" class="form-label required">Açıklama / Hakkımızda</label>
+                        <textarea asp-for="Aciklama" class="form-control" placeholder="Birimin detaylı açıklaması..."></textarea>
+                        <span asp-validation-for="Aciklama" class="text-danger"></span>
+                        <small class="text-muted">Birim hakkında detaylı bilgi yazınız. HTML formatı desteklenir.</small>
+                    </div>
+                </div>
+
+                <!-- İLETİŞİM BİLGİLERİ BÖLÜMÜ -->
+                <div class="form-section">
+                    <h3><i class="fa-solid fa-address-book mr-2"></i>İletişim Bilgileri</h3>
+
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label asp-for="Telefon" class="form-label">Telefon Numarası</label>
+                            <input type="tel" asp-for="Telefon" class="form-control" placeholder="0312 202 44 39" maxlength="50">
+                            <span asp-validation-for="Telefon" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Email" class="form-label">E-Posta Adresi</label>
+                            <input type="email" asp-for="Email" class="form-control" placeholder="gazihastanesibasin@gazi.edu.tr" maxlength="150">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Lokasyon" class="form-label">Ofis Konumu</label>
+                        <input type="text" asp-for="Lokasyon" class="form-control" placeholder="E Blok, 11. Kat" maxlength="150">
+                        <span asp-validation-for="Lokasyon" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- DURUM BÖLÜMÜ -->
+                <div class="form-section">
+                    <h3><i class="fa-solid fa-toggle-on mr-2"></i>Durum</h3>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" asp-for="IsActive" value="true" />
+                            <span>Bu birimi aktif tut</span>
+                        </label>
+                    </div>
+
+                    <small class="text-muted">
+                        Son güncelleme: <strong>@Model?.SonGuncelleme.ToString("dd.MM.yyyy HH:mm")</strong>
+                    </small>
+                </div>
+
+                <!-- BUTONLAR BÖLÜMÜ -->
+                <div class="form-group text-center mt-4">
+                    <button type="submit" class="btn-primary">
+                        <i class="fa-solid fa-save mr-2"></i>Kaydet
+                    </button>
+                    <a href="@Url.Action("Index", "Kurumsal")" class="btn-secondary">
+                        <i class="fa-solid fa-times mr-2"></i>İptal
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Form validation
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+
+        // Auto-save draft function (optional)
+        document.querySelector('textarea[name="Aciklama"]').addEventListener('change', function() {
+            console.log('Content changed - could implement auto-save here');
+        });
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

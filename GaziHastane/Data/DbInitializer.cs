@@ -1,4 +1,4 @@
-ï»¿using GaziHastane.Models;
+using GaziHastane.Models;
 using GaziHastane.Security;
 using System;
 using System.Linq;
@@ -10,10 +10,10 @@ namespace GaziHastane.Data
     {
         public static void Initialize(GaziHastaneContext context)
         {
-            // VeritabanÄ±nÄ±n oluÅŸturulduÄŸundan emin ol (EÄŸer migration yapÄ±lmadÄ±ysa bunu oluÅŸturur)
+            // Veritabanýnýn oluþturulduðundan emin ol (Eðer migration yapýlmadýysa bunu oluþturur)
             context.Database.EnsureCreated();
 
-            // HastaRehberi iÃ§in geriye dÃ¶nÃ¼k kolon gÃ¼venliÄŸi
+            // HastaRehberi için geriye dönük kolon güvenliði
             context.Database.ExecuteSqlRaw("ALTER TABLE \"HastaRehberi\" ADD COLUMN IF NOT EXISTS \"AcilisTipi\" character varying(20) NOT NULL DEFAULT 'Modal';");
             context.Database.ExecuteSqlRaw("ALTER TABLE \"HastaRehberi\" ADD COLUMN IF NOT EXISTS \"HedefUrl\" character varying(500) NULL;");
             context.Database.ExecuteSqlRaw("ALTER TABLE \"HastaRehberi\" ADD COLUMN IF NOT EXISTS \"ModalIcerik\" text NULL;");
@@ -43,13 +43,13 @@ namespace GaziHastane.Data
             ");
             context.Database.ExecuteSqlRaw(@"
                 INSERT INTO ""AdminMenuItems"" (""Section"", ""PermissionKey"", ""Url"", ""Label"", ""IconClass"", ""Controller"", ""Action"", ""HoverIconClass"", ""SortOrder"", ""IsSuperAdminOnly"", ""IsActive"")
-                SELECT 'System', NULL, '/Admin/TahlilSonuclari/Giris', 'Tahlil SonuÃ§ GiriÅŸi', 'fa-solid fa-vials', 'TahlilSonuclari', 'Giris', 'group-hover:text-cyan-400', 9, false, true
+                SELECT 'System', NULL, '/Admin/TahlilSonuclari/Giris', 'Tahlil Sonuç Giriþi', 'fa-solid fa-vials', 'TahlilSonuclari', 'Giris', 'group-hover:text-cyan-400', 9, false, true
                 WHERE EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'AdminMenuItems')
                   AND NOT EXISTS (SELECT 1 FROM ""AdminMenuItems"" WHERE ""Controller"" = 'TahlilSonuclari' AND COALESCE(""Action"", '') = 'Giris');
             ");
             context.Database.ExecuteSqlRaw(@"
                 INSERT INTO ""AdminMenuItems"" (""Section"", ""PermissionKey"", ""Url"", ""Label"", ""IconClass"", ""Controller"", ""Action"", ""HoverIconClass"", ""SortOrder"", ""IsSuperAdminOnly"", ""IsActive"")
-                SELECT 'System', NULL, '/Admin/TahlilSonuclari/Sorgula', 'Tahlil SonuÃ§ Sorgu', 'fa-solid fa-magnifying-glass-chart', 'TahlilSonuclari', 'Sorgula', 'group-hover:text-blue-400', 10, false, true
+                SELECT 'System', NULL, '/Admin/TahlilSonuclari/Sorgula', 'Tahlil Sonuç Sorgu', 'fa-solid fa-magnifying-glass-chart', 'TahlilSonuclari', 'Sorgula', 'group-hover:text-blue-400', 10, false, true
                 WHERE EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'AdminMenuItems')
                   AND NOT EXISTS (SELECT 1 FROM ""AdminMenuItems"" WHERE ""Controller"" = 'TahlilSonuclari' AND COALESCE(""Action"", '') = 'Sorgula');
             ");
@@ -127,72 +127,72 @@ namespace GaziHastane.Data
             context.Database.ExecuteSqlRaw("ALTER TABLE \"DoktorRandevuPlanGunleri\" DROP COLUMN IF EXISTS \"MolaHerHastaSayisi\";");
             context.Database.ExecuteSqlRaw("ALTER TABLE \"DoktorRandevuPlanGunleri\" DROP COLUMN IF EXISTS \"MolaSureDakika\";");
 
-            // 1. YEMEK LÄ°STESÄ° KONTROLÃœ VE EKLEME
+            // 1. YEMEK LÝSTESÝ KONTROLÜ VE EKLEME
             if (!context.YemekListesi.Any())
             {
                 var bugun = DateTime.Today;
 
                 var yemekler = new YemekListesi[]
                 {
-                    // BugÃ¼nÃ¼n Yemekleri
-                    new YemekListesi { Tarih = bugun, Ogun = 1, Corba = "Ã‡ay", AnaYemek = "HaÅŸlanmÄ±ÅŸ Yumurta", YardimciYemek = "Beyaz Peynir", TatliMeyve = "Siyah Zeytin", ToplamKalori = 450 },
-                    new YemekListesi { Tarih = bugun, Ogun = 2, Corba = "Mercimek Ã‡orbasÄ±", AnaYemek = "Ä°zmir KÃ¶fte", YardimciYemek = "PirinÃ§ PilavÄ±", TatliMeyve = "KemalpaÅŸa TatlÄ±sÄ±", ToplamKalori = 850 },
-                    new YemekListesi { Tarih = bugun, Ogun = 3, Corba = "Ezogelin Ã‡orbasÄ±", AnaYemek = "Taze Fasulye", YardimciYemek = "Bulgur PilavÄ±", TatliMeyve = "Mevsim Meyvesi", ToplamKalori = 700 },
+                    // Bugünün Yemekleri
+                    new YemekListesi { Tarih = bugun, Ogun = 1, Corba = "Çay", AnaYemek = "Haþlanmýþ Yumurta", YardimciYemek = "Beyaz Peynir", TatliMeyve = "Siyah Zeytin", ToplamKalori = 450 },
+                    new YemekListesi { Tarih = bugun, Ogun = 2, Corba = "Mercimek Çorbasý", AnaYemek = "Ýzmir Köfte", YardimciYemek = "Pirinç Pilavý", TatliMeyve = "Kemalpaþa Tatlýsý", ToplamKalori = 850 },
+                    new YemekListesi { Tarih = bugun, Ogun = 3, Corba = "Ezogelin Çorbasý", AnaYemek = "Taze Fasulye", YardimciYemek = "Bulgur Pilavý", TatliMeyve = "Mevsim Meyvesi", ToplamKalori = 700 },
 
-                    // YarÄ±nÄ±n Yemekleri
-                    new YemekListesi { Tarih = bugun.AddDays(1), Ogun = 1, Corba = "SÃ¼t", AnaYemek = "Omlet", YardimciYemek = "KaÅŸar Peyniri", TatliMeyve = "Bal-TereyaÄŸ", ToplamKalori = 500 },
-                    new YemekListesi { Tarih = bugun.AddDays(1), Ogun = 2, Corba = "Tarhana Ã‡orbasÄ±", AnaYemek = "PiliÃ§ TopkapÄ±", YardimciYemek = "Meyhane PilavÄ±", TatliMeyve = "SÃ¼tlaÃ§", ToplamKalori = 800 },
-                    new YemekListesi { Tarih = bugun.AddDays(1), Ogun = 3, Corba = "Yayla Ã‡orbasÄ±", AnaYemek = "KarnÄ±yarÄ±k", YardimciYemek = "CacÄ±k", TatliMeyve = "Elma", ToplamKalori = 750 },
+                    // Yarýnýn Yemekleri
+                    new YemekListesi { Tarih = bugun.AddDays(1), Ogun = 1, Corba = "Süt", AnaYemek = "Omlet", YardimciYemek = "Kaþar Peyniri", TatliMeyve = "Bal-Tereyað", ToplamKalori = 500 },
+                    new YemekListesi { Tarih = bugun.AddDays(1), Ogun = 2, Corba = "Tarhana Çorbasý", AnaYemek = "Piliç Topkapý", YardimciYemek = "Meyhane Pilavý", TatliMeyve = "Sütlaç", ToplamKalori = 800 },
+                    new YemekListesi { Tarih = bugun.AddDays(1), Ogun = 3, Corba = "Yayla Çorbasý", AnaYemek = "Karnýyarýk", YardimciYemek = "Cacýk", TatliMeyve = "Elma", ToplamKalori = 750 },
                 };
 
-                // Verileri veritabanÄ± kontekstine ekle
+                // Verileri veritabaný kontekstine ekle
                 context.YemekListesi.AddRange(yemekler);
                 context.SaveChanges();
             if (!context.KurumsalSekmeler.Any())
             {
                 context.KurumsalSekmeler.AddRange(
-                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane HakkÄ±nda</h3><p>Gazi Hastanesi, bÃ¶lgenin en kÃ¶klÃ¼ saÄŸlÄ±k kuruluÅŸlarÄ±ndan biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
-                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli saÄŸlÄ±k hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane Hakkýnda</h3><p>Gazi Hastanesi, bölgenin en köklü saðlýk kuruluþlarýndan biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli saðlýk hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
                 );
                 context.SaveChanges();
             }
             }
 
-            // 2. BÃ–LÃœM VE DOKTOR KONTROLÃœ VE EKLEME
+            // 2. BÖLÜM VE DOKTOR KONTROLÜ VE EKLEME
             if (!context.Bolumler.Any())
             {
-                // Ã–NEMLÄ°: ArayÃ¼zde gÃ¶rÃ¼nmesi iÃ§in 'Kategori' alanlarÄ± (Dahili, Cerrahi, Temel) eklendi!
+                // ÖNEMLÝ: Arayüzde görünmesi için 'Kategori' alanlarý (Dahili, Cerrahi, Temel) eklendi!
                 var bolumler = new Bolum[] {
-                     new Bolum { Ad = "Kardiyoloji", Aciklama = "Kalp saÄŸlÄ±ÄŸÄ± birimi", Kategori = "Dahili", IsActive = true },
-                     new Bolum { Ad = "Genel Cerrahi", Aciklama = "Cerrahi mÃ¼dahaleler", Kategori = "Cerrahi", IsActive = true },
-                     new Bolum { Ad = "Anatomi", Aciklama = "Ä°nsan anatomisi", Kategori = "Temel", IsActive = true },
-                     new Bolum { Ad = "GÃ¶z HastalÄ±klarÄ±", Aciklama = "GÃ¶z ve gÃ¶rme saÄŸlÄ±ÄŸÄ±", Kategori = "Dahili", IsActive = true },
-                     new Bolum { Ad = "Acil TÄ±p", Aciklama = "7/24 Acil Servis", Kategori = "Dahili", IsActive = true }
+                     new Bolum { Ad = "Kardiyoloji", Aciklama = "Kalp saðlýðý birimi", Kategori = "Dahili", IsActive = true },
+                     new Bolum { Ad = "Genel Cerrahi", Aciklama = "Cerrahi müdahaleler", Kategori = "Cerrahi", IsActive = true },
+                     new Bolum { Ad = "Anatomi", Aciklama = "Ýnsan anatomisi", Kategori = "Temel", IsActive = true },
+                     new Bolum { Ad = "Göz Hastalýklarý", Aciklama = "Göz ve görme saðlýðý", Kategori = "Dahili", IsActive = true },
+                     new Bolum { Ad = "Acil Týp", Aciklama = "7/24 Acil Servis", Kategori = "Dahili", IsActive = true }
                  };
                 context.Bolumler.AddRange(bolumler);
 
-                // BÃ¶lÃ¼mleri Ã¶nce kaydet ki ID'leri oluÅŸsun (Doktor eklerken lazÄ±m olacak)
+                // Bölümleri önce kaydet ki ID'leri oluþsun (Doktor eklerken lazým olacak)
                 context.SaveChanges();
             if (!context.KurumsalSekmeler.Any())
             {
                 context.KurumsalSekmeler.AddRange(
-                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane HakkÄ±nda</h3><p>Gazi Hastanesi, bÃ¶lgenin en kÃ¶klÃ¼ saÄŸlÄ±k kuruluÅŸlarÄ±ndan biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
-                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli saÄŸlÄ±k hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane Hakkýnda</h3><p>Gazi Hastanesi, bölgenin en köklü saðlýk kuruluþlarýndan biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli saðlýk hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
                 );
                 context.SaveChanges();
             }
 
-                // Ã–rnek Doktor Ekle
+                // Örnek Doktor Ekle
                 var kardiyoloji = context.Bolumler.FirstOrDefault(b => b.Ad == "Kardiyoloji");
                 if (kardiyoloji != null)
                 {
                     context.Doktorlar.Add(new Doktor
                     {
                         Ad = "Hasret",
-                        Soyad = "Ã–zdemir",
+                        Soyad = "Özdemir",
                         Unvan = "Uzman Dr.",
                         BolumId = kardiyoloji.Id,
-                        UzmanlikAlani = "Kalp YetmezliÄŸi",
+                        UzmanlikAlani = "Kalp Yetmezliði",
                         IsActive = true
                     });
                 }
@@ -201,23 +201,23 @@ namespace GaziHastane.Data
             if (!context.KurumsalSekmeler.Any())
             {
                 context.KurumsalSekmeler.AddRange(
-                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane HakkÄ±nda</h3><p>Gazi Hastanesi, bÃ¶lgenin en kÃ¶klÃ¼ saÄŸlÄ±k kuruluÅŸlarÄ±ndan biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
-                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli saÄŸlÄ±k hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane Hakkýnda</h3><p>Gazi Hastanesi, bölgenin en köklü saðlýk kuruluþlarýndan biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli saðlýk hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
                 );
                 context.SaveChanges();
             }
             }
 
-            // 3. YETKÄ°LÄ°LER (ADMIN) - EÄŸer yoksa bir yÃ¶netici ekle
+            // 3. YETKÝLÝLER (ADMIN) - Eðer yoksa bir yönetici ekle
             if (!context.Yetkililer.Any())
             {
-                // DÄ°KKAT: SifreHash ÅŸu an dÃ¼z metin olarak kullanÄ±lÄ±yor. Ãœretimde hash uygulayÄ±n.
+                // DÝKKAT: SifreHash þu an düz metin olarak kullanýlýyor. Üretimde hash uygulayýn.
                 var admin = new Yetkili
                 {
-                    AdSoyad = "Admin KullanÄ±cÄ±",
+                    AdSoyad = "Admin Kullanýcý",
                     Email = "admin@gazihastanesi.com",
                     SifreHash = "admin123",
-                    Rol = "SÃ¼per Admin",
+                    Rol = "Süper Admin",
                     AdminSayfaYetkileri = AdminPanelPermissions.Serialize(AdminPanelPermissions.AllKeys),
                     IsActive = true,
                     KayitTarihi = DateTime.UtcNow
@@ -227,8 +227,8 @@ namespace GaziHastane.Data
             if (!context.KurumsalSekmeler.Any())
             {
                 context.KurumsalSekmeler.AddRange(
-                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane HakkÄ±nda</h3><p>Gazi Hastanesi, bÃ¶lgenin en kÃ¶klÃ¼ saÄŸlÄ±k kuruluÅŸlarÄ±ndan biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
-                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli saÄŸlÄ±k hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane Hakkýnda</h3><p>Gazi Hastanesi, bölgenin en köklü saðlýk kuruluþlarýndan biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli saðlýk hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
                 );
                 context.SaveChanges();
             }
@@ -246,12 +246,12 @@ namespace GaziHastane.Data
                     yetkili.AdminSayfaYetkileri = tumYetkiler;
                 }
 
-                if (!context.Yetkililer.Any(x => x.Rol == "SÃ¼per Admin"))
+                if (!context.Yetkililer.Any(x => x.Rol == "Süper Admin"))
                 {
                     var ilkYetkili = context.Yetkililer.OrderBy(x => x.Id).FirstOrDefault();
                     if (ilkYetkili != null)
                     {
-                        ilkYetkili.Rol = "SÃ¼per Admin";
+                        ilkYetkili.Rol = "Süper Admin";
                         ilkYetkili.AdminSayfaYetkileri = tumYetkiler;
                     }
                 }
@@ -260,19 +260,19 @@ namespace GaziHastane.Data
             if (!context.KurumsalSekmeler.Any())
             {
                 context.KurumsalSekmeler.AddRange(
-                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane HakkÄ±nda</h3><p>Gazi Hastanesi, bÃ¶lgenin en kÃ¶klÃ¼ saÄŸlÄ±k kuruluÅŸlarÄ±ndan biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
-                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli saÄŸlÄ±k hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane Hakkýnda</h3><p>Gazi Hastanesi, bölgenin en köklü saðlýk kuruluþlarýndan biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli saðlýk hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
                 );
                 context.SaveChanges();
             }
             }
 
-            // 4. KURUMSAL SIDEBAR MENÃœ TOHUMLAMA
+            // 4. KURUMSAL SIDEBAR MENÜ TOHUMLAMA
             if (!context.KurumsalMenuGruplar.Any())
             {
                 var grupYonetim = new KurumsalMenuGrup
                 {
-                    GrupAdi = "YÃ¶netim",
+                    GrupAdi = "Yönetim",
                     Sira = 1,
                     AktifMi = true
                 };
@@ -289,31 +289,31 @@ namespace GaziHastane.Data
             if (!context.KurumsalSekmeler.Any())
             {
                 context.KurumsalSekmeler.AddRange(
-                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane HakkÄ±nda</h3><p>Gazi Hastanesi, bÃ¶lgenin en kÃ¶klÃ¼ saÄŸlÄ±k kuruluÅŸlarÄ±ndan biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
-                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli saÄŸlÄ±k hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane Hakkýnda</h3><p>Gazi Hastanesi, bölgenin en köklü saðlýk kuruluþlarýndan biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli saðlýk hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
                 );
                 context.SaveChanges();
             }
 
                 var menuler = new KurumsalMenu[]
                 {
-                    new KurumsalMenu { GrupId = grupYonetim.Id, Baslik = "BaÅŸhekimlik", Url = "/Kurumsal/Bashekimlik", IconClass = "fa-user-tie", Sira = 1, AktifMi = true },
-                    new KurumsalMenu { GrupId = grupYonetim.Id, Baslik = "BaÅŸmÃ¼dÃ¼rlÃ¼k", Url = "/Kurumsal/Basmudurluk", IconClass = "fa-users", Sira = 2, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupYonetim.Id, Baslik = "Baþhekimlik", Url = "/Kurumsal/Bashekimlik", IconClass = "fa-user-tie", Sira = 1, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupYonetim.Id, Baslik = "Baþmüdürlük", Url = "/Kurumsal/Basmudurluk", IconClass = "fa-users", Sira = 2, AktifMi = true },
 
-                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "HakkÄ±mÄ±zda", Url = "/Kurumsal/Index", IconClass = "fa-circle-info", Sira = 1, AktifMi = true },
-                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "HemÅŸirelik Hizmetleri", Url = "/Kurumsal/HemsirelikHizmetleri", IconClass = "fa-user-nurse", Sira = 2, AktifMi = true },
-                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Bilgi Ä°ÅŸlem Merkezi", Url = "/Kurumsal/BilgiIslem", IconClass = "fa-microchip", Sira = 3, AktifMi = true },
-                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Ä°ÅŸ SaÄŸlÄ±ÄŸÄ± ve GÃ¼venliÄŸi", Url = "/Kurumsal/IsSagligi", IconClass = "fa-shield-halved", Sira = 4, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Hakkýmýzda", Url = "/Kurumsal/Index", IconClass = "fa-circle-info", Sira = 1, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Hemþirelik Hizmetleri", Url = "/Kurumsal/HemsirelikHizmetleri", IconClass = "fa-user-nurse", Sira = 2, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Bilgi Ýþlem Merkezi", Url = "/Kurumsal/BilgiIslem", IconClass = "fa-microchip", Sira = 3, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Ýþ Saðlýðý ve Güvenliði", Url = "/Kurumsal/IsSagligi", IconClass = "fa-shield-halved", Sira = 4, AktifMi = true },
                     new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Enfeksiyon Kontrol", Url = "/Kurumsal/Enfeksiyon", IconClass = "fa-virus-slash", Sira = 5, AktifMi = true },
-                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "EczacÄ±lÄ±k Hizmetleri", Url = "/Kurumsal/Eczacilik", IconClass = "fa-pills", Sira = 6, AktifMi = true },
-                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "SatÄ±n Alma", Url = "/Kurumsal/SatinAlma", IconClass = "fa-cart-shopping", Sira = 7, AktifMi = true },
-                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Ä°statistik ve Raporlama", Url = "/Kurumsal/Istatistik", IconClass = "fa-chart-line", Sira = 8, AktifMi = true },
-                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "ArÅŸiv Birimi", Url = "/Kurumsal/Arsiv", IconClass = "fa-box-archive", Sira = 9, AktifMi = true },
-                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Hasta Ä°letiÅŸim Birimi", Url = "/Kurumsal/HastaIletisim", IconClass = "fa-comment-medical", Sira = 10, AktifMi = true },
-                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Ä°ÅŸ AkÄ±ÅŸ ÅžemalarÄ±", Url = "/Kurumsal/IsAkis", IconClass = "fa-diagram-project", Sira = 11, AktifMi = true },
-                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Organizasyon ÅžemalarÄ±", Url = "/Kurumsal/Organizasyon", IconClass = "fa-sitemap", Sira = 12, AktifMi = true },
-                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Ä°Ã§ Kontrol", Url = "/Kurumsal/IcKontrol", IconClass = "fa-check-double", Sira = 13, AktifMi = true },
-                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "BasÄ±n ve Kurumsal Ä°letiÅŸim", Url = "/Kurumsal/BasinIletisim", IconClass = "fa-bullhorn", Sira = 14, AktifMi = true }
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Eczacýlýk Hizmetleri", Url = "/Kurumsal/Eczacilik", IconClass = "fa-pills", Sira = 6, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Satýn Alma", Url = "/Kurumsal/SatinAlma", IconClass = "fa-cart-shopping", Sira = 7, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Ýstatistik ve Raporlama", Url = "/Kurumsal/Istatistik", IconClass = "fa-chart-line", Sira = 8, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Arþiv Birimi", Url = "/Kurumsal/Arsiv", IconClass = "fa-box-archive", Sira = 9, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Hasta Ýletiþim Birimi", Url = "/Kurumsal/HastaIletisim", IconClass = "fa-comment-medical", Sira = 10, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Ýþ Akýþ Þemalarý", Url = "/Kurumsal/IsAkis", IconClass = "fa-diagram-project", Sira = 11, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Organizasyon Þemalarý", Url = "/Kurumsal/Organizasyon", IconClass = "fa-sitemap", Sira = 12, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Ýç Kontrol", Url = "/Kurumsal/IcKontrol", IconClass = "fa-check-double", Sira = 13, AktifMi = true },
+                    new KurumsalMenu { GrupId = grupKurumsal.Id, Baslik = "Basýn ve Kurumsal Ýletiþim", Url = "/Kurumsal/BasinIletisim", IconClass = "fa-bullhorn", Sira = 14, AktifMi = true }
                 };
 
                 context.KurumsalMenuler.AddRange(menuler);
@@ -321,54 +321,54 @@ namespace GaziHastane.Data
             if (!context.KurumsalSekmeler.Any())
             {
                 context.KurumsalSekmeler.AddRange(
-                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane HakkÄ±nda</h3><p>Gazi Hastanesi, bÃ¶lgenin en kÃ¶klÃ¼ saÄŸlÄ±k kuruluÅŸlarÄ±ndan biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
-                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli saÄŸlÄ±k hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane Hakkýnda</h3><p>Gazi Hastanesi, bölgenin en köklü saðlýk kuruluþlarýndan biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli saðlýk hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
                 );
                 context.SaveChanges();
             }
             }
 
-            // 5. ADMIN SIDEBAR MENÃœ TOHUMLAMA
+            // 5. ADMIN SIDEBAR MENÜ TOHUMLAMA
             if (!context.AdminMenuItems.Any())
             {
                 var menuItems = new AdminMenuItem[]
                 {
-                    new() { Section = "Main", PermissionKey = AdminPanelPermissions.Keys.Dashboard, Url = "/Admin/Home/Index", Label = "GÃ¶sterge Paneli", IconClass = "fa-solid fa-cube", Controller = "Home", HoverIconClass = "group-hover:text-cyan-400", SortOrder = 1 },
+                    new() { Section = "Main", PermissionKey = AdminPanelPermissions.Keys.Dashboard, Url = "/Admin/Home/Index", Label = "Gösterge Paneli", IconClass = "fa-solid fa-cube", Controller = "Home", HoverIconClass = "group-hover:text-cyan-400", SortOrder = 1 },
                     new() { Section = "Main", PermissionKey = AdminPanelPermissions.Keys.Doktorlar, Url = "/Admin/Doktorlar/Index", Label = "Doktorlar", IconClass = "fa-solid fa-user-doctor", Controller = "Doktorlar", HoverIconClass = "group-hover:text-purple-400", SortOrder = 2 },
                     new() { Section = "Main", PermissionKey = AdminPanelPermissions.Keys.Bolumler, Url = "/Admin/Bolumler/Index", Label = "Poliklinikler", IconClass = "fa-solid fa-network-wired", Controller = "Bolumler", HoverIconClass = "group-hover:text-pink-400", SortOrder = 3 },
                     new() { Section = "Main", PermissionKey = AdminPanelPermissions.Keys.HastaRehberi, Url = "/Admin/HastaRehberi/Index", Label = "Hasta Rehberi", IconClass = "fa-solid fa-book-medical", Controller = "HastaRehberi", HoverIconClass = "group-hover:text-emerald-400", SortOrder = 4 },
-                    new() { Section = "Main", PermissionKey = AdminPanelPermissions.Keys.Iletisim, Url = "/Admin/Iletisim/Index", Label = "Ä°letiÅŸim", IconClass = "fa-solid fa-address-book", Controller = "Iletisim", HoverIconClass = "group-hover:text-orange-400", SortOrder = 5 },
+                    new() { Section = "Main", PermissionKey = AdminPanelPermissions.Keys.Iletisim, Url = "/Admin/Iletisim/Index", Label = "Ýletiþim", IconClass = "fa-solid fa-address-book", Controller = "Iletisim", HoverIconClass = "group-hover:text-orange-400", SortOrder = 5 },
 
-                    new() { Section = "System", PermissionKey = AdminPanelPermissions.Keys.KaliteYonetimi, Url = "/Admin/HizliIslem/Kalite", Label = "Kalite YÃ¶netimi", IconClass = "fa-solid fa-shield-heart", Controller = "HizliIslem", Action = "Kalite", HoverIconClass = "group-hover:text-blue-400", SortOrder = 1 },
-                    new() { Section = "System", PermissionKey = AdminPanelPermissions.Keys.Egitim, Url = "/Admin/Egitim/Index", Label = "EÄŸitim Komitesi", IconClass = "fa-solid fa-graduation-cap", Controller = "Egitim", HoverIconClass = "group-hover:text-orange-500", SortOrder = 2 },
+                    new() { Section = "System", PermissionKey = AdminPanelPermissions.Keys.KaliteYonetimi, Url = "/Admin/HizliIslem/Kalite", Label = "Kalite Yönetimi", IconClass = "fa-solid fa-shield-heart", Controller = "HizliIslem", Action = "Kalite", HoverIconClass = "group-hover:text-blue-400", SortOrder = 1 },
+                    new() { Section = "System", PermissionKey = AdminPanelPermissions.Keys.Egitim, Url = "/Admin/Egitim/Index", Label = "Eðitim Komitesi", IconClass = "fa-solid fa-graduation-cap", Controller = "Egitim", HoverIconClass = "group-hover:text-orange-500", SortOrder = 2 },
                     new() { Section = "System", PermissionKey = AdminPanelPermissions.Keys.YemekListesi, Url = "/Admin/HizliIslem/YemekListesi", Label = "Yemek Listesi", IconClass = "fa-solid fa-utensils", Controller = "HizliIslem", Action = "YemekListesi", HoverIconClass = "group-hover:text-orange-500", SortOrder = 3 },
-                    new() { Section = "System", PermissionKey = AdminPanelPermissions.Keys.Kroki, Url = "/Admin/Kroki/Index", Label = "Kroki YÃ¶netimi", IconClass = "fa-solid fa-map-location-dot", Controller = "Kroki", HoverIconClass = "group-hover:text-cyan-400", SortOrder = 4 },
-                    new() { Section = "System", PermissionKey = AdminPanelPermissions.Keys.Medya, Url = "/Admin/HizliIslem/Gorsel", Label = "GÃ¶rseller", IconClass = "fa-solid fa-images", Controller = "HizliIslem", Action = "Gorsel", ActiveIconClass = "text-pink-500 drop-shadow-[0_0_8px_rgba(236,72,153,0.8)] scale-110", HoverIconClass = "group-hover:text-pink-400 group-hover:scale-110", SortOrder = 5 },
+                    new() { Section = "System", PermissionKey = AdminPanelPermissions.Keys.Kroki, Url = "/Admin/Kroki/Index", Label = "Kroki Yönetimi", IconClass = "fa-solid fa-map-location-dot", Controller = "Kroki", HoverIconClass = "group-hover:text-cyan-400", SortOrder = 4 },
+                    new() { Section = "System", PermissionKey = AdminPanelPermissions.Keys.Medya, Url = "/Admin/HizliIslem/Gorsel", Label = "Görseller", IconClass = "fa-solid fa-images", Controller = "HizliIslem", Action = "Gorsel", ActiveIconClass = "text-pink-500 drop-shadow-[0_0_8px_rgba(236,72,153,0.8)] scale-110", HoverIconClass = "group-hover:text-pink-400 group-hover:scale-110", SortOrder = 5 },
                     new() { Section = "System", PermissionKey = AdminPanelPermissions.Keys.Medya, Url = "/Admin/HizliIslem/AnaSayfaGorsel", Label = "Ana Sayfa Slider", IconClass = "fa-solid fa-image", Controller = "HizliIslem", Action = "AnaSayfaGorsel", ActiveIconClass = "text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)] scale-110", HoverIconClass = "group-hover:text-yellow-400 group-hover:scale-110", SortOrder = 6 },
                     new() { Section = "System", PermissionKey = AdminPanelPermissions.Keys.Medya, Url = "/Admin/HizliIslem/Belge", Label = "Belgeler", IconClass = "fa-solid fa-file-lines", Controller = "HizliIslem", Action = "Belge", ActiveIconClass = "text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)] scale-110", HoverIconClass = "group-hover:text-blue-400 group-hover:scale-110", SortOrder = 7 },
                     new() { Section = "System", PermissionKey = AdminPanelPermissions.Keys.DoktorRandevuPlani, Url = "/Admin/DoktorRandevuPlan/Index", Label = "Doktor Planlama", IconClass = "fa-solid fa-calendar-plus", Controller = "DoktorRandevuPlan", HoverIconClass = "group-hover:text-cyan-400", SortOrder = 8 },
 
-                    new() { Section = "Content", PermissionKey = AdminPanelPermissions.Keys.DijitalIslemler, Url = "/Admin/HizliIslem/Index", Label = "Dijital Ä°ÅŸlemler", IconClass = "fa-solid fa-layer-group", Controller = "HizliIslem", Action = "Index", ActiveIconClass = "neon-icon text-cyan-400", HoverIconClass = "group-hover:text-cyan-400", SortOrder = 1 },
+                    new() { Section = "Content", PermissionKey = AdminPanelPermissions.Keys.DijitalIslemler, Url = "/Admin/HizliIslem/Index", Label = "Dijital Ýþlemler", IconClass = "fa-solid fa-layer-group", Controller = "HizliIslem", Action = "Index", ActiveIconClass = "neon-icon text-cyan-400", HoverIconClass = "group-hover:text-cyan-400", SortOrder = 1 },
                     new() { Section = "Content", PermissionKey = AdminPanelPermissions.Keys.Haberler, Url = "/Admin/Haberler/Index", Label = "Haberler", IconClass = "fa-solid fa-newspaper", Controller = "Haberler", HoverIconClass = "group-hover:text-blue-400", SortOrder = 2 },
                     new() { Section = "Content", PermissionKey = AdminPanelPermissions.Keys.Etkinlikler, Url = "/Admin/Etkinlikler/Index", Label = "Etkinlikler", IconClass = "fa-solid fa-calendar-days", Controller = "Etkinlikler", HoverIconClass = "group-hover:text-fuchsia-400", SortOrder = 3 },
                     new() { Section = "Content", PermissionKey = AdminPanelPermissions.Keys.Duyurular, Url = "/Admin/Duyurular/Index", Label = "Duyurular", IconClass = "fa-solid fa-bullhorn", Controller = "Duyurular", HoverIconClass = "group-hover:text-yellow-400", SortOrder = 4 },
 
-                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/Index", Label = "Sidebar YÃ¶netimi", Controller = "Kurumsal", Action = "Index", SortOrder = 1 },
-                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Bashekimlik/Index", Label = "BaÅŸhekimlik", Controller = "Bashekimlik", Action = "Index", SortOrder = 2 },
-                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Basmudurluk/Index", Label = "BaÅŸmÃ¼dÃ¼rlÃ¼k", Controller = "Basmudurluk", Action = "Index", SortOrder = 3 },
-                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/HemsirelikHizmetleri", Label = "HemÅŸirelik Hizmetleri", Controller = "Kurumsal", Action = "HemsirelikHizmetleri", SortOrder = 4 },
-                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/BilgiIslemMerkezi", Label = "Bilgi Ä°ÅŸlem Merkezi", Controller = "Kurumsal", Action = "BilgiIslemMerkezi", SortOrder = 5 },
-                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/IsSagligiVeGuvenligi", Label = "Ä°ÅŸ SaÄŸlÄ±ÄŸÄ± ve GÃ¼venliÄŸi", Controller = "Kurumsal", Action = "IsSagligiVeGuvenligi", SortOrder = 6 },
+                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/Index", Label = "Sidebar Yönetimi", Controller = "Kurumsal", Action = "Index", SortOrder = 1 },
+                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Bashekimlik/Index", Label = "Baþhekimlik", Controller = "Bashekimlik", Action = "Index", SortOrder = 2 },
+                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Basmudurluk/Index", Label = "Baþmüdürlük", Controller = "Basmudurluk", Action = "Index", SortOrder = 3 },
+                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/HemsirelikHizmetleri", Label = "Hemþirelik Hizmetleri", Controller = "Kurumsal", Action = "HemsirelikHizmetleri", SortOrder = 4 },
+                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/BilgiIslemMerkezi", Label = "Bilgi Ýþlem Merkezi", Controller = "Kurumsal", Action = "BilgiIslemMerkezi", SortOrder = 5 },
+                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/IsSagligiVeGuvenligi", Label = "Ýþ Saðlýðý ve Güvenliði", Controller = "Kurumsal", Action = "IsSagligiVeGuvenligi", SortOrder = 6 },
                     new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/EnfeksiyonKontrol", Label = "Enfeksiyon Kontrol", Controller = "Kurumsal", Action = "EnfeksiyonKontrol", SortOrder = 7 },
-                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/EczacilikHizmetleri", Label = "EczacÄ±lÄ±k Hizmetleri", Controller = "Kurumsal", Action = "EczacilikHizmetleri", SortOrder = 8 },
-                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/SatinAlma", Label = "SatÄ±n Alma", Controller = "Kurumsal", Action = "SatinAlma", SortOrder = 9 },
-                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/IstatistikVeRaporlama", Label = "Ä°statistik ve Raporlama", Controller = "Kurumsal", Action = "IstatistikVeRaporlama", SortOrder = 10 },
-                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/ArsivBirimi", Label = "ArÅŸiv Birimi", Controller = "Kurumsal", Action = "ArsivBirimi", SortOrder = 11 },
-                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/HastaIletisimBirimi", Label = "Hasta Ä°letiÅŸim Birimi", Controller = "Kurumsal", Action = "HastaIletisimBirimi", SortOrder = 12 },
-                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/IsAkisSemalari", Label = "Ä°ÅŸ AkÄ±ÅŸ ÅžemalarÄ±", Controller = "Kurumsal", Action = "IsAkisSemalari", SortOrder = 13 },
-                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/OrganizasyonSemalari", Label = "Organizasyon ÅžemalarÄ±", Controller = "Kurumsal", Action = "OrganizasyonSemalari", SortOrder = 14 },
-                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/IcKontrol", Label = "Ä°Ã§ Kontrol", Controller = "Kurumsal", Action = "IcKontrol", SortOrder = 15 },
-                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/BasinVeKurumsalIletisim", Label = "BasÄ±n ve Kurumsal Ä°letiÅŸim", Controller = "Kurumsal", Action = "BasinVeKurumsalIletisim", SortOrder = 16 },
+                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/EczacilikHizmetleri", Label = "Eczacýlýk Hizmetleri", Controller = "Kurumsal", Action = "EczacilikHizmetleri", SortOrder = 8 },
+                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/SatinAlma", Label = "Satýn Alma", Controller = "Kurumsal", Action = "SatinAlma", SortOrder = 9 },
+                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/IstatistikVeRaporlama", Label = "Ýstatistik ve Raporlama", Controller = "Kurumsal", Action = "IstatistikVeRaporlama", SortOrder = 10 },
+                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/ArsivBirimi", Label = "Arþiv Birimi", Controller = "Kurumsal", Action = "ArsivBirimi", SortOrder = 11 },
+                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/HastaIletisimBirimi", Label = "Hasta Ýletiþim Birimi", Controller = "Kurumsal", Action = "HastaIletisimBirimi", SortOrder = 12 },
+                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/IsAkisSemalari", Label = "Ýþ Akýþ Þemalarý", Controller = "Kurumsal", Action = "IsAkisSemalari", SortOrder = 13 },
+                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/OrganizasyonSemalari", Label = "Organizasyon Þemalarý", Controller = "Kurumsal", Action = "OrganizasyonSemalari", SortOrder = 14 },
+                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/IcKontrol", Label = "Ýç Kontrol", Controller = "Kurumsal", Action = "IcKontrol", SortOrder = 15 },
+                    new() { Section = "KurumsalSub", PermissionKey = AdminPanelPermissions.Keys.Kurumsal, Url = "/Admin/Kurumsal/BasinVeKurumsalIletisim", Label = "Basýn ve Kurumsal Ýletiþim", Controller = "Kurumsal", Action = "BasinVeKurumsalIletisim", SortOrder = 16 },
 
                     new() { Section = "Security", Url = "/Admin/Yetkililer/Index", Label = "Yetkili Listesi", IconClass = "fa-solid fa-user-shield", Controller = "Yetkililer", Action = "Index", HoverIconClass = "group-hover:text-rose-400", IsSuperAdminOnly = true, SortOrder = 1 }
                 };
@@ -378,8 +378,8 @@ namespace GaziHastane.Data
             if (!context.KurumsalSekmeler.Any())
             {
                 context.KurumsalSekmeler.AddRange(
-                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane HakkÄ±nda</h3><p>Gazi Hastanesi, bÃ¶lgenin en kÃ¶klÃ¼ saÄŸlÄ±k kuruluÅŸlarÄ±ndan biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
-                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli saÄŸlÄ±k hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Genel Bilgi", SekmeId = "genel-bilgi", Icerik = "<h3>Hastane Hakkýnda</h3><p>Gazi Hastanesi, bölgenin en köklü saðlýk kuruluþlarýndan biridir...</p>", Sira = 1, IconClass = "fa-solid fa-hospital" },
+                    new KurumsalSekme { SayfaKey = "hakkimizda", Baslik = "Misyon & Vizyon", SekmeId = "misyon-vizyon", Icerik = "<h3>Misyonumuz</h3><p>Kaliteli saðlýk hizmeti sunmak...</p>", Sira = 2, IconClass = "fa-solid fa-eye" }
                 );
                 context.SaveChanges();
             }
@@ -387,3 +387,4 @@ namespace GaziHastane.Data
         }
     }
 }
+

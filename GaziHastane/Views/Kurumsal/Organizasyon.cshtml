@@ -1,216 +1,68 @@
-﻿@* RAZOR KOD BLOĞU *@
+@model List<GaziHastane.Models.KurumsalIcerik>
+@using System.IO
 @{
     ViewData["Title"] = "Organizasyon Şemaları - Kurumsal Bilgi Sistemi";
 }
 
-@section Scripts {
-    <style>
-        /* ==========================================
-                   1. GENEL ANİMASYONLAR VE YAPI
-                   ========================================== */
-        .page-fade-in {
-            animation: fadeInPage 0.6s ease-out forwards;
-            opacity: 0;
-        }
+<style>
+    .page-fade-in {
+        animation: fadeInPage 0.6s ease-out forwards;
+        opacity: 0;
+    }
 
-        @@keyframes fadeInPage {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
+    @@keyframes fadeInPage {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    .schema-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.04);
+        scroll-margin-top: 120px;
+    }
 
-        /* ==========================================
-                   2. YAN MENÜ (SIDEBAR) DÜZELTME STİLLERİ
-                   ========================================== */
-        .sidebar-link {
-            transition: all 0.2s ease;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            padding: 0.65rem 0.9rem !important;
-            border-radius: 12px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: #64748b;
-            text-decoration: none;
-            margin-bottom: 2px;
-        }
+    .schema-file {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        border: 1px solid #dbeafe;
+        background: linear-gradient(180deg, #f8fbff, #ffffff);
+        border-radius: 1rem;
+        padding: 1rem 1.1rem;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.2s ease;
+    }
 
-            .sidebar-link span.flex {
-                display: flex !important;
-                align-items: center !important;
-                gap: 0.75rem !important;
-            }
+    .schema-file:hover {
+        transform: translateY(-2px);
+        border-color: #93c5fd;
+        box-shadow: 0 8px 18px rgba(37,99,235,0.08);
+    }
 
-            .sidebar-link i.fa-solid {
-                text-align: center;
-                width: 1rem;
-            }
-
-            .sidebar-link:hover {
-                background: #eff6ff;
-                color: #2563eb;
-                transform: translateX(4px);
-            }
-
-        .section-title {
-            font-size: 0.68rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: #94a3b8;
-            margin: 1.4rem 0.9rem 0.4rem;
-        }
-
-        .custom-scroll::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .custom-scroll::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: #e2e8f0;
-            border-radius: 10px;
-        }
-
-        /* ==========================================
-                   3. İÇ MENÜ (SEKMELER)
-                   ========================================== */
-        @@media (max-width: 1279px) {
-            .mobile-tab-menu {
-                display: flex !important;
-                flex-direction: row !important;
-                overflow-x: auto;
-                white-space: nowrap;
-                gap: 0.5rem;
-                padding-bottom: 0.5rem;
-                -webkit-overflow-scrolling: touch;
-            }
-
-                .mobile-tab-menu > * {
-                    margin-top: 0 !important;
-                }
-
-                .mobile-tab-menu::-webkit-scrollbar {
-                    display: none;
-                }
-
-            .sub-menu-btn {
-                width: auto !important;
-                flex-shrink: 0;
-                padding: 0.6rem 1.2rem;
-            }
-
-            .kurumsal-icerik-baslik {
-                display: none;
-            }
-        }
-
-        .sub-menu-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            width: 100%;
-            padding: 0.85rem 1rem;
-            border-radius: 14px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #475569;
-            background: white;
-            border: 1px solid #f1f5f9;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-        }
-
-            .sub-menu-btn:hover {
-                background: #f8fafc;
-                transform: translateX(3px);
-            }
-
-            .sub-menu-btn.active {
-                background: #eff6ff;
-                color: #2563eb;
-                border-color: #bfdbfe;
-                box-shadow: 0 4px 12px rgba(37,99,235,0.08);
-            }
-
-        /* ==========================================
-                   4. İÇERİK ANİMASYONLARI VE KARTLAR
-                   ========================================== */
-        .tab-content {
-            display: none;
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-            .tab-content.active {
-                display: block;
-                animation: fadeInTab 0.4s ease forwards;
-            }
-
-        @@keyframes fadeInTab {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .tech-card {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 1.25rem;
-            transition: all 0.2s;
-            height: 100%;
-        }
-
-            .tech-card:hover {
-                border-color: #cbd5e1;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            }
-    </style>
-
-    <script>
-        function openTab(event, tabId) {
-            if(event) event.preventDefault();
-            document.querySelectorAll('.sub-menu-btn').forEach(btn => btn.classList.remove('active'));
-            if(event) { event.currentTarget.classList.add('active'); }
-            else {
-                let activeBtn = document.querySelector(`[onclick*="${tabId}"]`);
-                if(activeBtn) activeBtn.classList.add('active');
-            }
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            let targetContent = document.getElementById(tabId);
-            if(targetContent) targetContent.classList.add('active');
-            if(history.pushState) { history.pushState(null, null, '#' + tabId); }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            let hash = window.location.hash.substring(1);
-            if(hash && document.getElementById(hash)) { openTab(null, hash); }
-        });
-    </script>
-}
+    .schema-icon {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 0.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: white;
+        flex-shrink: 0;
+    }
+</style>
 
 <main class="max-w-[1400px] mx-auto px-4 sm:px-6 py-8 mt-24 page-fade-in">
-
     <div class="flex flex-col lg:flex-row gap-7">
-
         <aside class="w-full lg:w-72 flex-shrink-0">
             @await Html.PartialAsync("_KurumsalSidebar")
         </aside>
 
         <section class="flex-1 min-w-0">
-
             <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
                 <i class="fa-solid fa-house text-[9px]"></i>
                 <i class="fa-solid fa-chevron-right text-[8px]"></i>
@@ -219,75 +71,72 @@
                 <span class="text-blue-600">Organizasyon Şemaları</span>
             </nav>
 
-            <div class="flex flex-col xl:flex-row gap-6 items-start">
-
-                <div class="mobile-tab-menu w-full xl:w-72 flex-shrink-0 space-y-2 bg-white p-4 rounded-[1.75rem] border border-slate-100" style="box-shadow: 0 4px 24px rgba(0,0,0,0.03);">
-                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-2">İçerik Menüsü</p>
-
-                    <button onclick="openTab(event, 'genel')" class="sub-menu-btn active">
-                        <i class="fa-solid fa-sitemap w-5 text-center"></i> Organizasyon Şeması
-                    </button>
-                    <button onclick="openTab(event, 'yonetim')" class="sub-menu-btn">
-                        <i class="fa-solid fa-users-cog w-5 text-center"></i> Yönetim Organizasyon
-                    </button>
-                </div>
-
-                <div class="flex-1 w-full bg-white rounded-[1.75rem] p-7 sm:p-10 border border-slate-100" style="box-shadow: 0 12px 40px rgba(0,0,0,0.04); min-height: 600px;">
-
-                    <div id="genel" class="tab-content active">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Genel Organizasyon Şeması</h2>
-                        </div>
-
-                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-100 mb-8">
-                            <p class="text-slate-700 leading-relaxed font-medium">Gazi Üniversitesi Hastanesi'nin idari, tıbbi ve destek hizmetleri birimlerini kapsayan, birimler arası hiyerarşik bağı ve iletişim kanallarını gösteren genel organizasyon yapımızdır.</p>
-                        </div>
-
-                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-6 text-center text-slate-400 min-h-[400px] flex flex-col items-center justify-center">
-                            <i class="fa-solid fa-network-wired text-6xl mb-4 text-slate-300"></i>
-                            <h4 class="font-bold text-lg text-slate-600 mb-2">Genel Hastane Organizasyon Şeması</h4>
-                            <p class="font-medium text-sm text-slate-500 max-w-sm mb-6">Hastane genel hiyerarşisini gösteren geniş şema görseli buraya eklenecektir.</p>
-
-                            <button class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-bold text-sm transition shadow-sm">
-                                <i class="fa-solid fa-expand"></i> Şemayı Tam Ekran İncele
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id="yonetim" class="tab-content">
-                        <div class="flex items-center gap-3 mb-8">
-                            <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Yönetim Organizasyon Şeması</h2>
-                        </div>
-                        <p class="text-slate-600 leading-relaxed font-medium mb-6">Hastanemiz Başhekimlik makamı ile ona bağlı olarak görev yapan Başhekim Yardımcıları, Başmüdürlük, Hastane Müdürlükleri ve Hemşirelik Hizmetleri Müdürlüğü arasındaki yönetim şeması aşağıda yer almaktadır.</p>
-
-                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-6 text-center text-slate-400 min-h-[400px] flex flex-col items-center justify-center">
-                            <i class="fa-solid fa-users-rectangle text-6xl mb-4 text-slate-300"></i>
-                            <h4 class="font-bold text-lg text-slate-600 mb-2">Üst Yönetim Şeması</h4>
-                            <p class="font-medium text-sm text-slate-500 max-w-sm mb-6">Yönetim kademelerini ve bağlı müdürlükleri gösteren detaylı şema görseli buraya eklenecektir.</p>
-
-                            <button class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-bold text-sm transition shadow-sm">
-                                <i class="fa-solid fa-expand"></i> Şemayı Tam Ekran İncele
-                            </button>
-                        </div>
-
-                        <div class="mt-8 p-5 bg-blue-50 border border-blue-100 rounded-xl flex items-start gap-4">
-                            <i class="fa-solid fa-user-tie text-blue-600 text-2xl mt-1"></i>
-                            <div>
-                                <h4 class="font-bold text-slate-800 text-sm mb-1">Yönetim Kadromuz</h4>
-                                <p class="text-slate-600 text-sm leading-relaxed mb-3">Hastanemiz yönetim kadrosunda görev yapan yöneticilerimizin özgeçmişlerine ve iletişim bilgilerine "Başhekimlik" ve "Başmüdürlük" sayfalarından ulaşabilirsiniz.</p>
-                                <div class="flex gap-3">
-                                    <a href="/Kurumsal/Bashekimlik" class="text-xs font-bold bg-white border border-blue-200 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-600 hover:text-white transition">Başhekimlik Sayfası</a>
-                                    <a href="/Kurumsal/Basmudurluk" class="text-xs font-bold bg-white border border-blue-200 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-600 hover:text-white transition">Başmüdürlük Sayfası</a>
+            @if (Model != null && Model.Any())
+            {
+                <div class="space-y-4">
+                    @foreach (var item in Model.OrderBy(x => x.Sira))
+                    {
+                        <article id="org-@item.Id" class="schema-card">
+                            <div class="flex items-start gap-4 mb-4">
+                                <div class="w-1.5 h-10 bg-blue-600 rounded-full mt-1"></div>
+                                <div class="flex-1">
+                                    <h1 class="text-2xl font-black text-slate-800">@item.Baslik</h1>
+                                    @if (!string.IsNullOrWhiteSpace(item.Aciklama))
+                                    {
+                                        <p class="text-slate-600 mt-2 leading-relaxed">@item.Aciklama</p>
+                                    }
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
+                            @if (!string.IsNullOrWhiteSpace(item.MedyaYolu))
+                            {
+                                <a href="@item.MedyaYolu" target="_blank" class="schema-file">
+                                    <div class="schema-icon">
+                                        <i class="fa-solid fa-file-image"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="text-sm font-bold text-slate-900">@System.IO.Path.GetFileName(item.MedyaYolu)</div>
+                                        <div class="text-xs text-slate-500 mt-1">Şemayı açmak için tıklayın</div>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-blue-600"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <div class="schema-file">
+                                    <div class="schema-icon">
+                                        <i class="fa-solid fa-diagram-project"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="text-sm font-bold text-slate-900">Dosya eklenmemiş</div>
+                                        <div class="text-xs text-slate-500 mt-1">Bu başlık için henüz şema dosyası yüklenmedi.</div>
+                                    </div>
+                                </div>
+                            }
+                        </article>
+                    }
                 </div>
-            </div>
-
+            }
+            else
+            {
+                <div class="bg-white rounded-[1.75rem] p-12 border border-slate-100 text-center">
+                    <i class="fa-solid fa-inbox text-5xl text-slate-300 mb-4"></i>
+                    <p class="text-slate-500 font-medium text-lg">Organizasyon şemaları henüz eklenmemiştir.</p>
+                    <p class="text-slate-400 text-sm mt-2">Admin panelinden başlık ve şema dosyası ekleyebilirsiniz.</p>
+                </div>
+            }
         </section>
     </div>
 </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const hash = window.location.hash.replace('#', '');
+        if (hash) {
+            const target = document.getElementById(hash);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+    });
+</script>

@@ -944,4 +944,33 @@ namespace GaziHastane.Models
         [ForeignKey("PlanId")]
         public virtual DoktorRandevuPlani? Plan { get; set; }
     }
+
+    [Table("BasinKurumsalIletisim")]
+    public class BasinKurumsalIletisim
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string Baslik { get; set; } = "Basın ve Kurumsal İletişim Birimi";
+
+        [Required]
+        public string? Aciklama { get; set; } // Birimin açıklaması
+
+        [StringLength(50)]
+        public string? Telefon { get; set; }
+
+        [StringLength(150)]
+        [EmailAddress]
+        public string? Email { get; set; }
+
+        [StringLength(150)]
+        public string? Lokasyon { get; set; } // Ofis konumu (E Blok 11. Kat)
+
+        public DateTime SonGuncelleme { get; set; } = DateTime.UtcNow;
+
+        public bool IsActive { get; set; } = true;
+    }
 }

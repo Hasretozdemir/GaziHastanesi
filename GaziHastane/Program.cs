@@ -84,6 +84,16 @@ namespace GaziHastane
                             );
                             """);
 
+                        context.Database.ExecuteSqlRaw("""
+                            ALTER TABLE "KurumsalIcerikler"
+                            ADD COLUMN IF NOT EXISTS "IcerikTipi" VARCHAR(20) NOT NULL DEFAULT 'Form';
+                            """);
+
+                        context.Database.ExecuteSqlRaw("""
+                            ALTER TABLE "KurumsalIcerikler"
+                            ADD COLUMN IF NOT EXISTS "VideoUrl" VARCHAR(500);
+                            """);
+
                         DbInitializer.Initialize(context);
                     }
                     catch (Exception ex)

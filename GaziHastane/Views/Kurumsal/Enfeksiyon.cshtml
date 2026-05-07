@@ -1,4 +1,4 @@
-@* RAZOR KOD BLOÐU *@
+@* RAZOR KOD BLOï¿½U *@
 @{
     ViewData["Title"] = "Enfeksiyon Kontrol Komitesi - Kurumsal Bilgi Sistemi";
 }
@@ -6,7 +6,7 @@
 @section Scripts {
     <style>
         /* ==========================================
-                   1. GENEL ANÝMASYONLAR VE YAPI
+                   1. GENEL ANï¿½MASYONLAR VE YAPI
                    ========================================== */
         .page-fade-in {
             animation: fadeInPage 0.6s ease-out forwards;
@@ -26,7 +26,7 @@
         }
 
         /* ==========================================
-                   2. YAN MENÜ (SIDEBAR) DÜZELTME STÝLLERÝ
+                   2. YAN MENï¿½ (SIDEBAR) Dï¿½ZELTME STï¿½LLERï¿½
                    ========================================== */
         .sidebar-link {
             transition: all 0.2s ease;
@@ -82,7 +82,7 @@
         }
 
         /* ==========================================
-                   3. ÝÇ MENÜ (SEKMELER)
+                   3. ï¿½ï¿½ MENï¿½ (SEKMELER)
                    ========================================== */
         @@media (max-width: 1279px) {
             .mobile-tab-menu {
@@ -144,7 +144,7 @@
             }
 
         /* ==========================================
-                   4. ÝÇERÝK ANÝMASYONLARI VE KARTLAR
+                   4. ï¿½ï¿½ERï¿½K ANï¿½MASYONLARI VE KARTLAR
                    ========================================== */
         .tab-content {
             display: none;
@@ -251,22 +251,22 @@
             <div class="flex flex-col xl:flex-row gap-6 items-start">
 
                 <div class="mobile-tab-menu w-full xl:w-72 flex-shrink-0 space-y-2 bg-white p-4 rounded-[1.75rem] border border-slate-100" style="box-shadow: 0 4px 24px rgba(0,0,0,0.03);">
-                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-2">Komite Yönetimi</p>
+                    <p class="kurumsal-icerik-baslik text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-2">Komite Yï¿½netimi</p>
 
                     <button onclick="openTab(event, 'hakkimizda')" class="sub-menu-btn active">
-                        <i class="fa-solid fa-circle-info w-5 text-center"></i> Hakkýmýzda & Üyeler
+                        <i class="fa-solid fa-circle-info w-5 text-center"></i> Hakkï¿½mï¿½zda & ï¿½yeler
                     </button>
                     <button onclick="openTab(event, 'surveyans')" class="sub-menu-btn">
-                        <i class="fa-solid fa-microscope w-5 text-center"></i> Sürveyans Faaliyetleri
+                        <i class="fa-solid fa-microscope w-5 text-center"></i> Sï¿½rveyans Faaliyetleri
                     </button>
                     <button onclick="openTab(event, 'alt-gruplar')" class="sub-menu-btn">
-                        <i class="fa-solid fa-users-gear w-5 text-center"></i> Alt Çalýþma Gruplarý
+                        <i class="fa-solid fa-users-gear w-5 text-center"></i> Alt ï¿½alï¿½ï¿½ma Gruplarï¿½
                     </button>
                     <button onclick="openTab(event, 'dokumanlar')" class="sub-menu-btn">
-                        <i class="fa-solid fa-file-pdf w-5 text-center"></i> Dokümanlar
+                        <i class="fa-solid fa-file-pdf w-5 text-center"></i> Dokï¿½manlar
                     </button>
                     <button onclick="openTab(event, 'akis-semasi')" class="sub-menu-btn">
-                        <i class="fa-solid fa-diagram-project w-5 text-center"></i> Ýþ Akýþ Þemasý
+                        <i class="fa-solid fa-diagram-project w-5 text-center"></i> ï¿½ï¿½ Akï¿½ï¿½ ï¿½emasï¿½
                     </button>
                 </div>
 
@@ -279,19 +279,19 @@
                         </div>
 
                         <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-100 mb-8">
-                            <p class="text-slate-700 leading-relaxed font-medium">Enfeksiyon Kontrol Komitesi, saðlýk hizmeti ile iliþkili enfeksiyonlarýn önlenmesi ve kontrolü için, çalýþmalarýný spesifik alanlarda uzmanlaþmýþ <strong>Alt Çalýþma ve Yürütme Gruplarý</strong> ile koordineli bir þekilde yürütmektedir.</p>
+                            <p class="text-slate-700 leading-relaxed font-medium">Enfeksiyon Kontrol Komitesi, saï¿½lï¿½k hizmeti ile iliï¿½kili enfeksiyonlarï¿½n ï¿½nlenmesi ve kontrolï¿½ iï¿½in, ï¿½alï¿½ï¿½malarï¿½nï¿½ spesifik alanlarda uzmanlaï¿½mï¿½ï¿½ <strong>Alt ï¿½alï¿½ï¿½ma ve Yï¿½rï¿½tme Gruplarï¿½</strong> ile koordineli bir ï¿½ekilde yï¿½rï¿½tmektedir.</p>
                         </div>
 
                         <div class="grid sm:grid-cols-2 gap-6">
                             <div class="border border-slate-100 p-6 rounded-2xl bg-white shadow-sm">
-                                <h3 class="font-black text-slate-800 text-lg mb-4 flex items-center gap-2"><i class="fa-solid fa-user-doctor text-blue-600"></i> Komite Üyeleri</h3>
-                                <p class="text-sm text-slate-600 leading-relaxed">Baþhekimlik onayý ile görevlendirilen Enfeksiyon Hastalýklarý uzmanlarý, Mikrobiyoloji uzmanlarý, Baþhemþirelik temsilcileri ve diðer ilgili klinik uzmanlarýndan oluþur.</p>
-                                <a href="#" class="inline-block mt-4 text-xs font-bold text-blue-600 hover:underline">Üye Listesini Görüntüle <i class="fa-solid fa-arrow-right ml-1"></i></a>
+                                <h3 class="font-black text-slate-800 text-lg mb-4 flex items-center gap-2"><i class="fa-solid fa-user-doctor text-blue-600"></i> Komite ï¿½yeleri</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed">Baï¿½hekimlik onayï¿½ ile gï¿½revlendirilen Enfeksiyon Hastalï¿½klarï¿½ uzmanlarï¿½, Mikrobiyoloji uzmanlarï¿½, Baï¿½hemï¿½irelik temsilcileri ve diï¿½er ilgili klinik uzmanlarï¿½ndan oluï¿½ur.</p>
+                                <a href="#" class="inline-block mt-4 text-xs font-bold text-blue-600 hover:underline">ï¿½ye Listesini Gï¿½rï¿½ntï¿½le <i class="fa-solid fa-arrow-right ml-1"></i></a>
                             </div>
                             <div class="border border-slate-100 p-6 rounded-2xl bg-white shadow-sm">
-                                <h3 class="font-black text-slate-800 text-lg mb-4 flex items-center gap-2"><i class="fa-solid fa-users-rectangle text-blue-600"></i> Alt Çalýþma Grup Üyeleri</h3>
-                                <p class="text-sm text-slate-600 leading-relaxed">Komiteye baðlý olarak çalýþan; sürveyans, eðitim, sterilizasyon, antibiyotik kontrolü gibi alanlarda aktif görev alan hekim, hemþire ve teknik personeldir.</p>
-                                <a href="#" class="inline-block mt-4 text-xs font-bold text-blue-600 hover:underline">Üye Listesini Görüntüle <i class="fa-solid fa-arrow-right ml-1"></i></a>
+                                <h3 class="font-black text-slate-800 text-lg mb-4 flex items-center gap-2"><i class="fa-solid fa-users-rectangle text-blue-600"></i> Alt ï¿½alï¿½ï¿½ma Grup ï¿½yeleri</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed">Komiteye baï¿½lï¿½ olarak ï¿½alï¿½ï¿½an; sï¿½rveyans, eï¿½itim, sterilizasyon, antibiyotik kontrolï¿½ gibi alanlarda aktif gï¿½rev alan hekim, hemï¿½ire ve teknik personeldir.</p>
+                                <a href="#" class="inline-block mt-4 text-xs font-bold text-blue-600 hover:underline">ï¿½ye Listesini Gï¿½rï¿½ntï¿½le <i class="fa-solid fa-arrow-right ml-1"></i></a>
                             </div>
                         </div>
                     </div>
@@ -299,31 +299,31 @@
                     <div id="surveyans" class="tab-content">
                         <div class="flex items-center gap-3 mb-6">
                             <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Sürveyans Faaliyetleri</h2>
+                            <h2 class="text-2xl font-black text-slate-800">Sï¿½rveyans Faaliyetleri</h2>
                         </div>
 
                         <div class="mb-8">
-                            <h3 class="font-black text-slate-800 mb-4 text-sm uppercase tracking-wider">Ýzlem Süreçleri</h3>
+                            <h3 class="font-black text-slate-800 mb-4 text-sm uppercase tracking-wider">ï¿½zlem Sï¿½reï¿½leri</h3>
                             <div class="bg-slate-50 border border-slate-100 p-6 rounded-2xl h-80 overflow-y-auto custom-scroll">
                                 <div class="numbered-list-item">
                                     <div class="list-number">1</div>
-                                    <p class="text-xs text-slate-600 pt-1 leading-relaxed">Sürekli, kesintisiz aktif-prospektif sürveyans yöntemi ile izlem yapýlýr. Yoðun bakýmlarda invaziv araç iliþkili sürveyans, Yenidoðan ünitesinde doðum aðýrlýðýna göre sürveyans yürütülmektedir.</p>
+                                    <p class="text-xs text-slate-600 pt-1 leading-relaxed">Sï¿½rekli, kesintisiz aktif-prospektif sï¿½rveyans yï¿½ntemi ile izlem yapï¿½lï¿½r. Yoï¿½un bakï¿½mlarda invaziv araï¿½ iliï¿½kili sï¿½rveyans, Yenidoï¿½an ï¿½nitesinde doï¿½um aï¿½ï¿½rlï¿½ï¿½ï¿½na gï¿½re sï¿½rveyans yï¿½rï¿½tï¿½lmektedir.</p>
                                 </div>
                                 <div class="numbered-list-item">
                                     <div class="list-number">2</div>
-                                    <p class="text-xs text-slate-600 pt-1 leading-relaxed">Enfeksiyon Kontrol Ekibi tarafýndan haftada iki gün olaðan toplantý yapýlýr. Yazýlý ve sözlü sorunlar, eðitim çalýþmalarý ve epidemik durumlar deðerlendirilir.</p>
+                                    <p class="text-xs text-slate-600 pt-1 leading-relaxed">Enfeksiyon Kontrol Ekibi tarafï¿½ndan haftada iki gï¿½n olaï¿½an toplantï¿½ yapï¿½lï¿½r. Yazï¿½lï¿½ ve sï¿½zlï¿½ sorunlar, eï¿½itim ï¿½alï¿½ï¿½malarï¿½ ve epidemik durumlar deï¿½erlendirilir.</p>
                                 </div>
                                 <div class="numbered-list-item">
                                     <div class="list-number">3</div>
-                                    <p class="text-xs text-slate-600 pt-1 leading-relaxed">EKH, HBYS ve Laboratuvarlardan kültür sonuçlarýný günlük takip eder.</p>
+                                    <p class="text-xs text-slate-600 pt-1 leading-relaxed">EKH, HBYS ve Laboratuvarlardan kï¿½ltï¿½r sonuï¿½larï¿½nï¿½ gï¿½nlï¿½k takip eder.</p>
                                 </div>
                                 <div class="numbered-list-item">
                                     <div class="list-number">4</div>
-                                    <p class="text-xs text-slate-600 pt-1 leading-relaxed">Pozitif sonuçlar ENF.FR.001 Takip Formuna kaydedilir ve ünite ziyaretleri gerçekleþtirilir.</p>
+                                    <p class="text-xs text-slate-600 pt-1 leading-relaxed">Pozitif sonuï¿½lar ENF.FR.001 Takip Formuna kaydedilir ve ï¿½nite ziyaretleri gerï¿½ekleï¿½tirilir.</p>
                                 </div>
                                 <div class="numbered-list-item">
                                     <div class="list-number">5</div>
-                                    <p class="text-xs text-slate-600 pt-1 leading-relaxed">Ýzolasyon gerektiren durumlarda ilgili klinik sorumlularý ile görüþülerek gerekli önlemler alýnýr.</p>
+                                    <p class="text-xs text-slate-600 pt-1 leading-relaxed">ï¿½zolasyon gerektiren durumlarda ilgili klinik sorumlularï¿½ ile gï¿½rï¿½ï¿½ï¿½lerek gerekli ï¿½nlemler alï¿½nï¿½r.</p>
                                 </div>
                             </div>
                         </div>
@@ -332,16 +332,16 @@
                             <div class="tech-card">
                                 <div class="flex items-center gap-3 mb-3 text-rose-600">
                                     <i class="fa-solid fa-lungs text-xl"></i>
-                                    <h4 class="font-bold text-slate-800">Tüberküloz Sürveyansý</h4>
+                                    <h4 class="font-bold text-slate-800">Tï¿½berkï¿½loz Sï¿½rveyansï¿½</h4>
                                 </div>
-                                <p class="text-[11px] text-slate-500">Poliklinik ve kliniklerde aktif sürveyans yapýlýr. Form 014 doldurularak istatistik ve ilgili saðlýk merkezlerine iletilir.</p>
+                                <p class="text-[11px] text-slate-500">Poliklinik ve kliniklerde aktif sï¿½rveyans yapï¿½lï¿½r. Form 014 doldurularak istatistik ve ilgili saï¿½lï¿½k merkezlerine iletilir.</p>
                             </div>
                             <div class="tech-card">
                                 <div class="flex items-center gap-3 mb-3 text-amber-600">
                                     <i class="fa-solid fa-virus-covid text-xl"></i>
-                                    <h4 class="font-bold text-slate-800">Bulaþýcý Hastalýk Bildirimi</h4>
+                                    <h4 class="font-bold text-slate-800">Bulaï¿½ï¿½cï¿½ Hastalï¿½k Bildirimi</h4>
                                 </div>
-                                <p class="text-[11px] text-slate-500">Bildirimi zorunlu tanýlar HBYS üzerinden otomatik olarak KDS ve ÝZCÝ sistemine gönderilir.</p>
+                                <p class="text-[11px] text-slate-500">Bildirimi zorunlu tanï¿½lar HBYS ï¿½zerinden otomatik olarak KDS ve ï¿½ZCï¿½ sistemine gï¿½nderilir.</p>
                             </div>
                         </div>
                     </div>
@@ -349,24 +349,24 @@
                     <div id="alt-gruplar" class="tab-content">
                         <div class="flex items-center gap-3 mb-6">
                             <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Alt Çalýþma Gruplarý</h2>
+                            <h2 class="text-2xl font-black text-slate-800">Alt ï¿½alï¿½ï¿½ma Gruplarï¿½</h2>
                         </div>
                         <div class="grid sm:grid-cols-2 gap-4">
                             <div class="tech-card">
-                                <h4 class="font-bold text-slate-800 mb-2">Eðitim ve Tanýtým</h4>
-                                <p class="text-xs text-slate-600">Personel eðitimleri, oryantasyonlar ve bilgilendirme materyallerinin hazýrlanmasý.</p>
+                                <h4 class="font-bold text-slate-800 mb-2">Eï¿½itim ve Tanï¿½tï¿½m</h4>
+                                <p class="text-xs text-slate-600">Personel eï¿½itimleri, oryantasyonlar ve bilgilendirme materyallerinin hazï¿½rlanmasï¿½.</p>
                             </div>
                             <div class="tech-card">
                                 <h4 class="font-bold text-slate-800 mb-2">Sterilizasyon Kontrol</h4>
-                                <p class="text-xs text-slate-600">MSÜ sterilizasyon kontrolü, þartnameler ve uygunluk raporlarý.</p>
+                                <p class="text-xs text-slate-600">MSï¿½ sterilizasyon kontrolï¿½, ï¿½artnameler ve uygunluk raporlarï¿½.</p>
                             </div>
                             <div class="tech-card">
-                                <h4 class="font-bold text-slate-800 mb-2">Atýk Yönetimi</h4>
-                                <p class="text-xs text-slate-600">Dezenfeksiyon politikasý, hastane temizliði ve týbbi atýk yönetimi eðitimleri.</p>
+                                <h4 class="font-bold text-slate-800 mb-2">Atï¿½k Yï¿½netimi</h4>
+                                <p class="text-xs text-slate-600">Dezenfeksiyon politikasï¿½, hastane temizliï¿½i ve tï¿½bbi atï¿½k yï¿½netimi eï¿½itimleri.</p>
                             </div>
                             <div class="tech-card">
-                                <h4 class="font-bold text-slate-800 mb-2">Personel Saðlýðý</h4>
-                                <p class="text-xs text-slate-600">Aþý takvimleri, personel saðlýk taramalarý ve enfekte temas takibi.</p>
+                                <h4 class="font-bold text-slate-800 mb-2">Personel Saï¿½lï¿½ï¿½ï¿½</h4>
+                                <p class="text-xs text-slate-600">Aï¿½ï¿½ takvimleri, personel saï¿½lï¿½k taramalarï¿½ ve enfekte temas takibi.</p>
                             </div>
                         </div>
                     </div>
@@ -374,11 +374,11 @@
                     <div id="dokumanlar" class="tab-content">
                         <div class="flex items-center gap-3 mb-8">
                             <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Dokümanlar</h2>
+                            <h2 class="text-2xl font-black text-slate-800">Dokï¿½manlar</h2>
                         </div>
                         <div class="space-y-3">
                             <a href="#" class="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl transition hover:bg-blue-50">
-                                <span class="text-sm font-bold text-slate-700">Enfeksiyon Sürveyans Rehberi</span>
+                                <span class="text-sm font-bold text-slate-700">Enfeksiyon Sï¿½rveyans Rehberi</span>
                                 <i class="fa-solid fa-file-pdf text-red-500"></i>
                             </a>
                             <a href="#" class="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl transition hover:bg-blue-50">
@@ -391,11 +391,11 @@
                     <div id="akis-semasi" class="tab-content">
                         <div class="flex items-center gap-3 mb-8">
                             <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                            <h2 class="text-2xl font-black text-slate-800">Ýþ Akýþ Þemasý</h2>
+                            <h2 class="text-2xl font-black text-slate-800">ï¿½ï¿½ Akï¿½ï¿½ ï¿½emasï¿½</h2>
                         </div>
                         <div class="bg-slate-50 border border-slate-200 rounded-xl p-10 text-center text-slate-400">
                             <i class="fa-solid fa-diagram-project text-5xl mb-4 opacity-30"></i>
-                            <p class="font-semibold text-sm">Ýþ Akýþ Þemasý Görseli Buraya Eklenecektir</p>
+                            <p class="font-semibold text-sm">ï¿½ï¿½ Akï¿½ï¿½ ï¿½emasï¿½ Gï¿½rseli Buraya Eklenecektir</p>
                         </div>
                     </div>
 

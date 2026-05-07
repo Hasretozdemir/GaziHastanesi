@@ -33,7 +33,7 @@ namespace GaziHastane.Areas.Admin.Controllers
         public IActionResult Login()
         {
             // Eğer kişi zaten giriş yapmışsa, login sayfasını görmesin, direkt panele gitsin
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity?.IsAuthenticated == true)
             {
                 return RedirectToAction("Index", "Home", new { area = "Admin" });
             }

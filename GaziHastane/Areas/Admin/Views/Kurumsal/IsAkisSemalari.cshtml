@@ -1,6 +1,74 @@
+@model List<GaziHastane.Models.KurumsalSekme>
+@inject GaziHastane.Data.GaziHastaneContext _context
 @{
-    ViewData["Title"] = "Ýþ Akýþ Þemalarý";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = ViewBag.SayfaBaslik;
+    var sayfaKey = ViewBag.SayfaKey as string;
 }
 
-<h1>Ýþ Akýþ Þemalarý</h1>
-<p>Bu sayfa Ýþ Akýþ Þemalarý ile ilgili bilgileri içermektedir.</p>
+<div class="max-w-6xl mx-auto mt-8 relative space-y-6">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)]">
+                <i class="fa-solid fa-diagram-project text-white text-2xl"></i>
+            </div>
+            <div>
+                <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-200">@ViewBag.SayfaBaslik</h2>
+                <p class="text-sm text-blue-200/60 mt-1">SayfanÄ±n sekmelerini yÃ¶netmek iÃ§in kart gÃ¶rÃ¼nÃ¼mÃ¼.</p>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="flex items-center gap-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-6 py-4 backdrop-blur-xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-1.5 h-full bg-emerald-500"></div>
+            <i class="fa-solid fa-check-circle text-emerald-400 text-xl"></i>
+            <div><h4 class="text-emerald-400 text-sm font-bold">BaÅŸarÄ±lÄ±</h4><p class="text-emerald-100/90 text-sm">@TempData["Success"]</p></div>
+        </div>
+    }
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var sekme in Model.OrderBy(x => x.Sira))
+            {
+                <div class="bg-slate-900/70 border border-blue-500/10 rounded-2xl p-6 shadow-lg">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white">
+                            <i class="@(string.IsNullOrWhiteSpace(sekme.IconClass) ? "fa-solid fa-list" : sekme.IconClass)"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-white">@sekme.Baslik</h3>
+                            <p class="text-sm text-slate-300 mt-1">Sekme ID: <span class="font-medium text-emerald-300">@sekme.SekmeId</span></p>
+                            <div class="mt-3 flex items-center gap-2">
+                                <a href="@Url.Action("IsAkisSemalari", "Kurumsal", new { area = "Admin", id = sekme.Id })" class="px-3 py-2 rounded-md bg-blue-600 text-white text-sm">DÃ¼zenle</a>
+                                <button type="button" onclick="showFormList('@sekme.SekmeId','@sekme.Baslik')" class="px-3 py-2 rounded-md bg-emerald-600 text-white text-sm">Formlar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-span-full text-center py-12">
+                <i class="fa-solid fa-inbox text-slate-400 text-4xl mb-4"></i>
+                <p class="text-slate-400 font-medium">HenÃ¼z sekme eklenmemiÅŸtir.</p>
+            </div>
+        }
+    </div>
+
+</div>
+
+<script>
+    function showFormList(sekmId, sekmBaslik) {
+        window.location.href = '/Admin/Kurumsal/IsAkisSemalari#' + sekmId;
+    }
+</script>
+@{
+    ViewData["Title"] = "ï¿½ï¿½ Akï¿½ï¿½ ï¿½emalarï¿½";
+}
+
+<h1>ï¿½ï¿½ Akï¿½ï¿½ ï¿½emalarï¿½</h1>
+<p>Bu sayfa ï¿½ï¿½ Akï¿½ï¿½ ï¿½emalarï¿½ ile ilgili bilgileri iï¿½ermektedir.</p>

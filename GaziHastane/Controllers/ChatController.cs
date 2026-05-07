@@ -43,7 +43,7 @@ namespace GaziHastane.Controllers
 
             if (IsSensitiveRequest(normalizedMessage))
             {
-                var actions = await BuildSensitiveActions(normalizedMessage);
+                var actions = BuildSensitiveActions(normalizedMessage);
                 var linkText = actions.Any()
                     ? string.Join(" | ", actions.Select(a => $"<a href=\"{a.Url}\" style=\"color:#2563eb;font-weight:700;text-decoration:underline;\">{a.Title}</a>"))
                     : string.Empty;
@@ -565,7 +565,7 @@ Hastane Veritabanı Bilgileri:
             return ContainsAny(normalizedMessage, "tahlil", "sonuç", "randevu", "ödeme", "borç", "protokol", "tc", "kimlik", "şifre", "parola");
         }
 
-        private async Task<List<ActionLink>> BuildSensitiveActions(string normalizedMessage)
+        private static List<ActionLink> BuildSensitiveActions(string normalizedMessage)
         {
             var actions = new List<ActionLink>();
 

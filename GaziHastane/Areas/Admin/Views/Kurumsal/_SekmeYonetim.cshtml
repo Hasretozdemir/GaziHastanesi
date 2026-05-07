@@ -1,154 +1,400 @@
-@model List<GaziHastane.Models.KurumsalSekme>
+﻿@model List<GaziHastane.Models.KurumsalIcerik>
 @{
-    var sayfaKey = ViewBag.SayfaKey as string ?? "genel";
-    var sayfaBaslik = ViewBag.SayfaBaslik as string ?? "Kurumsal İçerik";
+    ViewData["Title"] = "HemÅŸirelik YÃ¶netimi";
+    Layout = null;
+    var ayarlar = ViewBag.Ayarlar as GaziHastane.Models.HemsirelikAyar;
+    var Sekmeler = ViewBag.Sekmeler as List<GaziHastane.Models.KurumsalSekme> ?? new List<GaziHastane.Models.KurumsalSekme>();
 }
 
-<div class="max-w-2xl mx-auto mt-8 relative space-y-6">
-    <!-- Header Section -->
+<div class="max-w-6xl mx-auto mt-8 relative space-y-6">
+
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div class="flex items-center gap-4">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center shadow-[0_0_20px_rgba(20,184,166,0.4)]">
-                <i class="fa-solid fa-building-columns text-white text-3xl"></i>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center shadow-[0_0_20px_rgba(20,184,166,0.4)]">
+                <i class="fa-solid fa-server text-white text-2xl"></i>
             </div>
             <div>
-                <h2 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-teal-200">@sayfaBaslik</h2>
-                <p class="text-slate-400 font-medium">Sayfa sekmelerini ve içeriklerini buradan yönetebilirsiniz.</p>
+                <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-teal-200">HemÅŸirelik Hizmetleri</h2>
+                <p class="text-sm text-teal-200/60 mt-1">Sayfa ayarlarÄ±nÄ± ve dinamik iÃ§erikleri tek sayfadan yÃ¶netin.</p>
             </div>
+        </div>
+
+        <div class="flex gap-2 bg-slate-800/50 p-1.5 rounded-xl border border-teal-500/20">
+            <button onclick="switchTab('tab-icerik', this)" class="tab-btn active px-5 py-2.5 rounded-lg text-sm font-bold bg-teal-500/20 text-teal-300 transition-all">Ä°Ã§erik Listesi</button>
+            
+            <button onclick="switchTab('tab-Sekmeler', this)" class="tab-btn px-5 py-2.5 rounded-lg text-sm font-bold text-slate-400 hover:text-white transition-all">Sekmeler</button>
         </div>
     </div>
 
-    <!-- Main Content Card -->
-    <div class="glass-card bg-slate-900/40 border border-white/10 rounded-[2.5rem] p-8 backdrop-blur-xl shadow-2xl relative overflow-hidden min-h-[500px]">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-teal-500/5 blur-[100px] -z-10"></div>
-        <div class="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/5 blur-[100px] -z-10"></div>
-
-        <div class="flex justify-between items-center mb-8">
-            <div class="flex items-center gap-3">
-                <i class="fa-solid fa-layer-group text-teal-400 text-xl"></i>
-                <h3 class="text-xl font-bold text-white">Mevcut Sekmeler</h3>
+    <div id="tab-Sekmeler" class="tab-content hidden">
+        <div class="glass-card bg-slate-900/60 backdrop-blur-2xl border border-teal-500/20 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
+            <div class="flex justify-between items-center mb-6 border-b border-teal-500/10 pb-4">
+                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-folder-tree text-teal-400 mr-2"></i>Sekmeler</h3>
+                <button type="button" onclick="openSekmeModal()" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 text-white font-bold shadow-lg transition-all">
+                    <i class="fa-solid fa-plus"></i> Yeni Sekme
+                </button>
             </div>
-            <button type="button" onclick="openSekmeModal()" class="group relative px-6 py-3 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-2xl font-bold text-white shadow-lg hover:shadow-teal-500/20 transition-all active:scale-95">
-                <span class="flex items-center gap-2"><i class="fa-solid fa-plus text-lg"></i> Yeni Sekme Ekle</span>
-            </button>
-        </div>
 
-        <div class="overflow-x-auto custom-scroll">
-            <table class="w-full text-left border-separate border-spacing-y-3">
-                <thead>
-                    <tr class="text-slate-400 text-xs uppercase tracking-widest font-black">
-                        <th class="pb-2 px-4">Başlık</th>
-                        <th class="pb-2 px-4">Sekme ID</th>
-                        <th class="pb-2 px-4 text-center">Icon</th>
-                        <th class="pb-2 px-4 text-center">Sıra</th>
-                        <th class="pb-2 px-4 text-center">Durum</th>
-                        <th class="pb-2 px-4 text-right">İşlemler</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if(Model != null && Model.Any())
-                    {
-                        @foreach (var item in Model)
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-slate-400 border-b border-teal-500/20">
+                            <th class="text-left py-3 px-3 font-semibold">Ä°Ã§erik KimliÄŸi</th>
+                            <th class="text-left py-3 px-3 font-semibold">Sekme ID</th>
+                            <th class="text-left py-3 px-3 font-semibold">Icon</th>
+                            <th class="text-center py-3 px-3 font-semibold">SÄ±ra</th>
+                            <th class="text-center py-3 px-3 font-semibold">Durum</th>
+                            <th class="text-right py-3 px-3 font-semibold">Ä°ÅŸlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Sekmeler)
                         {
-                            <tr class="group bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl transition-all duration-300">
-                                <td class="py-4 px-4 rounded-l-2xl font-bold text-white">@item.Baslik</td>
-                                <td class="py-4 px-4 text-slate-400 font-mono text-sm">@item.SekmeId</td>
-                                <td class="py-4 px-4 text-center">
-                                    <i class="@(item.IconClass ?? "fa-solid fa-circle") text-teal-400 text-lg"></i>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="py-3 px-3 text-white font-semibold">@item.Baslik</td>
+                                <td class="py-3 px-3 text-slate-300">@item.SekmeId</td>
+                                <td class="py-3 px-3 text-slate-300">@item.IconClass</td>
+                                <td class="py-3 px-3 text-center"><span class="bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-slate-300 text-xs">@item.Sira</span></td>
+                                <td class="py-3 px-3 text-center">
+                                    @if (item.AktifMi)
+                                    {
+                                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block opacity-50"></span>
+                                    }
                                 </td>
-                                <td class="py-4 px-4 text-center">
-                                    <span class="bg-slate-800 text-slate-400 text-xs px-2 py-1 rounded-lg border border-slate-700">@item.Sira</span>
-                                </td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="flex justify-center">
-                                        @if (item.AktifMi) { <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span> }
-                                        else { <span class="w-2.5 h-2.5 rounded-full bg-rose-500 opacity-50"></span> }
-                                    </div>
-                                </td>
-                                <td class="py-4 px-4 text-right rounded-r-2xl">
-                                    <div class="flex justify-end gap-2">
-                                        <button type="button" onclick="openSekmeModal(this)"
+                                <td class="py-3 px-3 text-right">
+                                    <div class="inline-flex gap-2">
+                                        <button type="button"
                                                 data-id="@item.Id" data-baslik="@item.Baslik" data-sekmeid="@item.SekmeId"
                                                 data-icon="@item.IconClass" data-sira="@item.Sira" data-aktif="@(item.AktifMi ? "true" : "false")"
-                                                data-icerik="@item.Icerik"
-                                                class="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-50 hover:text-white transition-all shadow-sm">
-                                            <i class="fa-solid fa-pen-to-square"></i>
+                                                onclick="openSekmeModal(this)"
+                                                class="inline-flex items-center text-xs px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-all">
+                                            <i class="fa-solid fa-pen-to-square mr-1.5"></i> DÃ¼zenle
                                         </button>
                                         <form asp-action="KurumsalSekmeSil" method="post" class="inline">
                                             @Html.AntiForgeryToken()
                                             <input type="hidden" name="id" value="@item.Id" />
-                                            <button type="button" onclick="confirmDelete(this.closest('form'))"
-                                                    class="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500 hover:text-white transition-all shadow-sm">
-                                                <i class="fa-solid fa-trash-can"></i>
+                                            <button type="button" onclick="confirmDelete(this.closest('form'))" class="inline-flex items-center text-xs px-3 py-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/30 transition-all">
+                                                <i class="fa-solid fa-trash-can mr-1.5"></i> Sil
                                             </button>
                                         </form>
                                     </div>
                                 </td>
                             </tr>
                         }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="6" class="text-center py-12 text-slate-500 italic">Henüz sekme eklenmemiş.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
-
-<!-- Sekme Modalı -->
-<div id="sekmeModal" class="fixed inset-0 z-[105] hidden items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity opacity-0 duration-300 p-4">
-    <div id="sekmeModalContent" class="glass-card bg-slate-900/95 border border-teal-500/30 rounded-[2rem] p-8 max-w-4xl w-full shadow-[0_0_50px_rgba(20,184,166,0.15)] transform scale-90 transition-transform duration-300 max-h-[95vh] overflow-y-auto custom-scroll">
-        <div class="flex justify-between items-center mb-6 border-b border-teal-500/10 pb-4">
-            <h3 id="modalTitle" class="text-2xl font-black text-white">Yeni Sekme Ekle</h3>
-            <button type="button" onclick="closeSekmeModal()" class="text-slate-400 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-2xl"></i></button>
+    
+    @if (TempData["Success"] != null)
+    {
+        <div class="flex items-center gap-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-6 py-4 backdrop-blur-xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-1.5 h-full bg-emerald-500"></div>
+            <i class="fa-solid fa-check-circle text-emerald-400 text-xl"></i>
+            <div><h4 class="text-emerald-400 text-sm font-bold">BaÅŸarÄ±lÄ±</h4><p class="text-emerald-100/90 text-sm">@TempData["Success"]</p></div>
         </div>
+    }
 
-        <form asp-action="KurumsalSekmeKaydet" method="post" class="space-y-5">
-            @Html.AntiForgeryToken()
-            <input type="hidden" name="Id" id="modId" value="0" />
-            <input type="hidden" name="SayfaKey" value="@sayfaKey" />
-            <input type="hidden" name="SekmeId" id="modSekmeId" />
+    <div id="sekmeModal" class="fixed inset-0 z-[105] hidden items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity opacity-0 duration-300">
+        <div id="sekmeModalContent" class="glass-card bg-slate-900/95 border border-teal-500/30 rounded-3xl p-8 max-w-xl w-full shadow-[0_0_50px_rgba(20,184,166,0.15)] transform scale-90 transition-transform duration-300 max-h-[90vh] overflow-y-auto custom-scroll">
 
-            <div class="grid md:grid-cols-2 gap-5">
-                            <div class="space-y-1.5">
-                <label class="block text-sm font-bold text-teal-100/70 ml-1">Sekme ��eri�i (HTML)</label>
-                <textarea name="Icerik" id="modIcerik" rows="10" class="w-full rounded-2xl bg-slate-800/50 border border-teal-500/20 p-4 text-white focus:ring-2 focus:ring-teal-500/50 outline-none transition-all tiny-editor"></textarea>
+            <div class="flex justify-between items-center mb-6 border-b border-teal-500/10 pb-4">
+                <h3 id="sekmeModalTitle" class="text-2xl font-black text-white">Yeni Sekme Ekle</h3>
+                <button type="button" onclick="closeSekmeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
 
-            <div class="flex items-center justify-between">
-                <label class="flex items-center gap-3 bg-slate-800/50 border border-teal-500/20 rounded-2xl px-6 py-4 cursor-pointer hover:bg-slate-800 transition-all">
-                    <input type="checkbox" name="AktifMi" id="modAktif" value="true" checked class="w-5 h-5 accent-teal-500" />
-                    <span class="text-sm font-bold text-teal-400">Bu Sekme Aktif</span>
-                </label>
+            <form asp-action="KurumsalSekmeKaydet" method="post" class="space-y-5">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Id" id="sekmeId" value="0" />
+                <input type="hidden" name="SayfaKey" value="@ViewBag.SayfaKey" />
 
-                <div class="flex gap-4">
-                    <button type="button" onclick="closeSekmeModal()" class="px-8 py-4 rounded-2xl bg-slate-800 text-slate-400 font-bold hover:bg-slate-700 transition-all">İptal</button>
-                    <button type="submit" class="px-12 py-4 rounded-2xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-black shadow-lg hover:shadow-teal-500/20 transition-all active:scale-95">KAYDET</button>
+                <div>
+                    <label class="block text-sm font-semibold text-teal-100 mb-2">BaÅŸlÄ±k *</label>
+                    <input type="text" name="Baslik" id="sekmeBaslik" class="w-full rounded-xl bg-slate-800/50 border border-teal-500/20 p-3 text-white focus:ring-2 focus:ring-teal-500/50" required />
                 </div>
+                <div>
+                    <label class="block text-sm font-semibold text-teal-100 mb-2">Sekme ID (Ã–rn: misyon-vizyon) *</label>
+                    <input type="text" name="SekmeId" id="sekmeKey" class="w-full rounded-xl bg-slate-800/50 border border-teal-500/20 p-3 text-white focus:ring-2 focus:ring-teal-500/50" required />
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-teal-100 mb-2">Ä°kon SÄ±nÄ±fÄ±</label>
+                    <input type="text" name="IconClass" id="sekmeIcon" class="w-full rounded-xl bg-slate-800/50 border border-teal-500/20 p-3 text-white focus:ring-2 focus:ring-teal-500/50" placeholder="fa-solid fa-bullseye" />
+                </div>
+                <div class="grid md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-semibold text-teal-100 mb-2">SÄ±ralama</label>
+                        <input type="number" name="Sira" id="sekmeSira" value="99" class="w-full rounded-xl bg-slate-800/50 border border-teal-500/20 p-3 text-white focus:ring-2 focus:ring-teal-500/50" />
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-800/30 border border-emerald-500/20 rounded-xl p-3 mt-7">
+                        <input type="checkbox" name="AktifMi" id="sekmeAktif" value="true" checked class="w-5 h-5 accent-emerald-500 cursor-pointer" />
+                        <label class="text-sm font-bold text-emerald-400 cursor-pointer" for="sekmeAktif">Sitede YayÄ±nla</label>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-6 border-t border-teal-500/10">
+                    <button type="button" onclick="closeSekmeModal()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition-all">Ä°ptal</button>
+                    <button type="submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold shadow-lg transition-all">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="tab-icerik" class="tab-content block">
+        <div class="glass-card bg-slate-900/60 backdrop-blur-2xl border border-teal-500/20 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
+
+            <div class="flex justify-between items-center mb-6 border-b border-teal-500/10 pb-4">
+                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-list text-teal-400 mr-2"></i>Eklenen Ä°Ã§erikler</h3>
+                <button type="button" onclick="openIcerikModal()" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 text-white font-bold shadow-lg transition-all">
+                    <i class="fa-solid fa-plus"></i> Yeni Ekle
+                </button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-slate-400 border-b border-teal-500/20">
+                            <th class="text-left py-3 px-3 font-semibold">Kategori</th>
+                            <th class="text-left py-3 px-3 font-semibold">Ä°Ã§erik KimliÄŸi</th>
+                            <th class="text-center py-3 px-3 font-semibold">SÄ±ra</th>
+                            <th class="text-center py-3 px-3 font-semibold">Durum</th>
+                            <th class="text-right py-3 px-3 font-semibold">Ä°ÅŸlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="py-3 px-3"><span class="bg-teal-500/20 text-teal-400 border border-teal-500/30 px-3 py-1 rounded-lg text-xs font-bold">@item.Kategori</span></td>
+                                                                  <td class="py-3 px-3">
+                                      <p class="text-white font-bold">Ä°Ã§erik #@item.Id</p>
+                                  </td>
+                                <td class="py-3 px-3 text-center"><span class="bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-slate-300 text-xs">@item.Sira</span></td>
+                                <td class="py-3 px-3 text-center">
+                                    @if (item.AktifMi)
+                                    {
+                                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+                                    }
+                                    else
+                                    {
+
+                                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block opacity-50"></span>
+                                    }
+                                </td>
+                                <td class="py-3 px-3 text-right">
+                                    <div class="inline-flex gap-2">
+                                        <button type="button"
+                                                data-id="@item.Id" data-kategori="@item.Kategori" data-baslik="@item.Baslik"
+                                                data-altbaslik="@item.AltBaslik" data-aciklama="@item.Aciklama" data-medya="@item.MedyaYolu"
+                                                data-sira="@item.Sira" data-aktif="@(item.AktifMi ? "true" : "false")"
+                                                onclick="openIcerikModal(this)"
+                                                class="inline-flex items-center text-xs px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-all">
+                                            <i class="fa-solid fa-pen-to-square mr-1.5"></i> DÃ¼zenle
+                                        </button>
+
+                                        <form asp-action="KurumsalIcerikSil" method="post" class="inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button type="button" onclick="confirmDelete(this.closest('form'))" class="inline-flex items-center text-xs px-3 py-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/30 transition-all">
+                                                <i class="fa-solid fa-trash-can mr-1.5"></i> Sil
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+<div id="icerikModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity opacity-0 duration-300">
+    <div id="icerikModalContent" class="glass-card bg-slate-900/95 border border-teal-500/30 rounded-3xl p-8 max-w-2xl w-full shadow-[0_0_50px_rgba(20,184,166,0.15)] transform scale-90 transition-transform duration-300 max-h-[90vh] overflow-y-auto custom-scroll">
+
+        <div class="flex justify-between items-center mb-6 border-b border-teal-500/10 pb-4">
+            <h3 id="modalTitle" class="text-2xl font-black text-white">Yeni Ä°Ã§erik Ekle</h3>
+            <button type="button" onclick="closeIcerikModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+
+        <form asp-action="KurumsalIcerikKaydet" method="post" class="space-y-5">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="Id" id="modId" value="0" />
+            <input type="hidden" name="SayfaKey" value="@ViewBag.SayfaKey" />
+
+            <div>
+                <label class="block text-sm font-bold text-teal-300 mb-2">Hangi Sekmede Ã‡Ã‡Ä±kacak? *</label>
+                <select name="Kategori" id="modKat" class="w-full rounded-xl bg-slate-800 border border-teal-500/40 p-3 text-white focus:ring-2 focus:ring-teal-500/50" required>
+                    <option value="">-- SeÃ§iniz --</option>
+                    @foreach (var sekme in Sekmeler)
+                    {
+                        <option value="@sekme.SekmeId">@sekme.Baslik</option>
+                    }
+                </select>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-5">
+                
+                                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-teal-100 mb-2">Sayfa Ä°Ã§eriÄŸi (Kod / HTML)</label>
+                    <textarea name="Aciklama" id="modAciklama" rows="6" class="w-full rounded-xl bg-slate-800/50 border border-teal-500/20 p-3 text-white focus:ring-2 focus:ring-teal-500/50 tiny-editor"></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-semibold text-teal-100 mb-2">SÄ±ralama</label>
+                    <input type="number" name="Sira" id="modSira" value="99" class="w-full rounded-xl bg-slate-800/50 border border-teal-500/20 p-3 text-white focus:ring-2 focus:ring-teal-500/50" />
+                </div>
+                <div class="flex items-center gap-3 bg-slate-800/30 border border-emerald-500/20 rounded-xl p-3 mt-7">
+                    <input type="checkbox" name="AktifMi" id="modAktif" value="true" checked class="w-5 h-5 accent-emerald-500 cursor-pointer" />
+                    <label class="text-sm font-bold text-emerald-400 cursor-pointer" for="modAktif">Sitede YayÄ±nla</label>
+                </div>
+            </div>
+
+            <div class="flex gap-3 pt-6 border-t border-teal-500/10">
+                <button type="button" onclick="closeIcerikModal()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition-all">Ä°ptal</button>
+                <button type="submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold shadow-lg transition-all">Kaydet</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Silme Modalı -->
-<div id="deleteModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity opacity-0 duration-300 p-4">
-    <div id="deleteModalContent" class="glass-card bg-slate-900/95 border border-rose-500/30 rounded-[2.5rem] p-10 max-w-sm w-full shadow-[0_0_50px_rgba(225,29,72,0.2)] transform scale-90 transition-transform duration-300 text-center">
-        <div class="w-24 h-24 rounded-full bg-rose-500/10 flex items-center justify-center mx-auto mb-6 border-[4px] border-rose-500/20">
-            <i class="fa-solid fa-triangle-exclamation text-5xl text-rose-500"></i>
-        </div>
-        <h3 class="text-2xl font-black text-white mb-3">Emin misiniz?</h3>
-        <p class="text-slate-400 font-medium mb-8">Bu sekme ve tüm içeriği silinecektir.</p>
-        <div class="flex gap-4">
-            <button type="button" onclick="closeDeleteModal()" class="flex-1 py-4 rounded-2xl bg-slate-800 text-slate-400 font-bold hover:bg-slate-700 transition-all">Vazgeç</button>
-            <button id="confirmDelBtn" type="button" class="flex-1 py-4 rounded-2xl bg-gradient-to-r from-rose-600 to-red-600 text-white font-black shadow-lg hover:shadow-rose-500/20 transition-all active:scale-95">SİL</button>
+<div id="deleteModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity opacity-0 duration-300">
+    <div id="deleteModalContent" class="glass-card bg-slate-900/90 border border-rose-500/30 rounded-3xl p-8 max-w-sm w-full shadow-[0_0_50px_rgba(225,29,72,0.15)] transform scale-90 transition-transform duration-300 text-center">
+        <div class="w-20 h-20 rounded-full bg-rose-500/10 flex items-center justify-center mx-auto mb-5 border-[4px] border-rose-500/20"><i class="fa-solid fa-triangle-exclamation text-4xl text-rose-500"></i></div>
+        <h3 class="text-xl font-black text-white mb-2">Emin misiniz?</h3>
+        <p class="text-slate-300 text-sm mb-6">Bu iÅŸlem geri alÄ±namaz.</p>
+        <div class="flex gap-3">
+            <button type="button" onclick="closeDeleteModal()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold">VazgeÃ§</button>
+            <button id="confirmDelBtn" type="button" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 text-white font-bold">Sil</button>
         </div>
     </div>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const hash = window.location.hash.replace('#', '');
+        if (hash && document.getElementById(hash)) {
+            const btn = document.querySelector(`.tab-btn[onclick*="${hash}"]`);
+            if (btn) {
+                switchTab(hash, btn);
+            }
+        }
+    });
+
+    // Tab DeÄŸiÅŸtirme Sistemi
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.tab-content').forEach(tc => { tc.classList.remove('block'); tc.classList.add('hidden'); });
+        document.querySelectorAll('.tab-btn').forEach(tb => { tcClasses(tb, false); });
+
+        document.getElementById(tabId).classList.remove('hidden');
+        document.getElementById(tabId).classList.add('block');
+        tcClasses(btn, true);
+    }
+    function tcClasses(el, isActive) {
+        if(isActive) { el.classList.add('bg-teal-500/20', 'text-teal-300'); el.classList.remove('text-slate-400'); }
+        else { el.classList.remove('bg-teal-500/20', 'text-teal-300'); el.classList.add('text-slate-400'); }
+    }
+
+    // Ä°Ã§erik Ekle/DÃ¼zenle Modal Sistemi
+    const mod = document.getElementById('icerikModal');
+    const modContent = document.getElementById('icerikModalContent');
+
+    function openIcerikModal(btnData = null) {
+        // EÄŸer Butondan Veri Geldiyse (DÃ¼zenleme Modu)
+        if(btnData) {
+            document.getElementById('modalTitle').innerText = "Ä°Ã§eriÄŸi GÃ¼ncelle";
+            document.getElementById('modId').value = btnData.getAttribute('data-id');
+            document.getElementById('modKat').value = btnData.getAttribute('data-kategori');
+            
+            
+            const aciklama = btnData.getAttribute('data-aciklama');
+            if(window.codeEditor) window.codeEditor.setValue(aciklama);
+            else document.getElementById('modAciklama').value = aciklama;
+            
+            document.getElementById('modSira').value = btnData.getAttribute('data-sira');
+            document.getElementById('modAktif').checked = btnData.getAttribute('data-aktif') === 'true';
+        }
+        // Yeni Ekleme Modu
+        else {
+            document.getElementById('modalTitle').innerText = "Yeni Ä°Ã§erik Ekle";
+            document.getElementById('modId').value = "0";
+            document.getElementById('modKat').value = "";
+            
+            
+            if(window.codeEditor) window.codeEditor.setValue('');
+            else document.getElementById('modAciklama').value = '';
+            
+            document.getElementById('modSira').value = "99";
+            document.getElementById('modAktif').checked = true;
+        }
+
+        mod.classList.remove('hidden'); mod.classList.add('flex');
+        setTimeout(() => { mod.classList.remove('opacity-0'); modContent.classList.remove('scale-90'); modContent.classList.add('scale-100'); }, 10);
+    }
+
+    function closeIcerikModal() {
+        mod.classList.add('opacity-0'); modContent.classList.remove('scale-100'); modContent.classList.add('scale-90');
+        setTimeout(() => { mod.classList.add('hidden'); mod.classList.remove('flex'); }, 300);
+    }
+
+    const sekmeModal = document.getElementById('sekmeModal');
+    const sekmeModalContent = document.getElementById('sekmeModalContent');
+
+    function openSekmeModal(btnData = null) {
+        if (btnData) {
+            document.getElementById('sekmeModalTitle').innerText = "Sekmeyi GÃ¼ncelle";
+            document.getElementById('sekmeId').value = btnData.getAttribute('data-id');
+            document.getElementById('sekmeBaslik').value = btnData.getAttribute('data-baslik');
+            document.getElementById('sekmeKey').value = btnData.getAttribute('data-sekmeid');
+            document.getElementById('sekmeIcon').value = btnData.getAttribute('data-icon');
+            document.getElementById('sekmeSira').value = btnData.getAttribute('data-sira');
+            document.getElementById('sekmeAktif').checked = btnData.getAttribute('data-aktif') === 'true';
+        } else {
+            document.getElementById('sekmeModalTitle').innerText = "Yeni Sekme Ekle";
+            document.getElementById('sekmeId').value = "0";
+            document.getElementById('sekmeBaslik').value = "";
+            document.getElementById('sekmeKey').value = "";
+            document.getElementById('sekmeIcon').value = "";
+            document.getElementById('sekmeSira').value = "99";
+            document.getElementById('sekmeAktif').checked = true;
+        }
+
+        sekmeModal.classList.remove('hidden');
+        sekmeModal.classList.add('flex');
+        setTimeout(() => { sekmeModal.classList.remove('opacity-0'); sekmeModalContent.classList.remove('scale-90'); sekmeModalContent.classList.add('scale-100'); }, 10);
+    }
+
+    function closeSekmeModal() {
+        sekmeModal.classList.add('opacity-0');
+        sekmeModalContent.classList.remove('scale-100');
+        sekmeModalContent.classList.add('scale-90');
+        setTimeout(() => { sekmeModal.classList.add('hidden'); sekmeModal.classList.remove('flex'); }, 300);
+    }
+
+    // Silme Modal Sistemi
+    let formToSubmit = null;
+    const delMod = document.getElementById('deleteModal');
+    const delModContent = document.getElementById('deleteModalContent');
+
+    function confirmDelete(form) {
+        formToSubmit = form;
+        delMod.classList.remove('hidden'); delMod.classList.add('flex');
+        setTimeout(() => { delMod.classList.remove('opacity-0'); delModContent.classList.remove('scale-90'); delModContent.classList.add('scale-100'); }, 10);
+    }
+    function closeDeleteModal() {
+        delMod.classList.add('opacity-0'); delModContent.classList.remove('scale-100'); delModContent.classList.add('scale-90');
+        setTimeout(() => { delMod.classList.add('hidden'); delMod.classList.remove('flex'); }, 300);
+    }
+    document.getElementById('confirmDelBtn').addEventListener('click', function() {
+        if(formToSubmit) formToSubmit.submit();
+    });
+</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
@@ -157,77 +403,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closetag.min.js"></script>
+
 <script>
-    function updateSlug(val) {
-        const slug = val.toLowerCase()
-            .replace(/ /g, '-')
-            .replace(/[^\w-]+/g, '')
-            .replace(/-+/g, '-');
-        document.getElementById('modSekmeId').value = slug;
-        document.getElementById('slug-preview').innerText = slug;
-    }
-
-    function openSekmeModal(btn = null) {
-        const mod = document.getElementById('sekmeModal');
-        const modContent = document.getElementById('sekmeModalContent');
-
-        if(btn) {
-            document.getElementById('modalTitle').innerText = "Sekmeyi Düzenle";
-            document.getElementById('modId').value = btn.getAttribute('data-id');
-            document.getElementById('modBaslik').value = btn.getAttribute('data-baslik');
-            document.getElementById('modSekmeId').value = btn.getAttribute('data-sekmeid');
-            document.getElementById('slug-preview').innerText = btn.getAttribute('data-sekmeid');
-            document.getElementById('modIcon').value = btn.getAttribute('data-icon');
-            document.getElementById('modSira').value = btn.getAttribute('data-sira');
-            document.getElementById('modAktif').checked = btn.getAttribute('data-aktif') === 'true';
-            
-            const icerik = btn.getAttribute('data-icerik') || '';
-            if(window.codeEditor) window.codeEditor.setValue(icerik);
-            else document.getElementById('modIcerik').value = icerik;
-        } else {
-            document.getElementById('modalTitle').innerText = "Yeni Sekme Ekle";
-            document.getElementById('modId').value = "0";
-            document.getElementById('modBaslik').value = "";
-            document.getElementById('modSekmeId').value = "";
-            document.getElementById('slug-preview').innerText = "";
-            document.getElementById('modIcon').value = "fa-solid fa-info";
-            document.getElementById('modSira').value = "99";
-            document.getElementById('modAktif').checked = true;
-            if(window.codeEditor) window.codeEditor.setValue('');
-        }
-
-        mod.classList.remove('hidden'); mod.classList.add('flex');
-        setTimeout(() => { 
-            mod.classList.remove('opacity-0'); 
-            modContent.classList.remove('scale-90'); 
-            modContent.classList.add('scale-100'); 
-            if(window.codeEditor) window.codeEditor.refresh();
-        }, 10);
-    }
-
-    function closeSekmeModal() {
-        const mod = document.getElementById('sekmeModal');
-        const modContent = document.getElementById('sekmeModalContent');
-        mod.classList.add('opacity-0'); modContent.classList.remove('scale-100'); modContent.classList.add('scale-90');
-        setTimeout(() => { mod.classList.add('hidden'); mod.classList.remove('flex'); }, 300);
-    }
-
-    let formToSubmit = null;
-    function confirmDelete(form) {
-        formToSubmit = form;
-        const mod = document.getElementById('deleteModal');
-        const modContent = document.getElementById('deleteModalContent');
-        mod.classList.remove('hidden'); mod.classList.add('flex');
-        setTimeout(() => { mod.classList.remove('opacity-0'); modContent.classList.remove('scale-90'); modContent.classList.add('scale-100'); }, 10);
-    }
-    function closeDeleteModal() {
-        const mod = document.getElementById('deleteModal');
-        const modContent = document.getElementById('deleteModalContent');
-        mod.classList.add('opacity-0'); modContent.classList.remove('scale-100'); modContent.classList.add('scale-90');
-        setTimeout(() => { mod.classList.add('hidden'); mod.classList.remove('flex'); }, 300);
-    }
-    document.getElementById('confirmDelBtn').addEventListener('click', () => { if(formToSubmit) formToSubmit.submit(); });
-
     document.addEventListener("DOMContentLoaded", function() {
         const textareas = document.querySelectorAll('.tiny-editor');
         textareas.forEach(ta => {
@@ -238,7 +415,7 @@
                 autoCloseTags: true,
                 lineWrapping: true
             });
-                        window.codeEditor.on('change', editor => {
+            window.codeEditor.on('change', editor => {
                 editor.save();
             });
         });
@@ -246,13 +423,6 @@
 </script>
 
 <style>
-    .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-    .animate-fadeIn { animation: fadeIn 0.4s ease-out forwards; }
-    @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
-    .custom-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
-    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(20,184,166,0.2); border-radius: 10px; }
-    
     .CodeMirror {
         border-radius: 1rem;
         height: 400px;
@@ -262,6 +432,11 @@
         background: rgba(15, 23, 42, 0.5) !important;
     }
 </style>
+
+
+
+
+
 
 
 

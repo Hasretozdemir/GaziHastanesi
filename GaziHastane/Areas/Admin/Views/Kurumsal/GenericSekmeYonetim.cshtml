@@ -1,7 +1,456 @@
-﻿@model List<GaziHastane.Models.KurumsalSekme>
+@model List<GaziHastane.Models.KurumsalSekme>
+@inject GaziHastane.Data.GaziHastaneContext _context
 @{
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = ViewBag.SayfaBaslik;
+    var sayfaKey = ViewBag.SayfaKey as string;
+    ViewBag.Icerikler = _context.KurumsalIcerikler.Where(x => x.SayfaKey == sayfaKey).OrderBy(x => x.Sira).ToList();
+    ViewBag.Sekmeler = Model;
 }
 
-@await Html.PartialAsync("_SekmeYonetim", Model)
+<div class="max-w-6xl mx-auto mt-8 relative space-y-6">
+
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)]">
+                <i class="fa-solid fa-folder-tree text-white text-2xl"></i>
+            </div>
+            <div>
+                <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-200">@ViewBag.SayfaBaslik</h2>
+                <p class="text-sm text-blue-200/60 mt-1">Sayfanın sekmeleri ve içeriklerini yönetin.</p>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="flex items-center gap-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-6 py-4 backdrop-blur-xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-1.5 h-full bg-emerald-500"></div>
+            <i class="fa-solid fa-check-circle text-emerald-400 text-xl"></i>
+            <div><h4 class="text-emerald-400 text-sm font-bold">Başarılı</h4><p class="text-emerald-100/90 text-sm">@TempData["Success"]</p></div>
+        </div>
+    }
+
+    <!-- Sekmeler Yönetim -->
+    <div class="glass-card bg-slate-900/60 backdrop-blur-2xl border border-blue-500/20 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
+        <div class="flex justify-between items-center mb-6 border-b border-blue-500/10 pb-4">
+            <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-list text-blue-400 mr-2"></i>Sekmeler</h3>
+            <button type="button" onclick="openSekmeModal()" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold shadow-lg transition-all">
+                <i class="fa-solid fa-plus"></i> Yeni Sekme Ekle
+            </button>
+        </div>
+
+        @if (Model.Any())
+        {
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-slate-400 border-b border-blue-500/20">
+                            <th class="text-left py-3 px-3 font-semibold">Başlık</th>
+                            <th class="text-left py-3 px-3 font-semibold">Sekme ID</th>
+                            <th class="text-left py-3 px-3 font-semibold">İkon</th>
+                            <th class="text-center py-3 px-3 font-semibold">Sıra</th>
+                            <th class="text-center py-3 px-3 font-semibold">Durum</th>
+                            <th class="text-right py-3 px-3 font-semibold">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderBy(x => x.Sira))
+                        {
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="py-3 px-3 text-white font-semibold">@item.Baslik</td>
+                                <td class="py-3 px-3 text-slate-300">@item.SekmeId</td>
+                                <td class="py-3 px-3 text-slate-300">@(string.IsNullOrWhiteSpace(item.IconClass) ? "-" : item.IconClass)</td>
+                                <td class="py-3 px-3 text-center"><span class="bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-slate-300 text-xs">@item.Sira</span></td>
+                                <td class="py-3 px-3 text-center">
+                                    @if (item.AktifMi)
+                                    {
+                                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block opacity-50"></span>
+                                    }
+                                </td>
+                                <td class="py-3 px-3 text-right">
+                                    <div class="inline-flex gap-2">
+                                        <button type="button"
+                                                data-id="@item.Id" data-baslik="@item.Baslik" data-sekmeid="@item.SekmeId"
+                                                data-icon="@(item.IconClass ?? "")" data-sira="@item.Sira" data-aktif="@(item.AktifMi ? "true" : "false")"
+                                                onclick="openSekmeModal(this)"
+                                                class="inline-flex items-center text-xs px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-all">
+                                            <i class="fa-solid fa-pen-to-square mr-1.5"></i> Düzenle
+                                        </button>
+                                        <button type="button" 
+                                                onclick="showFormList('@item.SekmeId', '@item.Baslik')"
+                                                class="inline-flex items-center text-xs px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 transition-all">
+                                            <i class="fa-solid fa-file-lines mr-1.5"></i> İçerikler
+                                        </button>
+                                        <form asp-action="KurumsalSekmeSil" method="post" class="inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button type="button" onclick="confirmDelete(this.closest('form'))" class="inline-flex items-center text-xs px-3 py-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/30 transition-all">
+                                                <i class="fa-solid fa-trash-can mr-1.5"></i> Sil
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-12">
+                <i class="fa-solid fa-inbox text-slate-400 text-4xl mb-4"></i>
+                <p class="text-slate-400 font-medium">Henüz sekme eklenmemiştir.</p>
+            </div>
+        }
+    </div>
+
+    <!-- İçerik/Form Yönetim -->
+    <div id="formListContainer" class="glass-card bg-slate-900/60 backdrop-blur-2xl border border-emerald-500/20 rounded-3xl p-6 shadow-2xl relative overflow-hidden hidden">
+        <div class="flex justify-between items-center mb-6 border-b border-emerald-500/10 pb-4">
+            <div>
+                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-file-lines text-emerald-400 mr-2"></i>İçerikler: <span id="formListTitle" class="text-emerald-300">-</span></h3>
+                <p class="text-xs text-slate-400 mt-1">Sekmede gösterilecek form, video veya sayfa içeriklerini yönetin</p>
+            </div>
+            <div class="flex gap-2">
+                <button type="button" onclick="openFormModal()" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold shadow-lg transition-all">
+                    <i class="fa-solid fa-plus"></i> Yeni İçerik Ekle
+                </button>
+                <button type="button" onclick="hideFormList()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="formListContent" class="overflow-x-auto">
+            <!-- İçerikler buraya yüklenecek -->
+        </div>
+    </div>
+
+    <!-- Sekme Modal -->
+    <div id="sekmeModal" class="fixed inset-0 z-[105] hidden items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity opacity-0 duration-300">
+        <div id="sekmeModalContent" class="glass-card bg-slate-900/95 border border-blue-500/30 rounded-3xl p-8 max-w-xl w-full shadow-[0_0_50px_rgba(37,99,235,0.15)] transform scale-90 transition-transform duration-300 max-h-[90vh] overflow-y-auto custom-scroll">
+
+            <div class="flex justify-between items-center mb-6 border-b border-blue-500/10 pb-4">
+                <h3 id="sekmeModalTitle" class="text-2xl font-black text-white">Yeni Sekme Ekle</h3>
+                <button type="button" onclick="closeSekmeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+
+            <form asp-action="KurumsalSekmeKaydet" method="post" class="space-y-5">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Id" id="sekmeId" value="0" />
+                <input type="hidden" name="SayfaKey" value="@sayfaKey" />
+
+                <div>
+                    <label class="block text-sm font-semibold text-blue-100 mb-2">Başlık *</label>
+                    <input type="text" name="Baslik" id="sekmeBaslik" class="w-full rounded-xl bg-slate-800/50 border border-blue-500/20 p-3 text-white focus:ring-2 focus:ring-blue-500/50" required />
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-blue-100 mb-2">Sekme ID (Örn: hassas-gorev-envanteri) *</label>
+                    <input type="text" name="SekmeId" id="sekmeKey" class="w-full rounded-xl bg-slate-800/50 border border-blue-500/20 p-3 text-white focus:ring-2 focus:ring-blue-500/50" placeholder="URL-safe, boşluksuz" required />
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-blue-100 mb-2">İkon Sınıfı (Opsiyonel)</label>
+                    <input type="text" name="IconClass" id="sekmeIcon" class="w-full rounded-xl bg-slate-800/50 border border-blue-500/20 p-3 text-white focus:ring-2 focus:ring-blue-500/50" placeholder="fa-solid fa-file-pdf" />
+                    <p class="text-xs text-slate-400 mt-1">Font Awesome ikon sınıfı. Örn: fa-solid fa-file-pdf, fa-solid fa-document</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-semibold text-blue-100 mb-2">Sıralama</label>
+                        <input type="number" name="Sira" id="sekmeSira" value="99" class="w-full rounded-xl bg-slate-800/50 border border-blue-500/20 p-3 text-white focus:ring-2 focus:ring-blue-500/50" />
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-800/30 border border-emerald-500/20 rounded-xl p-3 mt-7">
+                        <input type="checkbox" name="AktifMi" id="sekmeAktif" value="true" checked class="w-5 h-5 accent-emerald-500 cursor-pointer" />
+                        <label class="text-sm font-bold text-emerald-400 cursor-pointer" for="sekmeAktif">Sitede Yayınla</label>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-6 border-t border-blue-500/10">
+                    <button type="button" onclick="closeSekmeModal()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition-all">İptal</button>
+                    <button type="submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold shadow-lg transition-all">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Form (İçerik) Modal -->
+    <div id="formModal" class="fixed inset-0 z-[105] hidden items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity opacity-0 duration-300">
+        <div id="formModalContent" class="glass-card bg-slate-900/95 border border-emerald-500/30 rounded-3xl p-8 max-w-2xl w-full shadow-[0_0_50px_rgba(16,185,129,0.15)] transform scale-90 transition-transform duration-300 max-h-[90vh] overflow-y-auto custom-scroll">
+
+            <div class="flex justify-between items-center mb-6 border-b border-emerald-500/10 pb-4">
+                <h3 id="formModalTitle" class="text-2xl font-black text-white">Yeni İçerik Ekle</h3>
+                <button type="button" onclick="closeFormModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+
+            <form asp-action="KurumsalIcerikKaydet" method="post" enctype="multipart/form-data" class="space-y-5">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Id" id="formId" value="0" />
+                <input type="hidden" name="SayfaKey" value="@sayfaKey" />
+                <input type="hidden" name="Kategori" id="formKategori" value="" />
+                <input type="hidden" name="ExistingMedya" id="formExistingMedya" value="" />
+
+                <div>
+                    <label class="block text-sm font-semibold text-emerald-100 mb-2">İçerik Türü *</label>
+                    <select name="IcerikTipi" id="formTip" class="w-full rounded-xl bg-slate-800/50 border border-emerald-500/20 p-3 text-white focus:ring-2 focus:ring-emerald-500/50" onchange="applyIcerikTipi(this.value)" required>
+                        <option value="Form">Form</option>
+                        <option value="Video">Video</option>
+                        <option value="Sayfa">Sayfa</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-emerald-100 mb-2">Başlık *</label>
+                    <input type="text" name="Baslik" id="formBaslik" class="w-full rounded-xl bg-slate-800/50 border border-emerald-500/20 p-3 text-white focus:ring-2 focus:ring-emerald-500/50" placeholder="Örn: Hassas Görev Envanteri Formu" required />
+                </div>
+
+                <div>
+                    <label id="formAciklamaLabel" class="block text-sm font-semibold text-emerald-100 mb-2">Form Açıklaması</label>
+                    <textarea name="Aciklama" id="formAciklama" class="w-full rounded-xl bg-slate-800/50 border border-emerald-500/20 p-3 text-white focus:ring-2 focus:ring-emerald-500/50 h-40" placeholder="Form ile ilgili açıklama veya talimatlar..."></textarea>
+                </div>
+
+                <div id="formFileGroup">
+                    <label class="block text-sm font-semibold text-emerald-100 mb-2">
+                        <i class="fa-solid fa-cloud-arrow-up mr-2"></i>Form Dosyası Yükle
+                    </label>
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="flex-1 relative">
+                            <input type="file" name="FormDosyasi" id="formFile" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip" class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 file:cursor-pointer" />
+                        </div>
+                    </div>
+                    <p id="formFileInfo" class="text-xs text-emerald-300 mt-1"></p>
+                </div>
+
+                <div id="formVideoGroup" class="hidden">
+                    <label class="block text-sm font-semibold text-emerald-100 mb-2">Video URL</label>
+                    <input type="url" name="VideoUrl" id="formVideoUrl" class="w-full rounded-xl bg-slate-800/50 border border-emerald-500/20 p-3 text-white focus:ring-2 focus:ring-emerald-500/50" placeholder="https://www.youtube.com/..." />
+                    <p class="text-xs text-slate-400 mt-1">YouTube veya doğrudan video bağlantısı ekleyin.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-semibold text-emerald-100 mb-2">Sıralama</label>
+                        <input type="number" name="Sira" id="formSira" value="99" class="w-full rounded-xl bg-slate-800/50 border border-emerald-500/20 p-3 text-white focus:ring-2 focus:ring-emerald-500/50" />
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-800/30 border border-emerald-500/20 rounded-xl p-3 mt-7">
+                        <input type="checkbox" name="AktifMi" id="formAktif" value="true" checked class="w-5 h-5 accent-emerald-500 cursor-pointer" />
+                        <label class="text-sm font-bold text-emerald-400 cursor-pointer" for="formAktif">Sitede Yayınla</label>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-6 border-t border-emerald-500/10">
+                    <button type="button" onclick="closeFormModal()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition-all">İptal</button>
+                    <button type="submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold shadow-lg transition-all">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .glass-card {
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+    }
+
+    .custom-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, 0.3);
+        border-radius: 10px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+        background: rgba(148, 163, 184, 0.5);
+    }
+</style>
+
+<script>
+    let currentSekmId = '';
+    let currentSekmBaslik = '';
+
+    function openSekmeModal(btn = null) {
+        const modal = document.getElementById('sekmeModal');
+        const title = document.getElementById('sekmeModalTitle');
+        const form = modal.querySelector('form');
+
+        if (btn && btn.dataset.id) {
+            title.textContent = 'Sekme Düzenle';
+            document.getElementById('sekmeId').value = btn.dataset.id;
+            document.getElementById('sekmeBaslik').value = btn.dataset.baslik;
+            document.getElementById('sekmeKey').value = btn.dataset.sekmeid;
+            document.getElementById('sekmeIcon').value = btn.dataset.icon || '';
+            document.getElementById('sekmeSira').value = btn.dataset.sira;
+            document.getElementById('sekmeAktif').checked = btn.dataset.aktif === 'true';
+        } else {
+            title.textContent = 'Yeni Sekme Ekle';
+            document.getElementById('sekmeId').value = '0';
+            form.reset();
+            document.getElementById('sekmeSira').value = '99';
+            document.getElementById('sekmeAktif').checked = true;
+        }
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => modal.classList.add('opacity-100'), 10);
+        document.getElementById('sekmeModalContent').classList.remove('scale-90');
+        document.getElementById('sekmeModalContent').classList.add('scale-100');
+    }
+
+    function closeSekmeModal() {
+        const modal = document.getElementById('sekmeModal');
+        modal.classList.remove('opacity-100');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 300);
+    }
+
+    function showFormList(sekmId, sekmBaslik) {
+        currentSekmId = sekmId;
+        currentSekmBaslik = sekmBaslik;
+        document.getElementById('formListTitle').textContent = sekmBaslik;
+        document.getElementById('formListContainer').classList.remove('hidden');
+        
+        // Formları yükle
+        loadFormList(sekmId);
+    }
+
+    function hideFormList() {
+        document.getElementById('formListContainer').classList.add('hidden');
+    }
+
+    function loadFormList(sekmId) {
+        const sayfaKey = '@sayfaKey';
+        const contentDiv = document.getElementById('formListContent');
+        
+        // Basit bir şekilde formları göster - gerçekte AJAX ile yüklenebilir
+        fetch(`/Admin/Kurumsal/GetIcerikler?sayfaKey=${sayfaKey}&kategori=${sekmId}`)
+            .then(r => r.text())
+            .then(html => {
+                contentDiv.innerHTML = html;
+            })
+            .catch(() => {
+                contentDiv.innerHTML = '<div class="text-center py-8 text-slate-400"><i class="fa-solid fa-inbox text-3xl mb-2"></i><p>Henüz içerik eklenmemiştir.</p></div>';
+            });
+    }
+
+    function openFormModal(btn = null) {
+        const modal = document.getElementById('formModal');
+        const title = document.getElementById('formModalTitle');
+        const form = modal.querySelector('form');
+
+        document.getElementById('formKategori').value = currentSekmId;
+
+        if (btn && btn.dataset.id) {
+            title.textContent = 'İçeriği Düzenle';
+            document.getElementById('formId').value = btn.dataset.id;
+            document.getElementById('formBaslik').value = btn.dataset.baslik;
+            document.getElementById('formTip').value = btn.dataset.iceriktipi || 'Form';
+            document.getElementById('formAciklama').value = btn.dataset.aciklama || '';
+            document.getElementById('formExistingMedya').value = btn.dataset.medya || '';
+            document.getElementById('formVideoUrl').value = btn.dataset.videourl || '';
+            document.getElementById('formSira').value = btn.dataset.sira;
+            document.getElementById('formAktif').checked = btn.dataset.aktif === 'true';
+            document.getElementById('formFileInfo').textContent = btn.dataset.medya ? `Mevcut dosya: ${btn.dataset.medya.split('/').pop()}` : '';
+            document.getElementById('formFile').value = '';
+        } else {
+            title.textContent = 'Yeni İçerik Ekle';
+            document.getElementById('formId').value = '0';
+            form.reset();
+            document.getElementById('formTip').value = 'Form';
+            document.getElementById('formSira').value = '99';
+            document.getElementById('formAktif').checked = true;
+            document.getElementById('formExistingMedya').value = '';
+            document.getElementById('formVideoUrl').value = '';
+            document.getElementById('formFileInfo').textContent = '';
+        }
+
+        applyIcerikTipi(document.getElementById('formTip').value);
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => modal.classList.add('opacity-100'), 10);
+        document.getElementById('formModalContent').classList.remove('scale-90');
+        document.getElementById('formModalContent').classList.add('scale-100');
+    }
+
+    function applyIcerikTipi(tip) {
+        const fileGroup = document.getElementById('formFileGroup');
+        const videoGroup = document.getElementById('formVideoGroup');
+        const aciklamaLabel = document.getElementById('formAciklamaLabel');
+        const aciklama = document.getElementById('formAciklama');
+
+        if (!fileGroup || !videoGroup || !aciklamaLabel || !aciklama) return;
+
+        fileGroup.classList.toggle('hidden', tip !== 'Form');
+        videoGroup.classList.toggle('hidden', tip !== 'Video');
+
+        if (tip === 'Sayfa') {
+            aciklamaLabel.textContent = 'Sayfa İçeriği (HTML / Metin)';
+            aciklama.placeholder = 'Sayfanın içeriğini HTML veya düz metin olarak yazın...';
+        } else if (tip === 'Video') {
+            aciklamaLabel.textContent = 'Video Açıklaması';
+            aciklama.placeholder = 'Video ile ilgili kısa açıklama ekleyin...';
+        } else {
+            aciklamaLabel.textContent = 'Form Açıklaması';
+            aciklama.placeholder = 'Form ile ilgili açıklama veya talimatlar...';
+        }
+    }
+
+    function closeFormModal() {
+        const modal = document.getElementById('formModal');
+        modal.classList.remove('opacity-100');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 300);
+    }
+
+    function confirmDelete(form) {
+        if (confirm('Silmek istediğinizden emin misiniz?')) {
+            form.submit();
+        }
+    }
+
+    document.addEventListener('click', function (e) {
+        const sekmeModal = document.getElementById('sekmeModal');
+        const formModal = document.getElementById('formModal');
+        if (e.target === sekmeModal) closeSekmeModal();
+        if (e.target === formModal) closeFormModal();
+    });
+
+    // Dosya seçildiğinde bilgi göster
+    const fileInput = document.getElementById('formFile');
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const fileInfo = document.getElementById('formFileInfo');
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                const maxSize = 50 * 1024 * 1024; // 50MB
+                if (file.size > maxSize) {
+                    fileInfo.textContent = '❌ Dosya çok büyük (Max 50MB)';
+                    fileInfo.style.color = '#ef4444';
+                    e.target.value = '';
+                } else {
+                    fileInfo.textContent = `✓ ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                    fileInfo.style.color = '#10b981';
+                }
+            } else {
+                fileInfo.textContent = '';
+            }
+        });
+    }
+</script>

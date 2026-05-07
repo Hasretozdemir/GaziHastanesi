@@ -1,0 +1,293 @@
+@using Microsoft.EntityFrameworkCore
+@using GaziHastane.Data
+@inject GaziHastaneContext _context
+
+@{
+    var menuGruplari = _context.KurumsalMenuGruplar
+        .Where(g => g.AktifMi)
+        .OrderBy(g => g.Sira)
+        .Include(g => g.Menuler.Where(m => m.AktifMi).OrderBy(m => m.Sira))
+        .ToList();
+}
+
+<style>
+    .sidebar-link { 
+        transition: all 0.25s ease; 
+        display: flex; 
+        align-items: center; 
+        padding: 0.85rem 1.25rem;
+        border-radius: 1rem; 
+        font-size: 0.85rem; 
+        font-weight: 700; 
+        color: #64748b;
+        text-decoration: none; 
+        margin-bottom: 0.35rem; 
+        white-space: nowrap; 
+        overflow: hidden;
+        letter-spacing: 0.01em;
+        border: none;
+        background: none;
+        cursor: pointer;
+        text-align: left;
+    }
+
+    .sidebar-link.submenu-toggle {
+        width: 100%;
+    }
+
+    .sidebar-icon { 
+        width: 1.5rem; 
+        text-align: center; 
+        font-size: 1.15rem; 
+        flex-shrink: 0; 
+        margin-right: 0.85rem; 
+        transition: color 0.25s ease, transform 0.2s; 
+    }
+
+    .sidebar-text { 
+        transition: opacity 0.2s ease; 
+        flex: 1; 
+    }
+
+    .sidebar-link:hover:not(.active-link) { 
+        background: #f8fafc; 
+        color: #2563eb; 
+        transform: translateX(4px);
+    }
+
+    .sidebar-link:hover:not(.active-link) .sidebar-icon { 
+        color: #2563eb; 
+    }
+
+    .sidebar-link.active-link { 
+        background: #2563eb !important; 
+        color: #ffffff !important; 
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25) !important; 
+    }
+    
+    .sidebar-link.active-link .sidebar-icon { 
+        color: #ffffff !important; 
+    }
+
+    .submenu-panel {
+        display: none;
+        margin: -0.05rem 0 0.5rem 0;
+        padding-left: 0.75rem;
+    }
+
+    .submenu-panel.open { 
+        display: block; 
+    }
+
+    .submenu-link {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.5rem 0.7rem;
+        border-radius: 0.75rem;
+        color: #64748b;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .submenu-link:hover { 
+        background: #f8fafc; 
+        color: #2563eb; 
+    }
+
+    .submenu-caret { 
+        margin-left: auto; 
+        font-size: 0.7rem; 
+        transition: transform 0.2s ease; 
+    }
+
+    .sidebar-link.submenu-open .submenu-caret { 
+        transform: rotate(180deg); 
+    }
+
+    .section-title { 
+        font-size: 0.65rem; 
+        font-weight: 800; 
+        text-transform: uppercase; 
+        letter-spacing: 0.12em; 
+        color: #94a3b8; 
+        margin: 1.75rem 1.25rem 0.5rem; 
+        white-space: nowrap; 
+    }
+
+    .custom-scroll::-webkit-scrollbar { 
+        width: 6px; 
+    }
+
+    .custom-scroll::-webkit-scrollbar-track { 
+        background: transparent; 
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb { 
+        background: #cbd5e1; 
+        border-radius: 10px; 
+    }
+</style>
+
+<div class="flex flex-col bg-white border border-slate-200 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.03)] h-fit lg:h-auto lg:sticky lg:top-24">
+    
+    <!-- Sidebar İçeriği -->
+    <div class="p-4 space-y-1 kurumsal-sidebar-menu custom-scroll max-h-[600px] lg:max-h-none overflow-y-auto lg:overflow-y-auto">
+        @if (menuGruplari != null && menuGruplari.Any())
+        {
+            @foreach (var grup in menuGruplari)
+            {
+                <p class="section-title">@grup.GrupAdi</p>
+                <nav class="space-y-1">
+                    @foreach (var menu in grup.Menuler.OrderBy(m => m.Sira))
+                    {
+                        @* İç Kontrol ve Organizasyon Şemaları için özel dropdown menü *@
+                        if (menu.Baslik == "İç Kontrol" || menu.Baslik == "Organizasyon Şemaları")
+                        {
+                            var isIcKontrol = menu.Baslik == "İç Kontrol";
+                            var submenuId = isIcKontrol ? "icKontrolSubmenu" : "organizasyonSubmenu";
+                            var actionName = isIcKontrol ? "IcKontrol" : "Organizasyon";
+                            var routePath = isIcKontrol ? "/Kurumsal/IcKontrol" : "/Kurumsal/Organizasyon";
+                            var sekmeler = isIcKontrol
+                                ? _context.KurumsalSekmeler
+                                    .Where(x => x.SayfaKey == "IcKontrol" && x.AktifMi)
+                                    .OrderBy(x => x.Sira)
+                                    .Select(x => new { LinkId = x.SekmeId, x.Baslik })
+                                    .ToList()
+                                : _context.KurumsalIcerikler
+                                    .Where(x => x.SayfaKey == "OrganizasyonSemalari" && x.AktifMi)
+                                    .OrderBy(x => x.Sira)
+                                    .Select(x => new { LinkId = $"org-{x.Id}", x.Baslik })
+                                    .ToList();
+
+                            <button type="button" onclick="toggleSidebarSubmenu('@submenuId', this)" class="sidebar-link submenu-toggle @(ViewContext.RouteData.Values["action"]?.ToString() == actionName ? "active-link" : "")" title="@menu.Baslik">
+                                <i class="fa-solid @(string.IsNullOrWhiteSpace(menu.IconClass) ? "fa-circle-info" : menu.IconClass) sidebar-icon"></i>
+                                <span class="sidebar-text">@menu.Baslik</span>
+                                <i class="fa-solid fa-chevron-down submenu-caret" style="margin-left: auto; transition: transform 0.3s ease;"></i>
+                            </button>
+
+                            @if (sekmeler.Any())
+                            {
+                                <div id="@submenuId" class="submenu-panel" style="padding-left: 1.5rem; margin-top: 0.25rem;">
+                                    @foreach (var sekme in sekmeler)
+                                    {
+                                        <a href="@routePath#@sekme.LinkId" class="submenu-link" onclick="navigateToTab('@routePath', '@sekme.LinkId')">
+                                            <i class="fa-solid fa-chevron-right" style="font-size: 0.6rem;"></i>
+                                            @sekme.Baslik
+                                        </a>
+                                    }
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <a href="@menu.Url" class="sidebar-link" title="@menu.Baslik">
+                                <i class="fa-solid @(string.IsNullOrWhiteSpace(menu.IconClass) ? "fa-circle-info" : menu.IconClass) sidebar-icon"></i>
+                                <span class="sidebar-text">@menu.Baslik</span>
+                            </a>
+                        }
+                    }
+                </nav>
+            }
+        }
+        else
+        {
+            <!-- Varsayılan Menü (Veritabanında veri yoksa) -->
+            <p class="section-title">Kurumsal</p>
+            <nav class="space-y-1">
+                <a href="/Kurumsal/Index" class="sidebar-link" title="Hakkımızda">
+                    <i class="fa-solid fa-circle-info sidebar-icon"></i>
+                    <span class="sidebar-text">Hakkımızda</span>
+                </a>
+                <a href="/Kurumsal/Bashekimlik" class="sidebar-link" title="Başhekimlik">
+                    <i class="fa-solid fa-user-tie sidebar-icon"></i>
+                    <span class="sidebar-text">Başhekimlik</span>
+                </a>
+                <a href="/Kurumsal/Basmudurluk" class="sidebar-link" title="Başmüdürlük">
+                    <i class="fa-solid fa-briefcase sidebar-icon"></i>
+                    <span class="sidebar-text">Başmüdürlük</span>
+                </a>
+                <a href="/Kurumsal/Organizasyon" class="sidebar-link" title="Organizasyon">
+                    <i class="fa-solid fa-diagram-project sidebar-icon"></i>
+                    <span class="sidebar-text">Organizasyon</span>
+                </a>
+            </nav>
+        }
+    </div>
+</div>
+
+<script>
+    function toggleSidebarSubmenu(submenuId, button) {
+        const submenu = document.getElementById(submenuId);
+        const chevron = button ? button.querySelector('.submenu-caret') : null;
+
+        if (submenu) {
+            submenu.classList.toggle('open');
+            if (chevron) {
+                chevron.style.transform = submenu.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+        }
+    }
+
+    function navigateToTab(pagePath, tabId) {
+        window.location.href = `${pagePath}#${tabId}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        let currentPath = window.location.pathname.toLowerCase();
+        
+        // İç Kontrol veya Organizasyon sayfasındaysa ilgili menüyü aç
+        const submenuConfigs = [
+            { path: '/kurumsal/ickontrol', id: 'icKontrolSubmenu' },
+            { path: '/kurumsal/organizasyon', id: 'organizasyonSubmenu' }
+        ];
+
+        submenuConfigs.forEach(cfg => {
+            if (currentPath === cfg.path) {
+                const submenu = document.getElementById(cfg.id);
+                const toggle = submenu ? submenu.previousElementSibling : null;
+                const chevron = toggle ? toggle.querySelector('.submenu-caret') : null;
+                if (submenu && !submenu.classList.contains('open')) {
+                    submenu.classList.add('open');
+                    if (chevron) chevron.style.transform = 'rotate(180deg)';
+                }
+            }
+        });
+
+        // Alt menü linklerini de current page üzerinden hafif vurgula
+        document.querySelectorAll('.submenu-link').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && href.toLowerCase().startsWith(currentPath)) {
+                link.style.opacity = '1';
+                link.style.color = '#2563eb';
+                link.style.fontWeight = '800';
+            }
+        });
+
+        // Diğer linkler için active state
+        document.querySelectorAll(".sidebar-link:not(.submenu-toggle)").forEach(link => {
+            let href = link.getAttribute("href");
+            if (href) {
+                href = href.toLowerCase();
+                if (href === currentPath || 
+                    (currentPath === '/kurumsal' && href === '/kurumsal/index') ||
+                    (currentPath === '/kurumsal/' && href === '/kurumsal/index') ||
+                    currentPath.startsWith(href + '/')) {
+                    link.classList.add("active-link");
+                }
+            }
+        });
+
+        // Organizasyon ve İç Kontrol toggle butonlarını aktif göstermeyi koru
+        if (currentPath === '/kurumsal/ickontrol') {
+            const toggle = document.querySelector('button[onclick*="icKontrolSubmenu"]');
+            if (toggle) toggle.classList.add('active-link');
+        }
+        if (currentPath === '/kurumsal/organizasyon') {
+            const toggle = document.querySelector('button[onclick*="organizasyonSubmenu"]');
+            if (toggle) toggle.classList.add('active-link');
+        }
+    });
+</script>

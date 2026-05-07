@@ -39,6 +39,7 @@ namespace GaziHastane.Data
         public DbSet<HemsirelikIcerik> HemsirelikIcerikler { get; set; }
         public DbSet<HemsirelikSekme> HemsirelikSekmeler { get; set; }
         public DbSet<KurumsalSekme> KurumsalSekmeler { get; set; }
+        public DbSet<KurumsalIcerik> KurumsalIcerikler { get; set; }
         public DbSet<ArsivSekme> ArsivSekmeler { get; set; }
         public DbSet<HizliIslem> HizliIslemler { get; set; }
         public DbSet<AdminMenuItem> AdminMenuItems { get; set; }
@@ -46,5 +47,6 @@ namespace GaziHastane.Data
         public DbSet<DoktorRandevuPlani> DoktorRandevuPlanlari { get; set; }
         public DbSet<DoktorRandevuPlanGunu> DoktorRandevuPlanGunleri { get; set; }
         public DbSet<AdminLog> AdminLoglari { get; set; }
+        public DbSet<BasinKurumsalIletisim> BasinKurumsalIletisimler { get; set; }
     }
 }

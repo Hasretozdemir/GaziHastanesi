@@ -215,6 +215,15 @@
                     hemsirelikLink.classList.add('submenu-open');
                 }
             }
+
+            if (currentPath === '/kurumsal/bilgiislem') {
+                const bilgiIslemPanel = document.getElementById('bilgiislem-submenu') || document.getElementById('bilgiislem-submenu-fallback');
+                const bilgiIslemLink = document.querySelector('.sidebar-link.has-submenu[data-submenu-target="bilgiislem-submenu"], .sidebar-link.has-submenu[data-submenu-target="bilgiislem-submenu-fallback"]');
+                if (bilgiIslemPanel && bilgiIslemLink) {
+                    bilgiIslemPanel.classList.add('open');
+                    bilgiIslemLink.classList.add('submenu-open');
+                }
+            }
         });
     </script>
     
@@ -286,6 +295,24 @@
                                     }
                                 </div>
                             }
+                            else if ((menu.Url?.ToLower() == "/kurumsal/bilgiislem") || (menu.Baslik?.ToLower() == "bilgi iþlem merkezi"))
+                            {
+                                <a href="@menu.Url" class="sidebar-link has-submenu" data-submenu-target="bilgiislem-submenu" data-navigate-if-not-current="true">
+                                    <i class="fa-solid @(string.IsNullOrWhiteSpace(menu.IconClass) ? "fa-microchip" : menu.IconClass) sidebar-icon"></i>
+                                    <span class="sidebar-text">@menu.Baslik</span>
+                                    <i class="fa-solid fa-chevron-down submenu-caret"></i>
+                                </a>
+                                <div id="bilgiislem-submenu" class="submenu-panel">
+                                    <a href="/Kurumsal/BilgiIslem#genel-bilgi" class="submenu-link"><i class="fa-solid fa-circle-info"></i> Genel Bilgi</a>
+                                    @{
+                                        var dbSekmelerBilgiIslem = _context.KurumsalSekmeler.Where(x => x.SayfaKey.ToLower() == "bilgiislemmerkezi" && x.AktifMi).OrderBy(x => x.Sira).ToList();
+                                        foreach (var sekme in dbSekmelerBilgiIslem)
+                                        {
+                                            <a href="/Kurumsal/BilgiIslem#@sekme.SekmeId" class="submenu-link"><i class="fa-solid @(string.IsNullOrWhiteSpace(sekme.IconClass) ? "fa-circle-info" : sekme.IconClass)"></i> @sekme.Baslik</a>
+                                        }
+                                    }
+                                </div>
+                            }
                             else
                             {
                                 <a href="@menu.Url" class="sidebar-link">
@@ -330,7 +357,16 @@
                                         }
                                     }
                     </div>
-                    <a href="/Kurumsal/BilgiIslem" class="sidebar-link"><i class="fa-solid fa-microchip sidebar-icon"></i><span class="sidebar-text">Bilgi Ýþlem Merkezi</span></a>
+                    <a href="/Kurumsal/BilgiIslem" class="sidebar-link has-submenu" data-submenu-target="bilgiislem-submenu-fallback" data-navigate-if-not-current="true"><i class="fa-solid fa-microchip sidebar-icon"></i><span class="sidebar-text">Bilgi Ýþlem Merkezi</span><i class="fa-solid fa-chevron-down submenu-caret"></i></a>
+                    <div id="bilgiislem-submenu-fallback" class="submenu-panel">
+                        <a href="/Kurumsal/BilgiIslem#genel-bilgi" class="submenu-link"><i class="fa-solid fa-circle-info"></i> Genel Bilgi</a>
+                        @{
+                            var dbSekmelerBilgiIslemFB = _context.KurumsalSekmeler.Where(x => x.SayfaKey.ToLower() == "bilgiislemmerkezi" && x.AktifMi).OrderBy(x => x.Sira).ToList();
+                            foreach(var sekme in dbSekmelerBilgiIslemFB) {
+                                <a href="/Kurumsal/BilgiIslem#@sekme.SekmeId" class="submenu-link"><i class="fa-solid @(string.IsNullOrWhiteSpace(sekme.IconClass) ? "fa-circle-info" : sekme.IconClass)"></i> @sekme.Baslik</a>
+                            }
+                        }
+                    </div>
                 </nav>
             }
         </div>
