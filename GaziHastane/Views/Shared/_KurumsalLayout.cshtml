@@ -1,128 +1,21 @@
-@{
+ï»¿@{
     Layout = "_Layout";
 }
-@using Microsoft.EntityFrameworkCore
-@using GaziHastane.Data
-@inject GaziHastaneContext _context
 
-@{
-    var menuGruplari = _context.KurumsalMenuGruplar
-        .Where(g => g.AktifMi)
-        .OrderBy(g => g.Sira)
-        .Include(g => g.Menuler.Where(m => m.AktifMi).OrderBy(m => m.Sira))
-        .ToList();
-}
-
-@section Scripts {
+@section Styles {
     <style>
-        .page-fade-in { animation: fadeInPage 0.5s ease-out forwards; opacity: 0; }
-        @@keyframes fadeInPage { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        * { -webkit-tap-highlight-color: transparent !important; }
-        .kurumsal-sidebar-menu { user-select: none; }
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-
-        .sidebar-link {
-            transition: all 0.25s ease; 
-            display: flex; 
-            align-items: center; 
-            padding: 0.85rem 1.25rem;
-            border-radius: 1rem; 
-            font-size: 0.85rem; 
-            font-weight: 700; 
-            color: #64748b;
-            text-decoration: none; 
-            margin-bottom: 0.35rem; 
-            white-space: nowrap; 
-            overflow: hidden;
-            letter-spacing: 0.01em;
-        }
-
-        .sidebar-icon { 
-            width: 1.5rem; 
-            text-align: center; 
-            font-size: 1.15rem; 
-            flex-shrink: 0; 
-            margin-right: 0.85rem; 
-            transition: color 0.25s ease, transform 0.2s; 
-        }
-
-        .sidebar-text { transition: opacity 0.2s ease; flex: 1; }
-
-        @@media (hover: hover) {
-            .sidebar-link:hover:not(.active-link) { 
-                background: #f8fafc; 
-                color: #2563eb; 
-                transform: translateX(4px);
-            }
-            .sidebar-link:hover:not(.active-link) .sidebar-icon { color: #2563eb; }
-        }
-
-        .sidebar-link.active-link { 
-            background: #2563eb !important; 
-            color: #ffffff !important; 
-            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25) !important; 
-        }
-        
-        .sidebar-link.active-link .sidebar-icon { color: #ffffff !important; }
-
-        .submenu-panel {
-            display: none;
-            margin: -0.05rem 0 0.5rem 0;
-            padding-left: 0.75rem;
-        }
-
-        .submenu-panel.open { display: block; }
-
-        .submenu-link {
-            display: flex;
-            align-items: center;
-            gap: 0.45rem;
-            padding: 0.5rem 0.7rem;
-            border-radius: 0.75rem;
-            color: #64748b;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .submenu-link:hover { background: #f8fafc; color: #2563eb; }
-
-        .submenu-caret { margin-left: auto; font-size: 0.7rem; transition: transform 0.2s ease; }
-        .sidebar-link.submenu-open .submenu-caret { transform: rotate(180deg); }
-
-        #app-sidebar { transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
-        /* Varsayýlan olarak kapalý kalsýn (ikon modunda) */
         #app-sidebar.collapsed { width: 5.5rem; }
-        /* Ýçeriklerin daraldýðýnda nasýl gizleneceði */
         #app-sidebar.collapsed .sidebar-text, 
         #app-sidebar.collapsed .section-title, 
         #app-sidebar.collapsed .logo-text { opacity: 0; display: none; }
-        
         #app-sidebar.collapsed .sidebar-link { justify-content: center; padding: 0.85rem 0; transform: none; }
         #app-sidebar.collapsed .sidebar-icon { margin-right: 0; font-size: 1.25rem; }
         #app-sidebar.collapsed .submenu-panel { display: none !important; }
-        
-        /* Oku veya hamburgeri deðiþtirebiliriz ama hamburger kalmasý daha iyi */
         #app-sidebar.collapsed #toggle-icon { transform: rotate(180deg); }
 
-        .section-title { 
-            font-size: 0.65rem; 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            letter-spacing: 0.12em; 
-            color: #94a3b8; 
-            margin: 1.75rem 1.25rem 0.5rem; 
-            white-space: nowrap; 
-        }
-
-        /* Yeni Toggle Butonu Tasarýmý (Ekran görüntüsündeki gibi dýþa taþan mavi yuvarlak) */
         .sidebar-toggle-btn {
             position: absolute;
-            right: -1.25rem; /* Çizginin tam ortasýna gelmesi için */
+            right: -1.25rem;
             top: 4.5rem;
             width: 2.5rem;
             height: 2.5rem;
@@ -133,110 +26,48 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-            border: 4px solid #ffffff; /* Beyaz çerçeve */
+            border: 4px solid #ffffff;
             z-index: 50;
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
-        .sidebar-toggle-btn:hover {
-            background-color: #1d4ed8;
-            transform: scale(1.05);
-        }
     </style>
+    @await RenderSectionAsync("Styles", required: false)
+}
 
+@section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let currentPath = window.location.pathname.toLowerCase();
-            document.querySelectorAll(".sidebar-link").forEach(link => {
-                let href = link.getAttribute("href").toLowerCase();
-                if (href === currentPath || (currentPath === '/kurumsal' && href === '/kurumsal/index')) {
-                    link.classList.add("active-link");
-                }
-            });
             const sidebar = document.getElementById("app-sidebar");
             const toggleBtn = document.getElementById("sidebar-toggle");
-            
-            // Sayfa ilk açýldýðýnda menü hep kapalý (dar) gelsin istendi.
-            sidebar.classList.add("collapsed");
+
+            if (window.innerWidth > 768) {
+                sidebar.classList.add("collapsed");
+            }
 
             toggleBtn.addEventListener("click", function() {
                 sidebar.classList.toggle("collapsed");
-                // Aç kapa durumunda ikon dönüþebilir
-                const icon = document.getElementById("toggle-icon");
-                if(sidebar.classList.contains("collapsed")) {
-                    icon.classList.remove("fa-xmark");
-                    icon.classList.add("fa-bars");
-                } else {
-                    // Açýldýðýnda belki çarpý olabilir veya yine hamburger olarak yön deðiþebilir.
-                    icon.classList.remove("fa-bars");
-                    icon.classList.add("fa-xmark");
-                }
             });
 
             document.querySelectorAll('.sidebar-link.has-submenu').forEach(link => {
                 link.addEventListener('click', function (e) {
-                    const linkHref = (link.getAttribute('href') || '').toLowerCase();
-                    const navigateIfNotCurrent = link.getAttribute('data-navigate-if-not-current') === 'true';
-
-                    if (navigateIfNotCurrent && linkHref) {
-                        const isCurrentPage = currentPath === linkHref || currentPath.startsWith(linkHref + '/');
-                        if (!isCurrentPage) {
-                            return;
-                        }
-                    }
-
                     e.preventDefault();
-
-                    if (sidebar.classList.contains('collapsed')) {
-                        sidebar.classList.remove('collapsed');
-                    }
-
+                    if (sidebar.classList.contains('collapsed')) sidebar.classList.remove('collapsed');
                     const targetId = link.getAttribute('data-submenu-target');
                     const target = targetId ? document.getElementById(targetId) : null;
-                    if (!target) return;
-
-                    const isOpen = target.classList.contains('open');
-                    document.querySelectorAll('.submenu-panel').forEach(p => p.classList.remove('open'));
-                    document.querySelectorAll('.sidebar-link.has-submenu').forEach(l => l.classList.remove('submenu-open'));
-
-                    if (!isOpen) {
-                        target.classList.add('open');
-                        link.classList.add('submenu-open');
-                    }
+                    if (target) target.classList.toggle('open');
                 });
             });
-
-            if (currentPath === '/kurumsal/hemsirelikhizmetleri') {
-                const hemsirelikPanel = document.getElementById('hemsirelik-submenu') || document.getElementById('hemsirelik-submenu-fallback');
-                const hemsirelikLink = document.querySelector('.sidebar-link.has-submenu[data-submenu-target="hemsirelik-submenu"], .sidebar-link.has-submenu[data-submenu-target="hemsirelik-submenu-fallback"]');
-                if (hemsirelikPanel && hemsirelikLink) {
-                    hemsirelikPanel.classList.add('open');
-                    hemsirelikLink.classList.add('submenu-open');
-                }
-            }
-
-            if (currentPath === '/kurumsal/bilgiislem') {
-                const bilgiIslemPanel = document.getElementById('bilgiislem-submenu') || document.getElementById('bilgiislem-submenu-fallback');
-                const bilgiIslemLink = document.querySelector('.sidebar-link.has-submenu[data-submenu-target="bilgiislem-submenu"], .sidebar-link.has-submenu[data-submenu-target="bilgiislem-submenu-fallback"]');
-                if (bilgiIslemPanel && bilgiIslemLink) {
-                    bilgiIslemPanel.classList.add('open');
-                    bilgiIslemLink.classList.add('submenu-open');
-                }
-            }
         });
     </script>
-    
     @await RenderSectionAsync("Scripts", required: false)
 }
 
-<div class="flex w-full overflow-hidden bg-slate-50 page-fade-in z-20" style="height: calc(100vh - 64px); position: fixed; top: 64px; left: 0; right: 0; bottom: 0;">
-
+<div class="flex w-full overflow-hidden bg-slate-50" style="height: calc(100vh - 64px); position: fixed; top: 64px; left: 0; right: 0; bottom: 0; z-index: 20;">
     <aside id="app-sidebar" class="relative flex flex-col bg-white border-r border-slate-200 h-full w-[280px] z-40 shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-all duration-300 group">
-        
-        <!-- Yarý dýþarý taþan mavi yuvarlak menü butonu -->
         <button id="sidebar-toggle" class="sidebar-toggle-btn hidden md:flex">
-            <i class="fa-solid fa-bars text-[12px] transition-transform duration-300" id="toggle-icon"></i>
+            <i class="fa-solid fa-bars text-[12px]" id="toggle-icon"></i>
         </button>
 
         <div class="flex items-center gap-4 px-6 py-7 border-b border-slate-100 min-h-[5.5rem]">
@@ -244,138 +75,17 @@
                 <i class="fa-solid fa-hospital text-xl"></i>
             </div>
             <div class="logo-text flex flex-col overflow-hidden transition-opacity duration-300">
-                <span class="font-extrabold text-slate-800 text-[15px] tracking-tight whitespace-nowrap">GAZÝ HASTANESÝ</span>
-                <span class="text-[10px] text-slate-500 whitespace-nowrap font-bold mt-0.5">Gazi Üniversitesi</span>
+                <span class="font-extrabold text-slate-800 text-[15px] tracking-tight whitespace-nowrap">GAZ&#304; HASTANES&#304;</span>
+                <span class="text-[10px] text-slate-500 whitespace-nowrap font-bold mt-0.5">Gazi &#220;niversitesi</span>
             </div>
         </div>
 
-    <div class="flex-1 overflow-y-auto custom-scroll p-4 kurumsal-sidebar-menu">
-            @if (menuGruplari != null && menuGruplari.Any())
-            {
-                @foreach (var grup in menuGruplari)
-                {
-                    <p class="section-title">@grup.GrupAdi</p>
-                    <nav class="space-y-1">
-                        @foreach (var menu in grup.Menuler.OrderBy(m => m.Sira))
-                        {
-                            if ((menu.Url?.ToLower() == "/kurumsal/index") || (menu.Baslik?.ToLower() == "hakkýmýzda"))
-                            {
-                                <a href="@menu.Url" class="sidebar-link has-submenu" data-submenu-target="hakkimizda-submenu">
-                                    <i class="fa-solid @(string.IsNullOrWhiteSpace(menu.IconClass) ? "fa-circle-info" : menu.IconClass) sidebar-icon"></i>
-                                    <span class="sidebar-text">@menu.Baslik</span>
-                                    <i class="fa-solid fa-chevron-down submenu-caret"></i>
-                                </a>
-                                <div id="hakkimizda-submenu" class="submenu-panel">
-                                    <a href="/Kurumsal/Index#tarihce" class="submenu-link"><i class="fa-solid fa-clock-rotate-left"></i> Tarihçemiz</a>
-                                    <a href="/Kurumsal/Index#misyon" class="submenu-link"><i class="fa-solid fa-bullseye"></i> Misyon & Vizyon</a>
-                                    <a href="/Kurumsal/Index#stratejik" class="submenu-link"><i class="fa-solid fa-chart-line"></i> Stratejik Plan</a>
-                                    <a href="/Kurumsal/Index#yonetmelik" class="submenu-link"><i class="fa-solid fa-scale-balanced"></i> Yönetmelik</a>
-                                                                        <a href="/Kurumsal/Index#amac" class="submenu-link"><i class="fa-solid fa-flag-checkered"></i> Amaç ve Hedefler</a>
-                                    @{
-                                        var hakkimizdaSekmeler = _context.KurumsalSekmeler.Where(x => x.SayfaKey.ToLower() == "hakkimizda" && x.AktifMi).OrderBy(x => x.Sira).ToList();
-                                        foreach(var sekme in hakkimizdaSekmeler) {
-                                            <a href="/Kurumsal/Index#@sekme.SekmeId" class="submenu-link"><i class="fa-solid @(string.IsNullOrWhiteSpace(sekme.IconClass) ? "fa-circle-info" : sekme.IconClass)"></i> @sekme.Baslik</a>
-                                        }
-                                    }
-                                </div>
-                            }
-                            else if ((menu.Url?.ToLower() == "/kurumsal/hemsirelikhizmetleri") || (menu.Baslik?.ToLower() == "hemþirelik hizmetleri"))
-                            {
-                                <a href="@menu.Url" class="sidebar-link has-submenu" data-submenu-target="hemsirelik-submenu" data-navigate-if-not-current="true">
-                                    <i class="fa-solid @(string.IsNullOrWhiteSpace(menu.IconClass) ? "fa-user-nurse" : menu.IconClass) sidebar-icon"></i>
-                                    <span class="sidebar-text">@menu.Baslik</span>
-                                    <i class="fa-solid fa-chevron-down submenu-caret"></i>
-                                </a>
-                                <div id="hemsirelik-submenu" class="submenu-panel">
-                                                                        @{
-                                        var dbSekmelerHemsirelik = _context.HemsirelikSekmeler.Where(x => x.AktifMi).OrderBy(x => x.Sira).ToList();
-                                        foreach(var sekme in dbSekmelerHemsirelik) {
-                                            <a href="/Kurumsal/HemsirelikHizmetleri#@sekme.SekmeId" class="submenu-link"><i class="fa-solid @(string.IsNullOrWhiteSpace(sekme.IconClass) ? "fa-circle-info" : sekme.IconClass)"></i> @sekme.Baslik</a>
-                                        }
-                                    }
-                                </div>
-                            }
-                            else if ((menu.Url?.ToLower() == "/kurumsal/bilgiislem") || (menu.Baslik?.ToLower() == "bilgi iþlem merkezi"))
-                            {
-                                <a href="@menu.Url" class="sidebar-link has-submenu" data-submenu-target="bilgiislem-submenu" data-navigate-if-not-current="true">
-                                    <i class="fa-solid @(string.IsNullOrWhiteSpace(menu.IconClass) ? "fa-microchip" : menu.IconClass) sidebar-icon"></i>
-                                    <span class="sidebar-text">@menu.Baslik</span>
-                                    <i class="fa-solid fa-chevron-down submenu-caret"></i>
-                                </a>
-                                <div id="bilgiislem-submenu" class="submenu-panel">
-                                    <a href="/Kurumsal/BilgiIslem#genel-bilgi" class="submenu-link"><i class="fa-solid fa-circle-info"></i> Genel Bilgi</a>
-                                    @{
-                                        var dbSekmelerBilgiIslem = _context.KurumsalSekmeler.Where(x => x.SayfaKey.ToLower() == "bilgiislemmerkezi" && x.AktifMi).OrderBy(x => x.Sira).ToList();
-                                        foreach (var sekme in dbSekmelerBilgiIslem)
-                                        {
-                                            <a href="/Kurumsal/BilgiIslem#@sekme.SekmeId" class="submenu-link"><i class="fa-solid @(string.IsNullOrWhiteSpace(sekme.IconClass) ? "fa-circle-info" : sekme.IconClass)"></i> @sekme.Baslik</a>
-                                        }
-                                    }
-                                </div>
-                            }
-                            else
-                            {
-                                <a href="@menu.Url" class="sidebar-link">
-                                    <i class="fa-solid @(string.IsNullOrWhiteSpace(menu.IconClass) ? "fa-circle-info" : menu.IconClass) sidebar-icon"></i>
-                                    <span class="sidebar-text">@menu.Baslik</span>
-                                </a>
-                            }
-                        }
-                    </nav>
-                }
-            }
-            else
-            {
-                <p class="section-title mt-2">YÖNETÝM</p>
-                <nav class="space-y-1">
-                    <a href="/Kurumsal/Basmudurluk" class="sidebar-link"><i class="fa-solid fa-users sidebar-icon"></i><span class="sidebar-text">Baþmüdürlük</span></a>
-                    <a href="/Kurumsal/Bashekimlik" class="sidebar-link"><i class="fa-solid fa-user-tie sidebar-icon"></i><span class="sidebar-text">Baþhekimlik</span></a>
-                </nav>
-
-                <p class="section-title">KURUMSAL</p>
-                <nav class="space-y-1">
-                    <a href="/Kurumsal/Index" class="sidebar-link has-submenu" data-submenu-target="hakkimizda-submenu-fallback"><i class="fa-solid fa-circle-info sidebar-icon"></i><span class="sidebar-text">Hakkýmýzda</span><i class="fa-solid fa-chevron-down submenu-caret"></i></a>
-                    <div id="hakkimizda-submenu-fallback" class="submenu-panel">
-                        <a href="/Kurumsal/Index#tarihce" class="submenu-link"><i class="fa-solid fa-clock-rotate-left"></i> Tarihçemiz</a>
-                        <a href="/Kurumsal/Index#misyon" class="submenu-link"><i class="fa-solid fa-bullseye"></i> Misyon & Vizyon</a>
-                        <a href="/Kurumsal/Index#stratejik" class="submenu-link"><i class="fa-solid fa-chart-line"></i> Stratejik Plan</a>
-                        <a href="/Kurumsal/Index#yonetmelik" class="submenu-link"><i class="fa-solid fa-scale-balanced"></i> Yönetmelik</a>
-                                                            <a href="/Kurumsal/Index#amac" class="submenu-link"><i class="fa-solid fa-flag-checkered"></i> Amaç ve Hedefler</a>
-                                    @{
-                                        var hakkimizdaSekmelerFB = _context.KurumsalSekmeler.Where(x => x.SayfaKey.ToLower() == "hakkimizda" && x.AktifMi).OrderBy(x => x.Sira).ToList();
-                                        foreach(var sekme in hakkimizdaSekmelerFB) {
-                                            <a href="/Kurumsal/Index#@sekme.SekmeId" class="submenu-link"><i class="fa-solid @(string.IsNullOrWhiteSpace(sekme.IconClass) ? "fa-circle-info" : sekme.IconClass)"></i> @sekme.Baslik</a>
-                                        }
-                                    }
-                    </div>
-                    <a href="/Kurumsal/HemsirelikHizmetleri" class="sidebar-link has-submenu" data-submenu-target="hemsirelik-submenu-fallback" data-navigate-if-not-current="true"><i class="fa-solid fa-user-nurse sidebar-icon"></i><span class="sidebar-text">Hemþirelik Hizmetleri</span><i class="fa-solid fa-chevron-down submenu-caret"></i></a>
-                    <div id="hemsirelik-submenu-fallback" class="submenu-panel">
-                                                            @{
-                                        var dbSekmelerHemsirelikFB = _context.HemsirelikSekmeler.Where(x => x.AktifMi).OrderBy(x => x.Sira).ToList();
-                                        foreach(var sekme in dbSekmelerHemsirelikFB) {
-                                            <a href="/Kurumsal/HemsirelikHizmetleri#@sekme.SekmeId" class="submenu-link"><i class="fa-solid @(string.IsNullOrWhiteSpace(sekme.IconClass) ? "fa-circle-info" : sekme.IconClass)"></i> @sekme.Baslik</a>
-                                        }
-                                    }
-                    </div>
-                    <a href="/Kurumsal/BilgiIslem" class="sidebar-link has-submenu" data-submenu-target="bilgiislem-submenu-fallback" data-navigate-if-not-current="true"><i class="fa-solid fa-microchip sidebar-icon"></i><span class="sidebar-text">Bilgi Ýþlem Merkezi</span><i class="fa-solid fa-chevron-down submenu-caret"></i></a>
-                    <div id="bilgiislem-submenu-fallback" class="submenu-panel">
-                        <a href="/Kurumsal/BilgiIslem#genel-bilgi" class="submenu-link"><i class="fa-solid fa-circle-info"></i> Genel Bilgi</a>
-                        @{
-                            var dbSekmelerBilgiIslemFB = _context.KurumsalSekmeler.Where(x => x.SayfaKey.ToLower() == "bilgiislemmerkezi" && x.AktifMi).OrderBy(x => x.Sira).ToList();
-                            foreach(var sekme in dbSekmelerBilgiIslemFB) {
-                                <a href="/Kurumsal/BilgiIslem#@sekme.SekmeId" class="submenu-link"><i class="fa-solid @(string.IsNullOrWhiteSpace(sekme.IconClass) ? "fa-circle-info" : sekme.IconClass)"></i> @sekme.Baslik</a>
-                            }
-                        }
-                    </div>
-                </nav>
-            }
+        <div class="flex-1 overflow-y-auto p-4 custom-scroll">
+            @await Html.PartialAsync("_KurumsalSidebar")
         </div>
     </aside>
 
     <main class="flex-1 overflow-y-auto bg-[#f8fafc] relative w-full pt-6 pb-24 px-6 md:px-10 custom-scroll h-full">
         @RenderBody()
     </main>
-
-</div>  
-
-
+</div>

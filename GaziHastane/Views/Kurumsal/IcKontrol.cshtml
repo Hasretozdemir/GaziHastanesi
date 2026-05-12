@@ -1,282 +1,187 @@
-﻿@* RAZOR KOD BLOĞU *@
-@model List<GaziHastane.Models.KurumsalSekme>
-@using Microsoft.EntityFrameworkCore
-@inject GaziHastane.Data.GaziHastaneContext _context
+@model List<GaziHastane.Models.KurumsalIcerik>
 @{
-    ViewData["Title"] = "İç Kontrol - Kurumsal Bilgi Sistemi";
+    Layout = "_KurumsalLayout";
+    ViewData["Title"] = "İç Kontrol";
+    var sekmeler = ViewBag.Sekmeler as List<GaziHastane.Models.KurumsalSekme> ?? new List<GaziHastane.Models.KurumsalSekme>();
 }
 
+<style>
+    .tab-nav {
+        display: flex;
+        gap: 0.75rem;
+        overflow-x: auto;
+        padding: 0.5rem 0.25rem 1.5rem;
+        margin-bottom: 2rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .tab-nav::-webkit-scrollbar { display: none; }
+    
+    .tab-link {
+        white-space: nowrap;
+        padding: 0.85rem 1.5rem;
+        border-radius: 1.25rem;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .tab-link:hover {
+        background: #f8fafc;
+        color: #2563eb;
+        border-color: #cbd5e1;
+        transform: translateY(-2px);
+    }
+    .tab-link.active {
+        background: #2563eb;
+        color: #fff;
+        border-color: #2563eb;
+        box-shadow: 0 10px 25px rgba(37,99,235,0.25);
+        transform: translateY(-2px);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: panelFadeIn 0.5s ease forwards; }
+    
+    @@keyframes panelFadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .content-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 2rem;
+        padding: 2.5rem;
+        box-shadow: 0 15px 50px rgba(0,0,0,0.03);
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+    .content-card:hover {
+        box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+    }
+
+    .doc-link {
+        display: flex;
+        align-items: center;
+        padding: 1.75rem;
+        background: linear-gradient(145deg, #ffffff, #f8fafc);
+        border: 1px solid #e2e8f0;
+        border-radius: 1.5rem;
+        text-decoration: none !important;
+        transition: all 0.3s ease;
+    }
+    .doc-link:hover {
+        border-color: #3b82f6;
+        transform: translateY(-3px) scale(1.01);
+        box-shadow: 0 12px 30px rgba(37,99,235,0.08);
+    }
+</style>
+
+<div class="max-w-6xl mx-auto py-12 px-4 sm:px-6 mt-10">
+    <div class="mb-10">
+        <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">
+            <i class="fa-solid fa-house"></i>
+            <i class="fa-solid fa-chevron-right text-[8px]"></i>
+            <span>Kurumsal</span>
+            <i class="fa-solid fa-chevron-right text-[8px]"></i>
+            <span class="text-blue-600">İç Kontrol</span>
+        </nav>
+        <h1 class="text-4xl sm:text-5xl font-black text-slate-800 tracking-tight mb-2">İç Kontrol</h1>
+        <p class="text-slate-500 font-medium">Kurumsal yönetim ve denetim süreçleri.</p>
+        <div class="min-h-[500px]">
+        @if (sekmeler.Any())
+        {
+            @for (int i = 0; i < sekmeler.Count; i++)
+            {
+                var sekme = sekmeler[i];
+                var icerikler = Model?.Where(x => x.Kategori == sekme.SekmeId).OrderBy(x => x.Sira).ToList() ?? new List<GaziHastane.Models.KurumsalIcerik>();
+                
+                <div id="@sekme.SekmeId" class="tab-panel @(i == 0 ? "active" : "")">
+                    @if (!icerikler.Any())
+                    {
+                        <div class="bg-white rounded-[2rem] p-20 text-center border border-slate-100 shadow-sm">
+                            <i class="fa-solid fa-shield-check text-5xl text-slate-200 mb-4"></i>
+                            <h3 class="text-xl font-bold text-slate-400">Bu kategori için henüz içerik eklenmemiş.</h3>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="space-y-8">
+                            @foreach (var item in icerikler)
+                            {
+                                <article class="content-card">
+                                    <div class="flex items-start gap-5 mb-6">
+                                        <div class="w-2 h-10 bg-blue-600 rounded-full mt-1"></div>
+                                        <div class="flex-1"><h2 class="text-3xl font-black text-slate-800 leading-tight">@item.Baslik</h2></div>
+                                    </div>
+                                    <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed text-lg mb-8">@Html.Raw(item.Aciklama)</div>
+                                    @if (!string.IsNullOrEmpty(item.MedyaYolu))
+                                    {
+                                        <a href="@item.MedyaYolu" target="_blank" class="doc-link group">
+                                            <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mr-5 group-hover:scale-110 transition-transform"><i class="fa-solid fa-file-pdf text-2xl"></i></div>
+                                            <div class="flex-1"><div class="text-sm font-black text-slate-400 uppercase tracking-widest mb-1">Kılavuz / Belge</div><div class="text-xl font-bold text-slate-900">Dosyayı Görüntüle</div></div>
+                                            <i class="fa-solid fa-arrow-up-right-from-square text-blue-600 text-xl"></i>
+                                        </a>
+                                    }
+                                </article>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div class="space-y-8">
+                @foreach (var item in Model.OrderBy(x => x.Sira))
+                {
+                    <article class="content-card">
+                        <div class="flex items-start gap-5 mb-6">
+                            <div class="w-2 h-10 bg-blue-600 rounded-full mt-1"></div>
+                            <div class="flex-1"><h2 class="text-3xl font-black text-slate-800">@item.Baslik</h2></div>
+                        </div>
+                        <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed text-lg">@Html.Raw(item.Aciklama)</div>
+                    </article>
+                }
+            </div>
+        }
+        </div>
+    </div>
+</div>
+
 @section Scripts {
-    <style>
-        .page-fade-in {
-            animation: fadeInPage 0.6s ease-out forwards;
-            opacity: 0;
-        }
-
-        @@keyframes fadeInPage {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .sub-menu-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            width: 100%;
-            padding: 0.85rem 1rem;
-            border-radius: 14px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #475569;
-            background: white;
-            border: 1px solid #f1f5f9;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-        }
-
-        .sub-menu-btn:hover {
-            background: #f8fafc;
-            transform: translateX(3px);
-        }
-
-        .sub-menu-btn.active {
-            background: #eff6ff;
-            color: #2563eb;
-            border-color: #bfdbfe;
-            box-shadow: 0 4px 12px rgba(37,99,235,0.08);
-        }
-
-        .tab-content {
-            display: none;
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-        .tab-content.active {
-            display: block;
-            animation: fadeInTab 0.4s ease forwards;
-        }
-
-        @@keyframes fadeInTab {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .form-list {
-            display: grid;
-            gap: 1rem;
-        }
-
-        .form-item {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 1.25rem;
-            transition: all 0.2s;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-
-        .form-item:hover {
-            border-color: #cbd5e1;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            transform: translateY(-2px);
-        }
-
-        .form-icon {
-            width: 3rem;
-            height: 3rem;
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.25rem;
-            flex-shrink: 0;
-        }
-
-        .form-info h4 {
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 0.25rem;
-        }
-
-        .form-info p {
-            font-size: 0.875rem;
-            color: #64748b;
-            line-height: 1.4;
-        }
-
-        .custom-scroll::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .custom-scroll::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: #e2e8f0;
-            border-radius: 10px;
-        }
-    </style>
-
     <script>
-        function openTab(event, tabId) {
-            if(event) event.preventDefault();
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            let targetContent = document.getElementById(tabId);
-            if(targetContent) targetContent.classList.add('active');
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
             
-            // Sidebar'daki submenu linki de highlight et
-            document.querySelectorAll('.submenu-link').forEach(link => link.style.opacity = '0.6');
-            let sidebarLink = document.querySelector(`.submenu-link[href="#${tabId}"]`);
-            if(sidebarLink) { 
-                sidebarLink.style.opacity = '1';
-                sidebarLink.style.color = '#2563eb';
-                sidebarLink.style.fontWeight = '800';
+            const target = document.getElementById(tabId);
+            const link = document.getElementById('link-' + tabId);
+            
+            if (target) target.classList.add('active');
+            if (link) {
+                link.classList.add('active');
+                link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             }
             
             if(history.pushState) { history.pushState(null, null, '#' + tabId); }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            let hash = window.location.hash.substring(1);
-            if(hash && document.getElementById(hash)) { 
-                openTab(null, hash); 
-            } else {
-                const firstTab = document.querySelector('.tab-content');
-                if (firstTab) {
-                    openTab(null, firstTab.id);
-                }
+        function handleHash() {
+            const hash = decodeURIComponent(window.location.hash.replace('#', ''));
+            if (hash) {
+                switchTab(hash);
             }
-        });
+        }
+        window.addEventListener('hashchange', handleHash);
+        document.addEventListener('DOMContentLoaded', handleHash);
     </script>
 }
-
-<main class="max-w-[1400px] mx-auto px-4 sm:px-6 py-8 mt-24 page-fade-in">
-
-    <div class="flex flex-col lg:flex-row gap-7">
-
-        <aside class="w-full lg:w-72 flex-shrink-0">
-            @await Html.PartialAsync("_KurumsalSidebar")
-        </aside>
-
-        <section class="flex-1 min-w-0">
-
-            <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
-                <i class="fa-solid fa-house text-[9px]"></i>
-                <i class="fa-solid fa-chevron-right text-[8px]"></i>
-                <span>Kurumsal</span>
-                <i class="fa-solid fa-chevron-right text-[8px]"></i>
-                <span class="text-blue-600">İç Kontrol</span>
-            </nav>
-
-            @if (Model != null && Model.Any())
-            {
-                <div class="w-full bg-white rounded-[1.75rem] p-7 sm:p-10 border border-slate-100" style="box-shadow: 0 12px 40px rgba(0,0,0,0.04); min-height: 600px;">
-
-                    @foreach (var sekme in Model.OrderBy(x => x.Sira))
-                    {
-                        <div id="@sekme.SekmeId" class="tab-content">
-                            <div class="flex items-center gap-3 mb-8">
-                                <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                                <h1 class="text-3xl font-black text-slate-800">@sekme.Baslik</h1>
-                            </div>
-
-                            @if (!string.IsNullOrWhiteSpace(sekme.Icerik))
-                            {
-                                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-100 mb-8">
-                                    <div class="text-slate-700 leading-relaxed font-medium prose prose-sm max-w-none">
-                                        @Html.Raw(sekme.Icerik)
-                                    </div>
-                                </div>
-                            }
-
-                            @{
-                                var formlar = _context.KurumsalIcerikler
-                                    .Where(x => x.SayfaKey == "IcKontrol" && x.Kategori == sekme.SekmeId && x.AktifMi)
-                                    .OrderBy(x => x.Sira)
-                                    .ToList();
-                            }
-
-                            @if (formlar.Any())
-                            {
-                                <div>
-                                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                                        <i class="fa-solid fa-file-lines text-blue-600"></i>
-                                        Formlar
-                                    </h3>
-                                    <div class="form-list">
-                                        @foreach (var form in formlar)
-                                        {
-                                            @if (!string.IsNullOrWhiteSpace(form.MedyaYolu))
-                                            {
-                                                <a href="@form.MedyaYolu" target="_blank" class="form-item" title="@form.Baslik">
-                                                    <div class="form-icon">
-                                                        <i class="fa-solid fa-file-pdf"></i>
-                                                    </div>
-                                                    <div class="form-info flex-1">
-                                                        <h4>@form.Baslik</h4>
-                                                        @if (!string.IsNullOrWhiteSpace(form.Aciklama))
-                                                        {
-                                                            <p>@form.Aciklama</p>
-                                                        }
-                                                        <p class="text-xs text-blue-600 font-semibold mt-2">
-                                                            <i class="fa-solid fa-download mr-1"></i> İndir
-                                                        </p>
-                                                    </div>
-                                                </a>
-                                            }
-                                            else
-                                            {
-                                                <div class="form-item">
-                                                    <div class="form-icon">
-                                                        <i class="fa-solid fa-file-lines"></i>
-                                                    </div>
-                                                    <div class="form-info flex-1">
-                                                        <h4>@form.Baslik</h4>
-                                                        @if (!string.IsNullOrWhiteSpace(form.Aciklama))
-                                                        {
-                                                            <p>@form.Aciklama</p>
-                                                        }
-                                                    </div>
-                                                </div>
-                                            }
-                                        }
-                                    </div>
-                                </div>
-                            }
-
-                        </div>
-                    }
-
-                </div>
-            }
-            else
-            {
-                <div class="bg-white rounded-[1.75rem] p-12 border border-slate-100 text-center">
-                    <i class="fa-solid fa-inbox text-5xl text-slate-300 mb-4"></i>
-                    <p class="text-slate-500 font-medium text-lg">İç Kontrol formları henüz eklenmemiştir.</p>
-                    <p class="text-slate-400 text-sm mt-2">Admin panelinden formlar ekleyerek başlayabilirsiniz.</p>
-                </div>
-            }
-
-        </section>
-
-    </div>
-
-</main>

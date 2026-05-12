@@ -1,323 +1,94 @@
 @model GaziHastane.Models.HemsirelikViewModel
-@* RAZOR KOD BLO?U: Sunucu taraf?nda ?al??an C# kodlar?n?n yaz?ld??? alan. *@
 @{
-    // Sayfan?n ba?l???n? belirliyoruz. Bu ba?l?k taray?c? sekmesinde g?r?n?r.
     Layout = "_KurumsalLayout";
-    ViewData["Title"] = "Hemsirelik Hizmetleri - Kurumsal Bilgi Sistemi";
+    ViewData["Title"] = "Hemşirelik Hizmetleri";
     var sekmeler = Model?.Sekmeler ?? new List<GaziHastane.Models.HemsirelikSekme>();
 }
 
-@section Scripts {
-    <style>
-        /* 1. SAYFA Y?KLENME AN?MASYONU (Z?plamay? Engeller) */
-        .page-fade-in {
-            animation: fadeInPage 0.6s ease-out forwards;
-            opacity: 0;
+<style>
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: panelFadeIn 0.5s ease forwards; }
+    @@keyframes panelFadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    .content-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 2rem; padding: 2.5rem; box-shadow: 0 15px 50px rgba(0,0,0,0.03); margin-bottom: 2rem; transition: all 0.3s ease; }
+    .content-card:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.06); }
+</style>
+
+<div class="max-w-6xl mx-auto py-12 px-4 sm:px-6 mt-10">
+    <div class="mb-10">
+        <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">
+            <i class="fa-solid fa-house"></i> <i class="fa-solid fa-chevron-right text-[8px]"></i>
+            <span>Kurumsal</span> <i class="fa-solid fa-chevron-right text-[8px]"></i>
+            <span class="text-blue-600">Hemşirelik Hizmetleri</span>
+        </nav>
+        <h1 class="text-4xl sm:text-5xl font-black text-slate-800 tracking-tight mb-2">Hemşirelik Hizmetleri</h1>
+        <p class="text-slate-500 font-medium">Bakım standartları, nöbet listeleri ve akademik çalışmalar.</p>
+    </div>
+
+    <div class="min-h-[500px]">
+        @if (!sekmeler.Any())
+        {
+            <div class="bg-white rounded-[2rem] p-20 text-center border border-slate-100 shadow-sm">
+                <i class="fa-solid fa-user-nurse text-5xl text-slate-200 mb-4"></i>
+                <h3 class="text-xl font-bold text-slate-400">Henüz içerik eklenmemiş.</h3>
+            </div>
         }
+        else
+        {
+            @for (int i = 0; i < sekmeler.Count; i++)
+            {
+                var sekme = sekmeler[i];
+                var icerikler = Model.TumIcerikler.Where(x => x.Kategori == sekme.SekmeId).OrderBy(x => x.Sira).ToList();
 
-        @@keyframes fadeInPage {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* 2. RESPONSIVE ?? MEN? (Mobilde yatay kayd?r?labilir men?) */
-        @@media (max-width: 1279px) { /* Tailwind xl breakpoint alt? i?in */
-            .mobile-tab-menu {
-                display: flex !important;
-                flex-direction: row !important;
-                overflow-x: auto;
-                white-space: nowrap;
-                gap: 0.5rem;
-                padding-bottom: 0.5rem; /* Scrollbar i?in biraz bo?luk */
-                -webkit-overflow-scrolling: touch; /* Mobilde p?r?zs?z kayd?rma */
-            }
-
-                .mobile-tab-menu > * {
-                    margin-top: 0 !important; /* space-y-2 s?n?f?n? mobilde ezer */
-                }
-
-                .mobile-tab-menu::-webkit-scrollbar {
-                    display: none; /* Mobilde ?irkin scrollbar'? gizle */
-                }
-
-            .sub-menu-btn {
-                width: auto !important;
-                flex-shrink: 0;
-                padding: 0.6rem 1.2rem;
-            }
-
-            .kurumsal-icerik-baslik {
-                display: none; /* Mobilde ba?l??? gizle, yer kaplamas?n */
-            }
-        }
-
-        /* YAN MEN? L?NKLER? (Mevcut stillerin) */
-        .sidebar-link {
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.65rem 0.9rem;
-            border-radius: 12px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: #64748b;
-            text-decoration: none;
-        }
-
-            .sidebar-link:hover {
-                background: #eff6ff;
-                color: #2563eb;
-                transform: translateX(4px);
-            }
-
-            .sidebar-link[href="/Hemsirelik/Index"] {
-                background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-                color: white;
-                box-shadow: 0 4px 14px rgba(37,99,235,0.25);
-            }
-
-        .section-title {
-            font-size: 0.68rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: #94a3b8;
-            margin: 1.4rem 0.9rem 0.4rem;
-        }
-
-        .custom-scroll::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .custom-scroll::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: #e2e8f0;
-            border-radius: 10px;
-        }
-
-        .sub-menu-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            width: 100%;
-            padding: 0.85rem 1rem;
-            border-radius: 14px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #475569;
-            background: white;
-            border: 1px solid #f1f5f9;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-        }
-
-            .sub-menu-btn:hover {
-                background: #f8fafc;
-                transform: translateX(3px);
-            }
-
-            .sub-menu-btn.active {
-                background: #eff6ff;
-                color: #2563eb;
-                border-color: #bfdbfe;
-                box-shadow: 0 4px 12px rgba(37,99,235,0.08);
-            }
-
-        /* 3. TAB ??ER?KLER? YUMU?AK GE??? AN?MASYONU */
-        .tab-content {
-            display: none;
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-            .tab-content.active {
-                display: block;
-                animation: fadeInTab 0.4s ease forwards;
-            }
-
-        @@keyframes fadeInTab {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .timeline-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #2563eb;
-            flex-shrink: 0;
-            margin-top: 4px;
-            box-shadow: 0 0 0 4px rgba(37,99,235,0.15);
-        }
-
-        .feature-card {
-            border-radius: 20px;
-            padding: 1.5rem;
-            transition: transform 0.2s, box-shadow 0.2s;
-            position: relative;
-            overflow: hidden;
-        }
-
-            .feature-card:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 16px 30px rgba(0,0,0,0.06);
-            }
-
-        .staff-card {
-            border-radius: 16px;
-            border: 1px solid #f1f5f9;
-            padding: 1.25rem;
-            text-align: center;
-            transition: all 0.2s;
-        }
-
-            .staff-card:hover {
-                border-color: #bfdbfe;
-                box-shadow: 0 10px 25px rgba(37,99,235,0.05);
-            }
-    </style>
-
-    <script>
-        function openTab(event, tabId) {
-            // Sayfan?n yenilenmesini veya yukar? z?plamas?n? engelle
-            if(event) event.preventDefault();
-
-            // 1. T?m butonlar? pasif yap
-            document.querySelectorAll('.sub-menu-btn').forEach(btn => btn.classList.remove('active'));
-
-            // 2. T?klanan butonu aktif yap
-            if(event) {
-                event.currentTarget.classList.add('active');
-            } else {
-                // E?er event yoksa (sayfa ilk y?klendi?inde URL'den geliyorsa)
-                let activeBtn = document.querySelector(`[onclick*="${tabId}"]`);
-                if(activeBtn) activeBtn.classList.add('active');
-            }
-
-            // 3. T?m i?erik alanlar?n? gizle
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-
-            // 4. Sadece se?ilen 'tabId'ye sahip i?eri?i g?ster
-            let targetContent = document.getElementById(tabId);
-            if(targetContent) targetContent.classList.add('active');
-
-            // 5. URL'yi g?ncelle (sayfa yenilenmeden ge?mi?e ekler)
-            if(history.pushState) {
-                history.pushState(null, null, '#' + tabId);
-            }
-        }
-
-        // Sayfa ilk y?klendi?inde URL'de #varsa (?rn: .../Hemsirelik/Index#misyon) o sekmeyi a?
-        document.addEventListener('DOMContentLoaded', function() {
-            let hash = window.location.hash.substring(1);
-            if(hash && document.getElementById(hash)) {
-                openTab(null, hash);
-            }
-        });
-
-        window.addEventListener('hashchange', function() {
-            let hash = window.location.hash.substring(1);
-            if(hash && document.getElementById(hash)) {
-                openTab(null, hash);
-            }
-        });
-    </script>
-}
-
-    <div class="flex flex-col w-full h-full">
-
-        <section class="flex-1 min-w-0">
-
-            <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
-                <i class="fa-solid fa-house text-[9px]"></i>
-                <i class="fa-solid fa-chevron-right text-[8px]"></i>
-                <span>Kurumsal</span>
-                <i class="fa-solid fa-chevron-right text-[8px]"></i>
-                <span class="text-blue-600">Hem?irelik Hizmetleri</span>
-            </nav>
-
-            <div class="flex flex-col xl:flex-row gap-6 items-start">
-
-                <div class="flex-1 w-full bg-white rounded-[1.75rem] p-7 sm:p-10 border border-slate-100" style="box-shadow: 0 12px 40px rgba(0,0,0,0.04); min-height: 600px;">
-
-                                        @if (Model.Sekmeler != null && Model.Sekmeler.Any())
+                <div id="@sekme.SekmeId" class="tab-panel @(i == 0 ? "active" : "")">
+                    <h2 class="text-2xl font-black text-slate-700 mb-6 border-b border-slate-100 pb-4">@sekme.Baslik</h2>
+                    @if (!icerikler.Any())
                     {
-                        var isFirst = true;
-                        foreach (var sekme in Model.Sekmeler)
-                        {
-                            <div id="@sekme.SekmeId" class="tab-content @(isFirst ? "active" : "")">
-                                <div class="flex items-center gap-3 mb-8">
-                                    <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                                    <h2 class="text-2xl font-black text-slate-800">@sekme.Baslik</h2>
-                                </div>
-                                <div class="space-y-6">
-                                    @if (Model.TumIcerikler != null)
-                                    {
-                                        var icerikler = Model.TumIcerikler.Where(x => x.Kategori == sekme.SekmeId).OrderBy(x => x.Sira).ToList();
-                                        if (icerikler.Any())
-                                        {
-                                            foreach (var icerik in icerikler)
-                                            {
-                                                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                                                    @if (!string.IsNullOrWhiteSpace(icerik.Baslik))
-                                                    {
-                                                        <h3 class="text-xl font-bold text-slate-800 mb-2">@icerik.Baslik</h3>
-                                                    }
-                                                    @if (!string.IsNullOrWhiteSpace(icerik.AltBaslik))
-                                                    {
-                                                        <h4 class="text-md font-semibold text-blue-600 mb-4">@icerik.AltBaslik</h4>
-                                                    }
-                                                    @if (!string.IsNullOrWhiteSpace(icerik.MedyaYolu))
-                                                    {
-                                                        <div class="mb-4">
-                                                            <img src="@icerik.MedyaYolu" alt="@icerik.Baslik" class="max-w-full rounded-xl border border-slate-200" />
-                                                        </div>
-                                                    }
-                                                    @if (!string.IsNullOrWhiteSpace(icerik.Aciklama))
-                                                    {
-                                                        <div class="prose max-w-none text-slate-600">
-                                                            @Html.Raw(icerik.Aciklama)
-                                                        </div>
-                                                    }
-                                                </div>
-                                            }
-                                        }
-                                        else
-                                        {
-                                            <p class="text-slate-500">Bu sekmeye ait i�erik bulunmamaktad�r.</p>
-                                        }
-                                    }
-                                </div>
-                            </div>
-                            isFirst = false;
-                        }
+                        <div class="bg-white rounded-[2rem] p-20 text-center border border-slate-100 shadow-sm">
+                            <i class="fa-solid fa-folder-open text-5xl text-slate-200 mb-4"></i>
+                            <h3 class="text-xl font-bold text-slate-400">Bu kategori için henüz içerik eklenmemiş.</h3>
+                        </div>
                     }
                     else
                     {
-                        <div class="p-8 text-center text-slate-500 bg-white rounded-2xl border border-slate-100">
-                            Hen�z eklenmi� bir sekme veya i�erik bulunmuyor. L�tfen y�netim panelinden i�erik ekleyin.
+                        <div class="space-y-8">
+                            @foreach (var item in icerikler)
+                            {
+                                <article class="content-card">
+                                    <div class="flex items-start gap-5 mb-6">
+                                        <div class="w-2 h-10 bg-blue-600 rounded-full mt-1"></div>
+                                        <div class="flex-1">
+                                            <h2 class="text-3xl font-black text-slate-800 leading-tight">@item.Baslik</h2>
+                                            @if (!string.IsNullOrEmpty(item.AltBaslik)) { <h4 class="text-lg font-bold text-blue-600 mt-1">@item.AltBaslik</h4> }
+                                        </div>
+                                    </div>
+                                    <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed text-lg">@Html.Raw(item.Aciklama)</div>
+                                    @if (!string.IsNullOrEmpty(item.MedyaYolu))
+                                    {
+                                        <div class="mt-8"><img src="@item.MedyaYolu" class="max-w-full h-auto rounded-[2rem] shadow-2xl border border-slate-100" alt="Görsel" /></div>
+                                    }
+                                </article>
+                            }
                         </div>
                     }
-</div>
-            </div>
-
-        </section>
+                </div>
+            }
+        }
     </div>
+</div>
 
-
-
-
+@section Scripts {
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
+            if(history.pushState) { history.pushState(null, null, '#' + tabId); }
+        }
+        function handleHash() {
+            const hash = decodeURIComponent(window.location.hash.replace('#', ''));
+            if (hash) { switchTab(hash); }
+        }
+        window.addEventListener('hashchange', handleHash);
+        document.addEventListener('DOMContentLoaded', handleHash);
+    </script>
+}

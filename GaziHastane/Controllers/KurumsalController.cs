@@ -1,4 +1,4 @@
-using GaziHastane.Models;
+﻿using GaziHastane.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -14,13 +14,27 @@ namespace GaziHastane.Controllers
             _context = context;
         }
 
-        // Hakk�m�zda (Kurumsal Ana Sayfa)
-        public IActionResult Index() { return View(); }
+        // Hakkï¿½mï¿½zda (Kurumsal Ana Sayfa)
+        public async Task<IActionResult> Index()
+        {
+            var icerikler = await _context.KurumsalIcerikler
+                .Where(x => x.SayfaKey == "hakkimizda" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
 
-        // Ba�hekimlik
+            var sekmeler = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "hakkimizda" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            ViewBag.Sekmeler = sekmeler;
+            return View("Index", icerikler);
+        }
+
+        // Baï¿½hekimlik
         public IActionResult Bashekimlik()
         {
-            // Veritaban�ndan aktif personelleri s�ras�na g�re �ekiyoruz
+            // Veritabanï¿½ndan aktif personelleri sï¿½rasï¿½na gï¿½re ï¿½ekiyoruz
             var aktifPersoneller = _context.BashekimlikPersoneller
                                            .Where(x => x.AktifMi)
                                            .OrderBy(x => x.Sira)
@@ -29,21 +43,21 @@ namespace GaziHastane.Controllers
             // Verileri ViewModel'e dolduruyoruz
             var viewModel = new BashekimlikViewModel
             {
-                // IsBashekim = true olan �LK kayd� Ba�hekim olarak al
+                // IsBashekim = true olan ï¿½LK kaydï¿½ Baï¿½hekim olarak al
                 Bashekim = aktifPersoneller.FirstOrDefault(x => x.IsBashekim),
 
-                // IsBashekim = false olanlar� Yard�mc�lar listesine al
+                // IsBashekim = false olanlarï¿½ Yardï¿½mcï¿½lar listesine al
                 Yardimcilar = aktifPersoneller.Where(x => !x.IsBashekim).ToList(),
 
-                // �leti�im bilgilerini burada tan�ml�yoruz
+                // ï¿½letiï¿½im bilgilerini burada tanï¿½mlï¿½yoruz
                 Telefon = "(0312) 202 40 00",
-                CalismaSaatleri = "Pzt�Cuma � 08:30 � 17:00"
+                CalismaSaatleri = "Pztï¿½Cuma ï¿½ 08:30 ï¿½ 17:00"
             };
 
             return View(viewModel);
         }
 
-        // Ba�m�d�rl�k
+        // Baï¿½mï¿½dï¿½rlï¿½k
         public IActionResult Basmudurluk()
         {
             var aktifPersoneller = _context.BasmudurlikPersoneller
@@ -56,16 +70,16 @@ namespace GaziHastane.Controllers
                 Basmudur = aktifPersoneller.FirstOrDefault(x => x.IsBasmudur),
                 Yardimcilar = aktifPersoneller.Where(x => !x.IsBasmudur).ToList(),
                 Telefon = "(0312) 202 40 00",
-                CalismaSaatleri = "Pzt�Cuma � 08:30 � 17:00"
+                CalismaSaatleri = "Pztï¿½Cuma ï¿½ 08:30 ï¿½ 17:00"
             };
 
             return View(viewModel);
         }
 
-        // Hem�irelik Hizmetleri (D�NAM�K HALE GET�R�LD�)
+        // Hemï¿½irelik Hizmetleri (Dï¿½NAMï¿½K HALE GETï¿½Rï¿½LDï¿½)
         public IActionResult HemsirelikHizmetleri()
         {
-            // Aktif olan t�m i�erikleri s�ras�na g�re tek seferde �ekiyoruz
+            // Aktif olan tï¿½m iï¿½erikleri sï¿½rasï¿½na gï¿½re tek seferde ï¿½ekiyoruz
             var tumIcerikler = _context.HemsirelikIcerikler
                                        .Where(x => x.AktifMi)
                                        .OrderBy(x => x.Sira)
@@ -78,11 +92,11 @@ namespace GaziHastane.Controllers
 
             var viewModel = new HemsirelikViewModel
             {
-                // Ayarlar tablosundan ilk kayd� al, yoksa bo� bir nesne g�nder (hata vermemesi i�in)
+                // Ayarlar tablosundan ilk kaydï¿½ al, yoksa boï¿½ bir nesne gï¿½nder (hata vermemesi iï¿½in)
                 Ayarlar = _context.HemsirelikAyarlar.FirstOrDefault() ?? new HemsirelikAyar(),
                 Sekmeler = sekmeler,
 
-                // Tek tabloyu Kategori s�tununa g�re View'daki ilgili listelere payla�t�r�yoruz
+                // Tek tabloyu Kategori sï¿½tununa gï¿½re View'daki ilgili listelere paylaï¿½tï¿½rï¿½yoruz
                 YonetimKadrosu = tumIcerikler.Where(x => x.Kategori == "Yonetim").ToList(),
                 Gorevler = tumIcerikler.Where(x => x.Kategori == "Gorev").ToList(),
                 Mevzuatlar = tumIcerikler.Where(x => x.Kategori == "Mevzuat").ToList(),
@@ -95,80 +109,212 @@ namespace GaziHastane.Controllers
             return View(viewModel);
         }
 
-        // Bilgi ��lem Merkezi
-        public IActionResult BilgiIslem() { return View(); }
-
-        // �� Sa�l��� ve G�venli�i
-        public IActionResult IsSagligi() { return View(); }
-
-        // Enfeksiyon Kontrol
-        public IActionResult Enfeksiyon() { return View(); }
-
-        // Eczac�l�k Hizmetleri
-        public IActionResult Eczacilik() { return View(); }
-
-        // Sat�n Alma
-        public IActionResult SatinAlma() { return View(); }
-
-        // �statistik ve Raporlama
-        public IActionResult Istatistik() { return View(); }
-
-        // Ar�iv Birimi
-        public IActionResult Arsiv()
+        public async Task<IActionResult> BilgiIslem()
         {
-            // Veritaban�ndan aktif sekmeleri s�ras�na g�re �ekiyoruz
-            var sekmeler = _context.ArsivSekmeler
-                                   .Where(x => x.IsActive)
-                                   .OrderBy(x => x.SiraNo)
-                                   .ToList();
+            var icerikler = await _context.KurumsalIcerikler
+                .Where(x => x.SayfaKey == "BilgiIslemMerkezi" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
 
-            return View(sekmeler);
+            var sekmeler = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "BilgiIslemMerkezi" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            ViewBag.Sekmeler = sekmeler;
+            return View("Index", icerikler);
         }
 
-        // Hasta �leti�im Birimi
-        public IActionResult HastaIletisim() { return View(); }
+        public async Task<IActionResult> IsSagligi()
+        {
+            var icerikler = await _context.KurumsalIcerikler
+                .Where(x => x.SayfaKey == "IsSagligiVeGuvenligi" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
 
-        // �� Ak�� �emalar�
-        public IActionResult IsAkis() { return View(); }
+            var sekmeler = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "IsSagligiVeGuvenligi" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
 
-        // Organizasyon �emalar�
+            ViewBag.Sekmeler = sekmeler;
+            return View("Index", icerikler);
+        }
+
+        // Enfeksiyon Kontrol
+        public async Task<IActionResult> Enfeksiyon()
+        {
+            var icerikler = await _context.KurumsalIcerikler
+                .Where(x => x.SayfaKey == "EnfeksiyonKontrol" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            var sekmeler = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "EnfeksiyonKontrol" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            ViewBag.Sekmeler = sekmeler;
+            return View("Index", icerikler);
+        }
+
+        // EczacÄ±lÄ±k Hizmetleri
+        public async Task<IActionResult> Eczacilik()
+        {
+            var icerikler = await _context.KurumsalIcerikler
+                .Where(x => x.SayfaKey == "EczacilikHizmetleri" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            var sekmeler = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "EczacilikHizmetleri" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            ViewBag.Sekmeler = sekmeler;
+            return View("Index", icerikler);
+        }
+
+        // SatÄ±n Alma
+        public async Task<IActionResult> SatinAlma()
+        {
+            var icerikler = await _context.KurumsalIcerikler
+                .Where(x => x.SayfaKey == "SatinAlma" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            var sekmeler = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "SatinAlma" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            ViewBag.Sekmeler = sekmeler;
+            return View("Index", icerikler);
+        }
+
+        // Ä°statistik ve Raporlama
+        public async Task<IActionResult> Istatistik()
+        {
+            var icerikler = await _context.KurumsalIcerikler
+                .Where(x => x.SayfaKey == "IstatistikVeRaporlama" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            var sekmeler = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "IstatistikVeRaporlama" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            ViewBag.Sekmeler = sekmeler;
+            return View("Index", icerikler);
+        }
+
+        // ArÅŸiv Birimi
+        public async Task<IActionResult> Arsiv()
+        {
+            var icerikler = await _context.KurumsalIcerikler
+                .Where(x => x.SayfaKey == "ArsivBirimi" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            var sekmeler = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "ArsivBirimi" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            ViewBag.Sekmeler = sekmeler;
+            return View("Index", icerikler);
+        }
+
+        // Hasta Ä°letiÅŸim Birimi
+        public async Task<IActionResult> HastaIletisim()
+        {
+            var icerikler = await _context.KurumsalIcerikler
+                .Where(x => x.SayfaKey == "HastaIletisimBirimi" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            var sekmeler = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "HastaIletisimBirimi" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            ViewBag.Sekmeler = sekmeler;
+            return View("Index", icerikler);
+        }
+
+        // Ä°ÅŸ AkÄ±ÅŸ ÅemalarÄ±
+        public async Task<IActionResult> IsAkis()
+        {
+            var icerikler = await _context.KurumsalIcerikler
+                .Where(x => x.SayfaKey == "IsAkisSemalari" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            var sekmeler = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "IsAkisSemalari" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            ViewBag.Sekmeler = sekmeler;
+            return View("Index", icerikler);
+        }
+
+        // Organizasyon emalar
         public async Task<IActionResult> Organizasyon()
         {
-            var sekmeler = await _context.KurumsalIcerikler
+            var icerikler = await _context.KurumsalIcerikler
                 .Where(x => x.SayfaKey == "OrganizasyonSemalari" && x.AktifMi)
                 .OrderBy(x => x.Sira)
                 .ToListAsync();
 
-            return View(sekmeler);
+            var sekmeler = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "OrganizasyonSemalari" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
+            ViewBag.Sekmeler = sekmeler;
+            return View("Index", icerikler);
         }
 
-        // �� Kontrol
+        // Ä°Ã§ Kontrol
         public async Task<IActionResult> IcKontrol()
         {
+            var icerikler = await _context.KurumsalIcerikler
+                .Where(x => x.SayfaKey == "IcKontrol" && x.AktifMi)
+                .OrderBy(x => x.Sira)
+                .ToListAsync();
+
             var sekmeler = await _context.KurumsalSekmeler
                 .Where(x => x.SayfaKey == "IcKontrol" && x.AktifMi)
                 .OrderBy(x => x.Sira)
                 .ToListAsync();
-            return View(sekmeler);
+
+            ViewBag.Sekmeler = sekmeler;
+            return View("Index", icerikler);
         }
 
-        // Bas�n ve Kurumsal �leti�im
+        // BasÄ±n ve Kurumsal Ä°letiÅŸim
         public async Task<IActionResult> BasinIletisim()
         {
             var model = await _context.BasinKurumsalIletisimler.FirstOrDefaultAsync();
             if (model == null)
             {
-                // Varsayılan değerler
+                // VarsayÄ±lan deÄŸerler
                 model = new BasinKurumsalIletisim
                 {
-                    Baslik = "Basın ve Kurumsal İletişim Birimi",
-                    Aciklama = "Sağlık Araştırma ve Uygulama Merkezimiz faaliyetleri çerçevesinde; hedef kitlelerle etkili bir iletişim kurmak ve sunulan sağlık hizmetinin yanı sıra hastanemizin gerçekleştirdiği yeniliklerden hem personelimizi ve hem de dış paydaşları haberdar etmek amacıyla hastanemiz web sayfasına ve kurum içi SMS faaliyetlerine yönelik süreçlerin takibi ve koordinasyonunun sağlanması adına Başhekimlik makamının 22.07.2025 tarihli Oluru doğrultusunda \"Basın ve Kurumsal İletişim Birimi\"miz kurulmuştur.",
+                    Baslik = "BasÄ±n ve Kurumsal Ä°letiÅŸim Birimi",
+                    Aciklama = "SaÄŸlÄ±k AraÅŸtÄ±rma ve Uygulama Merkezimiz faaliyetleri Ã§erÃ§evesinde; hedef kitlelerle etkili bir iletiÅŸim kurmak ve sunulan saÄŸlÄ±k hizmetinin yanÄ± sÄ±ra hastanemizin gerÃ§ekleÅŸtirdiÄŸi yeniliklerden hem personelimizi ve hem de dÄ±ÅŸ paydaÅŸlarÄ± haberdar etmek amacÄ±yla hastanemiz web sayfasÄ±na ve kurum iÃ§i SMS faaliyetlerine yÃ¶nelik sÃ¼reÃ§lerin takibi ve koordinasyonunun saÄŸlanmasÄ± adÄ±na BaÅŸhekimlik makamÄ±nÄ±n 22.07.2025 tarihli Oluru doÄŸrultusunda \"BasÄ±n ve Kurumsal Ä°letiÅŸim Birimi\"miz kurulmuÅŸtur.",
                     Telefon = "0312 202 44 39",
                     Email = "gazihastanesibasin@gazi.edu.tr",
                     Lokasyon = "E Blok 11. Kat"
                 };
             }
             return View(model);
+        }
+        public async Task<IActionResult> Hakkimizda()
+        {
+            return await Index();
         }
     }
 }

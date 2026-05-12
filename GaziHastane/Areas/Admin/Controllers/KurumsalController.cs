@@ -1,4 +1,4 @@
-﻿﻿using GaziHastane.Data;
+using GaziHastane.Data;
 using GaziHastane.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -23,6 +23,24 @@ namespace GaziHastane.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
+            // Eer Hakkimizda mens yoksa veritabanna ekle (Ynetim kolayl iin)
+            bool hasHakkimizda = await _context.AdminMenuItems.AnyAsync(x => x.Controller == "Kurumsal" && x.Action == "Hakkimizda");
+            if (!hasHakkimizda)
+            {
+                _context.AdminMenuItems.Add(new AdminMenuItem
+                {
+                    Section = "KurumsalSub",
+                    Label = "Hakkımızda Sayfası",
+                    Url = "/Admin/Kurumsal/Hakkimizda",
+                    Controller = "Kurumsal",
+                    Action = "Hakkimizda",
+                    SortOrder = 0,
+                    IsActive = true,
+                    PermissionKey = "kurumsal"
+                });
+                await _context.SaveChangesAsync();
+            }
+
             ViewBag.Gruplar = await _context.KurumsalMenuGruplar
                 .OrderBy(x => x.Sira)
                 .ToListAsync();
@@ -308,10 +326,9 @@ namespace GaziHastane.Areas.Admin.Controllers
             var icerik = await _context.HemsirelikIcerikler.FindAsync(id);
             if (icerik != null)
             {
-                icerik.AktifMi = false;
-                _context.HemsirelikIcerikler.Update(icerik);
+                _context.HemsirelikIcerikler.Remove(icerik);
                 await _context.SaveChangesAsync();
-                TempData["Success"] = "İçerik silindi.";
+                TempData["Success"] = "İçerik başarıyla silindi.";
             }
 
             return RedirectToAction(nameof(HemsirelikHizmetleri));
@@ -352,10 +369,9 @@ namespace GaziHastane.Areas.Admin.Controllers
             var sekme = await _context.HemsirelikSekmeler.FindAsync(id);
             if (sekme != null)
             {
-                sekme.AktifMi = false;
-                _context.HemsirelikSekmeler.Update(sekme);
+                _context.HemsirelikSekmeler.Remove(sekme);
                 await _context.SaveChangesAsync();
-                TempData["Success"] = "Sekme silindi.";
+                TempData["Success"] = "Sekme ve ilgili tüm içerikler için kategori bağlantısı silindi.";
             }
 
             return Redirect($"{Url.Action(nameof(HemsirelikHizmetleri))}#tab-sekmeler");
@@ -644,6 +660,18 @@ namespace GaziHastane.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Hakkimizda()
         {
+            // Örnek verileri temizle
+            var silinecekler = new string[] { "Tarihçemiz", "Misyon & Vizyon", "Stratejik Plan & Raporlar", "Yönetmelik", "Amaç ve Hedeflerimiz", "Sağlık Rehberleri", "Hastanemiz Uyum Rehberi", "Eğitim Komitesi" };
+            var ornekSekmeler = await _context.KurumsalSekmeler
+                .Where(x => x.SayfaKey == "hakkimizda" && silinecekler.Contains(x.Baslik))
+                .ToListAsync();
+
+            if (ornekSekmeler.Any())
+            {
+                _context.KurumsalSekmeler.RemoveRange(ornekSekmeler);
+                await _context.SaveChangesAsync();
+            }
+
             var model = await _context.KurumsalSekmeler
                 .Where(x => x.SayfaKey == "hakkimizda")
                 .OrderBy(x => x.Sira)
@@ -724,10 +752,9 @@ namespace GaziHastane.Areas.Admin.Controllers
                         Directory.CreateDirectory(uploadsFolder);
                     }
 
-                    // Dosya adını güvenli hale getir (timestamp ekle)
-                    string fileName = Path.GetFileNameWithoutExtension(FormDosyasi.FileName);
+                    // Dosya adını güvenli ve kısa hale getir (GUID ekle)
                     string fileExtension = Path.GetExtension(FormDosyasi.FileName);
-                    string uniqueFileName = $"{fileName}_{DateTime.Now:yyyyMMdd_HHmmss}{fileExtension}";
+                    string uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
                     string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
                     // Dosyayı kaydet
@@ -792,7 +819,7 @@ namespace GaziHastane.Areas.Admin.Controllers
         public async Task<IActionResult> GetIcerikler(string sayfaKey, string kategori)
         {
             var icerikler = await _context.KurumsalIcerikler
-                .Where(x => x.SayfaKey == sayfaKey && x.Kategori == kategori && x.AktifMi)
+                .Where(x => x.SayfaKey == sayfaKey && x.Kategori == kategori)
                 .OrderBy(x => x.Sira)
                 .ToListAsync();
 

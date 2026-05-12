@@ -3,6 +3,7 @@ using System;
 using GaziHastane.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GaziHastane.Migrations
 {
     [DbContext(typeof(GaziHastaneContext))]
-    partial class GaziHastaneContextModelSnapshot : ModelSnapshot
+    [Migration("20260512070352_AddBilgiIslemSekmeleri")]
+    partial class AddBilgiIslemSekmeleri
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -333,7 +336,7 @@ namespace GaziHastane.Migrations
                     b.ToTable("Belgeler");
                 });
 
-            modelBuilder.Entity("GaziHastane.Models.BilgiIslemMerkeziIcerik", b =>
+            modelBuilder.Entity("GaziHastane.Models.BilgiIslemIcerik", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -369,10 +372,10 @@ namespace GaziHastane.Migrations
 
                     b.HasIndex("SekmeId");
 
-                    b.ToTable("BilgiIslemMerkeziIcerikler");
+                    b.ToTable("BilgiIslemIcerikler");
                 });
 
-            modelBuilder.Entity("GaziHastane.Models.BilgiIslemMerkeziSekme", b =>
+            modelBuilder.Entity("GaziHastane.Models.BilgiIslemSekme", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -392,7 +395,7 @@ namespace GaziHastane.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BilgiIslemMerkeziSekmeler");
+                    b.ToTable("BilgiIslemSekmeler");
                 });
 
             modelBuilder.Entity("GaziHastane.Models.Bolum", b =>
@@ -1779,9 +1782,9 @@ namespace GaziHastane.Migrations
                     b.ToTable("Yetkililer");
                 });
 
-            modelBuilder.Entity("GaziHastane.Models.BilgiIslemMerkeziIcerik", b =>
+            modelBuilder.Entity("GaziHastane.Models.BilgiIslemIcerik", b =>
                 {
-                    b.HasOne("GaziHastane.Models.BilgiIslemMerkeziSekme", "Sekme")
+                    b.HasOne("GaziHastane.Models.BilgiIslemSekme", "Sekme")
                         .WithMany("Icerikler")
                         .HasForeignKey("SekmeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1914,7 +1917,7 @@ namespace GaziHastane.Migrations
                     b.Navigation("Hasta");
                 });
 
-            modelBuilder.Entity("GaziHastane.Models.BilgiIslemMerkeziSekme", b =>
+            modelBuilder.Entity("GaziHastane.Models.BilgiIslemSekme", b =>
                 {
                     b.Navigation("Icerikler");
                 });

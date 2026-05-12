@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+ï»¿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GaziHastane.Data;
@@ -28,14 +28,14 @@ namespace GaziHastane.Areas.Admin.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Süper Admin")]
+        [Authorize(Roles = "SÃ¼per Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Index(int doktorGunlukRandevuKapasitesi)
         {
             if (doktorGunlukRandevuKapasitesi < 1)
             {
-                TempData["Error"] = "Kapasite en az 1 olmalýdýr.";
+                TempData["Error"] = "Kapasite en az 1 olmalÄ±dÄ±r.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -54,14 +54,32 @@ namespace GaziHastane.Areas.Admin.Controllers
             }
 
             _context.SaveChanges();
-            TempData["Success"] = "Doktor günlük randevu kapasitesi güncellendi.";
+            TempData["Success"] = "Doktor gÃ¼nlÃ¼k randevu kapasitesi gÃ¼ncellendi.";
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Süper Admin")]
+        [Authorize(Roles = "SÃ¼per Admin")]
         [HttpGet]
         public IActionResult Menu()
         {
+            // EÄŸer Hakkimizda menÃ¼sÃ¼ yoksa veritabanÄ±na ekle
+            bool hasHakkimizda = _context.AdminMenuItems.Any(x => x.Controller == "Kurumsal" && x.Action == "Hakkimizda");
+            if (!hasHakkimizda)
+            {
+                _context.AdminMenuItems.Add(new AdminMenuItem
+                {
+                    Section = "KurumsalSub",
+                    Label = "HakkÄ±mÄ±zda SayfasÄ±",
+                    Url = "/Admin/Kurumsal/Hakkimizda",
+                    Controller = "Kurumsal",
+                    Action = "Hakkimizda",
+                    SortOrder = 0,
+                    IsActive = true,
+                    PermissionKey = "kurumsal"
+                });
+                _context.SaveChanges();
+            }
+
             var model = _context.AdminMenuItems
                 .OrderBy(x => x.Section)
                 .ThenBy(x => x.SortOrder)
@@ -70,7 +88,7 @@ namespace GaziHastane.Areas.Admin.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Süper Admin")]
+        [Authorize(Roles = "SÃ¼per Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Menu(List<AdminMenuItem> model)
@@ -94,7 +112,7 @@ namespace GaziHastane.Areas.Admin.Controllers
             }
 
             _context.SaveChanges();
-            TempData["Success"] = "Menü ayarlarý güncellendi.";
+            TempData["Success"] = "MenÃ¼ ayarlarÄ± gÃ¼ncellendi.";
             return RedirectToAction(nameof(Menu));
         }
     }

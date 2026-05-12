@@ -55,40 +55,40 @@ namespace GaziHastane.Security
 
         public static readonly IReadOnlyList<AdminPermissionItem> All = new List<AdminPermissionItem>
         {
-            new() { Key = Keys.Dashboard, DisplayName = "Gösterge Paneli" },
+            new() { Key = Keys.Dashboard, DisplayName = "Gï¿½sterge Paneli" },
             new() { Key = Keys.Doktorlar, DisplayName = "Doktorlar" },
             new() { Key = Keys.Bolumler, DisplayName = "Poliklinikler" },
             new() { Key = Keys.HastaRehberi, DisplayName = "Hasta Rehberi" },
-            new() { Key = Keys.Iletisim, DisplayName = "Ýletiþim" },
-            new() { Key = Keys.KaliteYonetimi, DisplayName = "Kalite Yönetimi" },
-            new() { Key = Keys.Egitim, DisplayName = "Eðitim Komitesi" },
+            new() { Key = Keys.Iletisim, DisplayName = "ï¿½letiï¿½im" },
+            new() { Key = Keys.KaliteYonetimi, DisplayName = "Kalite Yï¿½netimi" },
+            new() { Key = Keys.Egitim, DisplayName = "Eï¿½itim Komitesi" },
             new() { Key = Keys.YemekListesi, DisplayName = "Yemek Listesi" },
-            new() { Key = Keys.Kroki, DisplayName = "Kroki Yönetimi" },
-            new() { Key = Keys.Medya, DisplayName = "Görseller / Slider / Belgeler" },
-            new() { Key = Keys.DijitalIslemler, DisplayName = "Dijital Ýþlemler" },
+            new() { Key = Keys.Kroki, DisplayName = "Kroki Yï¿½netimi" },
+            new() { Key = Keys.Medya, DisplayName = "Gï¿½rseller / Slider / Belgeler" },
+            new() { Key = Keys.DijitalIslemler, DisplayName = "Dijital ï¿½ï¿½lemler" },
             new() { Key = Keys.Haberler, DisplayName = "Haberler" },
             new() { Key = Keys.Etkinlikler, DisplayName = "Etkinlikler" },
             new() { Key = Keys.Duyurular, DisplayName = "Duyurular" },
-            new() { Key = Keys.Kurumsal, DisplayName = "Kurumsal Ýçerikler" },
-            new() { Key = Keys.DoktorRandevuPlani, DisplayName = "Doktor Randevu Planý" }
+            new() { Key = Keys.Kurumsal, DisplayName = "Kurumsal ï¿½ï¿½erikler" },
+            new() { Key = Keys.DoktorRandevuPlani, DisplayName = "Doktor Randevu Planï¿½" }
         };
 
         public static readonly IReadOnlyList<AdminSidebarLink> MainScreenLinks = new List<AdminSidebarLink>
         {
-            new() { PermissionKey = Keys.Dashboard, Url = "/Admin/Home/Index", Label = "Gösterge Paneli", IconClass = "fa-solid fa-cube", Controller = "Home", HoverIconClass = "group-hover:text-cyan-400" },
+            new() { PermissionKey = Keys.Dashboard, Url = "/Admin/Home/Index", Label = "Gï¿½sterge Paneli", IconClass = "fa-solid fa-cube", Controller = "Home", HoverIconClass = "group-hover:text-cyan-400" },
             new() { PermissionKey = Keys.Doktorlar, Url = "/Admin/Doktorlar/Index", Label = "Doktorlar", IconClass = "fa-solid fa-user-doctor", Controller = "Doktorlar", HoverIconClass = "group-hover:text-purple-400" },
             new() { PermissionKey = Keys.Bolumler, Url = "/Admin/Bolumler/Index", Label = "Poliklinikler", IconClass = "fa-solid fa-network-wired", Controller = "Bolumler", HoverIconClass = "group-hover:text-pink-400" },
             new() { PermissionKey = Keys.HastaRehberi, Url = "/Admin/HastaRehberi/Index", Label = "Hasta Rehberi", IconClass = "fa-solid fa-book-medical", Controller = "HastaRehberi", HoverIconClass = "group-hover:text-emerald-400" },
-            new() { PermissionKey = Keys.Iletisim, Url = "/Admin/Iletisim/Index", Label = "Ýletiþim", IconClass = "fa-solid fa-address-book", Controller = "Iletisim", HoverIconClass = "group-hover:text-orange-400" }
+            new() { PermissionKey = Keys.Iletisim, Url = "/Admin/Iletisim/Index", Label = "ï¿½letiï¿½im", IconClass = "fa-solid fa-address-book", Controller = "Iletisim", HoverIconClass = "group-hover:text-orange-400" }
         };
 
         public static readonly IReadOnlyList<AdminSidebarLink> SystemSettingsLinks = new List<AdminSidebarLink>
         {
-            new() { PermissionKey = Keys.KaliteYonetimi, Url = "/Admin/HizliIslem/Kalite", Label = "Kalite Yönetimi", IconClass = "fa-solid fa-shield-heart", Controller = "HizliIslem", Action = "Kalite", HoverIconClass = "group-hover:text-blue-400" },
-            new() { PermissionKey = Keys.Egitim, Url = "/Admin/Egitim/Index", Label = "Eðitim Komitesi", IconClass = "fa-solid fa-graduation-cap", Controller = "Egitim", HoverIconClass = "group-hover:text-orange-500" },
+            new() { PermissionKey = Keys.KaliteYonetimi, Url = "/Admin/HizliIslem/Kalite", Label = "Kalite Yï¿½netimi", IconClass = "fa-solid fa-shield-heart", Controller = "HizliIslem", Action = "Kalite", HoverIconClass = "group-hover:text-blue-400" },
+            new() { PermissionKey = Keys.Egitim, Url = "/Admin/Egitim/Index", Label = "Eï¿½itim Komitesi", IconClass = "fa-solid fa-graduation-cap", Controller = "Egitim", HoverIconClass = "group-hover:text-orange-500" },
             new() { PermissionKey = Keys.YemekListesi, Url = "/Admin/HizliIslem/YemekListesi", Label = "Yemek Listesi", IconClass = "fa-solid fa-utensils", Controller = "HizliIslem", Action = "YemekListesi", HoverIconClass = "group-hover:text-orange-500" },
-            new() { PermissionKey = Keys.Kroki, Url = "/Admin/Kroki/Index", Label = "Kroki Yönetimi", IconClass = "fa-solid fa-map-location-dot", Controller = "Kroki", HoverIconClass = "group-hover:text-cyan-400" },
-            new() { PermissionKey = Keys.Medya, Url = "/Admin/HizliIslem/Gorsel", Label = "Görseller", IconClass = "fa-solid fa-images", Controller = "HizliIslem", Action = "Gorsel", ActiveIconClass = "text-pink-500 drop-shadow-[0_0_8px_rgba(236,72,153,0.8)] scale-110", HoverIconClass = "group-hover:text-pink-400 group-hover:scale-110" },
+            new() { PermissionKey = Keys.Kroki, Url = "/Admin/Kroki/Index", Label = "Kroki Yï¿½netimi", IconClass = "fa-solid fa-map-location-dot", Controller = "Kroki", HoverIconClass = "group-hover:text-cyan-400" },
+            new() { PermissionKey = Keys.Medya, Url = "/Admin/HizliIslem/Gorsel", Label = "Gï¿½rseller", IconClass = "fa-solid fa-images", Controller = "HizliIslem", Action = "Gorsel", ActiveIconClass = "text-pink-500 drop-shadow-[0_0_8px_rgba(236,72,153,0.8)] scale-110", HoverIconClass = "group-hover:text-pink-400 group-hover:scale-110" },
             new() { PermissionKey = Keys.Medya, Url = "/Admin/HizliIslem/AnaSayfaGorsel", Label = "Ana Sayfa Slider", IconClass = "fa-solid fa-image", Controller = "HizliIslem", Action = "AnaSayfaGorsel", ActiveIconClass = "text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)] scale-110", HoverIconClass = "group-hover:text-yellow-400 group-hover:scale-110" },
             new() { PermissionKey = Keys.Medya, Url = "/Admin/HizliIslem/Belge", Label = "Belgeler", IconClass = "fa-solid fa-file-lines", Controller = "HizliIslem", Action = "Belge", ActiveIconClass = "text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)] scale-110", HoverIconClass = "group-hover:text-blue-400 group-hover:scale-110" }
             ,new() { PermissionKey = Keys.DoktorRandevuPlani, Url = "/Admin/DoktorRandevuPlan/Index", Label = "Doktor Planlama", IconClass = "fa-solid fa-calendar-plus", Controller = "DoktorRandevuPlan", HoverIconClass = "group-hover:text-cyan-400" }
@@ -96,7 +96,7 @@ namespace GaziHastane.Security
 
         public static readonly IReadOnlyList<AdminSidebarLink> ContentLinks = new List<AdminSidebarLink>
         {
-            new() { PermissionKey = Keys.DijitalIslemler, Url = "/Admin/HizliIslem/Index", Label = "Dijital Ýþlemler", IconClass = "fa-solid fa-layer-group", Controller = "HizliIslem", Action = "Index", ActiveIconClass = "neon-icon text-cyan-400", HoverIconClass = "group-hover:text-cyan-400" },
+            new() { PermissionKey = Keys.DijitalIslemler, Url = "/Admin/HizliIslem/Index", Label = "Dijital Ä°ÅŸlemler", IconClass = "fa-solid fa-layer-group", Controller = "HizliIslem", Action = "Index", ActiveIconClass = "neon-icon text-cyan-400", HoverIconClass = "group-hover:text-cyan-400" },
             new() { PermissionKey = Keys.Haberler, Url = "/Admin/Haberler/Index", Label = "Haberler", IconClass = "fa-solid fa-newspaper", Controller = "Haberler", HoverIconClass = "group-hover:text-blue-400" },
             new() { PermissionKey = Keys.Etkinlikler, Url = "/Admin/Etkinlikler/Index", Label = "Etkinlikler", IconClass = "fa-solid fa-calendar-days", Controller = "Etkinlikler", HoverIconClass = "group-hover:text-fuchsia-400" },
             new() { PermissionKey = Keys.Duyurular, Url = "/Admin/Duyurular/Index", Label = "Duyurular", IconClass = "fa-solid fa-bullhorn", Controller = "Duyurular", HoverIconClass = "group-hover:text-yellow-400" }
@@ -104,22 +104,23 @@ namespace GaziHastane.Security
 
         public static readonly IReadOnlyList<AdminSidebarSubLink> KurumsalSubLinks = new List<AdminSidebarSubLink>
         {
-            new() { Url = "/Admin/Kurumsal/Index", Label = "Sidebar Yönetimi", Controller = "Kurumsal", Action = "Index" },
-            new() { Url = "/Admin/Bashekimlik/Index", Label = "Baþhekimlik", Controller = "Bashekimlik" },
-            new() { Url = "/Admin/Basmudurluk/Index", Label = "Baþmüdürlük", Controller = "Basmudurluk" },
-            new() { Url = "/Admin/Kurumsal/HemsirelikHizmetleri", Label = "Hemþirelik Hizmetleri", Controller = "Kurumsal", Action = "HemsirelikHizmetleri" },
-            new() { Url = "/Admin/Kurumsal/BilgiIslemMerkezi", Label = "Bilgi Ýþlem Merkezi", Controller = "Kurumsal", Action = "BilgiIslemMerkezi" },
-            new() { Url = "/Admin/Kurumsal/IsSagligiVeGuvenligi", Label = "Ýþ Saðlýðý ve Güvenliði", Controller = "Kurumsal", Action = "IsSagligiVeGuvenligi" },
+            new() { Url = "/Admin/Kurumsal/Hakkimizda", Label = "HakkÄ±mÄ±zda SayfasÄ±", Controller = "Kurumsal", Action = "Hakkimizda" },
+            new() { Url = "/Admin/Kurumsal/Index", Label = "Sidebar YÃ¶netimi", Controller = "Kurumsal", Action = "Index" },
+            new() { Url = "/Admin/Bashekimlik/Index", Label = "BaÅŸhekimlik", Controller = "Bashekimlik" },
+            new() { Url = "/Admin/Basmudurluk/Index", Label = "BaÅŸmÃ¼dÃ¼rlÃ¼k", Controller = "Basmudurluk" },
+            new() { Url = "/Admin/Kurumsal/HemsirelikHizmetleri", Label = "HemÅŸirelik Hizmetleri", Controller = "Kurumsal", Action = "HemsirelikHizmetleri" },
+            new() { Url = "/Admin/Kurumsal/BilgiIslemMerkezi", Label = "Bilgi Ä°ÅŸlem Merkezi", Controller = "Kurumsal", Action = "BilgiIslemMerkezi" },
+            new() { Url = "/Admin/Kurumsal/IsSagligiVeGuvenligi", Label = "Ä°ÅŸ SaÄŸlÄ±ÄŸÄ± ve GÃ¼venliÄŸi", Controller = "Kurumsal", Action = "IsSagligiVeGuvenligi" },
             new() { Url = "/Admin/Kurumsal/EnfeksiyonKontrol", Label = "Enfeksiyon Kontrol", Controller = "Kurumsal", Action = "EnfeksiyonKontrol" },
-            new() { Url = "/Admin/Kurumsal/EczacilikHizmetleri", Label = "Eczacýlýk Hizmetleri", Controller = "Kurumsal", Action = "EczacilikHizmetleri" },
-            new() { Url = "/Admin/Kurumsal/SatinAlma", Label = "Satýn Alma", Controller = "Kurumsal", Action = "SatinAlma" },
-            new() { Url = "/Admin/Kurumsal/IstatistikVeRaporlama", Label = "Ýstatistik ve Raporlama", Controller = "Kurumsal", Action = "IstatistikVeRaporlama" },
-            new() { Url = "/Admin/Kurumsal/ArsivBirimi", Label = "Arþiv Birimi", Controller = "Kurumsal", Action = "ArsivBirimi" },
-            new() { Url = "/Admin/Kurumsal/HastaIletisimBirimi", Label = "Hasta Ýletiþim Birimi", Controller = "Kurumsal", Action = "HastaIletisimBirimi" },
-            new() { Url = "/Admin/Kurumsal/IsAkisSemalari", Label = "Ýþ Akýþ Þemalarý", Controller = "Kurumsal", Action = "IsAkisSemalari" },
-            new() { Url = "/Admin/Kurumsal/OrganizasyonSemalari", Label = "Organizasyon Þemalarý", Controller = "Kurumsal", Action = "OrganizasyonSemalari" },
-            new() { Url = "/Admin/Kurumsal/IcKontrol", Label = "Ýç Kontrol", Controller = "Kurumsal", Action = "IcKontrol" },
-            new() { Url = "/Admin/Kurumsal/BasinVeKurumsalIletisim", Label = "Basýn ve Kurumsal Ýletiþim", Controller = "Kurumsal", Action = "BasinVeKurumsalIletisim" }
+            new() { Url = "/Admin/Kurumsal/EczacilikHizmetleri", Label = "EczacÄ±lÄ±k Hizmetleri", Controller = "Kurumsal", Action = "EczacilikHizmetleri" },
+            new() { Url = "/Admin/Kurumsal/SatinAlma", Label = "SatÄ±n Alma", Controller = "Kurumsal", Action = "SatinAlma" },
+            new() { Url = "/Admin/Kurumsal/IstatistikVeRaporlama", Label = "Ä°statistik ve Raporlama", Controller = "Kurumsal", Action = "IstatistikVeRaporlama" },
+            new() { Url = "/Admin/Kurumsal/ArsivBirimi", Label = "ArÅŸiv Birimi", Controller = "Kurumsal", Action = "ArsivBirimi" },
+            new() { Url = "/Admin/Kurumsal/HastaIletisimBirimi", Label = "Hasta Ä°letiÅŸim Birimi", Controller = "Kurumsal", Action = "HastaIletisimBirimi" },
+            new() { Url = "/Admin/Kurumsal/IsAkisSemalari", Label = "Ä°ÅŸ AkÄ±ÅŸ ÅžemalarÄ±", Controller = "Kurumsal", Action = "IsAkisSemalari" },
+            new() { Url = "/Admin/Kurumsal/OrganizasyonSemalari", Label = "Organizasyon ÅžemalarÄ±", Controller = "Kurumsal", Action = "OrganizasyonSemalari" },
+            new() { Url = "/Admin/Kurumsal/IcKontrol", Label = "Ä°Ã§ Kontrol", Controller = "Kurumsal", Action = "IcKontrol" },
+            new() { Url = "/Admin/Kurumsal/BasinVeKurumsalIletisim", Label = "BasÄ±n ve Kurumsal Ä°letiÅŸim", Controller = "Kurumsal", Action = "BasinVeKurumsalIletisim" }
         };
 
         private static readonly Dictionary<string, string> ControllerPermissions = new(StringComparer.OrdinalIgnoreCase)
@@ -154,7 +155,7 @@ namespace GaziHastane.Security
 
         public static bool IsSuperAdmin(ClaimsPrincipal user)
         {
-            return user.IsInRole("Süper Admin");
+            return user.IsInRole("Sï¿½per Admin");
         }
 
         public static bool IsSidebarLinkActive(string? currentController, string? currentAction, AdminSidebarLink link)

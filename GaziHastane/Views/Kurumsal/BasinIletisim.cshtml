@@ -1,173 +1,141 @@
-﻿@model GaziHastane.Models.BasinKurumsalIletisim
+@model GaziHastane.Models.BasinKurumsalIletisim
 @{
+    Layout = "_KurumsalLayout";
     ViewData["Title"] = Model?.Baslik ?? "Basın ve Kurumsal İletişim Birimi";
 }
 
-@section Scripts {
-    <style>
-        .page-fade-in {
-            animation: fadeInPage 0.6s ease-out forwards;
-            opacity: 0;
-        }
+<style>
+    .hero-gradient {
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        border-radius: 2.5rem;
+        padding: 3rem;
+        color: white;
+        margin-bottom: 3rem;
+        box-shadow: 0 20px 40px rgba(37,99,235,0.15);
+    }
+    
+    .info-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 1.5rem;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    }
+    
+    .info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        border-color: #3b82f6;
+    }
+    
+    .info-icon {
+        width: 3.5rem;
+        height: 3.5rem;
+        background: #eff6ff;
+        color: #2563eb;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .info-card:hover .info-icon {
+        background: #2563eb;
+        color: #fff;
+    }
+    
+    .info-label {
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #94a3b8;
+        margin-bottom: 0.25rem;
+    }
+    
+    .info-value {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #1e293b;
+        word-break: break-word;
+    }
+</style>
 
-        @@keyframes fadeInPage {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .info-card {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-            display: flex;
-            gap: 1rem;
-            align-items: flex-start;
-        }
-
-        .info-card:hover {
-            border-color: #cbd5e1;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            transform: translateY(-2px);
-        }
-
-        .info-icon {
-            width: 3rem;
-            height: 3rem;
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .info-content h3 {
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #94a3b8;
-            margin-bottom: 0.5rem;
-        }
-
-        .info-content p, .info-content a {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #1e293b;
-        }
-
-        .info-content a {
-            color: #2563eb;
-            text-decoration: none;
-        }
-
-        .info-content a:hover {
-            color: #1d4ed8;
-            text-decoration: underline;
-        }
-    </style>
-}
-
-<main class="max-w-[1400px] mx-auto px-4 sm:px-6 py-8 mt-24 page-fade-in">
-
-    <div class="flex flex-col lg:flex-row gap-7">
-
-        <aside class="w-full lg:w-72 flex-shrink-0">
-            @await Html.PartialAsync("_KurumsalSidebar")
-        </aside>
-
-        <section class="flex-1 min-w-0">
-
-            <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
-                <i class="fa-solid fa-house text-[9px]"></i>
-                <i class="fa-solid fa-chevron-right text-[8px]"></i>
-                <span>Kurumsal</span>
-                <i class="fa-solid fa-chevron-right text-[8px]"></i>
-                <span class="text-blue-600">@(Model?.Baslik ?? "Basın ve Kurumsal İletişim")</span>
-            </nav>
-
-            <div class="bg-white rounded-[1.75rem] p-7 sm:p-10 border border-slate-100 shadow-[0_12px_40px_rgba(0,0,0,0.04)]">
-
-                <!-- Başlık -->
-                <div class="flex items-center gap-3 mb-8">
-                    <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                    <h1 class="text-3xl font-black text-slate-800">@(Model?.Baslik ?? "Basın ve Kurumsal İletişim Birimi")</h1>
-                </div>
-
-                <!-- Açıklama -->
-                @if (!string.IsNullOrWhiteSpace(Model?.Aciklama))
-                {
-                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-100 mb-10">
-                        <p class="text-slate-700 leading-relaxed font-medium text-base">
-                            @Html.Raw(Model.Aciklama)
-                        </p>
-                    </div>
-                }
-
-                <!-- İletişim Bilgileri -->
-                <h2 class="text-2xl font-black text-slate-800 mb-6 flex items-center gap-2">
-                    <i class="fa-solid fa-address-card text-blue-600"></i>
-                    İletişim Bilgileri
-                </h2>
-
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    
-                    <!-- Telefon -->
-                    <div class="info-card">
-                        <div class="info-icon">
-                            <i class="fa-solid fa-phone"></i>
-                        </div>
-                        <div class="info-content flex-1">
-                            <h3>Telefon</h3>
-                            <p>@(Model?.Telefon ?? "-")</p>
-                        </div>
-                    </div>
-
-                    <!-- Email -->
-                    <div class="info-card">
-                        <div class="info-icon">
-                            <i class="fa-solid fa-envelope"></i>
-                        </div>
-                        <div class="info-content flex-1">
-                            <h3>E-Posta</h3>
-                            @if (!string.IsNullOrWhiteSpace(Model?.Email))
-                            {
-                                <a href="mailto:@Model.Email">@Model.Email</a>
-                            }
-                            else
-                            {
-                                <p>-</p>
-                            }
-                        </div>
-                    </div>
-
-                    <!-- Konum -->
-                    <div class="info-card">
-                        <div class="info-icon">
-                            <i class="fa-solid fa-location-dot"></i>
-                        </div>
-                        <div class="info-content flex-1">
-                            <h3>Konum</h3>
-                            <p>@(Model?.Lokasyon ?? "-")</p>
-                        </div>
-                    </div>
-
-                </div>
-
+<div class="max-w-6xl mx-auto py-12 px-4 sm:px-6 mt-10">
+    <div class="hero-gradient">
+        <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-200 mb-4">
+            <i class="fa-solid fa-house"></i>
+            <i class="fa-solid fa-chevron-right text-[8px]"></i>
+            <span>Kurumsal</span>
+            <i class="fa-solid fa-chevron-right text-[8px]"></i>
+            <span class="text-white">Basın ve İletişim</span>
+        </nav>
+        <h1 class="text-4xl sm:text-5xl font-black tracking-tight mb-4">@(Model?.Baslik ?? "Basın ve Kurumsal İletişim")</h1>
+        @if (!string.IsNullOrWhiteSpace(Model?.Aciklama))
+        {
+            <div class="text-blue-100 text-lg font-medium max-w-3xl leading-relaxed">
+                @Html.Raw(Model.Aciklama)
             </div>
-
-        </section>
-
+        }
     </div>
 
-</main>
+    <div class="grid md:grid-cols-3 gap-6">
+        <!-- Telefon -->
+        <div class="info-card">
+            <div class="info-icon">
+                <i class="fa-solid fa-phone"></i>
+            </div>
+            <div>
+                <div class="info-label">İletişim Hattı</div>
+                <div class="info-value">@(Model?.Telefon ?? "-")</div>
+            </div>
+        </div>
+
+        <!-- Email -->
+        <div class="info-card">
+            <div class="info-icon">
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+            <div>
+                <div class="info-label">E-Posta Adresi</div>
+                <div class="info-value">
+                    @if (!string.IsNullOrWhiteSpace(Model?.Email))
+                    {
+                        <a href="mailto:@Model.Email" class="text-blue-600 hover:underline">@Model.Email</a>
+                    }
+                    else
+                    {
+                        <span>-</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Lokasyon -->
+        <div class="info-card">
+            <div class="info-icon">
+                <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <div>
+                <div class="info-label">Ofis Lokasyonu</div>
+                <div class="info-value">@(Model?.Lokasyon ?? "-")</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-12 p-8 bg-white border border-slate-100 rounded-[2rem] shadow-sm">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
+            <h3 class="text-2xl font-black text-slate-800">Kurumsal Kimlik</h3>
+        </div>
+        <p class="text-slate-600 leading-relaxed text-lg">
+            Hastanemizin kurumsal kimlik rehberi, logo kullanım standartları ve basın bültenleri için birimimizle iletişime geçebilirsiniz.
+        </p>
+    </div>
+</div>
