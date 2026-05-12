@@ -1,7 +1,7 @@
 @model List<GaziHastane.Models.KurumsalIcerik>
 @{
     Layout = "_KurumsalLayout";
-    ViewData["Title"] = "Hakkımızda";
+    ViewData["Title"] ??= "Hakkımızda";
     var sekmeler = ViewBag.Sekmeler as List<GaziHastane.Models.KurumsalSekme> ?? new List<GaziHastane.Models.KurumsalSekme>();
 }
 
@@ -16,13 +16,16 @@
     .tab-panel.active { display: block; animation: panelFadeIn 0.5s ease forwards; }
     @@keyframes panelFadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     .content-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 2rem; padding: 2.5rem; box-shadow: 0 15px 50px rgba(0,0,0,0.03); margin-bottom: 2rem; }
+    .doc-link { display: flex; align-items: center; padding: 1.75rem; background: linear-gradient(145deg, #ffffff, #f8fafc); border: 1px solid #e2e8f0; border-radius: 1.5rem; text-decoration: none !important; transition: all 0.3s ease; }
+    .doc-link:hover { border-color: #3b82f6; transform: translateY(-3px); box-shadow: 0 12px 30px rgba(37,99,235,0.08); }
+    .layout-video-box { border-radius: 1.5rem; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); margin-bottom: 2rem; border: 1px solid #e2e8f0; }
     .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
     .custom-scroll::-webkit-scrollbar-track { background: transparent; }
     .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 </style>
 
-<div class="max-w-6xl mx-auto py-12 px-4 sm:px-6 mt-10">
-    <div class="hero-gradient">
+<div class="max-w-[1400px] mx-auto py-12 px-8 md:px-12 mt-10">
+    <div class="hero-gradient" style="padding: 4.5rem;">
         <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-200 mb-4">
             <i class="fa-solid fa-house"></i> <i class="fa-solid fa-chevron-right text-[8px]"></i>
             <span>Kurumsal</span> <i class="fa-solid fa-chevron-right text-[8px]"></i>
@@ -34,17 +37,6 @@
     <div class="min-h-[500px]">
         @if (sekmeler.Any())
         {
-            <div class="tab-nav custom-scroll">
-                @for (int i = 0; i < sekmeler.Count; i++)
-                {
-                    var sekme = sekmeler[i];
-                    <button type="button" id="link-@sekme.SekmeId" onclick="switchTab('@sekme.SekmeId')" class="tab-link @(i == 0 ? "active" : "")">
-                        <i class="@(string.IsNullOrWhiteSpace(sekme.IconClass) ? "fa-solid fa-circle-info" : sekme.IconClass)"></i>
-                        @sekme.Baslik
-                    </button>
-                }
-            </div>
-
             @for (int i = 0; i < sekmeler.Count; i++)
             {
                 var sekme = sekmeler[i];
@@ -60,15 +52,41 @@
                     }
                     else
                     {
-                        <div class="space-y-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             @foreach (var item in icerikler)
                             {
-                                <article class="content-card">
+                                <article class="content-card @(item.IcerikTipi == "Sayfa" ? "md:col-span-2" : "") mb-0">
                                     <div class="flex items-start gap-5 mb-6">
                                         <div class="w-2 h-10 bg-blue-600 rounded-full mt-1"></div>
-                                        <div class="flex-1"><h2 class="text-3xl font-black text-slate-800 leading-tight">@item.Baslik</h2></div>
+                                        <div class="flex-1">
+                                            <h2 class="text-3xl font-black text-slate-800 leading-tight">@item.Baslik</h2>
+                                            @if (!string.IsNullOrEmpty(item.AltBaslik)) { <h4 class="text-lg font-bold text-blue-600 mt-1">@item.AltBaslik</h4> }
+                                        </div>
                                     </div>
+
+                                    @if (item.IcerikTipi == "Video")
+                                    {
+                                        <div class="layout-video-box">
+                                            <div class="aspect-video">
+                                                <iframe src="@item.VideoUrl" class="w-full h-full" allowfullscreen></iframe>
+                                            </div>
+                                        </div>
+                                    }
+                                    else if (item.IcerikTipi == "Form" || item.IcerikTipi == "Belge" || (!string.IsNullOrEmpty(item.MedyaYolu) && item.MedyaYolu.ToLower().EndsWith(".pdf")))
+                                    {
+                                        <a href="@item.MedyaYolu" target="_blank" class="doc-link group mb-6">
+                                            <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mr-5 group-hover:scale-110 transition-transform"><i class="fa-solid fa-file-pdf text-2xl"></i></div>
+                                            <div class="flex-1"><div class="text-sm font-black text-slate-400 uppercase tracking-widest mb-1">Döküman / Klavuz</div><div class="text-xl font-bold text-slate-900">Dosyayı Görüntüle</div></div>
+                                            <i class="fa-solid fa-arrow-up-right-from-square text-blue-600 text-xl"></i>
+                                        </a>
+                                    }
+
                                     <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed text-lg">@Html.Raw(item.Aciklama)</div>
+
+                                    @if (!string.IsNullOrEmpty(item.MedyaYolu) && !item.MedyaYolu.ToLower().EndsWith(".pdf"))
+                                    {
+                                        <div class="mt-8"><img src="@item.MedyaYolu" class="max-w-full h-auto rounded-[2rem] shadow-2xl border border-slate-100" alt="Görsel" /></div>
+                                    }
                                 </article>
                             }
                         </div>
@@ -78,15 +96,41 @@
         }
         else
         {
-            <div class="space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 @foreach (var item in Model.OrderBy(x => x.Sira))
                 {
-                    <article class="content-card">
+                    <article class="content-card @(item.IcerikTipi == "Sayfa" ? "md:col-span-2" : "") mb-0">
                         <div class="flex items-start gap-5 mb-6">
                             <div class="w-2 h-10 bg-blue-600 rounded-full mt-1"></div>
-                            <div class="flex-1"><h2 class="text-3xl font-black text-slate-800">@item.Baslik</h2></div>
+                            <div class="flex-1">
+                                <h2 class="text-3xl font-black text-slate-800">@item.Baslik</h2>
+                                @if (!string.IsNullOrEmpty(item.AltBaslik)) { <h4 class="text-lg font-bold text-blue-600 mt-1">@item.AltBaslik</h4> }
+                            </div>
                         </div>
+
+                        @if (item.IcerikTipi == "Video")
+                        {
+                            <div class="layout-video-box">
+                                <div class="aspect-video">
+                                    <iframe src="@item.VideoUrl" class="w-full h-full" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        }
+                        else if (item.IcerikTipi == "Form" || item.IcerikTipi == "Belge" || (!string.IsNullOrEmpty(item.MedyaYolu) && item.MedyaYolu.ToLower().EndsWith(".pdf")))
+                        {
+                            <a href="@item.MedyaYolu" target="_blank" class="doc-link group mb-6">
+                                <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mr-5 group-hover:scale-110 transition-transform"><i class="fa-solid fa-file-pdf text-2xl"></i></div>
+                                <div class="flex-1"><div class="text-sm font-black text-slate-400 uppercase tracking-widest mb-1">Döküman / Klavuz</div><div class="text-xl font-bold text-slate-900">Dosyayı Görüntüle</div></div>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-blue-600 text-xl"></i>
+                            </a>
+                        }
+
                         <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed text-lg">@Html.Raw(item.Aciklama)</div>
+
+                        @if (!string.IsNullOrEmpty(item.MedyaYolu) && !item.MedyaYolu.ToLower().EndsWith(".pdf"))
+                        {
+                            <div class="mt-8"><img src="@item.MedyaYolu" class="max-w-full h-auto rounded-[2rem] shadow-2xl border border-slate-100" alt="Görsel" /></div>
+                        }
                     </article>
                 }
             </div>

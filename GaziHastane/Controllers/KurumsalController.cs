@@ -1,4 +1,4 @@
-﻿using GaziHastane.Models;
+using GaziHastane.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace GaziHastane.Controllers
             _context = context;
         }
 
-        // Hakkï¿½mï¿½zda (Kurumsal Ana Sayfa)
+        // HakkÃ¯Â¿Â½mÃ¯Â¿Â½zda (Kurumsal Ana Sayfa)
         public async Task<IActionResult> Index()
         {
             var icerikler = await _context.KurumsalIcerikler
@@ -31,10 +31,10 @@ namespace GaziHastane.Controllers
             return View("Index", icerikler);
         }
 
-        // Baï¿½hekimlik
+        // BaÃ¯Â¿Â½hekimlik
         public IActionResult Bashekimlik()
         {
-            // Veritabanï¿½ndan aktif personelleri sï¿½rasï¿½na gï¿½re ï¿½ekiyoruz
+            // VeritabanÃ¯Â¿Â½ndan aktif personelleri sÃ¯Â¿Â½rasÃ¯Â¿Â½na gÃ¯Â¿Â½re Ã¯Â¿Â½ekiyoruz
             var aktifPersoneller = _context.BashekimlikPersoneller
                                            .Where(x => x.AktifMi)
                                            .OrderBy(x => x.Sira)
@@ -43,21 +43,21 @@ namespace GaziHastane.Controllers
             // Verileri ViewModel'e dolduruyoruz
             var viewModel = new BashekimlikViewModel
             {
-                // IsBashekim = true olan ï¿½LK kaydï¿½ Baï¿½hekim olarak al
+                // IsBashekim = true olan Ã¯Â¿Â½LK kaydÃ¯Â¿Â½ BaÃ¯Â¿Â½hekim olarak al
                 Bashekim = aktifPersoneller.FirstOrDefault(x => x.IsBashekim),
 
-                // IsBashekim = false olanlarï¿½ Yardï¿½mcï¿½lar listesine al
+                // IsBashekim = false olanlarÃ¯Â¿Â½ YardÃ¯Â¿Â½mcÃ¯Â¿Â½lar listesine al
                 Yardimcilar = aktifPersoneller.Where(x => !x.IsBashekim).ToList(),
 
-                // ï¿½letiï¿½im bilgilerini burada tanï¿½mlï¿½yoruz
+                // Ã¯Â¿Â½letiÃ¯Â¿Â½im bilgilerini burada tanÃ¯Â¿Â½mlÃ¯Â¿Â½yoruz
                 Telefon = "(0312) 202 40 00",
-                CalismaSaatleri = "Pztï¿½Cuma ï¿½ 08:30 ï¿½ 17:00"
+                CalismaSaatleri = "PztÃ¯Â¿Â½Cuma Ã¯Â¿Â½ 08:30 Ã¯Â¿Â½ 17:00"
             };
 
             return View(viewModel);
         }
 
-        // Baï¿½mï¿½dï¿½rlï¿½k
+        // BaÃ¯Â¿Â½mÃ¯Â¿Â½dÃ¯Â¿Â½rlÃ¯Â¿Â½k
         public IActionResult Basmudurluk()
         {
             var aktifPersoneller = _context.BasmudurlikPersoneller
@@ -70,16 +70,16 @@ namespace GaziHastane.Controllers
                 Basmudur = aktifPersoneller.FirstOrDefault(x => x.IsBasmudur),
                 Yardimcilar = aktifPersoneller.Where(x => !x.IsBasmudur).ToList(),
                 Telefon = "(0312) 202 40 00",
-                CalismaSaatleri = "Pztï¿½Cuma ï¿½ 08:30 ï¿½ 17:00"
+                CalismaSaatleri = "PztÃ¯Â¿Â½Cuma Ã¯Â¿Â½ 08:30 Ã¯Â¿Â½ 17:00"
             };
 
             return View(viewModel);
         }
 
-        // Hemï¿½irelik Hizmetleri (Dï¿½NAMï¿½K HALE GETï¿½Rï¿½LDï¿½)
+        // HemÃ¯Â¿Â½irelik Hizmetleri (DÃ¯Â¿Â½NAMÃ¯Â¿Â½K HALE GETÃ¯Â¿Â½RÃ¯Â¿Â½LDÃ¯Â¿Â½)
         public IActionResult HemsirelikHizmetleri()
         {
-            // Aktif olan tï¿½m iï¿½erikleri sï¿½rasï¿½na gï¿½re tek seferde ï¿½ekiyoruz
+            // Aktif olan tÃ¯Â¿Â½m iÃ¯Â¿Â½erikleri sÃ¯Â¿Â½rasÃ¯Â¿Â½na gÃ¯Â¿Â½re tek seferde Ã¯Â¿Â½ekiyoruz
             var tumIcerikler = _context.HemsirelikIcerikler
                                        .Where(x => x.AktifMi)
                                        .OrderBy(x => x.Sira)
@@ -92,11 +92,11 @@ namespace GaziHastane.Controllers
 
             var viewModel = new HemsirelikViewModel
             {
-                // Ayarlar tablosundan ilk kaydï¿½ al, yoksa boï¿½ bir nesne gï¿½nder (hata vermemesi iï¿½in)
+                // Ayarlar tablosundan ilk kaydÃ¯Â¿Â½ al, yoksa boÃ¯Â¿Â½ bir nesne gÃ¯Â¿Â½nder (hata vermemesi iÃ¯Â¿Â½in)
                 Ayarlar = _context.HemsirelikAyarlar.FirstOrDefault() ?? new HemsirelikAyar(),
                 Sekmeler = sekmeler,
 
-                // Tek tabloyu Kategori sï¿½tununa gï¿½re View'daki ilgili listelere paylaï¿½tï¿½rï¿½yoruz
+                // Tek tabloyu Kategori sÃ¼tununa gÃ¶re View'daki ilgili listelere paylaÅŸtÄ±rÄ±yoruz
                 YonetimKadrosu = tumIcerikler.Where(x => x.Kategori == "Yonetim").ToList(),
                 Gorevler = tumIcerikler.Where(x => x.Kategori == "Gorev").ToList(),
                 Mevzuatlar = tumIcerikler.Where(x => x.Kategori == "Mevzuat").ToList(),
@@ -122,6 +122,7 @@ namespace GaziHastane.Controllers
                 .ToListAsync();
 
             ViewBag.Sekmeler = sekmeler;
+            ViewData["Title"] = "Bilgi İşlem Merkezi";
             return View("Index", icerikler);
         }
 
@@ -138,6 +139,7 @@ namespace GaziHastane.Controllers
                 .ToListAsync();
 
             ViewBag.Sekmeler = sekmeler;
+            ViewData["Title"] = "İş Sağlığı ve Güvenliği";
             return View("Index", icerikler);
         }
 
@@ -155,10 +157,11 @@ namespace GaziHastane.Controllers
                 .ToListAsync();
 
             ViewBag.Sekmeler = sekmeler;
+            ViewData["Title"] = "Enfeksiyon Kontrol Komitesi";
             return View("Index", icerikler);
         }
 
-        // EczacÄ±lÄ±k Hizmetleri
+        // Eczacılık Hizmetleri
         public async Task<IActionResult> Eczacilik()
         {
             var icerikler = await _context.KurumsalIcerikler
@@ -172,10 +175,11 @@ namespace GaziHastane.Controllers
                 .ToListAsync();
 
             ViewBag.Sekmeler = sekmeler;
+            ViewData["Title"] = "Eczacılık Hizmetleri";
             return View("Index", icerikler);
         }
 
-        // SatÄ±n Alma
+        // Satın Alma
         public async Task<IActionResult> SatinAlma()
         {
             var icerikler = await _context.KurumsalIcerikler
@@ -189,10 +193,11 @@ namespace GaziHastane.Controllers
                 .ToListAsync();
 
             ViewBag.Sekmeler = sekmeler;
+            ViewData["Title"] = "Satın Alma Birimi";
             return View("Index", icerikler);
         }
 
-        // Ä°statistik ve Raporlama
+        // İstatistik ve Raporlama
         public async Task<IActionResult> Istatistik()
         {
             var icerikler = await _context.KurumsalIcerikler
@@ -206,10 +211,11 @@ namespace GaziHastane.Controllers
                 .ToListAsync();
 
             ViewBag.Sekmeler = sekmeler;
+            ViewData["Title"] = "İstatistik ve Raporlama Birimi";
             return View("Index", icerikler);
         }
 
-        // ArÅŸiv Birimi
+        // Arşiv Birimi
         public async Task<IActionResult> Arsiv()
         {
             var icerikler = await _context.KurumsalIcerikler
@@ -223,10 +229,11 @@ namespace GaziHastane.Controllers
                 .ToListAsync();
 
             ViewBag.Sekmeler = sekmeler;
+            ViewData["Title"] = "Arşiv Birimi";
             return View("Index", icerikler);
         }
 
-        // Hasta Ä°letiÅŸim Birimi
+        // Hasta İletişim Birimi
         public async Task<IActionResult> HastaIletisim()
         {
             var icerikler = await _context.KurumsalIcerikler
@@ -240,10 +247,11 @@ namespace GaziHastane.Controllers
                 .ToListAsync();
 
             ViewBag.Sekmeler = sekmeler;
+            ViewData["Title"] = "Hasta İletişim Birimi";
             return View("Index", icerikler);
         }
 
-        // Ä°ÅŸ AkÄ±ÅŸ ÅemalarÄ±
+        // İş Akış Şemaları
         public async Task<IActionResult> IsAkis()
         {
             var icerikler = await _context.KurumsalIcerikler
@@ -257,10 +265,11 @@ namespace GaziHastane.Controllers
                 .ToListAsync();
 
             ViewBag.Sekmeler = sekmeler;
+            ViewData["Title"] = "İş Akış Şemaları";
             return View("Index", icerikler);
         }
 
-        // Organizasyon emalar
+        // Organizasyon Şemaları
         public async Task<IActionResult> Organizasyon()
         {
             var icerikler = await _context.KurumsalIcerikler
@@ -274,10 +283,11 @@ namespace GaziHastane.Controllers
                 .ToListAsync();
 
             ViewBag.Sekmeler = sekmeler;
+            ViewData["Title"] = "Organizasyon Şemaları";
             return View("Index", icerikler);
         }
 
-        // Ä°Ã§ Kontrol
+        // İç Kontrol
         public async Task<IActionResult> IcKontrol()
         {
             var icerikler = await _context.KurumsalIcerikler
@@ -291,20 +301,21 @@ namespace GaziHastane.Controllers
                 .ToListAsync();
 
             ViewBag.Sekmeler = sekmeler;
+            ViewData["Title"] = "İç Kontrol";
             return View("Index", icerikler);
         }
 
-        // BasÄ±n ve Kurumsal Ä°letiÅŸim
+        // BasÃ„Â±n ve Kurumsal Ã„Â°letiÃ…Å¸im
         public async Task<IActionResult> BasinIletisim()
         {
             var model = await _context.BasinKurumsalIletisimler.FirstOrDefaultAsync();
             if (model == null)
             {
-                // VarsayÄ±lan deÄŸerler
+                // VarsayÃ„Â±lan deÃ„Å¸erler
                 model = new BasinKurumsalIletisim
                 {
-                    Baslik = "BasÄ±n ve Kurumsal Ä°letiÅŸim Birimi",
-                    Aciklama = "SaÄŸlÄ±k AraÅŸtÄ±rma ve Uygulama Merkezimiz faaliyetleri Ã§erÃ§evesinde; hedef kitlelerle etkili bir iletiÅŸim kurmak ve sunulan saÄŸlÄ±k hizmetinin yanÄ± sÄ±ra hastanemizin gerÃ§ekleÅŸtirdiÄŸi yeniliklerden hem personelimizi ve hem de dÄ±ÅŸ paydaÅŸlarÄ± haberdar etmek amacÄ±yla hastanemiz web sayfasÄ±na ve kurum iÃ§i SMS faaliyetlerine yÃ¶nelik sÃ¼reÃ§lerin takibi ve koordinasyonunun saÄŸlanmasÄ± adÄ±na BaÅŸhekimlik makamÄ±nÄ±n 22.07.2025 tarihli Oluru doÄŸrultusunda \"BasÄ±n ve Kurumsal Ä°letiÅŸim Birimi\"miz kurulmuÅŸtur.",
+                    Baslik = "BasÃ„Â±n ve Kurumsal Ã„Â°letiÃ…Å¸im Birimi",
+                    Aciklama = "SaÃ„Å¸lÃ„Â±k AraÃ…Å¸tÃ„Â±rma ve Uygulama Merkezimiz faaliyetleri ÃƒÂ§erÃƒÂ§evesinde; hedef kitlelerle etkili bir iletiÃ…Å¸im kurmak ve sunulan saÃ„Å¸lÃ„Â±k hizmetinin yanÃ„Â± sÃ„Â±ra hastanemizin gerÃƒÂ§ekleÃ…Å¸tirdiÃ„Å¸i yeniliklerden hem personelimizi ve hem de dÃ„Â±Ã…Å¸ paydaÃ…Å¸larÃ„Â± haberdar etmek amacÃ„Â±yla hastanemiz web sayfasÃ„Â±na ve kurum iÃƒÂ§i SMS faaliyetlerine yÃƒÂ¶nelik sÃƒÂ¼reÃƒÂ§lerin takibi ve koordinasyonunun saÃ„Å¸lanmasÃ„Â± adÃ„Â±na BaÃ…Å¸hekimlik makamÃ„Â±nÃ„Â±n 22.07.2025 tarihli Oluru doÃ„Å¸rultusunda \"BasÃ„Â±n ve Kurumsal Ã„Â°letiÃ…Å¸im Birimi\"miz kurulmuÃ…Å¸tur.",
                     Telefon = "0312 202 44 39",
                     Email = "gazihastanesibasin@gazi.edu.tr",
                     Lokasyon = "E Blok 11. Kat"

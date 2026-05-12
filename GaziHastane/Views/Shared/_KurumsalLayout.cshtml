@@ -1,4 +1,4 @@
-﻿@{
+@{
     Layout = "_Layout";
 }
 
@@ -13,6 +13,7 @@
         #app-sidebar.collapsed .submenu-panel { display: none !important; }
         #app-sidebar.collapsed #toggle-icon { transform: rotate(180deg); }
 
+        /* Mobil iin toggle butonu ayar */
         .sidebar-toggle-btn {
             position: absolute;
             right: -1.25rem;
@@ -31,6 +32,18 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+
+        @@media (max-width: 768px) {
+            #app-sidebar:not(.collapsed) {
+                width: 280px;
+                position: fixed;
+                height: 100%;
+                box-shadow: 20px 0 50px rgba(0,0,0,0.1);
+            }
+            #app-sidebar.collapsed {
+                width: 4rem; /* Mobilde daha dar icon bar */
+            }
+        }
     </style>
     @await RenderSectionAsync("Styles", required: false)
 }
@@ -38,11 +51,11 @@
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            let currentPath = window.location.pathname.toLowerCase();
             const sidebar = document.getElementById("app-sidebar");
             const toggleBtn = document.getElementById("sidebar-toggle");
 
-            if (window.innerWidth > 768) {
+            // Mobilde (768px alt) varsaylan olarak kapal (collapsed) bala
+            if (window.innerWidth <= 768) {
                 sidebar.classList.add("collapsed");
             }
 
@@ -50,6 +63,7 @@
                 sidebar.classList.toggle("collapsed");
             });
 
+            // Alt men tklama ilemi
             document.querySelectorAll('.sidebar-link.has-submenu').forEach(link => {
                 link.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -66,7 +80,7 @@
 
 <div class="flex w-full overflow-hidden bg-slate-50" style="height: calc(100vh - 64px); position: fixed; top: 64px; left: 0; right: 0; bottom: 0; z-index: 20;">
     <aside id="app-sidebar" class="relative flex flex-col bg-white border-r border-slate-200 h-full w-[280px] z-40 shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-all duration-300 group">
-        <button id="sidebar-toggle" class="sidebar-toggle-btn hidden md:flex">
+        <button id="sidebar-toggle" class="sidebar-toggle-btn">
             <i class="fa-solid fa-bars text-[12px]" id="toggle-icon"></i>
         </button>
 

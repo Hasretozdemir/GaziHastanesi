@@ -17,32 +17,22 @@
     .content-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 2rem; padding: 2.5rem; box-shadow: 0 15px 50px rgba(0,0,0,0.03); margin-bottom: 2rem; }
     .doc-link { display: flex; align-items: center; padding: 1.75rem; background: linear-gradient(145deg, #ffffff, #f8fafc); border: 1px solid #e2e8f0; border-radius: 1.5rem; text-decoration: none !important; transition: all 0.3s ease; }
     .doc-link:hover { border-color: #3b82f6; transform: translateY(-3px); box-shadow: 0 12px 30px rgba(37,99,235,0.08); }
+    .hero-gradient { background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); border-radius: 2.5rem; padding: 4.5rem; color: white; margin-bottom: 3rem; box-shadow: 0 20px 40px rgba(37,99,235,0.15); }
 </style>
 
-<div class="max-w-6xl mx-auto py-12 px-4 sm:px-6 mt-10">
-    <div class="mb-10">
-        <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">
+<div class="max-w-[1400px] mx-auto py-12 px-8 md:px-12 mt-10">
+    <div class="hero-gradient">
+        <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-200 mb-4">
             <i class="fa-solid fa-house"></i> <i class="fa-solid fa-chevron-right text-[8px]"></i>
             <span>Kurumsal</span> <i class="fa-solid fa-chevron-right text-[8px]"></i>
-            <span class="text-blue-600">@ViewData["Title"]</span>
+            <span class="text-white">@ViewData["Title"]</span>
         </nav>
-        <h1 class="text-4xl sm:text-5xl font-black text-slate-800 tracking-tight mb-2">@ViewData["Title"]</h1>
+        <h1 class="text-4xl sm:text-5xl font-black tracking-tight mb-0">@ViewData["Title"]</h1>
     </div>
 
     <div class="min-h-[500px]">
         @if (sekmeler.Any())
         {
-            <div class="tab-nav custom-scroll">
-                @for (int i = 0; i < sekmeler.Count; i++)
-                {
-                    var sekme = sekmeler[i];
-                    <button type="button" id="link-@sekme.SekmeId" onclick="switchTab('@sekme.SekmeId')" class="tab-link @(i == 0 ? "active" : "")">
-                        <i class="@(string.IsNullOrWhiteSpace(sekme.IconClass) ? "fa-solid fa-circle-info" : sekme.IconClass)"></i>
-                        @sekme.Baslik
-                    </button>
-                }
-            </div>
-
             @for (int i = 0; i < sekmeler.Count; i++)
             {
                 var sekme = sekmeler[i];

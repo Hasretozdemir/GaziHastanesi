@@ -21,32 +21,22 @@
     .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
     .custom-scroll::-webkit-scrollbar-track { background: transparent; }
     .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    .hero-gradient { background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); border-radius: 2.5rem; padding: 4.5rem; color: white; margin-bottom: 3rem; box-shadow: 0 20px 40px rgba(37,99,235,0.15); }
 </style>
 
-<div class="max-w-6xl mx-auto py-12 px-4 sm:px-6 mt-10">
-    <div class="mb-10">
-        <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">
+<div class="max-w-[1400px] mx-auto py-12 px-8 md:px-12 mt-10">
+    <div class="hero-gradient">
+        <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-200 mb-4">
             <i class="fa-solid fa-house"></i> <i class="fa-solid fa-chevron-right text-[8px]"></i>
             <span>Kurumsal</span> <i class="fa-solid fa-chevron-right text-[8px]"></i>
-            <span class="text-blue-600">@ViewData["Title"]</span>
+            <span class="text-white">@ViewData["Title"]</span>
         </nav>
-        <h1 class="text-4xl sm:text-5xl font-black text-slate-800 tracking-tight mb-2">@ViewData["Title"]</h1>
+        <h1 class="text-4xl sm:text-5xl font-black tracking-tight mb-0">@ViewData["Title"]</h1>
     </div>
 
     <div class="min-h-[500px]">
         @if (sekmeler.Any())
         {
-            <div class="tab-nav custom-scroll">
-                @for (int i = 0; i < sekmeler.Count; i++)
-                {
-                    var sekme = sekmeler[i];
-                    <button type="button" id="link-@sekme.SekmeId" onclick="switchTab('@sekme.SekmeId')" class="tab-link @(i == 0 ? "active" : "")">
-                        <i class="@(string.IsNullOrWhiteSpace(sekme.IconClass) ? "fa-solid fa-circle-info" : sekme.IconClass)"></i>
-                        @sekme.Baslik
-                    </button>
-                }
-            </div>
-
             @for (int i = 0; i < sekmeler.Count; i++)
             {
                 var sekme = sekmeler[i];
@@ -62,10 +52,10 @@
                     }
                     else
                     {
-                        <div class="space-y-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             @foreach (var item in icerikler)
                             {
-                                <article class="content-card">
+                                <article class="content-card @(item.IcerikTipi == "Sayfa" ? "md:col-span-2" : "") mb-0">
                                     <div class="flex items-start gap-5 mb-6">
                                         <div class="w-2 h-10 bg-blue-600 rounded-full mt-1"></div>
                                         <div class="flex-1">

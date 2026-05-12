@@ -5,162 +5,291 @@
 }
 
 <style>
-    /* Container and card */
-    .form-container { max-width: 920px; margin: 0 auto; }
-
-    .card-header {
-        background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 100%);
-        color: #ffffff;
-        padding: 1.8rem 2rem;
-        border-radius: 10px 10px 0 0;
+    :root {
+        --glass-bg: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --accent-primary: #8b5cf6;
+        --accent-secondary: #6366f1;
+        --text-muted: #94a3b8;
     }
 
-    .card-body {
-        padding: 1.6rem 1.8rem;
-        background: #ffffff; /* force light background for contrast on dark admin layout */
-        color: #0f172a; /* dark text for readability */
+    .glass-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 2rem;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
 
-    .form-group { margin-bottom: 1.25rem; }
+    .hero-banner {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(99, 102, 241, 0.2) 100%);
+        padding: 4rem 3rem;
+        border-bottom: 1px solid var(--glass-border);
+        position: relative;
+        overflow: hidden;
+    }
 
-    /* Labels and headings */
-    .form-label { font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; display: block; }
-    .form-section h3 { color: #0f172a; margin-bottom: 1rem; font-size: 1.05rem; border-bottom: 2px solid #7c3aed; padding-bottom: 0.5rem; }
+    .hero-banner::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
+    }
 
-    /* Inputs / textarea - force white background and dark text to ensure visibility inside dark admin shell */
+    @@keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .content-area { padding: 3rem; }
+
+    .form-section {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--glass-border);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        margin-bottom: 2.5rem;
+        transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .form-section:hover {
+        background: rgba(255, 255, 255, 0.04);
+        transform: translateY(-5px);
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--glass-border);
+        padding-bottom: 1rem;
+    }
+
+    .section-header h3 {
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: #fff;
+    }
+
+    .form-label {
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        margin-bottom: 0.75rem;
+        display: block;
+    }
+
     .form-control {
-        border: 1px solid #e6e7eb;
-        background: #ffffff;
-        color: #0f172a;
-        border-radius: 8px;
-        padding: 0.7rem 0.95rem;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--glass-border);
+        border-radius: 1rem;
+        padding: 1rem 1.25rem;
+        color: #fff;
         font-size: 1rem;
-        transition: box-shadow .15s ease, border-color .15s ease;
+        transition: all 0.3s ease;
+        width: 100%;
     }
 
-    .form-control::placeholder { color: #94a3b8; opacity: 1; }
-    .form-control:focus { border-color: #7c3aed; box-shadow: 0 6px 18px rgba(124,58,237,0.10); outline: none; }
+    .form-control:focus {
+        background: rgba(0, 0, 0, 0.3);
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+        outline: none;
+    }
 
-    textarea.form-control { min-height: 160px; resize: vertical; font-family: inherit; }
+    textarea.form-control { min-height: 200px; line-height: 1.6; }
 
-    /* Buttons */
-    .btn-primary { background: linear-gradient(135deg,#7c3aed 0%,#5b21b6 100%); color:#fff; padding:.65rem 1.6rem; border-radius:8px; border:none; font-weight:700; }
-    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(92,51,179,0.22); }
-    .btn-secondary { background: #6b7280; color:#fff; padding:.65rem 1.6rem; border-radius:8px; border:none; font-weight:700; margin-left:.5rem; }
+    .btn-premium {
+        background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+        color: #fff;
+        padding: 1.25rem 2.5rem;
+        border-radius: 1.25rem;
+        font-weight: 800;
+        font-size: 1.1rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+    }
 
-    /* Info / success boxes */
-    .info-box { background: #f1f5f9; border-left: 4px solid #7c3aed; padding: 0.9rem 1rem; border-radius:6px; margin-bottom:1rem; color:#0f172a; }
-    .info-box strong { color: #5b21b6; }
-    .success-message { background:#ecfdf5; border:1px solid #bbf7d0; color:#064e3b; padding:1rem; border-radius:8px; margin-bottom:1rem; }
+    .btn-premium:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.4);
+    }
 
-    /* Card sections */
-    .form-section { background: #ffffff; padding: 1.2rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #eef2ff; }
+    .btn-outline {
+        background: transparent;
+        color: var(--text-muted);
+        padding: 1.25rem 2.5rem;
+        border-radius: 1.25rem;
+        font-weight: 700;
+        border: 1px solid var(--glass-border);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
 
-    .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    @@media (max-width: 768px) { .two-column { grid-template-columns: 1fr; } .card-header { padding:1.2rem; } .card-body { padding:1rem; } }
+    .btn-outline:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+        border-color: #fff;
+    }
 
-    .required::after { content: " *"; color: #e11d48; }
+    .info-pill {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+        padding: 1rem 1.5rem;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
 
-    /* Ensure form text overrides dark admin theme styles */
-    .form-container, .card-header, .card-body, .form-section, .info-box { color: inherit !important; }
+    .required::after { content: " *"; color: #ef4444; }
+
+    .custom-switch {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        cursor: pointer;
+    }
+
+    .switch-bg {
+        width: 3.5rem;
+        height: 2rem;
+        background: rgba(255,255,255,0.1);
+        border-radius: 2rem;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    input:checked + .switch-bg { background: var(--accent-primary); }
+
+    .switch-circle {
+        width: 1.5rem;
+        height: 1.5rem;
+        background: #fff;
+        border-radius: 50%;
+        position: absolute;
+        top: 0.25rem;
+        left: 0.25rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    input:checked + .switch-bg .switch-circle { left: 1.75rem; }
 </style>
 
-<div class="form-container mt-6">
-
+<div class="max-w-5xl mx-auto py-12 px-4">
     @if (TempData["Success"] != null)
     {
-        <div class="success-message">
-            <strong>✓ Başarılı!</strong> @TempData["Success"]
+        <div class="mb-8 animate-bounce bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 p-6 rounded-3xl flex items-center gap-4">
+            <i class="fa-solid fa-circle-check text-2xl"></i>
+            <span class="font-bold text-lg">@TempData["Success"]</span>
         </div>
     }
 
-    <div class="card border-0 shadow-md">
-        <div class="card-header">
-            <div class="flex items-center gap-3">
-                <i class="fa-solid fa-bullhorn text-2xl"></i>
-                <div>
-                    <h1 class="text-3xl font-black">Basın ve Kurumsal İletişim Birimi</h1>
-                    <p class="text-white/80 mt-1">Birim bilgilerini buradan güncelleyebilirsiniz</p>
+    <div class="glass-card">
+        <div class="hero-banner">
+            <div class="relative z-10">
+                <div class="w-20 h-20 bg-white/10 rounded-3xl flex items-center justify-center mb-6 backdrop-blur-md border border-white/20">
+                    <i class="fa-solid fa-bullhorn text-4xl text-white"></i>
                 </div>
+                <h1 class="text-5xl font-black text-white tracking-tighter mb-2">Basın ve İletişim</h1>
+                <p class="text-xl text-white/60 font-medium">Birim kurumsal bilgilerini buradan yönetebilirsiniz.</p>
             </div>
         </div>
 
-        <div class="card-body">
-            <div class="info-box">
-                <strong>ℹ️ Bilgi:</strong> Bu sayfada girdiğiniz bilgiler anasayfasında "Hastanemizde" menüsü altında "Basın ve Kurumsal İletişim" seçeneğinde görüntülenecektir.
+        <div class="content-area">
+            <div class="info-pill">
+                <i class="fa-solid fa-circle-info text-xl"></i>
+                <p class="text-sm font-semibold">Bu bilgiler ziyaretçilere "Hastanemizde" menüsü altında sunulacaktır.</p>
             </div>
 
             <form asp-action="BasinVeKurumsalIletisimKaydet" method="post" class="needs-validation">
                 @Html.AntiForgeryToken()
-
                 <input type="hidden" asp-for="Id" />
 
-                <!-- GENEL BİLGİLER BÖLÜMÜ -->
                 <div class="form-section">
-                    <h3><i class="fa-solid fa-info-circle mr-2"></i>Genel Bilgiler</h3>
-
-                    <div class="form-group">
-                        <label asp-for="Baslik" class="form-label required">Başlık</label>
-                        <input type="text" asp-for="Baslik" class="form-control" maxlength="255" placeholder="Birim adı">
-                        <span asp-validation-for="Baslik" class="text-danger"></span>
+                    <div class="section-header">
+                        <i class="fa-solid fa-file-lines text-accent-primary"></i>
+                        <h3>Genel İçerik</h3>
                     </div>
 
-                    <div class="form-group">
-                        <label asp-for="Aciklama" class="form-label required">Açıklama / Hakkımızda</label>
-                        <textarea asp-for="Aciklama" class="form-control" placeholder="Birimin detaylı açıklaması..."></textarea>
-                        <span asp-validation-for="Aciklama" class="text-danger"></span>
-                        <small class="text-muted">Birim hakkında detaylı bilgi yazınız. HTML formatı desteklenir.</small>
+                    <div class="mb-8">
+                        <label asp-for="Baslik" class="form-label required">Birim Başlığı</label>
+                        <input type="text" asp-for="Baslik" class="form-control" placeholder="Örn: Basın ve Kurumsal İletişim Birimi">
+                        <span asp-validation-for="Baslik" class="text-red-400 text-xs mt-2 block"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="Aciklama" class="form-label required">Hakkımızda / Tanıtım Metni</label>
+                        <textarea asp-for="Aciklama" class="form-control" placeholder="Birimin görevleri ve tanıtımı..."></textarea>
+                        <span asp-validation-for="Aciklama" class="text-red-400 text-xs mt-2 block"></span>
                     </div>
                 </div>
 
-                <!-- İLETİŞİM BİLGİLERİ BÖLÜMÜ -->
                 <div class="form-section">
-                    <h3><i class="fa-solid fa-address-book mr-2"></i>İletişim Bilgileri</h3>
+                    <div class="section-header">
+                        <i class="fa-solid fa-phone-volume text-accent-primary"></i>
+                        <h3>İletişim Detayları</h3>
+                    </div>
 
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label asp-for="Telefon" class="form-label">Telefon Numarası</label>
-                            <input type="tel" asp-for="Telefon" class="form-control" placeholder="0312 202 44 39" maxlength="50">
-                            <span asp-validation-for="Telefon" class="text-danger"></span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <div>
+                            <label asp-for="Telefon" class="form-label">Telefon</label>
+                            <input type="tel" asp-for="Telefon" class="form-control" placeholder="0312 XXX XX XX">
                         </div>
-
-                        <div class="form-group">
-                            <label asp-for="Email" class="form-label">E-Posta Adresi</label>
-                            <input type="email" asp-for="Email" class="form-control" placeholder="gazihastanesibasin@gazi.edu.tr" maxlength="150">
-                            <span asp-validation-for="Email" class="text-danger"></span>
+                        <div>
+                            <label asp-for="Email" class="form-label">E-Posta</label>
+                            <input type="email" asp-for="Email" class="form-control" placeholder="birim@gazi.edu.tr">
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label asp-for="Lokasyon" class="form-label">Ofis Konumu</label>
-                        <input type="text" asp-for="Lokasyon" class="form-control" placeholder="E Blok, 11. Kat" maxlength="150">
-                        <span asp-validation-for="Lokasyon" class="text-danger"></span>
+                    <div>
+                        <label asp-for="Lokasyon" class="form-label">Konum / Ofis</label>
+                        <input type="text" asp-for="Lokasyon" class="form-control" placeholder="E Blok, Kat: 11">
                     </div>
                 </div>
 
-                <!-- DURUM BÖLÜMÜ -->
                 <div class="form-section">
-                    <h3><i class="fa-solid fa-toggle-on mr-2"></i>Durum</h3>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <input type="checkbox" asp-for="IsActive" value="true" />
-                            <span>Bu birimi aktif tut</span>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-white font-bold text-lg">Yayın Durumu</h3>
+                            <p class="text-sm text-text-muted mt-1">Son Güncelleme: @Model?.SonGuncelleme.ToString("f")</p>
+                        </div>
+                        <label class="custom-switch">
+                            <input type="checkbox" asp-for="IsActive" class="hidden" />
+                            <div class="switch-bg">
+                                <div class="switch-circle"></div>
+                            </div>
                         </label>
                     </div>
-
-                    <small class="text-muted">
-                        Son güncelleme: <strong>@Model?.SonGuncelleme.ToString("dd.MM.yyyy HH:mm")</strong>
-                    </small>
                 </div>
 
-                <!-- BUTONLAR BÖLÜMÜ -->
-                <div class="form-group text-center mt-4">
-                    <button type="submit" class="btn-primary">
-                        <i class="fa-solid fa-save mr-2"></i>Kaydet
+                <div class="flex items-center justify-center gap-6 mt-12">
+                    <button type="submit" class="btn-premium">
+                        <i class="fa-solid fa-sparkles"></i>
+                        Güncelle ve Kaydet
                     </button>
-                    <a href="@Url.Action("Index", "Kurumsal")" class="btn-secondary">
-                        <i class="fa-solid fa-times mr-2"></i>İptal
+                    <a href="@Url.Action("Index", "Kurumsal")" class="btn-outline">
+                        Vazgeç
                     </a>
                 </div>
             </form>
@@ -169,31 +298,16 @@
 </div>
 
 @section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
     <script>
-        // Form validation
-        (function () {
-            'use strict';
-            window.addEventListener('load', function () {
-                var forms = document.getElementsByClassName('needs-validation');
-                var validation = Array.prototype.filter.call(forms, function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
-
-        // Auto-save draft function (optional)
-        document.querySelector('textarea[name="Aciklama"]').addEventListener('change', function() {
-            console.log('Content changed - could implement auto-save here');
+        // Form animasyonları ve validasyonlar
+        document.querySelectorAll('.form-control').forEach(el => {
+            el.addEventListener('focus', () => {
+                el.closest('.form-section').style.borderColor = 'rgba(139, 92, 246, 0.3)';
+            });
+            el.addEventListener('blur', () => {
+                el.closest('.form-section').style.borderColor = 'rgba(255, 255, 255, 0.08)';
+            });
         });
     </script>
-
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
 }
