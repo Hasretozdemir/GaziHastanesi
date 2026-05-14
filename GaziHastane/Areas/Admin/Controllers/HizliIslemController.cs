@@ -1,4 +1,4 @@
-﻿using GaziHastane.Data;
+using GaziHastane.Data;
 using GaziHastane.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -127,7 +127,7 @@ namespace GaziHastane.Areas.Admin.Controllers
             {
                 var eskiVeri = await _context.KaliteBelgeleri.AsNoTracking().FirstOrDefaultAsync(x => x.Id == model.Id);
 
-                if (model.FotoUrl == null) model.FotoUrl = eskiVeri?.FotoUrl;
+                model.FotoUrl ??= eskiVeri?.FotoUrl;
                 if (model.DosyaUrl == "#") model.DosyaUrl = eskiVeri?.DosyaUrl ?? "#";
 
                 model.YayinTarihi = DateTime.UtcNow;
@@ -154,133 +154,86 @@ namespace GaziHastane.Areas.Admin.Controllers
         // ==========================================
         // --- YEMEK LİSTESİ PANELİ ---
         // ==========================================
-        public IActionResult YemekListesi()
+        public async Task<IActionResult> YemekListesi()
         {
-            return View();
-        }
-
-        // ==========================================
-        // --- GÖRSELLER PANELİ (KURUMSAL SLIDER) ---
-        // ==========================================
-        public async Task<IActionResult> Gorsel()
-        {
-            var liste = await _context.Medyalar
-                .OrderBy(x => x.Alan)
-                .ThenBy(x => x.SiraNo)
-                .ThenByDescending(x => x.YuklenmeTarihi)
-                .ToListAsync();
-
+            var liste = await _context.YemekListesi.OrderByDescending(x => x.Tarih).ThenBy(x => x.Ogun).ToListAsync();
             return View(liste);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GorselYukle(string title, IFormFile imageFile, bool isSlider, string? hedefUrl, int siraNo = 0, string? alan = "Kurumsal")
+        public async Task<IActionResult> YemekEkle(YemekListesi model)
         {
-            if (imageFile == null || imageFile.Length == 0)
-            {
-                TempData["Error"] = "Lütfen bir görsel seçin.";
-                return RedirectToAction(nameof(Gorsel));
-            }
-
-            var seciliAlan = string.IsNullOrWhiteSpace(alan) ? "Kurumsal" : alan.Trim();
-            var alanKlasoru = seciliAlan.ToLowerInvariant().Replace(" ", "");
-            var uploadPath = Path.Combine(_env.WebRootPath, "uploads", "slider", alanKlasoru);
-            if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
-
-            var ext = Path.GetExtension(imageFile.FileName);
-            var fileName = Guid.NewGuid() + ext;
-            var fullPath = Path.Combine(uploadPath, fileName);
-
-            await using (var stream = new FileStream(fullPath, FileMode.Create))
-            {
-                await imageFile.CopyToAsync(stream);
-            }
-
-            var medya = new Medya
-            {
-                Baslik = title,
-                Alan = seciliAlan,
-                GorselYolu = "/uploads/slider/" + alanKlasoru + "/" + fileName,
-                IsSlider = isSlider,
-                HedefUrl = string.IsNullOrWhiteSpace(hedefUrl) ? null : hedefUrl.Trim(),
-                SiraNo = siraNo,
-                IsActive = true,
-                YuklenmeTarihi = DateTime.UtcNow
-            };
-
-            _context.Medyalar.Add(medya);
+            _context.YemekListesi.Add(model);
             await _context.SaveChangesAsync();
-
-            TempData["Success"] = "Kurumsal slider görseli eklendi.";
-            return RedirectToAction(nameof(Gorsel));
+            TempData["Success"] = "Yemek listesi güncellendi.";
+            return RedirectToAction("YemekListesi");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GorselDuzenle(int id, string title, bool isSlider, string? hedefUrl, int siraNo = 0, bool isActive = true, IFormFile? imageFile = null, string? alan = null)
+        public async Task<IActionResult> YemekSil(int id)
         {
-            var medya = await _context.Medyalar.FirstOrDefaultAsync(x => x.Id == id);
-            if (medya == null) return NotFound();
-
-            medya.Baslik = title;
-            medya.IsSlider = isSlider;
-            medya.HedefUrl = string.IsNullOrWhiteSpace(hedefUrl) ? null : hedefUrl.Trim();
-            medya.SiraNo = siraNo;
-            medya.IsActive = isActive;
-            if (!string.IsNullOrWhiteSpace(alan))
+            var veri = await _context.YemekListesi.FindAsync(id);
+            if (veri != null)
             {
-                medya.Alan = alan.Trim();
+                _context.YemekListesi.Remove(veri);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Öğün kaydı silindi.";
             }
+            return RedirectToAction("YemekListesi");
+        }
 
-            if (imageFile != null && imageFile.Length > 0)
+
+        public async Task<IActionResult> YemekListesiExcel()
+        {
+            var liste = await _context.YemekListesi.OrderByDescending(x => x.Tarih).ThenBy(x => x.Ogun).ToListAsync();
+
+            using var workbook = new ClosedXML.Excel.XLWorkbook();
             {
-                var alanKlasoru = medya.Alan.ToLowerInvariant().Replace(" ", "");
-                var uploadPath = Path.Combine(_env.WebRootPath, "uploads", "slider", alanKlasoru);
-                if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+                var worksheet = workbook.Worksheets.Add("Yemek Listesi");
+                
+                // Başlıklar
+                worksheet.Cell(1, 1).Value = "Tarih";
+                worksheet.Cell(1, 2).Value = "Gün";
+                worksheet.Cell(1, 3).Value = "Öğün";
+                worksheet.Cell(1, 4).Value = "Çorba";
+                worksheet.Cell(1, 5).Value = "Ana Yemek";
+                worksheet.Cell(1, 6).Value = "Yardımcı Yemek";
+                worksheet.Cell(1, 7).Value = "Tatlı / Meyve";
+                worksheet.Cell(1, 8).Value = "Kalori (Kcal)";
 
-                var ext = Path.GetExtension(imageFile.FileName);
-                var fileName = Guid.NewGuid() + ext;
-                var fullPath = Path.Combine(uploadPath, fileName);
+                // Başlık Stili
+                var headerRange = worksheet.Range(1, 1, 1, 8);
+                headerRange.Style.Font.Bold = true;
+                headerRange.Style.Fill.BackgroundColor = ClosedXML.Excel.XLColor.AliceBlue;
+                headerRange.Style.Border.OutsideBorder = ClosedXML.Excel.XLBorderStyleValues.Thin;
 
-                await using (var stream = new FileStream(fullPath, FileMode.Create))
+                // Veriler
+                for (int i = 0; i < liste.Count; i++)
                 {
-                    await imageFile.CopyToAsync(stream);
+                    var item = liste[i];
+                    int row = i + 2;
+
+                    worksheet.Cell(row, 1).Value = item.Tarih.ToString("dd.MM.yyyy");
+                    worksheet.Cell(row, 2).Value = item.Tarih.ToString("dddd");
+                    worksheet.Cell(row, 3).Value = item.Ogun switch { 1 => "Kahvaltı", 2 => "Öğle", 3 => "Akşam", _ => "-" };
+                    worksheet.Cell(row, 4).Value = item.Corba;
+                    worksheet.Cell(row, 5).Value = item.AnaYemek;
+                    worksheet.Cell(row, 6).Value = item.YardimciYemek;
+                    worksheet.Cell(row, 7).Value = item.TatliMeyve;
+                    worksheet.Cell(row, 8).Value = item.ToplamKalori;
                 }
 
-                medya.GorselYolu = "/uploads/slider/" + alanKlasoru + "/" + fileName;
+                worksheet.Columns().AdjustToContents();
+
+                using var stream = new MemoryStream();
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Yemek_Listesi_{DateTime.Now:yyyyMMdd}.xlsx");
+                }
             }
-
-            await _context.SaveChangesAsync();
-            TempData["Success"] = "Kurumsal slider görseli güncellendi.";
-            return RedirectToAction(nameof(Gorsel));
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GorselSil(int id)
-        {
-            var medya = await _context.Medyalar.FirstOrDefaultAsync(x => x.Id == id);
-            if (medya != null)
-            {
-                _context.Medyalar.Remove(medya);
-                await _context.SaveChangesAsync();
-            }
 
-            TempData["Success"] = "Görsel silindi.";
-            return RedirectToAction(nameof(Gorsel));
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SliderDurumGuncelle(int id, bool status)
-        {
-            var medya = await _context.Medyalar.FirstOrDefaultAsync(x => x.Id == id);
-            if (medya == null) return NotFound();
-
-            medya.IsSlider = status;
-            await _context.SaveChangesAsync();
-            return Ok();
-        }
 
         // ==========================================
         // --- ANA SAYFA SLIDER GÖRSELLERİ PANELİ ---
@@ -398,78 +351,6 @@ namespace GaziHastane.Areas.Admin.Controllers
             return Ok();
         }
 
-        // ==========================================
-        // --- BELGELER PANELİ ---
-        // ==========================================
-        public async Task<IActionResult> Belge()
-        {
-            var liste = await _context.Belgeler
-                .OrderByDescending(x => x.YuklenmeTarihi)
-                .ToListAsync();
-            return View(liste);
-        }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> BelgeYukle(string title, IFormFile? file, string? externalUrl)
-        {
-            string? dosyaYolu = null;
-
-            if (file != null && file.Length > 0)
-            {
-                var uploadPath = Path.Combine(_env.WebRootPath, "uploads", "belgeler");
-                if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
-
-                var ext = Path.GetExtension(file.FileName);
-                var fileName = Guid.NewGuid() + ext;
-                var fullPath = Path.Combine(uploadPath, fileName);
-
-                await using (var stream = new FileStream(fullPath, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-
-                dosyaYolu = "/uploads/belgeler/" + fileName;
-            }
-            else if (!string.IsNullOrWhiteSpace(externalUrl))
-            {
-                dosyaYolu = externalUrl.Trim();
-            }
-
-            if (string.IsNullOrWhiteSpace(dosyaYolu))
-            {
-                TempData["Error"] = "Belge dosyası veya harici URL giriniz.";
-                return RedirectToAction(nameof(Belge));
-            }
-
-            var belge = new Belge
-            {
-                Baslik = string.IsNullOrWhiteSpace(title) ? "Belge" : title.Trim(),
-                DosyaYolu = dosyaYolu,
-                DosyaTipi = Path.GetExtension(dosyaYolu),
-                YuklenmeTarihi = DateTime.UtcNow,
-                IsActive = true
-            };
-
-            _context.Belgeler.Add(belge);
-            await _context.SaveChangesAsync();
-            TempData["Success"] = "Belge kaydedildi.";
-            return RedirectToAction(nameof(Belge));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> BelgeSil(int id)
-        {
-            var belge = await _context.Belgeler.FindAsync(id);
-            if (belge != null)
-            {
-                _context.Belgeler.Remove(belge);
-                await _context.SaveChangesAsync();
-                TempData["Success"] = "Belge silindi.";
-            }
-
-            return RedirectToAction(nameof(Belge));
-        }
     }
 }

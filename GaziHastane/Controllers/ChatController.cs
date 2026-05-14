@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -65,11 +65,11 @@ namespace GaziHastane.Controllers
             // 2. Yapay Zeka Kuralları (Özel verileri koruma kalkanımız)
             string systemPrompt = $@"Sen Gazi Hastanesi'nin resmi dijital asistanısın. 
 Kuralların şunlardır:
-1. Gelen sorulara SADECE aşağıda verdiğim 'Hastane Veritabanı Bilgileri' kısmını kullanarak cevap ver.
-2. Sana verilen veritabanı bilgilerinde sorunun cevabı YOKSA, kesinlikle internetten bilgi uydurma ve 'Bu konuda detaylı bilgiye şu an ulaşamıyorum, lütfen hastanemizin iletişim kanallarını kullanın.' de.
+1. Öncelikli olarak aşağıda sağlanan 'Hastane Veritabanı Bilgileri' kısmını kullanarak cevap ver.
+2. Eğer soru hastane ile ilgiliyse ve veritabanında bilgi yoksa, genel hastane işleyişi ve sağlık protokolleri hakkında (tıbbi tavsiye vermeden) bilgilendirici ol. 
 3. KESİNLİKLE kullanıcılardan TC Kimlik No, tahlil sonucu, randevu numarası, ödeme bilgisi veya şifre isteme! Eğer tahlil, randevu veya borç sorarlarsa: 'Kişisel veri güvenliği kuralları gereği tahlil, randevu ve ödeme işlemlerinizi bu ekran üzerinden yapamıyoruz. Lütfen hasta panelimizi kullanınız.' de.
-4. Asla tıbbi tavsiye (şu ilacı kullan, şu teşhis konulur vb.) verme. Sadece hastanenin işleyişi hakkında bilgi ver.
-5. Cevapların kısa, net, kibar ve okunabilir olsun.
+4. Asla tıbbi teşhis koyma veya ilaç reçete etme. Sadece hastanenin birimleri ve işleyişi hakkında rehberlik yap.
+5. Cevapların profesyonel, yardımsever ve çözüm odaklı olsun.
 
 Hastane Veritabanı Bilgileri:
 {dbContextInfo}";
@@ -84,8 +84,8 @@ Hastane Veritabanı Bilgileri:
                 return Json(new { success = false, reply = "Yapay zeka servis anahtarı appsettings.json dosyasında bulunamadı." });
             }
 
-            // Google'ın en güncel ve çalışan 2.5 Flash modeli
-            string endpoint = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
+            // Google'ın güncel ve stabil Gemini 1.5 Flash modeli
+            string endpoint = $"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={apiKey}";
 
             var payload = new
             {
@@ -136,12 +136,12 @@ Hastane Veritabanı Bilgileri:
             var terms = ExtractTerms(normalizedMessage);
 
             // 1. DOKTORLAR TABLOSU
-            if (ContainsAny(normalizedMessage, "doktor", "hekim", "uzman", "prof", "doç"))
+            if (ContainsAny(normalizedMessage, "doktor", "hekim", "uzman", "prof", "doç", "kim", "hoca", "tabip"))
             {
                 var doktorlar = await _context.Doktorlar
                     .Include(d => d.Bolum)
                     .Where(d => d.IsActive)
-                    .Take(50)
+                    .Take(100)
                     .ToListAsync();
 
                 var filtreliDoktorlar = doktorlar
@@ -160,6 +160,7 @@ Hastane Veritabanı Bilgileri:
                     contextBuilder.AppendLine("Doktor Bilgileri:");
                     foreach (var dr in hedefDoktorlar)
                     {
+                        if (dr == null) continue;
                         var unvan = string.IsNullOrWhiteSpace(dr.Unvan) ? "Dr." : dr.Unvan;
                         var bolumAdi = dr.Bolum?.Ad;
                         var uzmanlik = dr.UzmanlikAlani;
@@ -173,11 +174,11 @@ Hastane Veritabanı Bilgileri:
             }
 
             // 2. BÖLÜMLER TABLOSU
-            if (ContainsAny(normalizedMessage, "bölüm", "klinik", "poliklinik", "hangi", "birim"))
+            if (ContainsAny(normalizedMessage, "bölüm", "klinik", "poliklinik", "hangi", "birim", "servis", "ünite"))
             {
                 var bolumler = await _context.Bolumler
                     .Where(b => b.IsActive)
-                    .Take(50)
+                    .Take(100)
                     .ToListAsync();
                 var filtreliBolumler = bolumler
                     .Where(b => terms.Any(t => b.Ad.ToLower(new CultureInfo("tr-TR")).Contains(t)))
@@ -317,9 +318,9 @@ Hastane Veritabanı Bilgileri:
             }
 
             // 5. ETKİNLİKLER TABLOSU
-            if (ContainsAny(normalizedMessage, "etkinlik", "program", "toplantı", "kongre", "seminer"))
+            if (ContainsAny(normalizedMessage, "etkinlik", "program", "toplantı", "kongre", "seminer", "konferans"))
             {
-                var etkinlikler = await _context.Etkinlikler.OrderByDescending(e => e.Id).Take(3).ToListAsync();
+                var etkinlikler = await _context.Etkinlikler.OrderByDescending(e => e.Id).Take(10).ToListAsync();
                 if (etkinlikler.Any())
                 {
                     contextBuilder.AppendLine("Yaklaşan Etkinlikler:");
@@ -485,6 +486,7 @@ Hastane Veritabanı Bilgileri:
                     contextBuilder.AppendLine("Yerleşim Bilgileri:");
                     foreach (var birim in ilgiliBirimler)
                     {
+                        if (birim == null) continue;
                         var blok = birim.Kat?.Blok?.BlokAdi ?? "Bilinmiyor";
                         var kat = birim.Kat?.KatAdi ?? "Bilinmiyor";
                         contextBuilder.AppendLine($"- {birim.BirimAdi} | Blok: {blok} | Kat: {kat}");
@@ -532,7 +534,54 @@ Hastane Veritabanı Bilgileri:
                 }
             }
 
-            // HİÇBİR EŞLEŞME YOKSA
+            // 12. DİĞER KURUMSAL İÇERİKLER (Yeni eklendi)
+            if (contextBuilder.Length < 4000) 
+            {
+                var kurumsalIcerikler = await _context.KurumsalIcerikler.Where(x => x.AktifMi).OrderByDescending(x => x.Id).Take(10).ToListAsync();
+                if (kurumsalIcerikler.Any())
+                {
+                    contextBuilder.AppendLine("Kurumsal Birim Detayları:");
+                    foreach (var icerik in kurumsalIcerikler)
+                    {
+                        contextBuilder.AppendLine($"- {icerik.Baslik}: {icerik.Aciklama}");
+                    }
+                }
+                
+                var kurumsalSekmeler = await _context.KurumsalSekmeler.Where(x => x.AktifMi).OrderBy(x => x.Sira).Take(10).ToListAsync();
+                if (kurumsalSekmeler.Any())
+                {
+                    contextBuilder.AppendLine("Kurumsal Sayfa İçerikleri:");
+                    foreach (var sekme in kurumsalSekmeler)
+                    {
+                        contextBuilder.AppendLine($"- {sekme.Baslik}: {sekme.Icerik}");
+                    }
+                }
+
+                var basinIletisim = await _context.BasinKurumsalIletisimler.Where(x => x.IsActive).FirstOrDefaultAsync();
+                if (basinIletisim != null)
+                {
+                    contextBuilder.AppendLine($"Basın ve Kurumsal İletişim: {basinIletisim.Aciklama} | Tel: {basinIletisim.Telefon} | E-posta: {basinIletisim.Email} | Konum: {basinIletisim.Lokasyon}");
+                }
+            }
+
+            // HİÇBİR EŞLEŞME YOKSA VEYA GENEL SORULAR İÇİN (Catch-all)
+            if (contextBuilder.Length < 500)
+            {
+                var sonDuyurular = await _context.Duyurular.Where(x => x.IsActive).OrderByDescending(x => x.Id).Take(3).ToListAsync();
+                if (sonDuyurular.Any())
+                {
+                    contextBuilder.AppendLine("Güncel Duyurular:");
+                    foreach (var d in sonDuyurular) contextBuilder.AppendLine($"- {d.Baslik}");
+                }
+
+                var rastgeleBolumler = await _context.Bolumler.Where(x => x.IsActive).Take(5).ToListAsync();
+                if (rastgeleBolumler.Any())
+                {
+                    contextBuilder.AppendLine("Hastanemizdeki Bazı Bölümler:");
+                    foreach (var b in rastgeleBolumler) contextBuilder.AppendLine($"- {b.Ad}");
+                }
+            }
+
             if (contextBuilder.Length == 0)
             {
                 contextBuilder.AppendLine("Gazi Hastanesi dijital asistanına hoş geldiniz. Doktorlarımız, bölümlerimiz, ulaşım, etkinlikler ve hastane işleyişimiz hakkında bana her şeyi sorabilirsiniz.");

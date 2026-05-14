@@ -23,6 +23,18 @@ namespace GaziHastane.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
+            // Temizlik: Gereksiz/Örnek alt sekmeleri veritabanından temizle
+            var silinecekler = new string[] { "Tarihçemiz", "Misyon & Vizyon", "Stratejik Plan & Raporlar", "Yönetmelik", "Amaç ve Hedeflerimiz", "Sağlık Rehberleri", "Hastanemiz Uyum Rehberi", "Eğitim Komitesi" };
+            var ornekSekmeler = await _context.KurumsalSekmeler
+                .Where(x => silinecekler.Contains(x.Baslik))
+                .ToListAsync();
+
+            if (ornekSekmeler.Any())
+            {
+                _context.KurumsalSekmeler.RemoveRange(ornekSekmeler);
+                await _context.SaveChangesAsync();
+            }
+
             // Eer Hakkimizda mens yoksa veritabanna ekle (Ynetim kolayl iin)
             bool hasHakkimizda = await _context.AdminMenuItems.AnyAsync(x => x.Controller == "Kurumsal" && x.Action == "Hakkimizda");
             if (!hasHakkimizda)
@@ -663,7 +675,7 @@ namespace GaziHastane.Areas.Admin.Controllers
             // Örnek verileri temizle
             var silinecekler = new string[] { "Tarihçemiz", "Misyon & Vizyon", "Stratejik Plan & Raporlar", "Yönetmelik", "Amaç ve Hedeflerimiz", "Sağlık Rehberleri", "Hastanemiz Uyum Rehberi", "Eğitim Komitesi" };
             var ornekSekmeler = await _context.KurumsalSekmeler
-                .Where(x => x.SayfaKey == "hakkimizda" && silinecekler.Contains(x.Baslik))
+                .Where(x => silinecekler.Contains(x.Baslik))
                 .ToListAsync();
 
             if (ornekSekmeler.Any())
@@ -673,7 +685,7 @@ namespace GaziHastane.Areas.Admin.Controllers
             }
 
             var model = await _context.KurumsalSekmeler
-                .Where(x => x.SayfaKey == "hakkimizda")
+                .Where(x => x.SayfaKey == "hakkimizda" || x.SayfaKey == "Hakkimizda" || x.SayfaKey == "Index")
                 .OrderBy(x => x.Sira)
                 .ToListAsync();
             

@@ -50,7 +50,7 @@ namespace GaziHastane.Models
         public virtual ICollection<TahlilSonuc> TahlilSonuclari { get; set; } = new List<TahlilSonuc>();
         public virtual ICollection<BorcOdeme> BorclarOdemeler { get; set; } = new List<BorcOdeme>();
     }
-    // 1. Bolumler Table
+
     [Table("Bolumler")]
     public class Bolum
     {
@@ -74,11 +74,11 @@ namespace GaziHastane.Models
 
         [Column("blok")]
         [StringLength(50)]
-        public string? Blok { get; set; } // �rn: "A Blok", "Ana Bina"
+        public string? Blok { get; set; }
 
         [Column("kat")]
         [StringLength(50)]
-        public string? Kat { get; set; } // �rn: "Zemin Kat", "1. Kat"
+        public string? Kat { get; set; }
 
         [Column("isactive")]
         public bool IsActive { get; set; } = true;
@@ -86,14 +86,10 @@ namespace GaziHastane.Models
         [NotMapped]
         public IFormFile? GorselDosya { get; set; }
 
-        // B�L�M -> DOKTORLAR �L��K�S�: Bu b�l�mdeki t�m doktorlar� getirir.
         public virtual ICollection<Doktor> Doktorlar { get; set; } = new List<Doktor>();
-
-        // B�L�M -> RANDEVULAR �L��K�S�
         public virtual ICollection<Randevu> Randevular { get; set; } = new List<Randevu>();
     }
 
-    // 2. Doktorlar Table
     [Table("Doktorlar")]
     public class Doktor
     {
@@ -106,12 +102,11 @@ namespace GaziHastane.Models
         [ForeignKey("KullaniciId")]
         public virtual User? Kullanici { get; set; }
 
-        // DOKTOR -> B�L�M �L��K�S� (Foreign Key)
         [Column("bolumid")]
         public int? BolumId { get; set; }
 
         [ForeignKey("BolumId")]
-        public virtual Bolum? Bolum { get; set; } // Doktorun ba�l� oldu�u b�l�m
+        public virtual Bolum? Bolum { get; set; }
 
         [Column("hekimtipi")]
         public short HekimTipi { get; set; }
@@ -151,12 +146,10 @@ namespace GaziHastane.Models
         [NotMapped]
         public IFormFile? GorselDosya { get; set; }
 
-        // DOKTOR -> RANDEVULAR / TAHL�LLER
         public virtual ICollection<Randevu> Randevular { get; set; } = new List<Randevu>();
         public virtual ICollection<TahlilSonuc> TahlilSonuclari { get; set; } = new List<TahlilSonuc>();
     }
 
-    // 3. Randevular Table
     [Table("Randevular")]
     public class Randevu
     {
@@ -187,7 +180,7 @@ namespace GaziHastane.Models
         public short Durum { get; set; }
 
         [Column("randevutipi")]
-        public short RandevuTipi { get; set; } = 1; // 1: Muayene, 2: Sonu�
+        public short RandevuTipi { get; set; } = 1;
 
         [Column("sikayet")]
         public string? Sikayet { get; set; }
@@ -195,7 +188,7 @@ namespace GaziHastane.Models
         [Column("olusturulmatarihi")]
         public DateTime OlusturulmaTarihi { get; set; } = DateTime.UtcNow;
     }
-    // 5. TahlilSonuclari Table
+
     [Table("TahlilSonuclari")]
     public class TahlilSonuc
     {
@@ -230,7 +223,6 @@ namespace GaziHastane.Models
         public string? RaporDosyaUrl { get; set; }
     }
 
-    // 6. BorclarOdemeler Table
     [Table("BorclarOdemeler")]
     public class BorcOdeme
     {
@@ -265,7 +257,6 @@ namespace GaziHastane.Models
         public DateTime? EklenmeTarihi { get; set; }
     }
 
-    // 7. YemekListesi Table
     [Table("YemekListesi")]
     public class YemekListesi
     {
@@ -293,7 +284,6 @@ namespace GaziHastane.Models
         public int? ToplamKalori { get; set; }
     }
 
-    // 8. Duyurular Table
     [Table("Duyurular")]
     public class Duyuru
     {
@@ -323,28 +313,25 @@ namespace GaziHastane.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Belge veya sayfa ba�l��� zorunludur.")]
+        [Required]
         [StringLength(255)]
-        public string BelgeAdi { get; set; } = null!; // Kart�n Ba�l���
+        public string BelgeAdi { get; set; } = null!;
 
         [StringLength(100)]
-        public string? Kategori { get; set; } // Organizasyon �emas�, Kalite Ekibi vb.
+        public string? Kategori { get; set; }
 
-        // --- YAZI YAZMA KISMI ---
-        // Uzun metinler veya HTML kodlar� (CKEditor i�eri�i gibi) burada tutulacak.
         public string? Aciklama { get; set; }
 
-        // --- FOTO�RAF EKLEME KISMI ---
         [StringLength(255)]
         public string? FotoUrl { get; set; }
 
-        // --- BELGE EKLEME KISMI ---
         [Required]
         [StringLength(255)]
-        public string DosyaUrl { get; set; } = null!; // PDF, Docx vb. dosya yolu
+        public string DosyaUrl { get; set; } = null!;
 
         public DateTime YayinTarihi { get; set; } = DateTime.UtcNow;
     }
+
     [Table("EgitimIcerikleri")]
     public class EgitimKarti
     {
@@ -352,39 +339,34 @@ namespace GaziHastane.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Kart ba�l��� zorunludur.")]
+        [Required]
         [StringLength(150)]
-        public string Baslik { get; set; } = null!; // �rn: E�itim Komitesi
+        public string Baslik { get; set; } = null!;
 
         [StringLength(255)]
-        public string? KisaAciklama { get; set; } // �rn: Y�r�tme kurulu ve �yelerimiz.
+        public string? KisaAciklama { get; set; }
 
         [StringLength(50)]
-        public string? Ikon { get; set; } // �rn: fa-users-crown
+        public string? Ikon { get; set; }
 
         [StringLength(50)]
-        public string? Renk { get; set; } // �rn: text-blue-400
+        public string? Renk { get; set; }
 
         [StringLength(50)]
-        public string? Tip { get; set; } // "Panel" (Modal a�ar) veya "Link" (Sayfaya gider)
+        public string? Tip { get; set; }
 
         [StringLength(255)]
-        public string? Hedef { get; set; } // �rn: /Egitim/Index veya #hakkimizdaPanel
+        public string? Hedef { get; set; }
 
-        // --- ZENG�N ��ER�K B�L�M� (CKEditor) ---
-        public string? Icerik { get; set; } // Modal i�inde g�r�necek HTML metin
-
-        // --- MEDYA VE DOSYA B�L�M� ---
-        [StringLength(255)]
-        public string? FotoUrl { get; set; } // Modal kapak foto�raf�
+        public string? Icerik { get; set; }
 
         [StringLength(255)]
-        public string? DosyaUrl { get; set; } = "#"; // �ndirilebilir PDF/Doc dosyas�
+        public string? FotoUrl { get; set; }
+
+        [StringLength(255)]
+        public string? DosyaUrl { get; set; } = "#";
     }
 
-
-
-    // 11. HastaRehberi Table
     [Table("HastaRehberi")]
     public class HastaRehberi
     {
@@ -402,7 +384,7 @@ namespace GaziHastane.Models
         public string? ModalIcerik { get; set; }
 
         [StringLength(20)]
-        public string AcilisTipi { get; set; } = "Modal"; // Modal / Link
+        public string AcilisTipi { get; set; } = "Modal";
 
         [StringLength(500)]
         public string? HedefUrl { get; set; }
@@ -418,7 +400,6 @@ namespace GaziHastane.Models
         public string? Tema { get; set; }
     }
 
-    // 12. Iletisim Table
     [Table("Iletisim")]
     public class Iletisim
     {
@@ -466,7 +447,6 @@ namespace GaziHastane.Models
         public bool IsActive { get; set; } = true;
     }
 
-    // 13. UlasimRehberi Table
     [Table("UlasimRehberi")]
     public class UlasimRehberi
     {
@@ -488,7 +468,6 @@ namespace GaziHastane.Models
         public bool IsActive { get; set; } = true;
     }
 
-    // 14. Haberler Table
     [Table("Haberler")]
     public class Haber
     {
@@ -516,7 +495,6 @@ namespace GaziHastane.Models
         public bool IsActive { get; set; } = true;
     }
 
-    // 15. Etkinlikler Table
     [Table("Etkinlikler")]
     public class Etkinlik
     {
@@ -552,7 +530,6 @@ namespace GaziHastane.Models
         public bool IsActive { get; set; } = true;
     }
 
-    // 16. Yetkililer Table
     [Table("Yetkililer")]
     public class Yetkili
     {
@@ -574,7 +551,7 @@ namespace GaziHastane.Models
         public string SifreHash { get; set; } = null!;
 
         [StringLength(50)]
-        public string Rol { get; set; } = "Y�netici";
+        public string Rol { get; set; } = "Yönetici";
 
         [StringLength(2000)]
         public string? AdminSayfaYetkileri { get; set; }
@@ -589,33 +566,6 @@ namespace GaziHastane.Models
         public List<string> SecilenSayfaYetkileri { get; set; } = new();
     }
 
-    // --- YEN� EKLENEN TABLOLAR ---
-
-    // 17. Belgeler Table (Genel Dosya Y�netimi)
-    [Table("Belgeler")]
-    public class Belge
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
-        [Required]
-        [StringLength(255)]
-        public string Baslik { get; set; } = null!;
-
-        [Required]
-        [StringLength(500)]
-        public string DosyaYolu { get; set; } = null!; // wwwroot alt�ndaki konumu
-
-        [StringLength(50)]
-        public string? DosyaTipi { get; set; } // .pdf, .docx vb.
-
-        public DateTime YuklenmeTarihi { get; set; } = DateTime.UtcNow;
-
-        public bool IsActive { get; set; } = true;
-    }
-
-    // 18. Medya Table (G�rsel ve Slider Y�netimi)
     [Table("Medya")]
     public class Medya
     {
@@ -627,25 +577,24 @@ namespace GaziHastane.Models
         public string? Baslik { get; set; }
 
         [StringLength(50)]
-        public string Alan { get; set; } = "Genel"; // Genel, Kurumsal vb.
+        public string Alan { get; set; } = "Genel";
 
         [Required]
         [StringLength(500)]
         public string GorselYolu { get; set; } = null!;
 
         [StringLength(500)]
-        public string? HedefUrl { get; set; } // T�klan�nca gidilecek sayfa
+        public string? HedefUrl { get; set; }
 
-        public bool IsSlider { get; set; } = false; // Slider'da g�r�n�p g�r�nmeyece�i
+        public bool IsSlider { get; set; } = false;
 
-        public int SiraNo { get; set; } = 0; // Slider'daki g�r�nt�lenme s�ras�
+        public int SiraNo { get; set; } = 0;
 
         public DateTime YuklenmeTarihi { get; set; } = DateTime.UtcNow;
 
         public bool IsActive { get; set; } = true;
     }
 
-    // 19. Kroki Yerle�im Table (Dinamik Harita ��in)
     [Table("KrokiBirimleri")]
     public class KrokiBirim
     {
@@ -655,93 +604,89 @@ namespace GaziHastane.Models
 
         [Required]
         [StringLength(50)]
-        public string KatAdi { get; set; } = null!; // �rn: "Zemin Kat", "1. Kat" (Sekmeler i�in)
+        public string KatAdi { get; set; } = null!;
 
         [Required]
         [StringLength(100)]
-        public string Baslik { get; set; } = null!; // Odada yazacak yaz� (�rn: "DANI�MA", "WC")
+        public string Baslik { get; set; } = null!;
 
         [StringLength(500)]
-        public string? Aciklama { get; set; } // �st�ne t�klan�nca a��lacak a��klama
+        public string? Aciklama { get; set; }
 
         [StringLength(50)]
-        public string? Ikon { get; set; } // FontAwesome (�rn: "fa-solid fa-circle-info")
+        public string? Ikon { get; set; }
 
         [Required]
         [StringLength(20)]
-        public string GridColumn { get; set; } = "1 / 2"; // Grid S�tun Konumu (�rn: "1 / 3")
+        public string GridColumn { get; set; } = "1 / 2";
 
         [Required]
         [StringLength(20)]
-        public string GridRow { get; set; } = "1 / 2"; // Grid Sat�r Konumu (�rn: "1 / 3")
+        public string GridRow { get; set; } = "1 / 2";
 
         [StringLength(50)]
-        public string TipSinifi { get; set; } = "room"; // Stil s�n�f�: "room", "room wc", "corridor" vb.
+        public string TipSinifi { get; set; } = "room";
 
-        // E�er bu alan bir poliklinikse, veritaban�ndaki Bolum'e ba�la (Zorunlu de�il, WC vb. i�in bo� kal�r)
         public int? BolumId { get; set; }
         [ForeignKey("BolumId")]
         public virtual Bolum? Bolum { get; set; }
     }
 
+    public class BashekimlikPersonel
+    {
+        [Key]
+        public int Id { get; set; }
 
-        public class BashekimlikPersonel
-        {
-            [Key]
-            public int Id { get; set; }
+        [Required]
+        public string AdSoyad { get; set; } = string.Empty;
 
-            [Required(ErrorMessage = "Ad Soyad zorunludur.")]
-            public string AdSoyad { get; set; } = string.Empty;
+        [Required]
+        public string Unvan { get; set; } = string.Empty;
 
-            [Required(ErrorMessage = "Unvan zorunludur.")]
-            public string Unvan { get; set; } = string.Empty;
+        public bool IsBashekim { get; set; }
 
-            // True ise Ba�hekim, False ise Yard�mc� olacak
-            public bool IsBashekim { get; set; }
+        public string UzmanlikAlani { get; set; } = string.Empty;
 
-            public string UzmanlikAlani { get; set; } = string.Empty;
+        public string KurumBilgisi { get; set; } = string.Empty;
 
-            public string KurumBilgisi { get; set; } = string.Empty;
+        public string FotografYolu { get; set; } = string.Empty;
 
-            public string FotografYolu { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
 
-            public string Email { get; set; } = string.Empty;
+        public string CvYolu { get; set; } = string.Empty;
 
-            public string CvYolu { get; set; } = string.Empty;
+        public int Sira { get; set; }
 
-            public int Sira { get; set; } // S�ralama i�in
+        public bool AktifMi { get; set; } = true;
+    }
 
-            public bool AktifMi { get; set; } = true;
-        }
+    public class BasmudurlikPersonel
+    {
+        [Key]
+        public int Id { get; set; }
 
-        public class BasmudurlikPersonel
-        {
-            [Key]
-            public int Id { get; set; }
+        [Required]
+        public string AdSoyad { get; set; } = string.Empty;
 
-            [Required(ErrorMessage = "Ad Soyad zorunludur.")]
-            public string AdSoyad { get; set; } = string.Empty;
+        [Required]
+        public string Unvan { get; set; } = string.Empty;
 
-            [Required(ErrorMessage = "Unvan zorunludur.")]
-            public string Unvan { get; set; } = string.Empty;
+        public bool IsBasmudur { get; set; }
 
-            // True ise Ba�m�d�r, False ise Yard�mc� olacak
-            public bool IsBasmudur { get; set; }
+        public string UzmanlikAlani { get; set; } = string.Empty;
 
-            public string UzmanlikAlani { get; set; } = string.Empty;
+        public string KurumBilgisi { get; set; } = string.Empty;
 
-            public string KurumBilgisi { get; set; } = string.Empty;
+        public string FotografYolu { get; set; } = string.Empty;
 
-            public string FotografYolu { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
 
-            public string Email { get; set; } = string.Empty;
+        public string CvYolu { get; set; } = string.Empty;
 
-            public string CvYolu { get; set; } = string.Empty;
+        public int Sira { get; set; }
 
-            public int Sira { get; set; } // S�ralama i�in
-
-            public bool AktifMi { get; set; } = true;
-        }
+        public bool AktifMi { get; set; } = true;
+    }
 
     [Table("ArsivSekmeler")]
     public class ArsivSekme
@@ -752,22 +697,19 @@ namespace GaziHastane.Models
 
         [Required]
         [StringLength(100)]
-        public string Baslik { get; set; } = null!; // Men�deki Ad�: (�rn: Hakk�m�zda)
+        public string Baslik { get; set; } = null!;
 
         [Required]
         [StringLength(50)]
-        public string TabId { get; set; } = null!; // div id'si ve URL i�in (�rn: genel-bilgi)
+        public string TabId { get; set; } = null!;
 
         [StringLength(50)]
-        public string? Ikon { get; set; } // (�rn: fa-box-archive)
+        public string? Ikon { get; set; }
 
-        // Dinamik sayfalar i�in kullan�lacak CKEditor i�eri�i
         public string? Icerik { get; set; }
 
         public int SiraNo { get; set; } = 1;
 
-        // E�ER TRUE �SE: Senin tasarlad���n sabit HTML bas�l�r.
-        // E�ER FALSE �SE: Veritaban�ndaki "Icerik" k�sm� bas�l�r.
         public bool SabitTasarimMi { get; set; } = false;
 
         public bool IsActive { get; set; } = true;
@@ -782,22 +724,22 @@ namespace GaziHastane.Models
 
         [Required]
         [StringLength(100)]
-        public string Baslik { get; set; } = null!; // "Online<br>Randevu" �eklinde HTML destekli veya d�z metin kaydedebilirsiniz.
+        public string Baslik { get; set; } = null!;
 
         [Required]
         [StringLength(50)]
-        public string Ikon { get; set; } = null!; // �rn: "fa-solid fa-calendar-check"
+        public string Ikon { get; set; } = null!;
 
         [Required]
         [StringLength(255)]
-        public string Url { get; set; } = null!; // �rn: "/Randevu/Giris" veya "https://..."
+        public string Url { get; set; } = null!;
 
-        public bool YeniSekme { get; set; } = false; // Farkl� siteye gidecekse "_blank" tetiklemek i�in
+        public bool YeniSekme { get; set; } = false;
 
         [StringLength(20)]
-        public string TemaRengi { get; set; } = "blue"; // blue, teal, cyan, indigo, violet, sky, rose vb. Tailwind renkleri
+        public string TemaRengi { get; set; } = "blue";
 
-        public int SiraNo { get; set; } = 1; // S�ralama yapmak i�in
+        public int SiraNo { get; set; } = 1;
 
         public bool IsActive { get; set; } = true;
     }
@@ -840,10 +782,10 @@ namespace GaziHastane.Models
 
         [Required]
         [StringLength(50)]
-        public string Section { get; set; } = null!; // Main, System, Content, KurumsalSub, Security
+        public string Section { get; set; } = null!;
 
         [StringLength(50)]
-        public string? PermissionKey { get; set; } // AdminPanelPermissions key
+        public string? PermissionKey { get; set; }
 
         [Required]
         [StringLength(255)]
@@ -957,7 +899,7 @@ namespace GaziHastane.Models
         public string Baslik { get; set; } = "Basın ve Kurumsal İletişim Birimi";
 
         [Required]
-        public string? Aciklama { get; set; } // Birimin açıklaması
+        public string? Aciklama { get; set; }
 
         [StringLength(50)]
         public string? Telefon { get; set; }
@@ -967,7 +909,7 @@ namespace GaziHastane.Models
         public string? Email { get; set; }
 
         [StringLength(150)]
-        public string? Lokasyon { get; set; } // Ofis konumu (E Blok 11. Kat)
+        public string? Lokasyon { get; set; }
 
         public DateTime SonGuncelleme { get; set; } = DateTime.UtcNow;
 

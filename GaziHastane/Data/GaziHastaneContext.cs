@@ -14,7 +14,7 @@ namespace GaziHastane.Data
         public DbSet<TahlilSonuc> TahlilSonuclari { get; set; }
         public DbSet<BorcOdeme> BorclarOdemeler { get; set; }
         public DbSet<YemekListesi> YemekListesi { get; set; }
-        public DbSet<Duyuru> Duyurular { get; set; }
+        public virtual DbSet<Duyuru> Duyurular { get; set; }
         public DbSet<KaliteBelgesi> KaliteBelgeleri { get; set; }
         public DbSet<EgitimKarti> EgitimIcerikleri { get; set; }
         public DbSet<HastaRehberi> HastaRehberleri { get; set; }
@@ -26,10 +26,10 @@ namespace GaziHastane.Data
         public DbSet<UlasimRehberi> UlasimRehberleri { get; set; }
 
         public DbSet<Yetkili> Yetkililer { get; set; }
-        public DbSet<Haber> Haberler { get; set; }
-        public DbSet<Etkinlik> Etkinlikler { get; set; }
+        public virtual DbSet<Haber> Haberler { get; set; }
+        public virtual DbSet<Etkinlik> Etkinlikler { get; set; }
         public DbSet<Medya> Medyalar { get; set; }
-        public DbSet<Belge> Belgeler { get; set; }
+
         public DbSet<KurumsalMenuGrup> KurumsalMenuGruplar { get; set; }
         public DbSet<KurumsalMenu> KurumsalMenuler { get; set; }
         public DbSet<KurumsalSayfa> KurumsalSayfalar { get; set; }

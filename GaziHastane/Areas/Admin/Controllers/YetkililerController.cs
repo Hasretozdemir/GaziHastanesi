@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using GaziHastane.Data;
@@ -16,21 +16,18 @@ namespace GaziHastane.Areas.Admin.Controllers
         private readonly GaziHastaneContext _context;
         public YetkililerController(GaziHastaneContext context) { _context = context; }
 
-        [Authorize(Roles = "Süper Admin")]
         public IActionResult Index()
         {
             return View(_context.Yetkililer.OrderByDescending(y => y.KayitTarihi).ToList());
         }
 
         // EKLEME SAYFASINI AÇAR
-        [Authorize(Roles = "Süper Admin")]
         public IActionResult Create()
         {
             ViewBag.AdminSayfaYetkileri = AdminPanelPermissions.All;
             return View();
         }
 
-        [Authorize(Roles = "Süper Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Yetkili yetkili)
@@ -52,7 +49,6 @@ namespace GaziHastane.Areas.Admin.Controllers
         }
 
         // DÜZENLEME SAYFASINI AÇAR
-        [Authorize(Roles = "Süper Admin")]
         public IActionResult Edit(int id)
         {
             var yetkili = _context.Yetkililer.Find(id);
@@ -63,7 +59,6 @@ namespace GaziHastane.Areas.Admin.Controllers
             return View(yetkili);
         }
 
-        [Authorize(Roles = "Süper Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Yetkili yetkili)
@@ -87,7 +82,6 @@ namespace GaziHastane.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Süper Admin")]
         public IActionResult Delete(int id)
         {
             var yetkili = _context.Yetkililer.Find(id);

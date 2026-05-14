@@ -255,7 +255,7 @@ namespace GaziHastane.Controllers
 
                 return Json(slotlar.Select(x => new { saat = x.Saat, musait = x.Musait, dolu = x.Dolu, ogleMolasi = x.OgleMolasi }).ToList());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Json(new { success = false, message = "Saatler hesaplan�rken sunucu hatas� olu�tu." });
             }

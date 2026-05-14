@@ -1,4 +1,4 @@
-﻿@using System.Security.Claims
+@using System.Security.Claims
 @using System.Linq
 @using GaziHastane.Security
 @inject GaziHastane.Data.GaziHastaneContext Db
@@ -128,31 +128,44 @@
                 menuItems = new List<GaziHastane.Models.AdminMenuItem>();
             }
 
-            var mainLinks = (menuItems.Any()
-                    ? AdminPanelPermissions.BuildSidebarLinks(menuItems, "Main")
-                    : AdminPanelPermissions.MainScreenLinks.ToList())
-                .Where(x => string.IsNullOrWhiteSpace(x.PermissionKey) || AdminPanelPermissions.UserHasPermission(User, x.PermissionKey))
-                .ToList();
+            var mainLinks = AdminPanelPermissions.MainScreenLinks.ToList();
+            if (menuItems.Any())
+            {
+                var dbMain = AdminPanelPermissions.BuildSidebarLinks(menuItems, "Main");
+                foreach (var item in dbMain) { if (!mainLinks.Any(x => x.Url == item.Url)) mainLinks.Add(item); }
+            }
+            mainLinks = mainLinks.Where(x => string.IsNullOrWhiteSpace(x.PermissionKey) || AdminPanelPermissions.UserHasPermission(User, x.PermissionKey)).ToList();
 
-            var systemLinks = (menuItems.Any()
-                    ? AdminPanelPermissions.BuildSidebarLinks(menuItems, "System")
-                    : AdminPanelPermissions.SystemSettingsLinks.ToList())
-                .Where(x => string.IsNullOrWhiteSpace(x.PermissionKey) || AdminPanelPermissions.UserHasPermission(User, x.PermissionKey))
-                .ToList();
+            var systemLinks = AdminPanelPermissions.SystemSettingsLinks.ToList();
+            if (menuItems.Any())
+            {
+                var dbSystem = AdminPanelPermissions.BuildSidebarLinks(menuItems, "System");
+                foreach (var item in dbSystem) { if (!systemLinks.Any(x => x.Url == item.Url)) systemLinks.Add(item); }
+            }
+            systemLinks = systemLinks.Where(x => string.IsNullOrWhiteSpace(x.PermissionKey) || AdminPanelPermissions.UserHasPermission(User, x.PermissionKey)).ToList();
 
-            var contentLinks = (menuItems.Any()
-                    ? AdminPanelPermissions.BuildSidebarLinks(menuItems, "Content")
-                    : AdminPanelPermissions.ContentLinks.ToList())
-                .Where(x => string.IsNullOrWhiteSpace(x.PermissionKey) || AdminPanelPermissions.UserHasPermission(User, x.PermissionKey))
-                .ToList();
+            var contentLinks = AdminPanelPermissions.ContentLinks.ToList();
+            if (menuItems.Any())
+            {
+                var dbContent = AdminPanelPermissions.BuildSidebarLinks(menuItems, "Content");
+                foreach (var item in dbContent) { if (!contentLinks.Any(x => x.Url == item.Url)) contentLinks.Add(item); }
+            }
+            contentLinks = contentLinks.Where(x => string.IsNullOrWhiteSpace(x.PermissionKey) || AdminPanelPermissions.UserHasPermission(User, x.PermissionKey)).ToList();
 
-            var kurumsalSubLinks = (menuItems.Any()
-                    ? AdminPanelPermissions.BuildSidebarSubLinks(menuItems, "KurumsalSub")
-                    : AdminPanelPermissions.KurumsalSubLinks.ToList());
+            var kurumsalSubLinks = AdminPanelPermissions.KurumsalSubLinks.ToList();
+            if (menuItems.Any())
+            {
+                var dbKurumsal = AdminPanelPermissions.BuildSidebarSubLinks(menuItems, "KurumsalSub");
+                foreach (var item in dbKurumsal) { if (!kurumsalSubLinks.Any(x => x.Url == item.Url)) kurumsalSubLinks.Add(item); }
+            }
 
-            var securityLinks = menuItems.Any()
-                ? menuItems.Where(x => x.Section == "Security" && x.IsActive).OrderBy(x => x.SortOrder).ToList()
-                : new List<GaziHastane.Models.AdminMenuItem>();
+            var securityLinks = AdminPanelPermissions.SecurityLinks.ToList();
+            if (menuItems.Any())
+            {
+                var dbSecurity = AdminPanelPermissions.BuildSidebarLinks(menuItems, "Security");
+                foreach (var item in dbSecurity) { if (!securityLinks.Any(x => x.Url == item.Url)) securityLinks.Add(item); }
+            }
+            securityLinks = securityLinks.Where(x => string.IsNullOrWhiteSpace(x.PermissionKey) || AdminPanelPermissions.UserHasPermission(User, x.PermissionKey)).ToList();
 
             var canKurumsal = AdminPanelPermissions.UserHasPermission(User, AdminPanelPermissions.Keys.Kurumsal);
             var isSuperAdmin = AdminPanelPermissions.IsSuperAdmin(User);
@@ -221,27 +234,12 @@
             {
                 foreach (var item in securityLinks)
                 {
-                    if (item.IsSuperAdminOnly && !isSuperAdmin)
-                    {
-                        continue;
-                    }
-
-                    var isActive = string.Equals(ctrl, item.Controller, StringComparison.OrdinalIgnoreCase)
-                        && (string.IsNullOrWhiteSpace(item.Action)
-                            || string.Equals(action, item.Action, StringComparison.OrdinalIgnoreCase));
-
+                    var isActive = AdminPanelPermissions.IsSidebarLinkActive(ctrl, action, item);
                     <a href="@item.Url" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(isActive ? activeClass : passiveClass)">
-                        <i class="@item.IconClass text-lg @(isActive ? "neon-icon" : item.HoverIconClass)"></i>
+                        <i class="@item.IconClass text-lg @(isActive ? item.ActiveIconClass : item.HoverIconClass)"></i>
                         <span class="font-semibold tracking-wide">@item.Label</span>
                     </a>
                 }
-            }
-            else if (isSuperAdmin)
-            {
-                <a href="/Admin/Yetkililer/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "Yetkililer" ? activeClass : passiveClass)">
-                    <i class="fa-solid fa-user-shield text-lg @(ctrl == "Yetkililer" ? "neon-icon" : "group-hover:text-rose-400")"></i>
-                    <span class="font-semibold tracking-wide">Yetkili Listesi</span>
-                </a>
             }
 
             <a href="/Admin/SistemLog/Index" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group @(ctrl == "SistemLog" ? activeClass : passiveClass)">

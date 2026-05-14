@@ -208,21 +208,6 @@
                         ))
                         .ToList();
 
-                    if (!altSekmeler.Any())
-                    {
-                        altSekmeler = tumIcerikler
-                            .Where(x => !string.IsNullOrEmpty(x.SayfaKey) && (
-                                x.SayfaKey.Equals(normalizedBaslik, StringComparison.OrdinalIgnoreCase) ||
-                                x.SayfaKey.Equals(urlSegment, StringComparison.OrdinalIgnoreCase) ||
-                                x.SayfaKey.Equals(urlPath, StringComparison.OrdinalIgnoreCase)))
-                            .OrderBy(x => x.Sira)
-                            .Select(x => (
-                                LinkId: $"org-{x.Id}",
-                                Baslik: x.Baslik ?? "İsimsiz"
-                            ))
-                            .ToList();
-                    }
-
                     if (!altSekmeler.Any() && hemsirelikMenu)
                     {
                         altSekmeler = hemsirelikSekmeler

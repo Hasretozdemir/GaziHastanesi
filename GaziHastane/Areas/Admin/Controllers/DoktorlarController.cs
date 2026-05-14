@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using GaziHastane.Data; 
 using GaziHastane.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using System;
 
 namespace GaziHastane.Areas.Admin.Controllers
 {
@@ -15,11 +18,13 @@ namespace GaziHastane.Areas.Admin.Controllers
     {
         private readonly GaziHastaneContext _context;
         private readonly ILogger<DoktorlarController> _logger;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public DoktorlarController(GaziHastaneContext context, ILogger<DoktorlarController> logger)
+        public DoktorlarController(GaziHastaneContext context, ILogger<DoktorlarController> logger, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             _logger = logger;
+            _hostEnvironment = hostEnvironment;
         }
 
         // DOKTORLARI LİSTELEME
@@ -49,9 +54,25 @@ namespace GaziHastane.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                // Dosya Yükleme İşlemi
+                if (doktor.GorselDosya != null && doktor.GorselDosya.Length > 0)
+                {
+                    string wwwRootPath = _hostEnvironment.WebRootPath;
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(doktor.GorselDosya.FileName);
+                    string path = Path.Combine(wwwRootPath, "uploads", "doktorlar");
+                    
+                    if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+
+                    using (var fileStream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
+                    {
+                        await doktor.GorselDosya.CopyToAsync(fileStream);
+                    }
+                    doktor.FotografUrl = "/uploads/doktorlar/" + fileName;
+                }
+
                 _context.Add(doktor);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index)); // Kayıt başarılıysa listeye dön
+                return RedirectToAction(nameof(Index));
             }
 
             PopulateBolumlerViewBag(kategoriSecim);
@@ -89,6 +110,29 @@ namespace GaziHastane.Areas.Admin.Controllers
             {
                 try
                 {
+                    // Dosya Yükleme İşlemi (Yeni dosya seçilmişse)
+                    if (doktor.GorselDosya != null && doktor.GorselDosya.Length > 0)
+                    {
+                        string wwwRootPath = _hostEnvironment.WebRootPath;
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(doktor.GorselDosya.FileName);
+                        string path = Path.Combine(wwwRootPath, "uploads", "doktorlar");
+
+                        if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+
+                        // Eski dosyayı silme (İsteğe bağlı, temizlik için)
+                        if (!string.IsNullOrEmpty(doktor.FotografUrl))
+                        {
+                            var oldPath = Path.Combine(wwwRootPath, doktor.FotografUrl.TrimStart('/'));
+                            if (System.IO.File.Exists(oldPath)) System.IO.File.Delete(oldPath);
+                        }
+
+                        using (var fileStream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
+                        {
+                            await doktor.GorselDosya.CopyToAsync(fileStream);
+                        }
+                        doktor.FotografUrl = "/uploads/doktorlar/" + fileName;
+                    }
+
                     _context.Update(doktor);
                     await _context.SaveChangesAsync();
                 }
@@ -97,7 +141,7 @@ namespace GaziHastane.Areas.Admin.Controllers
                     if (!_context.Doktorlar.Any(e => e.Id == doktor.Id)) return NotFound();
                     else throw;
                 }
-                return RedirectToAction(nameof(Index)); // Başarılıysa listeye dön
+                return RedirectToAction(nameof(Index));
             }
 
             PopulateBolumlerViewBag(kategoriSecim);
