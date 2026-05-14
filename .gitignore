@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 # Serilog Logs
 /Logs/
+
+# Videos
+videos/

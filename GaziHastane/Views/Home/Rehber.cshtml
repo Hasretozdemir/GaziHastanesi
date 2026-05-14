@@ -53,6 +53,12 @@
             titleEl.textContent = item.baslik ?? item.Baslik;
             bodyEl.innerHTML = item.modalIcerik ?? item.ModalIcerik ?? item.icerik ?? item.Icerik ?? '';
 
+            // Arka planı sabitle ve kaymayı önle
+            const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+            document.body.style.paddingRight = scrollBarWidth + 'px';
+            document.body.classList.add('modal-open');
+            document.documentElement.classList.add('modal-open');
+
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
@@ -64,9 +70,16 @@
             const modal = document.getElementById('rehberModal');
             const content = document.getElementById('rehberModalContent');
             if (!modal || !content) return;
+
             modal.classList.add('opacity-0');
             content.classList.add('scale-95');
-            setTimeout(() => modal.classList.add('hidden'), 200);
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+                document.documentElement.classList.remove('modal-open');
+                document.body.style.paddingRight = '';
+            }, 200);
         }
 
         document.addEventListener('click', (e) => {

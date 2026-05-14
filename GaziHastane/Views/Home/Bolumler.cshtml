@@ -468,7 +468,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
-            width: 100%;
+            margin: 0;
         }
     </style>
 
@@ -490,7 +490,9 @@
             const closeMob = () => {
                 mobSidebar.classList.remove('open');
                 mobOverlay.classList.remove('open');
-                document.body.style.overflow = '';
+                document.body.classList.remove('modal-open');
+                document.documentElement.classList.remove('modal-open');
+                document.body.style.paddingRight = '';
             };
 
             if(mobToggle) mobToggle.addEventListener('click', openMob);
@@ -587,6 +589,13 @@
                 }
 
                 document.querySelectorAll('.card-menu-panel').forEach(m => m.classList.remove('open'));
+
+                // Arka planı sabitle
+                const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+                document.body.style.paddingRight = scrollBarWidth + 'px';
+                document.body.classList.add('modal-open');
+                document.documentElement.classList.add('modal-open');
+
                 doktorModal.classList.remove('hidden');
                 setTimeout(() => {
                     doktorModal.classList.remove('opacity-0');
@@ -605,6 +614,13 @@
                 infoModalText.textContent = aciklama;
 
                 document.querySelectorAll('.card-menu-panel').forEach(m => m.classList.remove('open'));
+
+                // Arka planı sabitle
+                const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+                document.body.style.paddingRight = scrollBarWidth + 'px';
+                document.body.classList.add('modal-open');
+                document.documentElement.classList.add('modal-open');
+
                 infoModal.classList.remove('hidden');
                 setTimeout(() => {
                     infoModal.classList.remove('opacity-0');
@@ -615,13 +631,23 @@
             window.closeBolumDoktorModal = function () {
                 doktorModal.classList.add('opacity-0');
                 doktorModalContent.classList.add('scale-95');
-                setTimeout(() => doktorModal.classList.add('hidden'), 200);
+                setTimeout(() => {
+                    doktorModal.classList.add('hidden');
+                    document.body.classList.remove('modal-open');
+                    document.documentElement.classList.remove('modal-open');
+                    document.body.style.paddingRight = '';
+                }, 200);
             };
 
             window.closeBolumInfoModal = function () {
                 infoModal.classList.add('opacity-0');
                 infoModalContent.classList.add('scale-95');
-                setTimeout(() => infoModal.classList.add('hidden'), 200);
+                setTimeout(() => {
+                    infoModal.classList.add('hidden');
+                    document.body.classList.remove('modal-open');
+                    document.documentElement.classList.remove('modal-open');
+                    document.body.style.paddingRight = '';
+                }, 200);
             };
 
             window.toggleDesktopSidebar = function() {

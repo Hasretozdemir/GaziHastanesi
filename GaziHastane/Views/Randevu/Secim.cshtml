@@ -1621,7 +1621,12 @@
                     const modal = document.getElementById('randevuFisiModal');
                     modal.classList.remove('d-none');
                     modal.classList.add('d-flex');
-                    document.body.style.overflow = 'hidden';
+
+                    // Arka planı sabitle
+                    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+                    document.body.style.paddingRight = scrollBarWidth + 'px';
+                    document.body.classList.add('modal-open');
+                    document.documentElement.classList.add('modal-open');
                 })
                 .catch(() => {
                     Swal.fire({
@@ -1638,7 +1643,10 @@
             const modal = document.getElementById('randevuFisiModal');
             modal.classList.remove('d-flex');
             modal.classList.add('d-none');
-            document.body.style.overflow = '';
+            
+            document.body.classList.remove('modal-open');
+            document.documentElement.classList.remove('modal-open');
+            document.body.style.paddingRight = '';
         }
 
         function fisiIndir() {

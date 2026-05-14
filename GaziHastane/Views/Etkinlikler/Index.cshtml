@@ -187,6 +187,13 @@
                 etkinlikModalIcerik.innerHTML = icerik || '<p class="text-slate-500 text-sm">Detay içerik bulunmuyor.</p>';
 
                 etkinlikModal.classList.remove('hidden');
+
+                // Arka planı sabitle
+                const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+                document.body.style.paddingRight = scrollBarWidth + 'px';
+                document.body.classList.add('modal-open');
+                document.documentElement.classList.add('modal-open');
+
                 setTimeout(() => {
                     etkinlikModal.classList.remove('opacity-0');
                     etkinlikModalContent.classList.remove('scale-95');
@@ -198,6 +205,9 @@
                 etkinlikModalContent.classList.add('scale-95');
                 setTimeout(() => {
                     etkinlikModal.classList.add('hidden');
+                    document.body.classList.remove('modal-open');
+                    document.documentElement.classList.remove('modal-open');
+                    document.body.style.paddingRight = '';
                 }, 250);
             }
 

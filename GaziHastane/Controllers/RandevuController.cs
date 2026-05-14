@@ -36,7 +36,14 @@ namespace GaziHastane.Controllers
 
                 for (var gun = ayBaslangic; gun <= ayBitis; gun = gun.AddDays(1))
                 {
+                    // GEÇMİŞ GÜNLER İÇİN RANDEVU AÇILMASIN (Kullanıcı Talebi)
                     var planGunAcik = plan != null && plan.Gunler.Any(x => x.Tarih.Date == gun.Date && x.IsRandevuAcik);
+                    
+                    if (gun.Date < DateTime.Today)
+                    {
+                        planGunAcik = false;
+                    }
+
                     var uygunSaatler = planGunAcik ? HesaplaUygunSaatler(doktorId, gun) : new List<string>();
 
                     if (planGunAcik && gun.Date == DateTime.Today)
@@ -241,7 +248,15 @@ namespace GaziHastane.Controllers
                 var slotlar = HesaplaGunSlotDurumlari(doktorId, secilenTarih);
 
                 // Bug�n i�in ge�mi� saatleri de dolu/pasif i�aretle
-                if (secilenTarih.Date == DateTime.Today)
+                // Geçmiş günler veya bugün için geçmiş saatleri dolu/pasif işaretle
+                if (secilenTarih.Date < DateTime.Today)
+                {
+                    foreach (var slot in slotlar)
+                    {
+                        slot.Musait = false;
+                    }
+                }
+                else if (secilenTarih.Date == DateTime.Today)
                 {
                     var simdi = DateTime.Now.TimeOfDay;
                     foreach (var slot in slotlar)
@@ -278,6 +293,12 @@ namespace GaziHastane.Controllers
                 }
 
                 DateTime randevuZamani = DateTime.Parse($"{Tarih} {Saat}");
+
+                // GEÇMİŞ ZAMANA RANDEVU ALINMASIN
+                if (randevuZamani < DateTime.Now)
+                {
+                    return Json(new { success = false, message = "Geçmiş bir tarihe/saate randevu alamazsınız." });
+                }
 
                 var musaitSaatler = HesaplaGunSlotDurumlari(DoktorId, randevuZamani.Date)
                     .Where(x => x.Musait)

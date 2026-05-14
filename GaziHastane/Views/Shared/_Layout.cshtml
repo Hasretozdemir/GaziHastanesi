@@ -137,6 +137,12 @@
             background-color: #cbd5e1;
             border-radius: 20px;
         }
+
+        html.modal-open, body.modal-open {
+            overflow: hidden !important;
+            height: 100% !important;
+            overscroll-behavior: none;
+        }
     </style>
 
     @await RenderSectionAsync("Styles", required: false)
@@ -434,13 +440,21 @@
         function openMob() {
             document.getElementById('mob-sidebar').classList.add('open');
             document.getElementById('mob-overlay').classList.add('open');
-            document.body.style.overflow='hidden';
+            
+            // Arka planı sabitle
+            const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+            document.body.style.paddingRight = scrollBarWidth + 'px';
+            document.body.classList.add('modal-open');
+            document.documentElement.classList.add('modal-open');
         }
 
         function closeMob() {
             document.getElementById('mob-sidebar').classList.remove('open');
             document.getElementById('mob-overlay').classList.remove('open');
-            document.body.style.overflow='';
+            
+            document.body.classList.remove('modal-open');
+            document.documentElement.classList.remove('modal-open');
+            document.body.style.paddingRight = '';
         }
     </script>
 

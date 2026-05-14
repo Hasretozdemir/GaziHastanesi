@@ -84,7 +84,7 @@ Hastane Veritabanı Bilgileri:
                 return Json(new { success = false, reply = "Yapay zeka servis anahtarı appsettings.json dosyasında bulunamadı." });
             }
 
-            // Google'ın güncel ve stabil Gemini 1.5 Flash modeli
+            // Google'ın güncel ve stabil Gemini 1.5 Flash modeli (veya 2.0-flash)
             string endpoint = $"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={apiKey}";
 
             var payload = new
