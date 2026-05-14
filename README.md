@@ -16,8 +16,10 @@ Gazi Üniversitesi Hastanesi için geliştirilmiş, modern web teknolojileri ve 
 > Projenin tüm özelliklerini ve çalışma mantığını aşağıdaki videodan izleyebilirsiniz:
 
 <div align="center">
-  <video src="./videos/tanitim.mp4" width="100%" controls nonce="tanitim_video"></video>
-  <p><i>▶️ Proje Tanıtım Videosu</i></p>
+  <a href="https://youtu.be/JSDaG0zK1kY" target="_blank">
+    <img src="https://img.youtube.com/vi/JSDaG0zK1kY/maxresdefault.jpg" alt="Proje Tanıtım Videosu" width="100%">
+  </a>
+  <p><i>▶️ Proje Tanıtım Videosunu İzlemek İçin Görsele Tıklayın</i></p>
 </div>
 
 ---
